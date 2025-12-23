@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Hotel Booking</string>
 
-    // Onboarding
+    <!-- ONBOARDING -->
     <string name="onboarding_continue">Continue</string>
     <string name="onboarding_get_started">Get Started</string>
     <string name="onboarding_title_1">Luxury and Comfort,\nJust a Tap Away</string>
@@ -13,7 +13,7 @@
     <string name="email_not_valid">Email is not valid</string>
     <string name="password_too_short">Password must be at least 8 characters long</string>
 
-    // Sign In
+    <!-- SIGN IN -->
     <string name="signIn_title">Let’s Sign you in</string>
     <string name="signIn_description">Welcome back! Please sign in to continue your booking journey.</string>
     <string name="email_label">Email Address</string>
@@ -25,7 +25,7 @@
     <string name="dont_have_account">Don’t have an account?</string>
     <string name="sign_up">Sign Up</string>
 
-    // Sign Up
+    <!-- SIGN UP -->
     <string name="or">Or</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="signup_title">Create Account</string>
@@ -40,4 +40,14 @@
     <string name="admin_code_label">Admin Code</string>
     <string name="admin_code_hint">Enter secret code</string>
     <string name="code_is_required">Code is required</string>
+
+    <!-- USER HOME -->
+    <string name="home">Home</string>
+    <string name="booking">Booking</string>
+    <string name="message">Message</string>
+    <string name="profile">Profile</string>
+
+    <!-- HOTEL -->
+    <string name="night">night</string>
+
 </resources>

@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -30,6 +31,7 @@ import com.example.hotelbooking.features.auth.presentation.ui.SignUpScreen
 import com.example.hotelbooking.features.home.HomeScreen
 import com.example.hotelbooking.features.onboarding.presentation.ui.OnboardingScreen
 import com.example.hotelbooking.ui.theme.HotelBookingTheme
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
@@ -40,6 +42,9 @@ class MainActivity : BaseComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HotelBookingTheme {
+                val user = FirebaseAuth.getInstance().currentUser
+                Log.d("AuthDebug", "Current UID: ${user?.uid}")
+
                 MainApp()
             }
         }
@@ -90,11 +95,11 @@ fun NavGraphBuilder.onboardingGraph(navController: NavController) {
 
 fun NavGraphBuilder.userGraph(navController: NavController) {
     navigation(
-        startDestination = "user_home",
+        startDestination = "user_main",
         route = "user_root"
     ) {
-        composable("user_home") {
-            HomeScreen()
+        composable("user_main") {
+            MainScreen(navController = navController)
         }
     }
 }

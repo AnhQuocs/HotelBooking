@@ -28,6 +28,11 @@ object Dimen {
     val SizeMega = 80.dp
     val SizeUltra = 120.dp
 
+    // Card Size
+    val HotelCardWidth = 160.dp
+    val HotelCardHeight = 250.dp
+    val HotelCardCorner = 12.dp
+
     // Height (component height)
     val HeightXXS = 20.dp
     val HeightXS = 24.dp

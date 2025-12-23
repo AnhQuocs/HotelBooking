@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Hotel Booking</string>
 
-    // Onboarding
+    <!-- ONBOARDING -->
     <string name="onboarding_continue">Tiếp tục</string>
     <string name="onboarding_get_started">Khám phá ngay</string>
     <string name="onboarding_title_1">Sang trọng và tiện nghi,\nchỉ trong một chạm</string>
@@ -13,7 +13,7 @@
     <string name="email_not_valid">Email không hợp lệ</string>
     <string name="password_too_short">Mật khẩu phải có ít nhất 8 ký tự</string>
 
-    <!-- Sign In -->
+    <!-- SIGN IN -->
     <string name="signIn_title">Đăng nhập</string>
     <string name="signIn_description">Chào mừng bạn quay lại! Vui lòng đăng nhập để tiếp tục hành trình đặt phòng.</string>
     <string name="email_label">Địa chỉ email</string>
@@ -25,7 +25,7 @@
     <string name="dont_have_account">Chưa có tài khoản?</string>
     <string name="sign_up">Đăng ký</string>
 
-    <!-- Sign Up -->
+    <!-- SIGN UP -->
     <string name="or">Hoặc</string>
     <string name="continue_with_google">Tiếp tục với Google</string>
     <string name="signup_title">Tạo tài khoản</string>
@@ -40,5 +40,14 @@
     <string name="admin_code_label">Mã quản trị</string>
     <string name="admin_code_hint">Nhập mã quản trị viên</string>
     <string name="code_is_required">Mã không được để trống</string>
+
+    <!-- USER HOME -->
+    <string name="home">Trang Chủ</string>
+    <string name="booking">Đơn Đặt</string>
+    <string name="message">Tin Nhắn</string>
+    <string name="profile">Hồ Sơ</string>
+
+    <!-- HOTEL -->
+    <string name="night">đêm</string>
 
 </resources>
