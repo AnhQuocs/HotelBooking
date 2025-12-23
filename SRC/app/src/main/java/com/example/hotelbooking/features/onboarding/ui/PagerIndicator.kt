@@ -36,7 +36,7 @@ fun PagerIndicator(
 
 @Composable
 fun Indicator(isSelected: Boolean) {
-    val width = animateDpAsState(targetValue = if (isSelected) 25.dp else 12.dp, label = "")
+    val width = animateDpAsState(targetValue = if (isSelected) 25.dp else 10.dp, label = "")
 
     Box(
         modifier = Modifier
