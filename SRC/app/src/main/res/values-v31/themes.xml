@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.HOTEL_BOOKING_SPLASH" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">0</item>
+        <item name="postSplashScreenTheme">@style/Theme.HOTEL_BOOKING</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+</resources>

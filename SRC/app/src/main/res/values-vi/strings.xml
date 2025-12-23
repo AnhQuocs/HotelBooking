@@ -10,4 +10,35 @@
     <string name="onboarding_desc_1">Tận hưởng kỳ nghỉ sang trọng, tiện nghi cao cấp, đặt phòng ngay chỉ với một chạm</string>
     <string name="onboarding_desc_2">Đặt phòng nhanh chóng với trải nghiệm mượt mà, phù hợp phong cách du lịch hiện đại</string>
     <string name="onboarding_desc_3">Dễ dàng tìm khách sạn lý tưởng và bắt đầu mọi chuyến đi thật tự tin</string>
+    <string name="email_not_valid">Email không hợp lệ</string>
+    <string name="password_too_short">Mật khẩu phải có ít nhất 8 ký tự</string>
+
+    <!-- Sign In -->
+    <string name="signIn_title">Đăng nhập</string>
+    <string name="signIn_description">Chào mừng bạn quay lại! Vui lòng đăng nhập để tiếp tục hành trình đặt phòng.</string>
+    <string name="email_label">Địa chỉ email</string>
+    <string name="email_hint">Nhập địa chỉ email</string>
+    <string name="password_label">Mật khẩu</string>
+    <string name="password_hint">Nhập mật khẩu</string>
+    <string name="forgot_password">Quên mật khẩu</string>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="dont_have_account">Chưa có tài khoản?</string>
+    <string name="sign_up">Đăng ký</string>
+
+    <!-- Sign Up -->
+    <string name="or">Hoặc</string>
+    <string name="continue_with_google">Tiếp tục với Google</string>
+    <string name="signup_title">Tạo tài khoản</string>
+    <string name="signup_description">Tạo tài khoản để khám phá khách sạn, quản lý đặt phòng và du lịch dễ dàng hơn.</string>
+    <string name="username_label">Tên người dùng</string>
+    <string name="username_hint">Nhập tên người dùng</string>
+    <string name="create_account">Tạo tài khoản</string>
+    <string name="already_account">Đã có tài khoản?</string>
+    <string name="username_too_short">Tên người dùng phải có ít nhất 8 ký tự</string>
+    <string name="register_as_admin">Đăng ký quản trị viên</string>
+    <string name="sign_up_admin">Đăng ký (Quản trị viên)</string>
+    <string name="admin_code_label">Mã quản trị</string>
+    <string name="admin_code_hint">Nhập mã quản trị viên</string>
+    <string name="code_is_required">Mã không được để trống</string>
+
 </resources>

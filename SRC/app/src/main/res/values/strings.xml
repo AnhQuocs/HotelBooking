@@ -10,4 +10,34 @@
     <string name="onboarding_desc_1">Enjoy luxury stays with premium comfort, book instantly with just one tap</string>
     <string name="onboarding_desc_2">Book hotels easily with a smooth experience designed for comfort and modern travel</string>
     <string name="onboarding_desc_3">Discover your ideal hotel effortlessly and start every journey with confidence</string>
+    <string name="email_not_valid">Email is not valid</string>
+    <string name="password_too_short">Password must be at least 8 characters long</string>
+
+    // Sign In
+    <string name="signIn_title">Let’s Sign you in</string>
+    <string name="signIn_description">Welcome back! Please sign in to continue your booking journey.</string>
+    <string name="email_label">Email Address</string>
+    <string name="email_hint">Enter your email address</string>
+    <string name="password_label">Password</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="dont_have_account">Don’t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+
+    // Sign Up
+    <string name="or">Or</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="signup_title">Create Account</string>
+    <string name="signup_description">Create an account to explore hotels, manage bookings, and travel with ease.</string>
+    <string name="username_label">Username</string>
+    <string name="username_hint">Enter your username</string>
+    <string name="create_account">Create An Account</string>
+    <string name="already_account">Already an account?</string>
+    <string name="username_too_short">Username must be at least 8 characters long</string>
+    <string name="register_as_admin">Register as Admin</string>
+    <string name="sign_up_admin">Sign Up (Admin)</string>
+    <string name="admin_code_label">Admin Code</string>
+    <string name="admin_code_hint">Enter secret code</string>
+    <string name="code_is_required">Code is required</string>
 </resources>

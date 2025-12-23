@@ -2,34 +2,49 @@ package com.example.hotelbooking.features.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.features.onboarding.data.local.OnboardingDataStore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class SplashViewModel() : ViewModel() {
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    private val onboardingDataStore: OnboardingDataStore
+) : ViewModel() {
 
-    fun checkUserRole(onResult: (String) -> Unit) {
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        val firestore = FirebaseFirestore.getInstance()
-
-        if (uid == null) {
-            onResult("onboarding")
-            return
-        }
-
+    fun decideStartDestination(onResult: (String) -> Unit) {
         viewModelScope.launch {
+            val isOnboardingDone = onboardingDataStore.isOnboardingDone()
+            val user = FirebaseAuth.getInstance().currentUser
+
+            if (!isOnboardingDone) {
+                onResult("onboarding_root")
+                return@launch
+            }
+
+            if (user == null) {
+                onResult("auth")
+                return@launch
+            }
+
             try {
-                val document = firestore.collection("users").document(uid).get().await()
-                val role = document.getString("role") ?: "USER"
+                val role = FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(user.uid)
+                    .get()
+                    .await()
+                    .getString("role") ?: "USER"
 
                 if (role == "ADMIN") {
-                    onResult("admin_main")
+                    onResult("admin_root")
                 } else {
-                    onResult("main")
+                    onResult("user_root")
                 }
             } catch (e: Exception) {
-                onResult("main")
+                onResult("user_root")
             }
         }
     }

@@ -12,3 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 val PrimaryBlue = Color(0xFF2853AF)
 val MistGray = Color(0xFFE3E9ED)
+val SlateGray = Color(0xFF9CA4AB)
+val InputBackground = Color(0xFFF6F6F6)
+val ActionDanger = Color(0xFFF41F52)
+val TextTertiary = Color(0xFF78828A)
