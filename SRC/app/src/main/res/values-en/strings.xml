@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Hotel Booking</string>
+
+    // Onboarding
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_get_started">Get Started</string>
+    <string name="onboarding_title_1">Luxury and Comfort, \nJust a Tap Away</string>
+    <string name="onboarding_title_2">Book with Ease, Stay \nwith Style</string>
+    <string name="onboarding_title_3">Discover Your Dream \nHotel, Effortlessly</string>
+    <string name="onboarding_desc_1">Enjoy luxury stays with premium comfort, book instantly with just one tap</string>
+    <string name="onboarding_desc_2">Book hotels easily with a smooth experience designed for comfort and modern travel</string>
+    <string name="onboarding_desc_3">Discover your ideal hotel effortlessly and start every journey with confidence</string>
+</resources>

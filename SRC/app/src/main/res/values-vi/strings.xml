@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Hotel Booking</string>
+
+    // Onboarding
+    <string name="onboarding_continue">Tiếp tục</string>
+    <string name="onboarding_get_started">Khám phá ngay</string>
+    <string name="onboarding_title_1">Sang trọng và tiện nghi,\nchỉ trong một chạm</string>
+    <string name="onboarding_title_2">Đặt phòng dễ dàng,\ntrải nghiệm phong cách</string>
+    <string name="onboarding_title_3">Khám phá khách sạn mơ ước,\nthật nhẹ nhàng</string>
+    <string name="onboarding_desc_1">Tận hưởng kỳ nghỉ sang trọng, tiện nghi cao cấp, đặt phòng ngay chỉ với một chạm</string>
+    <string name="onboarding_desc_2">Đặt phòng nhanh chóng với trải nghiệm mượt mà, phù hợp phong cách du lịch hiện đại</string>
+    <string name="onboarding_desc_3">Dễ dàng tìm khách sạn lý tưởng và bắt đầu mọi chuyến đi thật tự tin</string>
+</resources>

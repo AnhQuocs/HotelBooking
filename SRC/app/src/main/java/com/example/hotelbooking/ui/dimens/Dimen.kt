@@ -2,7 +2,7 @@ package com.example.hotelbooking.ui.dimens
 
 import androidx.compose.ui.unit.dp
 
-object Dimens {
+object Dimen {
     // Padding
     val PaddingXXS = 2.dp
     val PaddingXS = 4.dp
