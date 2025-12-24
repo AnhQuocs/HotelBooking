@@ -49,5 +49,6 @@
 
     <!-- HOTEL -->
     <string name="night">đêm</string>
+    <string name="home_topbar_title">Lên kế hoạch cho chuyến đi tiếp theo</string>
 
 </resources>

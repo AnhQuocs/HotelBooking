@@ -170,8 +170,8 @@ fun OnboardingPager(
                         }
                     } else {
                         viewModel.completeOnboarding {
-                            navController.navigate("login") {
-                                popUpTo("onboarding") { inclusive = true }
+                            navController.navigate("auth") {
+                                popUpTo("onboarding_root") { inclusive = true }
                             }
                         }
                     }

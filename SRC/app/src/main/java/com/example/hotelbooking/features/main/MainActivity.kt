@@ -150,7 +150,6 @@ fun SplashScreen(
     }
 
     LaunchedEffect(Unit) {
-        delay(500)
         viewModel.decideStartDestination { destination ->
             navController.navigate(destination) {
                 popUpTo("splash_root") { inclusive = true }

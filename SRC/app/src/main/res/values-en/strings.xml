@@ -49,5 +49,6 @@
 
     <!-- HOTEL -->
     <string name="night">night</string>
+    <string name="home_topbar_title">Planning your next trip</string>
 
 </resources>

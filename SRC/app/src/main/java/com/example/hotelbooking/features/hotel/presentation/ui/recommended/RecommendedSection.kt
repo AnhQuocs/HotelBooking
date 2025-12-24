@@ -1,14 +1,13 @@
-package com.example.hotelbooking.features.hotel.presentation.ui
+package com.example.hotelbooking.features.hotel.presentation.ui.recommended
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,49 +21,45 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 
 @Composable
-fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
-    when (state) {
+fun RecommendedSection(
+    recommendedState: HotelState<List<Hotel>>
+) {
+    when(recommendedState) {
         is HotelState.Loading -> {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(280.dp),
+                    .wrapContentHeight(),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(top = Dimen.PaddingS),
                 ) {
                     AppTitleShimmer(
                         modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                     )
-                    Spacer(modifier = Modifier.height(AppSpacing.MediumLarge + 4.dp))
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        contentPadding = PaddingValues(horizontal = Dimen.PaddingM)
-                    ) {
-                        items(3) {
-                            HotelItemShimmer()
-                        }
-                    }
+                    Spacer(modifier = Modifier.height(AppSpacing.M))
+                    RecommendedShimmer()
                 }
             }
         }
 
         is HotelState.Success -> {
+            val hotels = recommendedState.data
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AppTitle(
-                    text1 = "Most Popular",
+                    text1 = "Recommended for you",
                     text2 = "See All",
                     onClick = {},
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                 )
-                Spacer(modifier = Modifier.height(AppSpacing.MPlus))
-                HotelList(state.data, onClick)
+                Spacer(modifier = Modifier.height(AppSpacing.S))
+                RecommendedList(hotels)
             }
         }
 
-        is HotelState.Error -> Text("Error: ${state.message}")
+        is HotelState.Error -> Text("Error: ${recommendedState.message}")
     }
 }
