@@ -30,12 +30,14 @@ import com.example.hotelbooking.features.booking.BookingScreen
 import com.example.hotelbooking.features.chat.MessageScreen
 import com.example.hotelbooking.features.home.HomeScreen
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
+import com.example.hotelbooking.features.map.MapPreviewViewModel
 import com.example.hotelbooking.features.profile.ProfileScreen
 
 @Composable
 fun MainScreen(
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
+    mapPreviewViewModel: MapPreviewViewModel = hiltViewModel()
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var previousTabIndex by remember { mutableIntStateOf(0) }
@@ -108,6 +110,7 @@ fun MainScreen(
         ) { tab ->
             when (tab) {
                 0 -> HomeScreen(
+                    cameraPositionState = mapPreviewViewModel.cameraPositionState,
                     hotelState = hotelState,
                     recommendedState = recommendedState,
 //                    list = unreadCount

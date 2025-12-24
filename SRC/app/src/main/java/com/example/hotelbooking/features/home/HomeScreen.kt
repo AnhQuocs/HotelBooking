@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.home
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,12 +21,16 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.HotelSection
 import com.example.hotelbooking.features.hotel.presentation.ui.recommended.RecommendedSection
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
+import com.example.hotelbooking.features.map.MapPreviewCard
+import com.example.hotelbooking.features.map.MapPreviewViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
-import kotlin.jvm.java
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 
 @Composable
 fun HomeScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
+    cameraPositionState: CameraPositionState,
     hotelState: HotelState<List<Hotel>>,
     recommendedState: HotelState<List<Hotel>>,
 //    list: Int
@@ -76,6 +79,19 @@ fun HomeScreen(
             item {
                 RecommendedSection(
                     recommendedState = recommendedState
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
+
+                MapPreviewCard(
+                    cameraPositionState = cameraPositionState,
+                    modifier = Modifier.padding(16.dp),
+                    location = LatLng(1.35, 103.87),
+                    onClick = {
+                        // Navigate sang MapScreen full
+                    }
                 )
             }
         }

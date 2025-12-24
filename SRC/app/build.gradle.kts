@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,6 +24,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+
+        val mapsApiKey = localProperties.getProperty("GOOGLE_MAPS_API_KEY")
+            ?: error("GOOGLE_MAPS_API_KEY is missing in local.properties")
+
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = mapsApiKey
+
     }
 
     buildTypes {
@@ -43,6 +58,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     hilt {
         enableAggregatingTask = false
@@ -91,4 +107,11 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Google Map
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
+    implementation("com.google.maps.android:maps-compose:4.3.0")
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }
