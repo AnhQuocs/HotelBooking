@@ -16,7 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.UpdateRatingViewModel
+import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun HotelDetailSection(
@@ -26,16 +27,16 @@ fun HotelDetailSection(
     onChatClick: (String, String, String) -> Unit,
     hotelViewModel: HotelViewModel = hiltViewModel(),
 //    roomViewModel: RoomViewModel = hiltViewModel(),
-    reviewViewModel: UpdateRatingViewModel = hiltViewModel()
+    reviewViewModel: ReviewViewModel = hiltViewModel()
 ) {
     val hotelDetailState by hotelViewModel.hotelDetailState.collectAsState()
 //    val roomState by roomViewModel.roomsState.collectAsState()
-//    val reviewState by reviewViewModel.reviewState.collectAsState()
+    val reviewState by reviewViewModel.reviewState.collectAsState()
 
     LaunchedEffect(Unit) {
         hotelViewModel.loadHotelById(hotelId)
 //        roomViewModel.loadRooms(hotelId)
-//        reviewViewModel.loadReviewsByServiceId(hotelId)
+        reviewViewModel.loadReviewsByServiceId(hotelId)
     }
 
     when (hotelDetailState) {
@@ -46,7 +47,7 @@ fun HotelDetailSection(
                     .background(color = Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFF2F5AA8))
+                CircularProgressIndicator(color = PrimaryBlue)
             }
         }
 
@@ -55,7 +56,7 @@ fun HotelDetailSection(
             HotelDetailScreen(
                 hotel as Hotel,
 //                roomState,
-//                reviewState,
+                reviewState,
                 onBackClick,
                 onRoomClick,
                 onChatClick = { hotelId, hotelName, shortAddress ->

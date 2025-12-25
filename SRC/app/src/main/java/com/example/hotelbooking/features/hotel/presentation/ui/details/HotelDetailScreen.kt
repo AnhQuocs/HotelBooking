@@ -35,6 +35,9 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.components.ReadMoreText
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.presentation.ui.ReviewSection
+import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -47,7 +50,7 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 fun HotelDetailScreen(
     hotel: Hotel,
 //    roomState: RoomState<List<RoomType>>,
-//    reviewState: ReviewState<List<Review>>,
+    reviewState: ReviewState<List<Review>>,
     onBackClick: () -> Unit,
     onRoomClick: (String) -> Unit,
     onChatClick: (String, String, String) -> Unit
@@ -101,6 +104,16 @@ fun HotelDetailScreen(
                 )
 
                 Spacer(modifier = Modifier.height(AppSpacing.M))
+            }
+
+            item {
+                // Room
+
+                Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
+            }
+
+            item {
+                ReviewSection(reviewState)
             }
         }
     }

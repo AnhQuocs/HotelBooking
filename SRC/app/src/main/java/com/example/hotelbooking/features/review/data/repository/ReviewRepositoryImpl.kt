@@ -2,8 +2,8 @@ package com.example.hotelbooking.features.review.data.repository
 
 import com.example.hotelbooking.features.review.data.mapper.toReview
 import com.example.hotelbooking.features.review.data.source.FirebaseReviewDataSource
-import com.example.tomn_test.features.review.domain.model.Review
-import com.example.tomn_test.features.review.domain.repository.ReviewRepository
+import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.domain.repository.ReviewRepository
 
 class ReviewRepositoryImpl (
     private val dataSource: FirebaseReviewDataSource
