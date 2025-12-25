@@ -71,5 +71,6 @@
     <string name="description">Mô tả</string>
     <string name="read_more">Xem thêm</string>
     <string name="show_less">Thu gọn</string>
+    <string name="reviews">Đánh giá</string>
 
 </resources>

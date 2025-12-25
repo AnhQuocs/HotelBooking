@@ -71,5 +71,6 @@
     <string name="description">Description</string>
     <string name="read_more">Read more</string>
     <string name="show_less">Show less</string>
+    <string name="reviews">Reviews</string>
 
 </resources>
