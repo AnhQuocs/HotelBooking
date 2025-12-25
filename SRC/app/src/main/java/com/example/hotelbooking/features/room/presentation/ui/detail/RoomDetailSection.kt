@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.room.presentation.ui.detail
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -11,12 +12,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.tomn_test.features.room.domain.model.RoomType
-import com.example.tomn_test.features.room.presentation.viewmodel.RoomState
-import com.example.tomn_test.features.room.presentation.viewmodel.RoomViewModel
+import com.example.hotelbooking.features.room.domain.model.RoomType
+import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 
 @Composable
 fun RoomDetailSection(
@@ -38,7 +40,8 @@ fun RoomDetailSection(
         is RoomState.Loading -> {
             Box(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()

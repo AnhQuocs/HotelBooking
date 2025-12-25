@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -17,6 +16,9 @@
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
             android:name=".features.hotel.presentation.ui.details.HotelDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.room.presentation.ui.detail.RoomDetailActivity"
             android:exported="false" />
 
         <meta-data

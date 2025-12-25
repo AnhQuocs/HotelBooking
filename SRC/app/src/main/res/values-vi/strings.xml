@@ -72,5 +72,18 @@
     <string name="read_more">Xem thêm</string>
     <string name="show_less">Thu gọn</string>
     <string name="reviews">Đánh giá</string>
+    <string name="preview">Xem trước</string>
+
+    <!-- ROOM -->
+    <string name="amenities">Tiện nghi</string>
+    <string name="policy_no_smoking">Không hút thuốc</string>
+    <string name="policy_smoking_allowed">Được phép hút thuốc</string>
+    <string name="policy_pets_allowed">Cho phép thú cưng</string>
+    <string name="policy_no_pets">Không cho phép thú cưng</string>
+    <string name="check_available_rooms">Kiểm tra phòng trống</string>
+    <string name="room_information">Thông tin phòng</string>
+    <string name="total_rooms">Tổng số phòng: %1$d</string>
+    <string name="capacity_guests">%1$d khách</string>
+    <string name="room_size">%1$d m²</string>
 
 </resources>

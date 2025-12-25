@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +29,6 @@ import java.time.format.DateTimeFormatter
 fun RoomInfoItem(
     icon: ImageVector,
     text: String,
-    jostFont: FontFamily,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -49,7 +47,6 @@ fun RoomInfoItem(
         Text(
             text = text,
             fontSize = 14.sp,
-            fontFamily = jostFont,
             color = Color.Black.copy(alpha = 0.6f)
         )
     }
@@ -59,7 +56,6 @@ fun RoomInfoItem(
 fun AmenityItem(
     iconUrl: String,
     text: String,
-    jostFont: FontFamily,
     context: Context
 ) {
     Row(
@@ -83,7 +79,6 @@ fun AmenityItem(
         Text(
             text = text,
             fontSize = 14.sp,
-            fontFamily = jostFont,
             color = Color.Black
         )
     }
@@ -94,7 +89,6 @@ fun PolicyItem(
     icon: ImageVector,
     text: String,
     color: Color,
-    jostFont: FontFamily
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -110,7 +104,6 @@ fun PolicyItem(
         Text(
             text = text,
             fontSize = 14.sp,
-            fontFamily = jostFont,
             color = color,
             fontWeight = FontWeight.Medium
         )

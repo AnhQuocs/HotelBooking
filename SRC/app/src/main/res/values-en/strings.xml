@@ -72,5 +72,18 @@
     <string name="read_more">Read more</string>
     <string name="show_less">Show less</string>
     <string name="reviews">Reviews</string>
+    <string name="preview">Preview</string>
+
+    <!-- ROOM -->
+    <string name="amenities">Amenities</string>
+    <string name="policy_no_smoking">No Smoking</string>
+    <string name="policy_smoking_allowed">Smoking Allowed</string>
+    <string name="policy_pets_allowed">Pets Allowed</string>
+    <string name="policy_no_pets">No Pets Allowed</string>
+    <string name="check_available_rooms">Check available rooms</string>
+    <string name="room_information">Room Information</string>
+    <string name="total_rooms">Total rooms: %1$d</string>
+    <string name="capacity_guests">%1$d Guests</string>
+    <string name="room_size">%1$d m²</string>
 
 </resources>

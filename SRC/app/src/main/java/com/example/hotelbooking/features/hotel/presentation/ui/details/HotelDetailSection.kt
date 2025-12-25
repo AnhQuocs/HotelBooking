@@ -17,6 +17,7 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
@@ -26,16 +27,16 @@ fun HotelDetailSection(
     onRoomClick: (String) -> Unit,
     onChatClick: (String, String, String) -> Unit,
     hotelViewModel: HotelViewModel = hiltViewModel(),
-//    roomViewModel: RoomViewModel = hiltViewModel(),
+    roomViewModel: RoomViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel()
 ) {
     val hotelDetailState by hotelViewModel.hotelDetailState.collectAsState()
-//    val roomState by roomViewModel.roomsState.collectAsState()
+    val roomState by roomViewModel.roomsState.collectAsState()
     val reviewState by reviewViewModel.reviewState.collectAsState()
 
     LaunchedEffect(Unit) {
         hotelViewModel.loadHotelById(hotelId)
-//        roomViewModel.loadRooms(hotelId)
+        roomViewModel.loadRooms(hotelId)
         reviewViewModel.loadReviewsByServiceId(hotelId)
     }
 
@@ -55,7 +56,7 @@ fun HotelDetailSection(
             val hotel = (hotelDetailState as HotelState.Success<*>).data
             HotelDetailScreen(
                 hotel as Hotel,
-//                roomState,
+                roomState,
                 reviewState,
                 onBackClick,
                 onRoomClick,

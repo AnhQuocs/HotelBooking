@@ -1,9 +1,7 @@
 package com.example.hotelbooking.features.room.presentation.ui.detail
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -15,21 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.tomn_test.R
-import com.example.tomn_test.features.booking.presentation.ui.BookingScreen
-import com.example.tomn_test.features.booking.presentation.ui.CheckoutScreen
-import com.example.tomn_test.features.booking.presentation.ui.PaymentCompleteScreen
-import com.example.tomn_test.features.main.MainActivity
+import com.example.hotelbooking.BaseComponentActivity
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import kotlin.jvm.java
 
 @AndroidEntryPoint
-class RoomDetailActivity : ComponentActivity() {
+class RoomDetailActivity : BaseComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_room_detail)
 
         val roomId = intent.getStringExtra("roomId") ?: ""
 
@@ -91,17 +82,17 @@ class RoomDetailActivity : ComponentActivity() {
                     val price = backStackEntry.arguments?.getString("price") ?: ""
                     val capacity = backStackEntry.arguments?.getInt("capacity") ?: 0
 
-                    BookingScreen(
-                        navController = navController,
-                        roomId = roomId,
-                        startDate = LocalDate.parse(startStr),
-                        endDate = LocalDate.parse(endStr),
-                        hotelId = hotelId,
-                        availableStock = stock,
-                        roomName = roomName,
-                        price = price,
-                        capacity = capacity
-                    )
+//                    BookingScreen(
+//                        navController = navController,
+//                        roomId = roomId,
+//                        startDate = LocalDate.parse(startStr),
+//                        endDate = LocalDate.parse(endStr),
+//                        hotelId = hotelId,
+//                        availableStock = stock,
+//                        roomName = roomName,
+//                        price = price,
+//                        capacity = capacity
+//                    )
                 }
 
                 composable(
@@ -126,31 +117,31 @@ class RoomDetailActivity : ComponentActivity() {
                     val phone = backStackEntry.arguments?.getString("phone") ?: ""
                     val totalPrice = backStackEntry.arguments?.getString("totalPrice") ?: ""
 
-                    CheckoutScreen(
-                        date = date,
-                        hotelId = hotelId,
-                        bookingId = bookingId,
-                        roomName = roomName,
-                        guestName = guestName,
-                        numberOfGuest = numberOfGuest,
-                        phone = phone,
-                        totalPrice = totalPrice,
-                        navController = navController
-                    )
+//                    CheckoutScreen(
+//                        date = date,
+//                        hotelId = hotelId,
+//                        bookingId = bookingId,
+//                        roomName = roomName,
+//                        guestName = guestName,
+//                        numberOfGuest = numberOfGuest,
+//                        phone = phone,
+//                        totalPrice = totalPrice,
+//                        navController = navController
+//                    )
                 }
 
                 composable("payment_complete") {
-                    PaymentCompleteScreen(
-                        onBackClick = {
-                            finish()
-                        },
-                        onHomeClick = {
-                            val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                    )
+//                    PaymentCompleteScreen(
+//                        onBackClick = {
+//                            finish()
+//                        },
+//                        onHomeClick = {
+//                            val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
+//                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+//                            startActivity(intent)
+//                            finish()
+//                        }
+//                    )
                 }
             }
         }

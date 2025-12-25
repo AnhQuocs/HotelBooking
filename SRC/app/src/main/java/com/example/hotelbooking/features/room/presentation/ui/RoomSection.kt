@@ -19,12 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.hotelbooking.components.AppTitle
+import com.example.hotelbooking.R
+import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun RoomSection(
@@ -36,10 +42,10 @@ fun RoomSection(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp),
+                    .height(Dimen.HeightML),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = PrimaryBlue)
             }
         }
 
@@ -47,12 +53,8 @@ fun RoomSection(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                AppTitle(
-                    text1 = "Preview",
-                    text2 = "",
-                    onClick = {}
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                InfoTitle(text = stringResource(id = R.string.preview))
+                Spacer(modifier = Modifier.height(AppSpacing.S))
                 RoomList(state.data, onRoomClick)
             }
         }
@@ -70,7 +72,7 @@ fun RoomList(
 
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.S)
     ) {
         items(list, key = { it.id }) { room ->
             AsyncImage(
@@ -85,7 +87,7 @@ fun RoomList(
                 modifier = Modifier
                     .height(75.dp)
                     .width(120.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(AppShape.ShapeS + 2.dp))
                     .clickable { onRoomClick(room.id) }
             )
         }
