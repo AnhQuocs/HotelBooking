@@ -17,7 +17,7 @@ sealed class UpdateRatingState {
 }
 
 @HiltViewModel
-class ReviewViewModel @Inject constructor(
+class UpdateRatingViewModel @Inject constructor(
     private val updateHotelRatingUseCase: UpdateHotelRatingUseCase
 ) : ViewModel() {
 

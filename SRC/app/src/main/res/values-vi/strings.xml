@@ -50,5 +50,26 @@
     <!-- HOTEL -->
     <string name="night">đêm</string>
     <string name="home_topbar_title">Lên kế hoạch cho chuyến đi tiếp theo</string>
+    <string name="recommended">Gợi ý cho bạn</string>
+    <string name="see_all">Xem tất cả</string>
+
+    <string name="detail">Chi tiết</string>
+    <string name="amenity_free_wifi">Wi-Fi miễn phí</string>
+    <string name="amenity_swimming_pool">Hồ bơi</string>
+    <string name="amenity_restaurant_bar">Nhà hàng và quầy bar</string>
+    <string name="amenity_room_service">Dịch vụ phòng</string>
+    <string name="amenity_free_parking">Bãi đậu xe miễn phí</string>
+    <string name="amenity_gym_spa">Phòng gym và spa</string>
+    <string name="amenity_breakfast_included">Bữa sáng miễn phí</string>
+    <string name="amenity_ski_storage">Kho trượt tuyết</string>
+    <string name="amenity_hot_tub">Bồn tắm nước nóng</string>
+    <string name="amenity_restaurant">Nhà hàng</string>
+    <string name="amenity_outdoor_patio">Sân vườn ngoài trời</string>
+    <string name="amenity_spa_wellness">Spa &amp; chăm sóc sức khỏe</string>
+
+    <string name="facilities">Tiện ích chung</string>
+    <string name="description">Mô tả</string>
+    <string name="read_more">Xem thêm</string>
+    <string name="show_less">Thu gọn</string>
 
 </resources>

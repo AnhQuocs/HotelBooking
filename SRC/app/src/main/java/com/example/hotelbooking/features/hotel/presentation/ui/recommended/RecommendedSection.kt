@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTitle
 import com.example.hotelbooking.components.AppTitleShimmer
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
@@ -50,8 +50,8 @@ fun RecommendedSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AppTitle(
-                    text1 = "Recommended for you",
-                    text2 = "See All",
+                    text1 = stringResource(id = R.string.recommended),
+                    text2 = stringResource(id = R.string.see_all),
                     onClick = {},
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                 )

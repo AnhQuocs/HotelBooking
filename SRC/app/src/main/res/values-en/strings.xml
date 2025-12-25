@@ -50,5 +50,26 @@
     <!-- HOTEL -->
     <string name="night">night</string>
     <string name="home_topbar_title">Planning your next trip</string>
+    <string name="recommended">Recommended for you</string>
+    <string name="see_all">See all</string>
+
+    <string name="detail">Detail</string>
+    <string name="amenity_free_wifi">Free Wi-Fi</string>
+    <string name="amenity_swimming_pool">Swimming Pool</string>
+    <string name="amenity_restaurant_bar">Restaurant and Bar</string>
+    <string name="amenity_room_service">Room Service</string>
+    <string name="amenity_free_parking">Free Parking</string>
+    <string name="amenity_gym_spa">Gym and Spa</string>
+    <string name="amenity_breakfast_included">Breakfast Included</string>
+    <string name="amenity_ski_storage">Ski Storage</string>
+    <string name="amenity_hot_tub">Hot Tub</string>
+    <string name="amenity_restaurant">Restaurant</string>
+    <string name="amenity_outdoor_patio">Outdoor Patio</string>
+    <string name="amenity_spa_wellness">Spa and Wellness Center</string>
+
+    <string name="facilities">Common Facilities</string>
+    <string name="description">Description</string>
+    <string name="read_more">Read more</string>
+    <string name="show_less">Show less</string>
 
 </resources>

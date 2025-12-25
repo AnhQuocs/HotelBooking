@@ -15,9 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
+        <activity
+            android:name=".features.hotel.presentation.ui.details.HotelDetailActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_API_KEY}" />
+
         <activity
             android:name=".features.main.MainActivity"
             android:exported="true"
