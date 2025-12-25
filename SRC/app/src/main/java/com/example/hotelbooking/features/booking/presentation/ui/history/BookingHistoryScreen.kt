@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.booking
+package com.example.hotelbooking.features.booking.presentation.ui.history
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,11 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun BookingScreen() {
+fun BookingHistoryScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text("Booking Screen", fontSize = 20.sp, color = Color.Black)
+        Text("Booking History Screen", fontSize = 20.sp, color = Color.Black)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.room.presentation.ui.detail
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,22 +17,32 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.components.ReadMoreText
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
+import com.example.hotelbooking.features.room.presentation.ui.BottomBookingBar
+import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilitySection
+import com.example.hotelbooking.features.room.presentation.ui.DateSelectionSection
+import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
+import java.time.Instant
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,32 +51,32 @@ fun RoomDetailScreen(
     context: Context,
     onBackClick: () -> Unit,
     navController: NavController,
-//    bookingViewModel: BookingViewModel = hiltViewModel()
+    bookingViewModel: BookingViewModel = hiltViewModel()
 ) {
-//    val uiState by bookingViewModel.uiState.collectAsState()
+    val uiState by bookingViewModel.uiState.collectAsState()
 
-//    val start = bookingViewModel.checkInDate
-//    val end = bookingViewModel.checkOutDate
+    val start = bookingViewModel.checkInDate
+    val end = bookingViewModel.checkOutDate
 
     Scaffold(
         bottomBar = {
-//            BottomBookingBar(
-//                pricePerNight = room.pricePerNight,
-//                totalPrice = bookingViewModel.calculateTotalPrice(room.pricePerNight),
-//                uiState = uiState,
-//                onBookNowClick = {
-//                    val startStr = bookingViewModel.checkInDate.toString()
-//                    val endStr = bookingViewModel.checkOutDate.toString()
-//                    val stock = bookingViewModel.currentAvailableRooms
-//                    val price = room.pricePerNight.toString()
-//                    val encodedName = Uri.encode(room.name)
-//                    val capacity = room.capacity
-//
-//                    navController.navigate(
-//                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&stock=$stock&roomName=$encodedName&price=$price&capacity=$capacity"
-//                    )
-//                }
-//            )
+            BottomBookingBar(
+                pricePerNight = room.pricePerNight,
+                totalPrice = bookingViewModel.calculateTotalPrice(room.pricePerNight),
+                uiState = uiState,
+                onBookNowClick = {
+                    val startStr = bookingViewModel.checkInDate.toString()
+                    val endStr = bookingViewModel.checkOutDate.toString()
+                    val stock = bookingViewModel.currentAvailableRooms
+                    val price = room.pricePerNight.toString()
+                    val encodedName = Uri.encode(room.name)
+                    val capacity = room.capacity
+
+                    navController.navigate(
+                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&stock=$stock&roomName=$encodedName&price=$price&capacity=$capacity"
+                    )
+                }
+            )
         },
         containerColor = Color.White,
         contentWindowInsets = WindowInsets(0,0,0,0)
@@ -180,37 +191,37 @@ fun RoomDetailScreen(
 
                         Spacer(modifier = Modifier.height(AppSpacing.S))
 
-//                        DateSelectionSection(
-//                            checkInMillis = bookingViewModel.checkInDate.toMillis(),
-//                            checkOutMillis = bookingViewModel.checkOutDate.toMillis(),
-//                            onDateConfirm = { newStartMillis, newEndMillis ->
-//                                val newStart = Instant.ofEpochMilli(newStartMillis)
-//                                    .atZone(ZoneId.systemDefault()).toLocalDate()
-//                                val newEnd = Instant.ofEpochMilli(newEndMillis)
-//                                    .atZone(ZoneId.systemDefault()).toLocalDate()
-//
-//                                bookingViewModel.onDateSelected(
-//                                    newStart.toMillis(),
-//                                    newEnd.toMillis()
-//                                )
-//                            }
-//                        )
+                        DateSelectionSection(
+                            checkInMillis = bookingViewModel.checkInDate.toMillis(),
+                            checkOutMillis = bookingViewModel.checkOutDate.toMillis(),
+                            onDateConfirm = { newStartMillis, newEndMillis ->
+                                val newStart = Instant.ofEpochMilli(newStartMillis)
+                                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                                val newEnd = Instant.ofEpochMilli(newEndMillis)
+                                    .atZone(ZoneId.systemDefault()).toLocalDate()
+
+                                bookingViewModel.onDateSelected(
+                                    newStart.toMillis(),
+                                    newEnd.toMillis()
+                                )
+                            }
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
-//                    CheckAvailabilitySection(
-//                        uiState = uiState,
-//                        startDate = start,
-//                        endDate = end,
-//                        onCheckClick = {
-//                            bookingViewModel.checkRoomAvailability(
-//                                room.hotelId,
-//                                room.id,
-//                                room.totalStock
-//                            )
-//                        }
-//                    )
+                    CheckAvailabilitySection(
+                        uiState = uiState,
+                        startDate = start,
+                        endDate = end,
+                        onCheckClick = {
+                            bookingViewModel.checkRoomAvailability(
+                                room.hotelId,
+                                room.id,
+                                room.totalStock
+                            )
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(AppSpacing.L))
                 }

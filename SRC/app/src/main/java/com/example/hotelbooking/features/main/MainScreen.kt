@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.components.UserBottomAppBar
-import com.example.hotelbooking.features.booking.BookingScreen
+import com.example.hotelbooking.features.booking.presentation.ui.history.BookingHistoryScreen
 import com.example.hotelbooking.features.chat.MessageScreen
 import com.example.hotelbooking.features.home.HomeScreen
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
@@ -116,7 +116,7 @@ fun MainScreen(
 //                    list = unreadCount
                 )
 
-                1 -> BookingScreen()
+                1 -> BookingHistoryScreen()
 
                 2 -> MessageScreen()
 

@@ -14,7 +14,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.hotelbooking.BaseComponentActivity
+import com.example.hotelbooking.features.booking.presentation.ui.book.BookingScreen
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutScreen
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class RoomDetailActivity : BaseComponentActivity() {
@@ -82,17 +85,17 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val price = backStackEntry.arguments?.getString("price") ?: ""
                     val capacity = backStackEntry.arguments?.getInt("capacity") ?: 0
 
-//                    BookingScreen(
-//                        navController = navController,
-//                        roomId = roomId,
-//                        startDate = LocalDate.parse(startStr),
-//                        endDate = LocalDate.parse(endStr),
-//                        hotelId = hotelId,
-//                        availableStock = stock,
-//                        roomName = roomName,
-//                        price = price,
-//                        capacity = capacity
-//                    )
+                    BookingScreen(
+                        navController = navController,
+                        roomId = roomId,
+                        startDate = LocalDate.parse(startStr),
+                        endDate = LocalDate.parse(endStr),
+                        hotelId = hotelId,
+                        availableStock = stock,
+                        roomName = roomName,
+                        price = price,
+                        capacity = capacity
+                    )
                 }
 
                 composable(
@@ -117,17 +120,17 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val phone = backStackEntry.arguments?.getString("phone") ?: ""
                     val totalPrice = backStackEntry.arguments?.getString("totalPrice") ?: ""
 
-//                    CheckoutScreen(
-//                        date = date,
-//                        hotelId = hotelId,
-//                        bookingId = bookingId,
-//                        roomName = roomName,
-//                        guestName = guestName,
-//                        numberOfGuest = numberOfGuest,
-//                        phone = phone,
-//                        totalPrice = totalPrice,
-//                        navController = navController
-//                    )
+                    CheckoutScreen(
+                        date = date,
+                        hotelId = hotelId,
+                        bookingId = bookingId,
+                        roomName = roomName,
+                        guestName = guestName,
+                        numberOfGuest = numberOfGuest,
+                        phone = phone,
+                        totalPrice = totalPrice,
+                        navController = navController
+                    )
                 }
 
                 composable("payment_complete") {

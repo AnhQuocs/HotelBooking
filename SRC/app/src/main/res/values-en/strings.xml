@@ -85,5 +85,47 @@
     <string name="total_rooms">Total rooms: %1$d</string>
     <string name="capacity_guests">%1$d Guests</string>
     <string name="room_size">%1$d m²</string>
+    <string name="total_price">Total price</string>
+
+    <!-- BOOKING -->
+    <string name="book_now">Book Now</string>
+    <string name="sold_out">Sold Out</string>
+    <string name="checking">Checking...</string>
+    <string name="check">Check</string>
+    <string name="rooms_available">Rooms available! See total price below.</string>
+    <string name="complete_your_booking">Complete your booking</string>
+    <string name="pay_now">PAY $%1$d NOW</string>
+    <string name="booking_summary">Booking Summary</string>
+    <string name="check_in">Check-in</string>
+    <string name="check_out">Check-out</string>
+    <string name="nights">nights</string>
+    <string name="guest_information">Guest Information</string>
+    <string name="full_name">Full Name</string>
+    <string name="name_required">Name is required</string>
+    <string name="phone">Phone</string>
+    <string name="age">Age</string>
+    <string name="email_required">Email is required</string>
+    <string name="phone_required">Phone number is required</string>
+    <string name="guests">Guests</string>
+    <string name="decrease_guests">Decrease guests</string>
+    <string name="increase_guests">Increase guests</string>
+
+    <!-- CHECKOUT -->
+    <string name="checkout">Checkout</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="payment_countdown">Please complete your payment within %1$s</string>
+    <string name="payment_time_expired">Payment time expired!</string>
+    <string name="error_loading_hotel_data">Error loading hotel data</string>
+    <string name="your_booking">Your Booking</string>
+    <string name="dates">Dates</string>
+    <string name="guest">Guest</string>
+    <string name="room">Room</string>
+    <string name="room_type">Room type</string>
+    <string name="name">Name</string>
+    <string name="price_details">Price Details</string>
+    <string name="price">Price</string>
+    <string name="discount">Discount</string>
+    <string name="guest_room_format">%1$d %2$s (1 Room)</string>
 
 </resources>

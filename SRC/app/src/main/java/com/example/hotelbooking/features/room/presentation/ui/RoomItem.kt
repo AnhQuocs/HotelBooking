@@ -1,13 +1,22 @@
 package com.example.hotelbooking.features.room.presentation.ui
 
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,11 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.hotelbooking.R
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AvailableGreen
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -109,70 +124,73 @@ fun PolicyItem(
         )
     }
 }
-//
-//@Composable
-//fun BottomBookingBar(
-//    pricePerNight: Int,
-//    totalPrice: Long,
-//    uiState: BookingUiState,
-//    onBookNowClick: () -> Unit
-//) {
-//    Surface(
-//        shadowElevation = 16.dp,
-//        color = Color.White
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp)
-//                .navigationBarsPadding(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Column {
-//                if (uiState is BookingUiState.Available) {
-//                    Text(
-//                        text = "$$totalPrice",
-//                        style = MaterialTheme.typography.headlineSmall,
-//                        fontWeight = FontWeight.Bold,
-//                        color = Color(0xFF4CAF50)
-//                    )
-//                    Text(
-//                        text = "Total price",
-//                        style = MaterialTheme.typography.bodySmall,
-//                        color = Color.Gray
-//                    )
-//                } else {
-//                    Text(
-//                        text = "$$pricePerNight",
-//                        style = MaterialTheme.typography.headlineSmall,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                    Text(
-//                        text = "/ night",
-//                        style = MaterialTheme.typography.bodySmall,
-//                        color = Color.Gray
-//                    )
-//                }
-//            }
-//
-//            Button(
-//                onClick = onBookNowClick,
-//                shape = RoundedCornerShape(8.dp),
-//                enabled = uiState is BookingUiState.Available,
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = if (uiState is BookingUiState.Available) Color(0xFF0A3A7A) else Color.Gray
-//                )
-//            ) {
-//                Text(
-//                    text = if (uiState is BookingUiState.SoldOut) "Sold Out" else "Book Now",
-//                    color = Color.White,
-//                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-//                )
-//            }
-//        }
-//    }
-//}
+
+@Composable
+fun BottomBookingBar(
+    pricePerNight: Int,
+    totalPrice: Long,
+    uiState: BookingUiState,
+    onBookNowClick: () -> Unit
+) {
+    Surface(
+        shadowElevation = 16.dp,
+        color = Color.White
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimen.PaddingM)
+                .navigationBarsPadding(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                if (uiState is BookingUiState.Available) {
+                    Text(
+                        text = "$$totalPrice",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = AvailableGreen
+                    )
+                    Text(
+                        text = stringResource(R.string.total_price),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                } else {
+                    Text(
+                        text = "$$pricePerNight",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "/ " + stringResource(id = R.string.night),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
+            }
+
+            Button(
+                onClick = onBookNowClick,
+                shape = RoundedCornerShape(AppShape.ShapeS),
+                enabled = uiState is BookingUiState.Available,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (uiState is BookingUiState.Available) Color(0xFF0A3A7A) else Color.Gray
+                )
+            ) {
+                Text(
+                    text = if (uiState is BookingUiState.SoldOut)
+                        stringResource(R.string.sold_out)
+                    else
+                        stringResource(R.string.book_now),
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = Dimen.PaddingM, vertical = Dimen.PaddingXS)
+                )
+            }
+        }
+    }
+}
 
 fun LocalDate.toMillis(): Long {
     return this.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
