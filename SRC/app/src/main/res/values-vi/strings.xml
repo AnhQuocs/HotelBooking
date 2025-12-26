@@ -127,5 +127,14 @@
     <string name="price">Giá</string>
     <string name="discount">Giảm giá</string>
     <string name="guest_room_format">%1$d %2$s (1 Phòng)</string>
+    <string name="promo">Khuyến mãi</string>
+    <string name="select_promo">Chọn</string>
+    <string name="payment_method">Phương thức thanh toán</string>
+    <string name="master_card">Thẻ MasterCard</string>
+    <string name="visa">Thẻ Visa</string>
+    <string name="add_debit_card">Thêm thẻ ghi nợ</string>
+    <string name="confirm_and_pay">Xác nhận &amp; Thanh toán</string>
+    <string name="payment_complete">Thanh toán thành công</string>
+    <string name="thank_you_for_using_service">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</string>
 
 </resources>

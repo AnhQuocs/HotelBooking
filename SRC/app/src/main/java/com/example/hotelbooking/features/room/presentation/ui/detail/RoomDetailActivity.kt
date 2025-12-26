@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.room.presentation.ui.detail
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -16,6 +17,8 @@ import androidx.navigation.navArgument
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.features.booking.presentation.ui.book.BookingScreen
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutScreen
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentCompleteScreen
+import com.example.hotelbooking.features.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -134,17 +137,17 @@ class RoomDetailActivity : BaseComponentActivity() {
                 }
 
                 composable("payment_complete") {
-//                    PaymentCompleteScreen(
-//                        onBackClick = {
-//                            finish()
-//                        },
-//                        onHomeClick = {
-//                            val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
-//                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-//                            startActivity(intent)
-//                            finish()
-//                        }
-//                    )
+                    PaymentCompleteScreen(
+                        onBackClick = {
+                            finish()
+                        },
+                        onHomeClick = {
+                            val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                    )
                 }
             }
         }
