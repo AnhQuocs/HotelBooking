@@ -86,17 +86,10 @@
     <string name="capacity_guests">%1$d khách</string>
     <string name="room_size">%1$d m²</string>
     <string name="total_price">Tổng tiền</string>
-    <string name="book_now">Đặt ngay</string>
     <string name="sold_out">Hết phòng</string>
-    <string name="checking">Đang kiểm tra...</string>
-    <string name="check">Kiểm tra</string>
-    <string name="rooms_available">Còn phòng! Xem tổng giá bên dưới.</string>
-    <string name="complete_your_booking">Hoàn tất đặt phòng</string>
-    <string name="pay_now">THANH TOÁN %1$d$ NGAY</string>
 
     <!-- BOOKING -->
     <string name="book_now">Đặt ngay</string>
-    <string name="sold_out">Hết phòng</string>
     <string name="checking">Đang kiểm tra...</string>
     <string name="check">Kiểm tra</string>
     <string name="rooms_available">Còn phòng! Xem tổng giá bên dưới.</string>
