@@ -32,12 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -137,6 +135,7 @@ fun BookingSummaryCard(
 
 @Composable
 fun AppOutlinedTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -144,23 +143,23 @@ fun AppOutlinedTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     isError: Boolean = false,
     errorText: String? = null,
-    modifier: Modifier = Modifier,
     singleLine: Boolean = true,
 ) {
-    val outlinedTextFieldColor = OutlinedTextFieldDefaults.colors(
+    val colors = OutlinedTextFieldDefaults.colors(
         focusedBorderColor = Color.Black,
+        unfocusedBorderColor = Color.Gray,
         errorBorderColor = Color.Red,
+        focusedTextColor = Color.Black,
+        unfocusedTextColor = Color.Black,
         cursorColor = Color.Black
     )
-    val outlinedTextFieldTextStyle = TextStyle(color = Color.Black, fontSize = 16.sp)
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label, color = Color.Gray) },
         shape = RoundedCornerShape(12.dp),
-        colors = outlinedTextFieldColor,
-        textStyle = outlinedTextFieldTextStyle,
+        colors = colors,
         modifier = modifier,
         singleLine = singleLine,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),

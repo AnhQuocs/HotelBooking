@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 
 data class BookingDto(
     val bookingId: String = "",
-    val guestId: String = "",
+    val userId: String = "",
     val hotelId: String = "",
     val roomTypeId: String = "",
     val startDate: Timestamp = Timestamp.now(),

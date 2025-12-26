@@ -90,11 +90,11 @@
 
     <!-- BOOKING -->
     <string name="book_now">Đặt ngay</string>
-    <string name="checking">Đang kiểm tra...</string>
+    <string name="checking">Đang kiểm tra…</string>
     <string name="check">Kiểm tra</string>
     <string name="rooms_available">Còn phòng! Xem tổng giá bên dưới.</string>
     <string name="complete_your_booking">Hoàn tất đặt phòng</string>
-    <string name="pay_now">THANH TOÁN %1$d$ NGAY</string>
+    <string name="pay_now">THANH TOÁN $%1$.2f NGAY</string>
     <string name="booking_summary">Thông tin đặt phòng</string>
     <string name="check_in">Nhận phòng</string>
     <string name="check_out">Trả phòng</string>

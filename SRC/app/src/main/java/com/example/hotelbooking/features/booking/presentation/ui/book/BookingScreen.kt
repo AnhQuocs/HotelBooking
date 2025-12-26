@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.booking.presentation.ui.book
 
 import android.net.Uri
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -136,6 +137,8 @@ fun BookingScreen(
                             age = ageStr.toIntOrNull() ?: 18
                         )
                         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+                        Log.d("BookingScreen", "User ID: $userId")
 
                         bookingViewModel.submitBooking(
                             hotelId = hotelId,

@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.data.repository
 
+import android.util.Log
 import com.example.hotelbooking.features.booking.data.dto.BookingDto
 import com.example.hotelbooking.features.booking.data.mapper.toDomain
 import com.example.hotelbooking.features.booking.data.mapper.toDto
@@ -69,6 +70,8 @@ class BookingRepositoryImpl(
 
         val docRef = bookingsCollection.document()
         val finalBooking = booking.copy(bookingId = docRef.id)
+
+        Log.d("BOOKING_DTO", finalBooking.toDto().toString())
 
         docRef.set(finalBooking.toDto()).await()
 
