@@ -8,7 +8,7 @@ import com.example.hotelbooking.features.booking.domain.model.Guest
 
 fun Booking.toDto() = BookingDto(
     bookingId = bookingId,
-    userId = guestId,
+    userId = userId,
     hotelId = hotelId,
     roomTypeId = roomTypeId,
     startDate = startDate,
@@ -17,14 +17,15 @@ fun Booking.toDto() = BookingDto(
     numberOfGuests = numberOfGuests,
     totalPrice = totalPrice,
     status = status.name,
-    createdAt = createdAt
+    createdAt = createdAt,
+    expireAt = expireAt
 )
 
 fun Guest.toDto() = GuestDto(name, phone, email, age)
 
 fun BookingDto.toDomain() = Booking(
     bookingId = bookingId,
-    guestId = userId,
+    userId = userId,
     hotelId = hotelId,
     roomTypeId = roomTypeId,
     startDate = startDate,
@@ -33,7 +34,8 @@ fun BookingDto.toDomain() = Booking(
     numberOfGuests = numberOfGuests,
     totalPrice = totalPrice,
     status = BookingStatus.valueOf(status),
-    createdAt = createdAt
+    createdAt = createdAt,
+    expireAt = expireAt
 )
 
 fun GuestDto.toDomain() = Guest(name, phone, email, age)

@@ -43,12 +43,27 @@ class BookingRepositoryImpl(
         val requestedNights = startDate.datesUntil(endDate).toList()
         val bookedPerNight = requestedNights.associateWith { 0 }.toMutableMap()
 
+        val now = Timestamp.now()
+
         bookings.forEach { booking ->
+
+            if (booking.status == BookingStatus.PENDING &&
+                booking.expireAt != null &&
+                now.seconds > booking.expireAt.seconds
+            ) {
+                bookingsCollection.document(booking.bookingId)
+                    .update("status", "CANCELLED")
+                    .addOnFailureListener { e ->
+                        Log.e("LazyCheck", "Failed to cleanup booking ${booking.bookingId}")
+                    }
+
+                return@forEach
+            }
+
             val bStart = booking.startDate.toLocalDate()
             val bEnd = booking.endDate.toLocalDate()
 
             if (bStart.isBefore(endDate) && bEnd.isAfter(startDate)) {
-
                 for (night in requestedNights) {
                     if (!night.isBefore(bStart) && night.isBefore(bEnd)) {
                         bookedPerNight[night] = bookedPerNight[night]!! + 1
@@ -64,14 +79,20 @@ class BookingRepositoryImpl(
 
     override suspend fun createBooking(
         booking: Booking,
-        availableRooms: Int
+        availableRooms: Int,
+        expireAt: Timestamp
     ): Booking {
-        if (availableRooms < 1) throw Exception("Room sold out just now!")
+        if (availableRooms < 1) {
+            throw Exception("Room sold out just now!")
+        }
 
         val docRef = bookingsCollection.document()
-        val finalBooking = booking.copy(bookingId = docRef.id)
 
-        Log.d("BOOKING_DTO", finalBooking.toDto().toString())
+        val finalBooking = booking.copy(
+            bookingId = docRef.id,
+            status = BookingStatus.PENDING,
+            expireAt = expireAt
+        )
 
         docRef.set(finalBooking.toDto()).await()
 
@@ -173,6 +194,41 @@ class BookingRepositoryImpl(
 
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    override suspend fun checkAndCancelExpiredBookings(userId: String): Result<Int> {
+        return try {
+            val now = Timestamp.now()
+
+            val snapshot = firestore.collection("bookings")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("status", "PENDING")
+                .get()
+                .await()
+
+            if (snapshot.isEmpty) return Result.success(0)
+
+            val batch = firestore.batch()
+            var cancelCount = 0
+
+            for (document in snapshot.documents) {
+                val expireAt = document.getTimestamp("expireAt")
+
+                if (expireAt != null && now.seconds > expireAt.seconds) {
+                    batch.update(document.reference, "status", BookingStatus.CANCELLED)
+                    cancelCount++
+                }
+            }
+
+            if (cancelCount > 0) {
+                batch.commit().await()
+            }
+
+            Result.success(cancelCount)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
         }
     }
 

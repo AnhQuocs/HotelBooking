@@ -73,12 +73,15 @@ fun CheckoutScreen(
     numberOfGuest: Int,
     phone: String,
     totalPrice: String,
+    timeoutSecond: Int,
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
     bookingViewModel: BookingViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by hotelViewModel.hotelDetailState.collectAsState()
+    val isTimeout by bookingViewModel.isTimeout.collectAsState()
+
     val bookingState by bookingViewModel.uiState.collectAsState()
 
     var isShowBottomSheet by remember { mutableStateOf(false) }
@@ -88,7 +91,7 @@ fun CheckoutScreen(
     }
 
     LaunchedEffect(bookingState) {
-        if (bookingState is BookingUiState.BookingSuccess) {
+        if (bookingState is BookingUiState.BookingSuccess && !isTimeout) {
             navController.navigate("payment_complete") {
                 popUpTo("checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}") {
                     inclusive = true
@@ -155,14 +158,18 @@ fun CheckoutScreen(
                     .padding(horizontal = Dimen.PaddingM)
             ) {
                 CountdownTimer(
+                    totalTime = timeoutSecond,
                     onTimeout = {
+                        bookingViewModel.onTimeout()
                         bookingViewModel.updateStatus(bookingId, BookingStatus.CANCELLED)
                         Toast.makeText(
                             context,
                             context.getString(R.string.payment_time_expired),
                             Toast.LENGTH_LONG
                         ).show()
-                        navController.popBackStack()
+                        navController.navigate("roomDetail") {
+                            popUpTo("0") { inclusive = true }
+                        }
                     }
                 )
 

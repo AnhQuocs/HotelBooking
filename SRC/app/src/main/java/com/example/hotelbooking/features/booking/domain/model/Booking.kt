@@ -8,7 +8,7 @@ enum class BookingStatus {
 
 data class Booking(
     val bookingId: String,
-    val guestId: String,
+    val userId: String,
     val hotelId: String,
     val roomTypeId: String,
     val startDate: Timestamp,
@@ -17,7 +17,8 @@ data class Booking(
     val numberOfGuests: Int,
     val totalPrice: Double,
     val status: BookingStatus,
-    val createdAt: Timestamp = Timestamp.now()
+    val createdAt: Timestamp = Timestamp.now(),
+    val expireAt: Timestamp? = null
 )
 
 data class Guest(

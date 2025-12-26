@@ -102,7 +102,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                 }
 
                 composable(
-                    route = "checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}",
+                    route = "checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}&timeoutSecond={timeoutSecond}",
                     arguments = listOf(
                         navArgument("date") { type = NavType.StringType },
                         navArgument("hotelId") { type = NavType.StringType },
@@ -112,6 +112,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                         navArgument("numberOfGuest") { type = NavType.IntType },
                         navArgument("phone") { type = NavType.StringType },
                         navArgument("totalPrice") { type = NavType.StringType },
+                        navArgument("timeoutSecond") { type = NavType.IntType },
                     )
                 ) { backStackEntry ->
                     val date = Uri.decode(backStackEntry.arguments?.getString("date") ?: "")
@@ -122,6 +123,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val numberOfGuest = backStackEntry.arguments?.getInt("numberOfGuest") ?: 1
                     val phone = backStackEntry.arguments?.getString("phone") ?: ""
                     val totalPrice = backStackEntry.arguments?.getString("totalPrice") ?: ""
+                    val timeoutSecond = backStackEntry.arguments?.getInt("timeoutSecond") ?: 600
 
                     CheckoutScreen(
                         date = date,
@@ -132,7 +134,8 @@ class RoomDetailActivity : BaseComponentActivity() {
                         numberOfGuest = numberOfGuest,
                         phone = phone,
                         totalPrice = totalPrice,
-                        navController = navController
+                        navController = navController,
+                        timeoutSecond = timeoutSecond
                     )
                 }
 

@@ -6,6 +6,7 @@ import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.booking.domain.usecase.create.CreateBookingUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.delete.CancelBookingUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.CheckAvailabilityUseCase
+import com.example.hotelbooking.features.booking.domain.usecase.read.CheckExpiredBookingsUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingByIdUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsByUserUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsUseCase
@@ -43,7 +44,8 @@ object BookingModule {
             getBookingsByUserUseCase = GetBookingsByUserUseCase(repository),
             getBookingByIdUseCase = GetBookingByIdUseCase(repository),
             getBookingsUseCase = GetBookingsUseCase(repository),
-            expirePendingBookingsUseCase = ExpirePendingBookingsUseCase(repository)
+            expirePendingBookingsUseCase = ExpirePendingBookingsUseCase(repository),
+            checkExpirePendingBookingsUseCase = CheckExpiredBookingsUseCase(repository)
         )
     }
 }

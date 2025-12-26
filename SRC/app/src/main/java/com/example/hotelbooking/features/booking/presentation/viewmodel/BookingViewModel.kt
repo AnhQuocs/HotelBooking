@@ -1,19 +1,26 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
+import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
+import com.example.hotelbooking.features.main.viewmodel.UiText
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -35,6 +42,13 @@ class BookingViewModel @Inject constructor (
 //    private val notificationUseCases: NotificationUseCases,
 //    private val notificationHelper: NotificationHelper
 ) : ViewModel() {
+
+    private val _isTimeout = MutableStateFlow(false)
+    val isTimeout = _isTimeout.asStateFlow()
+
+    fun onTimeout() {
+        _isTimeout.value = true
+    }
 
     var checkInDate by mutableStateOf<LocalDate>(LocalDate.now())
         private set
@@ -91,41 +105,58 @@ class BookingViewModel @Inject constructor (
         guest: Guest,
         numberOfGuests: Int,
         pricePerNight: Double,
-        availableRooms: Int
+        availableRooms: Int,
+        timeoutSeconds: Long
     ) {
         viewModelScope.launch {
             if (availableRooms <= 0) {
-                _uiState.value = BookingUiState.Error("Please check the date again, the room is fully booked.")
+                _uiState.value = BookingUiState.Error(
+                    "Please check the date again, the room is fully booked."
+                )
                 return@launch
             }
 
             _uiState.value = BookingUiState.Loading
 
-            // Tính tổng tiền
-            val totalDays = ChronoUnit.DAYS.between(startDate, endDate).coerceAtLeast(1)
+            val totalDays = ChronoUnit.DAYS
+                .between(startDate, endDate)
+                .coerceAtLeast(1)
+
             val totalPrice = pricePerNight * totalDays
 
             val newBooking = Booking(
                 bookingId = "",
-                guestId = userId,
+                userId = userId,
                 hotelId = hotelId,
                 roomTypeId = roomTypeId,
-                startDate = Timestamp(startDate.atStartOfDay(ZoneOffset.UTC).toInstant()),
-                endDate = Timestamp(endDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant()),
+                startDate = Timestamp(
+                    startDate.atStartOfDay(ZoneOffset.UTC).toInstant()
+                ),
+                endDate = Timestamp(
+                    endDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant()
+                ),
                 guest = guest,
                 numberOfGuests = numberOfGuests,
                 totalPrice = totalPrice,
                 status = BookingStatus.PENDING,
-                createdAt = Timestamp.now()
+                createdAt = Timestamp.now(),
             )
 
-            val result = bookingUseCases.createBookingUseCase(newBooking, availableRooms)
+            val result = bookingUseCases.createBookingUseCase(
+                booking = newBooking,
+                availableRooms = availableRooms,
+                timeoutSeconds = timeoutSeconds
+            )
 
-            result.onSuccess { booking ->
-                _uiState.value = BookingUiState.BookingSuccess(booking.bookingId)
-            }.onFailure { error ->
-                _uiState.value = BookingUiState.Error(error.message ?: "Booking failed")
-            }
+            result
+                .onSuccess { booking ->
+                    _uiState.value =
+                        BookingUiState.BookingSuccess(booking.bookingId)
+                }
+                .onFailure { error ->
+                    _uiState.value =
+                        BookingUiState.Error(error.message ?: "Booking failed")
+                }
         }
     }
 

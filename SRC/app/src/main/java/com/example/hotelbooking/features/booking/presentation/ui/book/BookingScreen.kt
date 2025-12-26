@@ -90,6 +90,9 @@ fun BookingScreen(
     val totalDays = ChronoUnit.DAYS.between(startDate, endDate)
     val totalPrice = totalDays * pricePerNight
 
+    val timeoutSeconds: Long = 10 * 60L
+//    val timeoutSeconds: Long = 30L
+
     LaunchedEffect(uiState) {
         if (uiState is BookingUiState.BookingSuccess) {
             val dateStr = "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
@@ -98,9 +101,10 @@ fun BookingScreen(
             val encodedRoomName = Uri.encode(roomName)
             val encodedGuestName = Uri.encode(name)
             val bookingId = (uiState as BookingUiState.BookingSuccess).bookingId
+            val timeoutSecondsInt: Int = timeoutSeconds.toInt()
 
             navController.navigate(
-                "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice"
+                "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice&timeoutSecond=$timeoutSecondsInt"
             ) {
                 popUpTo("booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&stock={stock}&roomName={roomName}&price={price}") {
                     inclusive = true
@@ -138,8 +142,6 @@ fun BookingScreen(
                         )
                         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-                        Log.d("BookingScreen", "User ID: $userId")
-
                         bookingViewModel.submitBooking(
                             hotelId = hotelId,
                             roomTypeId = roomId,
@@ -149,7 +151,8 @@ fun BookingScreen(
                             guest = guest,
                             numberOfGuests = numberOfGuest,
                             pricePerNight = pricePerNight,
-                            availableRooms = availableStock
+                            availableRooms = availableStock,
+                            timeoutSeconds = timeoutSeconds
                         )
                     },
                     modifier = Modifier

@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.booking.domain.repository
 
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
+import com.google.firebase.Timestamp
 import java.time.LocalDate
 
 interface BookingRepository {
@@ -13,7 +14,7 @@ interface BookingRepository {
         endDate: LocalDate
     ): Int
 
-    suspend fun createBooking(booking: Booking, availableRooms: Int): Booking
+    suspend fun createBooking(booking: Booking, availableRooms: Int, expireAt: Timestamp): Booking
 
     suspend fun cancelBooking(bookingId: String): Boolean
 
@@ -34,4 +35,6 @@ interface BookingRepository {
     ): List<Booking>
 
     suspend fun expirePendingBookings()
+
+    suspend fun checkAndCancelExpiredBookings(userId: String): Result<Int>
 }

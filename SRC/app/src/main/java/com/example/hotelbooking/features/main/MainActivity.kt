@@ -1,9 +1,10 @@
 package com.example.hotelbooking.features.main
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -28,23 +31,41 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.auth.presentation.ui.SignInScreen
 import com.example.hotelbooking.features.auth.presentation.ui.SignUpScreen
-import com.example.hotelbooking.features.home.HomeScreen
+import com.example.hotelbooking.features.main.viewmodel.MainViewModel
 import com.example.hotelbooking.features.onboarding.presentation.ui.OnboardingScreen
 import com.example.hotelbooking.ui.theme.HotelBookingTheme
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : BaseComponentActivity() {
+    private val mainViewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            mainViewModel.checkGlobalExpiration(currentUser.uid)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.uiEvent.collect { event ->
+                    when(event) {
+                        is MainViewModel.UiEvent.ShowToast -> {
+                            val message = event.message.asString(this@MainActivity)
+                            Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+
         setContent {
             HotelBookingTheme {
-                val user = FirebaseAuth.getInstance().currentUser
-                Log.d("AuthDebug", "Current UID: ${user?.uid}")
-
                 MainApp()
             }
         }

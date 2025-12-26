@@ -136,5 +136,6 @@
     <string name="confirm_and_pay">Confirm &amp; Pay</string>
     <string name="payment_complete">Payment Complete</string>
     <string name="thank_you_for_using_service">Thank you for using our service!</string>
+    <string name="msg_auto_cancel_expired">System automatically cancelled %1$d expired booking(s).</string>
 
 </resources>
