@@ -109,6 +109,9 @@
     <string name="guests">Guests</string>
     <string name="decrease_guests">Decrease guests</string>
     <string name="increase_guests">Increase guests</string>
+    <string name="date">Date</string>
+    <string name="one_room">1 Room</string>
+    <string name="no_bookings_yet">You don’t have any bookings yet.</string>
 
     <!-- CHECKOUT -->
     <string name="checkout">Checkout</string>

@@ -109,6 +109,9 @@
     <string name="guests">Số khách</string>
     <string name="decrease_guests">Giảm số khách</string>
     <string name="increase_guests">Tăng số khách</string>
+    <string name="date">Ngày</string>
+    <string name="one_room">1 Phòng</string>
+    <string name="no_bookings_yet">Bạn chưa có đặt phòng nào.</string>
 
     <!-- CHECKOUT -->
     <string name="checkout">Thanh toán</string>

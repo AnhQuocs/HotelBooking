@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.main
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
@@ -26,30 +27,39 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.components.UserBottomAppBar
+import com.example.hotelbooking.features.booking.presentation.ui.history.BookingDetailActivity
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingHistoryScreen
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.chat.MessageScreen
 import com.example.hotelbooking.features.home.HomeScreen
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.map.MapPreviewViewModel
 import com.example.hotelbooking.features.profile.ProfileScreen
+import com.google.firebase.auth.FirebaseAuth
+import kotlin.jvm.java
 
 @Composable
 fun MainScreen(
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
-    mapPreviewViewModel: MapPreviewViewModel = hiltViewModel()
+    mapPreviewViewModel: MapPreviewViewModel = hiltViewModel(),
+    bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var previousTabIndex by remember { mutableIntStateOf(0) }
 
+    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
     val hotelState by hotelViewModel.hotelsState.collectAsState()
     val recommendedState by hotelViewModel.recommendedState.collectAsState()
+    val bookingHistoryState by bookingHistoryViewModel.state.collectAsState()
 
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         hotelViewModel.loadHotels()
         hotelViewModel.loadRecommendedHotels(4.7)
+        bookingHistoryViewModel.loadMyBookings(userId)
     }
 
     Scaffold(
@@ -116,7 +126,15 @@ fun MainScreen(
 //                    list = unreadCount
                 )
 
-                1 -> BookingHistoryScreen()
+                1 -> BookingHistoryScreen(
+                    bookingHistoryState,
+                    onDetailClick = { bookingId, roomId ->
+                        val intent = Intent(context, BookingDetailActivity::class.java)
+                            .putExtra("bookingId", bookingId)
+                            .putExtra("roomId", roomId)
+                        context.startActivity(intent)
+                    }
+                )
 
                 2 -> MessageScreen()
 

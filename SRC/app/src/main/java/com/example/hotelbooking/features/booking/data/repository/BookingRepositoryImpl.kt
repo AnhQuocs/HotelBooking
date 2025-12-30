@@ -133,7 +133,7 @@ class BookingRepositoryImpl(
 
     override suspend fun getBookingsByUser(userId: String): List<Booking> {
         val snapshot = bookingsCollection
-            .whereEqualTo("guestId", userId)
+            .whereEqualTo("userId", userId)
             .orderBy("startDate", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .get()
             .await()

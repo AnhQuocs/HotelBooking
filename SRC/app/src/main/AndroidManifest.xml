@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.booking.presentation.ui.history.BookingDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.hotel.presentation.ui.details.HotelDetailActivity"
             android:exported="false" />
         <activity
