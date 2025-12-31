@@ -110,8 +110,24 @@
     <string name="decrease_guests">Decrease guests</string>
     <string name="increase_guests">Increase guests</string>
     <string name="date">Date</string>
-    <string name="one_room">1 Room</string>
+    <string name="one_room">(1 Room)</string>
     <string name="no_bookings_yet">You don’t have any bookings yet.</string>
+    <string name="your_hotel">Your Hotel</string>
+    <string name="hotel_load_error">An error occurred while loading the hotel!</string>
+    <string name="your_room">Your Room</string>
+    <string name="error">Error: %1$s</string>
+    <string name="booking_detail_title">Booking Detail</string>
+    <string name="booking_loading">Loading booking data...</string>
+    <!-- QR CODE -->
+    <string name="download">Download</string>
+    <string name="qr_hotel">Hotel: %1$s</string>
+    <string name="qr_address">Address: %1$s</string>
+    <string name="qr_price">Price: $%1$s</string>
+    <string name="qr_rating">Rating: %1$s/5</string>
+    <string name="qr_check_in">Check-in: %1$s</string>
+    <string name="qr_check_out">Check-out: %1$s</string>
+    <string name="qr_guests">Number of Guests: %1$d</string>
+    <string name="qr_invalid">Invalid data</string>
 
     <!-- CHECKOUT -->
     <string name="checkout">Checkout</string>

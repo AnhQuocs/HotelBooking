@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.recommended
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,20 +42,20 @@ import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
 
 @Composable
-fun RecommendedList(list: List<Hotel>) {
+fun RecommendedList(list: List<Hotel>, onClick: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = Dimen.PaddingM)
     ) {
         list.forEach { hotel ->
-            RecommendedItem(hotel)
+            RecommendedItem(hotel, onClick)
         }
     }
 }
 
 @Composable
-fun RecommendedItem(hotel: Hotel) {
+fun RecommendedItem(hotel: Hotel, onClick: (String) -> Unit) {
     val context = LocalContext.current
 
     Box(
@@ -62,6 +63,7 @@ fun RecommendedItem(hotel: Hotel) {
             .fillMaxWidth()
             .height(Dimen.HeightML + 10.dp)
             .background(color = Color.White)
+            .clickable { onClick(hotel.id) }
     ) {
         Row(
             modifier = Modifier

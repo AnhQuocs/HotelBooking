@@ -148,20 +148,12 @@ fun BookingHistoryCard(
 
     val dateStr = "${start.dayOfMonth}-${end.dayOfMonth} $monthStr ${start.year}"
 
-    val nights = (booking.endDate.seconds - booking.startDate.seconds) / (60 * 60 * 24)
-
     val numberOfGuest = booking.numberOfGuests
     val guestText =
         if (numberOfGuest == 1)
             stringResource(id = R.string.guest)
         else
             stringResource(id = R.string.guests)
-
-    val dateText =
-        if (nights == 1L)
-            stringResource(id = R.string.date)
-        else
-            stringResource(id = R.string.dates)
 
     Box(
         modifier = Modifier
@@ -260,7 +252,7 @@ fun BookingHistoryCard(
 
                 CheckoutSummaryItem(
                     icon = R.drawable.ic_calendar,
-                    key = dateText,
+                    key = stringResource(id = R.string.dates),
                     value = dateStr
                 )
 

@@ -81,7 +81,12 @@ fun HomeScreen(
 
             item {
                 RecommendedSection(
-                    recommendedState = recommendedState
+                    recommendedState = recommendedState,
+                    onClick = { hotelId ->
+                        val intent = Intent(context, HotelDetailActivity::class.java)
+                            .putExtra("hotelId", hotelId)
+                        context.startActivity(intent)
+                    }
                 )
             }
 

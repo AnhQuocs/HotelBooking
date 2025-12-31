@@ -22,7 +22,8 @@ import com.example.hotelbooking.ui.dimens.Dimen
 
 @Composable
 fun RecommendedSection(
-    recommendedState: HotelState<List<Hotel>>
+    recommendedState: HotelState<List<Hotel>>,
+    onClick: (String) -> Unit
 ) {
     when(recommendedState) {
         is HotelState.Loading -> {
@@ -56,7 +57,7 @@ fun RecommendedSection(
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                 )
                 Spacer(modifier = Modifier.height(AppSpacing.S))
-                RecommendedList(hotels)
+                RecommendedList(hotels, onClick)
             }
         }
 

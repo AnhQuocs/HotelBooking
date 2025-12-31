@@ -42,7 +42,7 @@ object Dimen {
     val HeightLarge = 56.dp
     val HeightML = 80.dp
     val HeightXL = 100.dp
-    val HeightXL2 = 130.dp
+    val HeightXL2 = 120.dp
     val HeightXL3 = 150.dp
     val HeightXL4 = 250.dp
     val HeightXXL = 300.dp

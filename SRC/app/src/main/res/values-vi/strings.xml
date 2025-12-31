@@ -110,8 +110,24 @@
     <string name="decrease_guests">Giảm số khách</string>
     <string name="increase_guests">Tăng số khách</string>
     <string name="date">Ngày</string>
-    <string name="one_room">1 Phòng</string>
+    <string name="one_room">(1 Phòng)</string>
     <string name="no_bookings_yet">Bạn chưa có đặt phòng nào.</string>
+    <string name="your_hotel">Khách sạn của bạn</string>
+    <string name="hotel_load_error">Đã xảy ra lỗi khi tải thông tin khách sạn!</string>
+    <string name="your_room">Phòng của bạn</string>
+    <string name="error">Lỗi: %1$s</string>
+    <string name="booking_detail_title">Thông tin đặt phòng</string>
+    <string name="booking_loading">Đang tải thông tin đặt phòng...</string>
+    <!-- QR CODE -->
+    <string name="download">Tải xuống</string>
+    <string name="qr_hotel">Khách sạn: %1$s</string>
+    <string name="qr_address">Địa chỉ: %1$s</string>
+    <string name="qr_price">Giá: $%1$s</string>
+    <string name="qr_rating">Đánh giá: %1$s/5</string>
+    <string name="qr_check_in">Nhận phòng: %1$s</string>
+    <string name="qr_check_out">Trả phòng: %1$s</string>
+    <string name="qr_guests">Số lượng khách: %1$d</string>
+    <string name="qr_invalid">Dữ liệu không hợp lệ</string>
 
     <!-- CHECKOUT -->
     <string name="checkout">Thanh toán</string>

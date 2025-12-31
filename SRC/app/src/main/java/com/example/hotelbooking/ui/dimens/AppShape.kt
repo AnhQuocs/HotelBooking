@@ -8,6 +8,6 @@ object AppShape {
     val ShapeS = 8.dp
     val ShapeM = 12.dp
     val ShapeL = 16.dp
-    val ShapeXL = 24.dp
+    val ShapeXL = 20.dp
     val ShapeXXL = 32.dp
 }
