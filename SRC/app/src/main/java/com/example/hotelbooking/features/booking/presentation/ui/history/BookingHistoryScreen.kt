@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -39,13 +40,19 @@ import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingWithHotel
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.SurfaceGray
+import com.example.hotelbooking.ui.theme.TextPrimaryDark
+import com.example.hotelbooking.ui.theme.TextTertiary
 
 @Composable
 fun BookingHistoryScreen(
     bookingHistoryState: BookingHistoryState<List<BookingWithHotel>>,
     onDetailClick: (String, String) -> Unit
 ) {
-    val jostFont = FontFamily(Font(R.font.jost_font))
     var query by remember { mutableStateOf("") }
 
     Scaffold(
@@ -55,12 +62,13 @@ fun BookingHistoryScreen(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Text(
-                    text = "My Booking",
-                    fontFamily = jostFont,
-                    color = Color.Black,
-                    fontSize = 20.sp,
+                    text = stringResource(id = R.string.my_booking),
+                    style = JostTypography.titleLarge.copy(
+                        color = Color.Black,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold
+                    ),
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -71,49 +79,50 @@ fun BookingHistoryScreen(
             modifier = Modifier
                 .padding(top = paddingValues.calculateTopPadding())
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp)
+                .padding(horizontal = Dimen.PaddingM)
+                .padding(top = Dimen.PaddingM)
         ) {
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                label = { Text("Search...", fontSize = 15.sp) },
+                label = { Text(
+                    stringResource(id = R.string.search), fontSize = 15.sp) },
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.ic_search),
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color(0xFF78828A)),
-                        modifier = Modifier.size(20.dp)
+                        colorFilter = ColorFilter.tint(TextTertiary),
+                        modifier = Modifier.size(Dimen.SizeSM)
                     )
                 },
                 trailingIcon = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
-                                .height(20.dp)
+                                .height(Dimen.HeightXXS)
                                 .width(1.dp)
                                 .background(color = Color.LightGray)
                         )
 
-                        Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.width(AppSpacing.XS))
 
                         Icon(
                             Icons.Default.FilterAlt,
                             contentDescription = null,
-                            tint = Color(0xFF171725),
-                            modifier = Modifier.size(20.dp)
+                            tint = TextPrimaryDark,
+                            modifier = Modifier.size(Dimen.SizeSM)
                         )
                     }
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFE9EBED),
-                    unfocusedBorderColor = Color(0xFFE9EBED)
+                    focusedBorderColor = SurfaceGray,
+                    unfocusedBorderColor = SurfaceGray
                 ),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(AppShape.ShapeXL2),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.L))
 
             BookingHistorySection(bookingHistoryState, onDetailClick)
         }

@@ -111,6 +111,7 @@
     <string name="increase_guests">Tăng số khách</string>
     <string name="date">Ngày</string>
     <string name="one_room">(1 Phòng)</string>
+    <string name="my_booking">Đơn của tôi</string>
     <string name="no_bookings_yet">Bạn chưa có đặt phòng nào.</string>
     <string name="your_hotel">Khách sạn của bạn</string>
     <string name="hotel_load_error">Đã xảy ra lỗi khi tải thông tin khách sạn!</string>
@@ -156,5 +157,10 @@
     <string name="payment_complete">Thanh toán thành công</string>
     <string name="thank_you_for_using_service">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</string>
     <string name="msg_auto_cancel_expired">Hệ thống đã tự động hủy %1$d đơn quá hạn.</string>
+
+    <!-- CHAT -->
+    <string name="chat">Chat</string>
+    <string name="search">Tìm kiếm...</string>
+    <string name="you">Bạn</string>
 
 </resources>

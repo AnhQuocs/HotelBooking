@@ -30,13 +30,13 @@ import com.example.hotelbooking.components.UserBottomAppBar
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingDetailActivity
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingHistoryScreen
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
-import com.example.hotelbooking.features.chat.MessageScreen
+import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
+import com.example.hotelbooking.features.chat.presentation.ui.MessageScreen
 import com.example.hotelbooking.features.home.HomeScreen
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.map.MapPreviewViewModel
 import com.example.hotelbooking.features.profile.ProfileScreen
 import com.google.firebase.auth.FirebaseAuth
-import kotlin.jvm.java
 
 @Composable
 fun MainScreen(
@@ -136,7 +136,17 @@ fun MainScreen(
                     }
                 )
 
-                2 -> MessageScreen()
+                2 -> MessageScreen(
+                    userId = userId,
+                    onOpenChat = { chat ->
+                        val intent = Intent(context, ChatActivity::class.java)
+                            .putExtra("hotelId", chat.hotelId)
+                            .putExtra("hotelName", chat.hotelName)
+                            .putExtra("shortAddress", chat.shortAddress)
+                            .putExtra("userId", chat.userId)
+                        context.startActivity(intent)
+                    }
+                )
 
                 3 -> ProfileScreen()
             }
