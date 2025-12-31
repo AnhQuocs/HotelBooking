@@ -4,6 +4,7 @@ import com.example.hotelbooking.features.auth.data.repository.AuthRepositoryImpl
 import com.example.hotelbooking.features.auth.domain.repository.AuthRepository
 import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.auth.domain.usecase.GetCurrentUserUseCase
+import com.example.hotelbooking.features.auth.domain.usecase.GetUserByIdUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignInUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignOutUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignUpAdminUseCase
@@ -41,6 +42,7 @@ object AuthModule {
         signUpAdminUseCase = SignUpAdminUseCase(repository),
         signInUseCase = SignInUseCase(repository),
         getCurrentUserUseCase = GetCurrentUserUseCase(repository),
+        getUserByIdUseCase = GetUserByIdUseCase(repository),
         signOutUseCase = SignOutUseCase(repository)
     )
 }

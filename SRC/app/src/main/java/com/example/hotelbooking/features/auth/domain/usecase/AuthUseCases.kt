@@ -8,6 +8,7 @@ data class AuthUseCases(
     val signUpAdminUseCase: SignUpAdminUseCase,
     val signInUseCase: SignInUseCase,
     val getCurrentUserUseCase: GetCurrentUserUseCase,
+    val getUserByIdUseCase: GetUserByIdUseCase,
     val signOutUseCase: SignOutUseCase
 )
 
@@ -40,6 +41,14 @@ class GetCurrentUserUseCase(
 ) {
     suspend operator fun invoke(): AuthUser? {
         return repository.getCurrentUser()
+    }
+}
+
+class GetUserByIdUseCase(
+    private val repository: AuthRepository
+) {
+    suspend operator fun invoke(userId: String): AuthUser? {
+        return repository.getUserById(userId)
     }
 }
 
