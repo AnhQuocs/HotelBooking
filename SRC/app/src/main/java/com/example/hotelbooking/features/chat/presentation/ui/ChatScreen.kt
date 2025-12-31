@@ -39,8 +39,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,8 +47,11 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
 import com.example.hotelbooking.features.chat.presentation.viewmodel.ChatViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.NearBlack
+import com.example.hotelbooking.ui.theme.SlateGray
+import com.example.hotelbooking.ui.theme.SurfaceLight
 
 @Composable
 fun ChatScreen(
@@ -153,16 +154,20 @@ fun ChatScreen(
                     value = inputText,
                     onValueChange = { inputText = it },
                     placeholder = {
-                        Text("Type a message", lineHeight = 12.sp, color = Color(0xFF9CA4AB))
+                        Text(
+                            stringResource(id = R.string.type_a_message),
+                            lineHeight = 12.sp,
+                            color = SlateGray
+                        )
                     },
                     textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
                     shape = CircleShape,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color.Transparent,
                         unfocusedBorderColor = Color.Transparent,
-                        focusedContainerColor = Color(0xFFECF1F6),
-                        unfocusedContainerColor = Color(0xFFECF1F6),
-                        cursorColor = Color(0xFF0A3A7A)
+                        focusedContainerColor = SurfaceLight,
+                        unfocusedContainerColor = SurfaceLight,
+                        cursorColor = BlueNavy
                     ),
                     trailingIcon = {
                         Button(
@@ -196,7 +201,7 @@ fun ChatScreen(
                     },
                     modifier = Modifier
                         .height(50.dp)
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = Dimen.PaddingS)
                         .weight(1f)
                 )
             }

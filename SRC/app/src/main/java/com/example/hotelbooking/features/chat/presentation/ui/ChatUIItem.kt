@@ -36,8 +36,12 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.domain.model.ChatMessage
 import com.example.hotelbooking.features.chat.presentation.util.getInitials
 import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.BlueNavy
+import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.ScrimBlack20
+import com.example.hotelbooking.ui.theme.SlateGray
 
 @Composable
 fun MessageBubble(
@@ -59,36 +63,38 @@ fun MessageBubble(
                     .background(
                         if (isMe) Color(0xFF2A5A9A) else Color(0xFFE0E0E0),
                         RoundedCornerShape(
-                            topStart = 16.dp,
-                            topEnd = 16.dp,
-                            bottomStart = if (isMe) 16.dp else 0.dp,
-                            bottomEnd = if (isMe) 0.dp else 16.dp
+                            topStart = AppShape.ShapeL,
+                            topEnd = AppShape.ShapeL,
+                            bottomStart = if (isMe) AppShape.ShapeL else 0.dp,
+                            bottomEnd = if (isMe) 0.dp else AppShape.ShapeL
                         )
                     )
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(horizontal = Dimen.SizeSM, vertical = Dimen.PaddingS)
             ) {
                 Text(
                     message.content,
-                    fontSize = 16.sp,
-                    color = if (isMe) Color.White else Color.Black,
-                    lineHeight = 24.sp,
+                    style = JostTypography.bodyLarge.copy(
+                        color = if (isMe) Color.White else Color.Black,
+                        lineHeight = 24.sp,
+                    )
                 )
             }
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.XXS))
 
             Text(
                 text = time,
-                fontSize = 14.sp,
-                color = Color(0xFF9CA4AB),
+                style = JostTypography.labelLarge.copy(
+                    color = SlateGray,
+                ),
                 modifier = Modifier
-                    .padding(end = if (isMe) 4.dp else 0.dp, start = if (!isMe) 4.dp else 0.dp)
+                    .padding(end = if (isMe) Dimen.PaddingXS else 0.dp, start = if (!isMe) Dimen.PaddingXS else 0.dp)
                     .align(if (isMe) Alignment.End else Alignment.Start)
             )
         }
     }
 
-    Spacer(modifier = Modifier.height(6.dp))
+    Spacer(modifier = Modifier.height(AppSpacing.XSPlus))
 }
 
 @Composable
@@ -115,32 +121,34 @@ fun ChatHeader(
             modifier = Modifier
                 .size(55.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF0A3A7A)),
+                .background(BlueNavy),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = initials,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.White
+                style = JostTypography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             )
         }
 
-        Spacer(Modifier.width(4.dp))
+        Spacer(Modifier.width(AppSpacing.XS))
 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 4.dp)
+                .padding(start = Dimen.PaddingXS)
         ) {
             Text(
                 text = chatName,
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold,
+                style = JostTypography.bodyLarge.copy(
+                    color = Color.Black,
+                    fontWeight = FontWeight.SemiBold,
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(start = 2.dp)
+                modifier = Modifier.padding(start = Dimen.PaddingXXS)
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -149,16 +157,17 @@ fun ChatHeader(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = null,
                         tint = Color.Gray.copy(alpha = 0.6f),
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(Dimen.SizeSM)
                     )
 
-                    Spacer(Modifier.width(4.dp))
+                    Spacer(Modifier.width(AppSpacing.XS))
                 }
 
                 Text(
                     text = subChatName,
-                    fontSize = 14.sp,
-                    color = Color.Gray,
+                    style = JostTypography.labelLarge.copy(
+                        color = Color.Gray,
+                    ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -170,10 +179,10 @@ fun ChatHeader(
                 painter = painterResource(R.drawable.ic_video_call),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(Color.Black),
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(Dimen.SizeM)
             )
 
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(AppSpacing.MediumLarge))
 
             Image(
                 painter = painterResource(R.drawable.ic_call),

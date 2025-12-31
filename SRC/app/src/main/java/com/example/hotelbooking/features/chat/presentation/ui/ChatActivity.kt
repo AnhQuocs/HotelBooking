@@ -18,7 +18,13 @@ class ChatActivity : BaseComponentActivity() {
         val userId = intent.getStringExtra("userId") ?: ""
 
         setContent {
-
+            ChatScreen(
+                hotelId = hotelId,
+                hotelName = hotelName,
+                shortAddress = shortAddress,
+                userId = userId,
+                onBackClick = { finish() }
+            )
         }
     }
 }

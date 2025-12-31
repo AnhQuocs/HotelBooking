@@ -160,7 +160,8 @@
 
     <!-- CHAT -->
     <string name="chat">Chat</string>
-    <string name="search">Tìm kiếm...</string>
+    <string name="search">Tìm kiếm…</string>
     <string name="you">Bạn</string>
+    <string name="type_a_message">Nhập tin nhắn…</string>
 
 </resources>

@@ -160,7 +160,8 @@
 
     <!-- CHAT -->
     <string name="chat">Chat</string>
-    <string name="search">Search...</string>
+    <string name="search">Search…</string>
     <string name="you">You</string>
+    <string name="type_a_message">Type a message…</string>
 
 </resources>

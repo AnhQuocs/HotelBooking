@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.chat.presentation.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -73,6 +74,8 @@ fun MessageScreen(
         viewModel.load(userId)
     }
 
+    Log.d("MessageScreen", "${list.size}")
+
     Scaffold(
         topBar = {
             Box(
@@ -143,7 +146,7 @@ fun MessageScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(AppSpacing.L))
+                Spacer(modifier = Modifier.height(AppSpacing.M))
             }
 
             itemsIndexed(list) { index, chat ->
@@ -178,7 +181,7 @@ fun ChatItem(
     Row(
         modifier = Modifier
             .padding(horizontal = Dimen.PaddingSM, vertical = Dimen.PaddingM)
-            .clickable { onOpenChat },
+            .clickable { onOpenChat() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         val initials = getInitials(hotelName)

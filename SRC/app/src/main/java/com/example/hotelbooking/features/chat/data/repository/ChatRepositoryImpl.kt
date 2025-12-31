@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.chat.data.repository
 
+import android.util.Log
 import com.example.hotelbooking.features.chat.data.dto.ChatDto
 import com.example.hotelbooking.features.chat.data.dto.ChatMessageDto
 import com.example.hotelbooking.features.chat.data.mapper.toDomain
@@ -109,33 +110,41 @@ class ChatRepositoryImpl(
             .addSnapshotListener { snapshot, error ->
                 try {
                     if (error != null) {
+                        Log.e("CHAT_REPO", "Firestore listener error", error)
                         // Send nothing or keep previous state? gửi empty to be explicit
                         trySendBlocking(emptyList())
                         return@addSnapshotListener
                     }
 
                     if (snapshot == null) {
+                        Log.w("CHAT_REPO", "Snapshot is null")
                         trySendBlocking(emptyList())
                         return@addSnapshotListener
                     }
 
+                    Log.d("CHAT_REPO", "Snapshot docs count = ${snapshot.documents.size}")
                     val list = snapshot.documents.mapNotNull { doc ->
                         try {
                             // debug raw fields
+                            Log.d("CHAT_REPO", "Doc id=${doc.id} data=${doc.data}")
                             doc.toObject(ChatDto::class.java)?.toDomain()
                         } catch (e: Exception) {
+                            Log.e("CHAT_REPO", "Failed mapping doc ${doc.id}", e)
                             null
                         }
                     }
 
+                    Log.d("CHAT_REPO", "Mapped chats size = ${list.size}")
                     trySendBlocking(list)
                 } catch (t: Throwable) {
+                    Log.e("CHAT_REPO", "Unhandled error in snapshot listener", t)
                     // avoid crashing callbackFlow; emit empty
                     trySendBlocking(emptyList())
                 }
             }
 
         awaitClose {
+            Log.d("CHAT_REPO", "Listener removed")
             listener.remove()
         }
     }
