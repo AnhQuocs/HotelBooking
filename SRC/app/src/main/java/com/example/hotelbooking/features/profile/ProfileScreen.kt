@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -12,7 +13,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ProfileScreen() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(color = Color.White),
         contentAlignment = Alignment.Center
     ) {
         Text("Profile Screen", fontSize = 20.sp, color = Color.Black)
