@@ -161,7 +161,12 @@ fun CheckoutScreen(
                     totalTime = timeoutSecond,
                     onTimeout = {
                         bookingViewModel.onTimeout()
-                        bookingViewModel.updateStatus(bookingId, BookingStatus.CANCELLED)
+                        bookingViewModel.updateStatus(
+                            bookingId,
+                            BookingStatus.CANCELLED,
+                            null,
+                            null
+                        )
                         Toast.makeText(
                             context,
                             context.getString(R.string.payment_time_expired),
@@ -218,6 +223,13 @@ fun CheckoutScreen(
                     if (uiState is HotelState.Success) {
                         val hotel = (uiState as HotelState.Success<Hotel>).data
 
+                        val title = stringResource(R.string.booking_success_title)
+                        val message = stringResource(
+                            R.string.booking_success_message,
+                            hotel.name,
+                            bookingId
+                        )
+
                         PaymentMethodBottomSheet(
                             onDismissRequest = { isShowBottomSheet = false },
                             onNextClick = {
@@ -225,7 +237,8 @@ fun CheckoutScreen(
                                 bookingViewModel.updateStatus(
                                     bookingId = bookingId,
                                     status = BookingStatus.CONFIRMED,
-                                    hotelName = hotel.name
+                                    title = title,
+                                    message = message
                                 )
                             }
                         )
@@ -234,7 +247,7 @@ fun CheckoutScreen(
             }
         }
 
-        if(bookingState is BookingUiState.Loading) {
+        if (bookingState is BookingUiState.Loading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

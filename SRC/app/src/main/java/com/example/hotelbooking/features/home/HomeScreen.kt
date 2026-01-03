@@ -24,6 +24,7 @@ import com.example.hotelbooking.features.hotel.presentation.ui.details.HotelDeta
 import com.example.hotelbooking.features.hotel.presentation.ui.recommended.RecommendedSection
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.map.MapPreviewCard
+import com.example.hotelbooking.features.notification.presentation.ui.NotificationActivity
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -34,7 +35,7 @@ fun HomeScreen(
     cameraPositionState: CameraPositionState,
     hotelState: HotelState<List<Hotel>>,
     recommendedState: HotelState<List<Hotel>>,
-//    list: Int
+    list: Int
 ) {
     val currentUser = authViewModel.currentUser.collectAsState()
     val user = currentUser.value
@@ -49,9 +50,9 @@ fun HomeScreen(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 user?.let {
-                    UserInfo(user) {
-//                        val intent = Intent(context, NotificationActivity::class.java)
-//                        context.startActivity(intent)
+                    UserInfo(user, list) {
+                        val intent = Intent(context, NotificationActivity::class.java)
+                        context.startActivity(intent)
                     }
                 }
             }

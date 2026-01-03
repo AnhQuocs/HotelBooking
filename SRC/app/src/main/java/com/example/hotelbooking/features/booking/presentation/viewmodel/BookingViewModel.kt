@@ -1,26 +1,21 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
-import android.content.Context
-import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
-import com.example.hotelbooking.features.main.viewmodel.UiText
+import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
+import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -37,10 +32,10 @@ sealed class BookingUiState {
 }
 
 @HiltViewModel
-class BookingViewModel @Inject constructor (
+class BookingViewModel @Inject constructor(
     private val bookingUseCases: BookingUseCases,
-//    private val notificationUseCases: NotificationUseCases,
-//    private val notificationHelper: NotificationHelper
+    private val notificationUseCases: NotificationUseCases,
+    private val notificationHelper: NotificationHelper
 ) : ViewModel() {
 
     private val _isTimeout = MutableStateFlow(false)
@@ -88,7 +83,8 @@ class BookingViewModel @Inject constructor (
                 if (count > 0) {
                     _uiState.value = BookingUiState.Available(count)
                 } else {
-                    _uiState.value = BookingUiState.SoldOut("Sorry, there are no rooms available on this date.")
+                    _uiState.value =
+                        BookingUiState.SoldOut("Sorry, there are no rooms available on this date.")
                 }
             }.onFailure { error ->
                 _uiState.value = BookingUiState.Error(error.message ?: "Room inspection error")
@@ -160,7 +156,12 @@ class BookingViewModel @Inject constructor (
         }
     }
 
-    fun updateStatus(bookingId: String, status: BookingStatus, hotelName: String = "") {
+    fun updateStatus(
+        bookingId: String,
+        status: BookingStatus,
+        title: String?,
+        message: String?
+    ) {
         viewModelScope.launch {
             try {
                 _uiState.value = BookingUiState.Loading
@@ -168,20 +169,25 @@ class BookingViewModel @Inject constructor (
                 val updatedBooking = bookingUseCases.updateStatusUseCase(bookingId, status)
 
                 if (status == BookingStatus.CONFIRMED) {
-                    val title = "Booking Successful! 🎉"
-                    val message = "You have successfully booked a room at $hotelName. Code: ${updatedBooking.bookingId}"
+                    title?.let {
+                        message?.let { it1 ->
+                            notificationUseCases.saveNotificationUseCase(
+                                title = it,
+                                message = it1,
+                                bookingId = updatedBooking.bookingId
+                            )
+                        }
+                    }
 
-//                    notificationUseCases.saveNotificationUseCase(
-//                        title = title,
-//                        message = message,
-//                        bookingId = updatedBooking.bookingId
-//                    )
-//
-//                    notificationHelper.showBookingNotification(
-//                        title = title,
-//                        message = message,
-//                        bookingId = updatedBooking.bookingId
-//                    )
+                    title?.let {
+                        message?.let { it1 ->
+                            notificationHelper.showBookingNotification(
+                                title = it,
+                                message = it1,
+                                bookingId = updatedBooking.bookingId
+                            )
+                        }
+                    }
                 }
 
                 _uiState.value = BookingUiState.BookingSuccess(updatedBooking.bookingId)

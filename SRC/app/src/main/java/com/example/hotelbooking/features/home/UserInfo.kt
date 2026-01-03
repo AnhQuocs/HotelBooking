@@ -35,7 +35,7 @@ import com.example.hotelbooking.ui.theme.JostTypography
 @Composable
 fun UserInfo(
     user: AuthUser,
-//    unreadCount: Int,
+    unreadCount: Int,
     onNotificationClick: () -> Unit
 ) {
     Row(

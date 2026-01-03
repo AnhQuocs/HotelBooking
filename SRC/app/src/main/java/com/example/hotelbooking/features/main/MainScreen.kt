@@ -35,6 +35,7 @@ import com.example.hotelbooking.features.chat.presentation.ui.MessageScreen
 import com.example.hotelbooking.features.home.HomeScreen
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.map.MapPreviewViewModel
+import com.example.hotelbooking.features.notification.presentation.viewmodel.NotificationViewModel
 import com.example.hotelbooking.features.profile.ProfileScreen
 import com.google.firebase.auth.FirebaseAuth
 
@@ -44,6 +45,7 @@ fun MainScreen(
     hotelViewModel: HotelViewModel = hiltViewModel(),
     mapPreviewViewModel: MapPreviewViewModel = hiltViewModel(),
     bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
+    notificationViewModel: NotificationViewModel = hiltViewModel()
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var previousTabIndex by remember { mutableIntStateOf(0) }
@@ -53,6 +55,7 @@ fun MainScreen(
     val hotelState by hotelViewModel.hotelsState.collectAsState()
     val recommendedState by hotelViewModel.recommendedState.collectAsState()
     val bookingHistoryState by bookingHistoryViewModel.state.collectAsState()
+    val unreadCount by notificationViewModel.unreadCount.collectAsState()
 
     val context = LocalContext.current
 
@@ -123,7 +126,7 @@ fun MainScreen(
                     cameraPositionState = mapPreviewViewModel.cameraPositionState,
                     hotelState = hotelState,
                     recommendedState = recommendedState,
-//                    list = unreadCount
+                    list = unreadCount
                 )
 
                 1 -> BookingHistoryScreen(

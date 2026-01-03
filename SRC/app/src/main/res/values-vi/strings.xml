@@ -164,4 +164,11 @@
     <string name="you">Bạn</string>
     <string name="type_a_message">Nhập tin nhắn…</string>
 
+    <!-- Notification -->
+    <string name="notification">Thông báo</string>
+    <string name="notification_on">Thông báo đã được bật!</string>
+    <string name="notification_off">Bạn đã tắt thông báo</string>
+    <string name="booking_success_title">Đặt phòng thành công!</string>
+    <string name="booking_success_message">Bạn đã đặt phòng thành công tại %1$s.</string>
+    <string name="code">Mã đơn: %1$s</string>
 </resources>
