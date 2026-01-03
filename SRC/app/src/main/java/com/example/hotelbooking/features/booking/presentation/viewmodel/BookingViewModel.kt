@@ -174,7 +174,7 @@ class BookingViewModel @Inject constructor(
                             notificationUseCases.saveNotificationUseCase(
                                 title = it,
                                 message = it1,
-                                bookingId = updatedBooking.bookingId
+                                bookingId = updatedBooking.bookingId,
                             )
                         }
                     }

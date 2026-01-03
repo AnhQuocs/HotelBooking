@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingWithHotel
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -53,7 +54,17 @@ fun BookingDetailScreen(
 
     LaunchedEffect(roomId, bookingId) {
         bookingHistoryViewModel.loadBookingById(bookingId)
-        roomViewModel.loadRoomDetail(roomId)
+    }
+
+    LaunchedEffect(bookingDetailState, roomId) {
+        if (roomId.isNotEmpty()) {
+            roomViewModel.loadRoomDetail(roomId)
+        } else if (bookingDetailState is BookingHistoryState.Success<*>) {
+            val bookingData = (bookingDetailState as BookingHistoryState.Success<*>).data as? BookingWithHotel
+            bookingData?.booking?.roomTypeId?.let { roomIdFromBooking ->
+                roomViewModel.loadRoomDetail(roomIdFromBooking)
+            }
+        }
     }
 
     Scaffold(

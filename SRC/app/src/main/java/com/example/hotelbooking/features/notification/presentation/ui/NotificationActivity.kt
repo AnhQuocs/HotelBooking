@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.notification.presentation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.LineGray
+import com.example.hotelbooking.features.booking.presentation.ui.history.BookingDetailActivity
 import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
 import com.example.hotelbooking.features.notification.domain.model.BookingNotification
 import com.example.hotelbooking.features.notification.presentation.viewmodel.NotificationViewModel
@@ -68,7 +71,9 @@ class NotificationActivity : BaseComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            NotificationScreen(onBackClick = { finish() })
+            NotificationScreen(
+                onBackClick = { finish() }
+            )
         }
     }
 }
@@ -78,6 +83,7 @@ fun NotificationScreen(
     notificationViewModel: NotificationViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
     val notifications by notificationViewModel.notifications.collectAsState()
 
     Scaffold(
@@ -131,7 +137,13 @@ fun NotificationScreen(
                 Column {
                     NotificationItem(
                         notification = notification,
-                        onClick = { notificationViewModel.markAsRead(notification.id) }
+                        onClick = { id ->
+                            notificationViewModel.markAsRead(notification.id)
+                            val intent = Intent(context, BookingDetailActivity::class.java).apply {
+                                putExtra("bookingId", id)
+                            }
+                            context.startActivity(intent)
+                        }
                     )
 
                     if (index != notifications.lastIndex) {
@@ -146,7 +158,7 @@ fun NotificationScreen(
 @Composable
 fun NotificationItem(
     notification: BookingNotification,
-    onClick: () -> Unit
+    onClick: (String) -> Unit
 ) {
     val backgroundColor = if (notification.isRead) Color.White else BackgroundLight
     val indicatorColor = if (notification.isRead) Color.Transparent else PrimaryBlue
@@ -156,7 +168,7 @@ fun NotificationItem(
             .fillMaxWidth()
             .padding(vertical = Dimen.PaddingXSPlus)
             .clip(RoundedCornerShape(AppShape.ShapeL))
-            .clickable { onClick() },
+            .clickable { onClick(notification.bookingId) },
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
