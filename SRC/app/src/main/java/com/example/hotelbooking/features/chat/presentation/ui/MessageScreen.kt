@@ -154,7 +154,7 @@ fun MessageScreen(
                     ChatItem(
                         hotelName = chat.hotelName,
                         lastTimestamp = chat.lastTimestamp,
-                        lastSenderId = chat.lastMessage,
+                        lastSenderId = chat.lastSenderId,
                         lastMessage = chat.lastMessage,
                         userId = userId,
                         onOpenChat = { onOpenChat(chat) }

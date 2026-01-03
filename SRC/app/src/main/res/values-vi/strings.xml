@@ -171,4 +171,7 @@
     <string name="booking_success_title">Đặt phòng thành công!</string>
     <string name="booking_success_message">Bạn đã đặt phòng thành công tại %1$s.</string>
     <string name="code">Mã đơn: %1$s</string>
+    <string name="yesterday">Hôm qua</string>
+    <string name="today">Hôm nay</string>
+
 </resources>

@@ -9,11 +9,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -41,10 +42,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
+import com.example.hotelbooking.features.chat.presentation.util.formatDateHeader
+import com.example.hotelbooking.features.chat.presentation.util.isSameDay
 import com.example.hotelbooking.features.chat.presentation.viewmodel.ChatViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
@@ -129,18 +132,27 @@ fun ChatScreen(
                 subChatName = shortAddress
             )
 
+            val chatList = messages.sortedByDescending { it.timestamp }
+
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .padding(Dimen.PaddingS),
                 reverseLayout = true
             ) {
-                items(messages.reversed()) { msg ->
+                itemsIndexed(chatList) { index, msg ->
+                    val isLastMessage = index == chatList.size - 1
+                    val showDivider =
+                        isLastMessage || !isSameDay(msg.timestamp, chatList[index + 1].timestamp)
+
                     MessageBubble(
                         message = msg,
-                        isMe = msg.senderId == userId,
-                        time = formatTimestamp24h(msg.timestamp)
+                        isMe = msg.senderId == userId
                     )
+
+                    if (showDivider) {
+                        DateDivider(date = formatDateHeader(msg.timestamp))
+                    }
                 }
             }
 
@@ -200,7 +212,7 @@ fun ChatScreen(
                         }
                     },
                     modifier = Modifier
-                        .height(50.dp)
+                        .heightIn(min = 50.dp, max = 70.dp)
                         .padding(horizontal = Dimen.PaddingS)
                         .weight(1f)
                 )

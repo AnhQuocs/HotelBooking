@@ -171,5 +171,7 @@
     <string name="booking_success_title">Booking Successful!</string>
     <string name="booking_success_message">You have successfully booked a room at %1$s.</string>
     <string name="code">Code: %1$s</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
 
 </resources>
