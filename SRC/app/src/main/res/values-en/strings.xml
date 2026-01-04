@@ -46,8 +46,12 @@
     <string name="booking">Booking</string>
     <string name="message">Message</string>
     <string name="profile">Profile</string>
+    <string name="prompt_where_to_go">Where do you want to go?</string>
+    <string name="msg_no_hotels_found">No hotels found</string>
+    <string name="search_title">Search</string>
 
     <!-- HOTEL -->
+    <string name="most_popular">Most Popular</string>
     <string name="night">night</string>
     <string name="home_topbar_title">Planning your next trip</string>
     <string name="recommended">Recommended for you</string>

@@ -18,7 +18,7 @@ sealed class HotelState<out T> {
 
 @HiltViewModel
 class HotelViewModel @Inject constructor(
-    private val hotelUseCase: HotelUseCases
+    private val hotelUseCases: HotelUseCases
 ) : ViewModel() {
     private val _hotelsState = MutableStateFlow<HotelState<List<Hotel>>>(HotelState.Loading)
     val hotelsState = _hotelsState.asStateFlow()
@@ -36,7 +36,7 @@ class HotelViewModel @Inject constructor(
             _hotelsState.value = HotelState.Loading
 
             runCatching {
-                hotelUseCase.getAllHotelsUseCase()
+                hotelUseCases.getAllHotelsUseCase()
             }.onSuccess { hotels ->
                 _hotelsState.value = HotelState.Success(hotels)
             }.onFailure { e ->
@@ -50,7 +50,7 @@ class HotelViewModel @Inject constructor(
             _recommendedState.value = HotelState.Loading
 
             runCatching {
-                hotelUseCase.getRecommendedHotelsUseCase(minAverageRating)
+                hotelUseCases.getRecommendedHotelsUseCase(minAverageRating)
             }.onSuccess { data ->
                 _recommendedState.value = HotelState.Success(data)
             }.onFailure { e ->
@@ -70,7 +70,7 @@ class HotelViewModel @Inject constructor(
             _hotelDetailState.value = HotelState.Loading
 
             runCatching {
-                hotelUseCase.getHotelByIdUseCase(hotelId)
+                hotelUseCases.getHotelByIdUseCase(hotelId)
             }.onSuccess { hotel ->
                 if (hotel != null) {
                     hotelCache[hotelId] = hotel

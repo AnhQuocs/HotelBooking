@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.home.search.ui.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.review.presentation.ui.AllReviewActivity"
             android:exported="false" />
         <activity

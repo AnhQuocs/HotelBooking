@@ -24,16 +24,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.LineGray
+import com.example.hotelbooking.features.home.search.ui.getHighlightedText
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -49,14 +50,30 @@ fun RecommendedList(list: List<Hotel>, onClick: (String) -> Unit) {
             .padding(horizontal = Dimen.PaddingM)
     ) {
         list.forEach { hotel ->
-            RecommendedItem(hotel, onClick)
+            RecommendedItem(hotel, onClick, null)
         }
     }
 }
 
 @Composable
-fun RecommendedItem(hotel: Hotel, onClick: (String) -> Unit) {
+fun RecommendedItem(
+    hotel: Hotel,
+    onClick: (String) -> Unit,
+    query: String?
+) {
     val context = LocalContext.current
+
+    val hotelName = if (query.isNullOrEmpty()) {
+        AnnotatedString(hotel.name)
+    } else {
+        getHighlightedText(hotel.name, query)
+    }
+
+    val hotelShortAddress = if (query.isNullOrEmpty()) {
+        AnnotatedString(hotel.shortAddress)
+    } else {
+        getHighlightedText(hotel.shortAddress, query)
+    }
 
     Box(
         modifier = Modifier
@@ -96,7 +113,7 @@ fun RecommendedItem(hotel: Hotel, onClick: (String) -> Unit) {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = hotel.name,
+                    text = hotelName,
                     color = Color.Black,
                     style = JostTypography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     modifier = Modifier.padding(start = AppSpacing.XS)
@@ -113,7 +130,7 @@ fun RecommendedItem(hotel: Hotel, onClick: (String) -> Unit) {
                     Spacer(modifier = Modifier.width(AppSpacing.XS))
 
                     Text(
-                        text = hotel.shortAddress,
+                        text = hotelShortAddress,
                         style = JostTypography.labelLarge.copy(fontWeight = FontWeight.Normal),
                         color = Color.Gray
                     )

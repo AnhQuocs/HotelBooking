@@ -46,8 +46,12 @@
     <string name="booking">Đơn Đặt</string>
     <string name="message">Tin Nhắn</string>
     <string name="profile">Hồ Sơ</string>
+    <string name="prompt_where_to_go">Bạn muốn đi đâu?</string>
+    <string name="msg_no_hotels_found">Không tìm thấy khách sạn nào</string>
+    <string name="search_title">Tìm kiếm</string>
 
     <!-- HOTEL -->
+    <string name="most_popular">Phổ biến nhất</string>
     <string name="night">đêm</string>
     <string name="home_topbar_title">Lên kế hoạch cho chuyến đi tiếp theo</string>
     <string name="recommended">Gợi ý cho bạn</string>

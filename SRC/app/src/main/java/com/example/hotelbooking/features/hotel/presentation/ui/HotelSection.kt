@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTitle
 import com.example.hotelbooking.components.AppTitleShimmer
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
@@ -55,9 +57,11 @@ fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AppTitle(
-                    text1 = "Most Popular",
-                    text2 = "See All",
-                    onClick = {},
+                    text1 = stringResource(R.string.most_popular),
+                    text2 = stringResource(R.string.see_all),
+                    onClick = {
+                        // Navigate
+                    },
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                 )
                 Spacer(modifier = Modifier.height(AppSpacing.MPlus))

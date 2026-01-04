@@ -36,6 +36,7 @@ import com.example.hotelbooking.ui.theme.JostTypography
 fun UserInfo(
     user: AuthUser,
     unreadCount: Int,
+    onSearchClick: () -> Unit,
     onNotificationClick: () -> Unit
 ) {
     Row(
@@ -59,7 +60,10 @@ fun UserInfo(
             Text(
                 text = user.username ?: "",
                 color = Color.Black,
-                style = JostTypography.titleMedium.copy(fontSize = 18.sp, fontWeight = FontWeight.SemiBold),
+                style = JostTypography.titleMedium.copy(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
+                ),
             )
 
             Text(
@@ -77,7 +81,8 @@ fun UserInfo(
                     .size(Dimen.SizeXLPlus)
                     .clip(CircleShape)
                     .background(color = Color.White, CircleShape)
-                    .border(1.dp, color = Color.LightGray, CircleShape),
+                    .border(1.dp, color = Color.LightGray, CircleShape)
+                    .clickable { onSearchClick() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -95,18 +100,16 @@ fun UserInfo(
                     .size(Dimen.SizeXLPlus)
                     .clip(CircleShape)
                     .background(color = Color.White, CircleShape)
-                    .border(1.dp, color = Color.LightGray, CircleShape),
+                    .border(1.dp, color = Color.LightGray, CircleShape)
+                    .clickable { onNotificationClick() },
                 contentAlignment = Alignment.Center
             ) {
-//                Image(
-//                    painter = if(unreadCount == 0) painterResource(R.drawable.ic_notification2) else painterResource(R.drawable.ic_notification),
-//                    contentDescription = null,
-//                    modifier = Modifier.size(Dimen.SizeML).clickable { onNotificationClick() }
-//                )
                 Image(
-                    painter = painterResource(R.drawable.ic_notification2),
+                    painter = if (unreadCount == 0) painterResource(R.drawable.ic_notification2) else painterResource(
+                        R.drawable.ic_notification
+                    ),
                     contentDescription = null,
-                    modifier = Modifier.size(Dimen.SizeML).clickable { onNotificationClick() }
+                    modifier = Modifier.size(Dimen.SizeML)
                 )
             }
         }

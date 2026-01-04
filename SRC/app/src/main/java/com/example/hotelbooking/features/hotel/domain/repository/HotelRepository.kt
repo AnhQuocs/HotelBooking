@@ -9,6 +9,7 @@ interface HotelRepository {
     suspend fun getHotelById(hotelId: String): Hotel?
 
     suspend fun updateHotelRating(hotelId: String, rating: Double)
+    suspend fun searchHotels(query: String): List<Hotel>
 
     // ADMIN
     suspend fun addHotel(adminHotel: AdminHotel)
