@@ -10,14 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun ReviewSection(
-    state: ReviewState<List<Review>>,
+    state: ReviewState<HotelReviewSummary>,
+    onSeeAllClick: () -> Unit
 ) {
     when(state) {
         is ReviewState.Loading -> {
@@ -33,7 +34,7 @@ fun ReviewSection(
         }
 
         is ReviewState.Success -> {
-            ReviewList(state.data)
+            ReviewList(state.data, onSeeAllClick)
         }
 
         is ReviewState.Error -> {

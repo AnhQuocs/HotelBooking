@@ -164,7 +164,7 @@
     <string name="you">Bạn</string>
     <string name="type_a_message">Nhập tin nhắn…</string>
 
-    <!-- Notification -->
+    <!-- NOTIFICATION -->
     <string name="notification">Thông báo</string>
     <string name="notification_on">Thông báo đã được bật!</string>
     <string name="notification_off">Bạn đã tắt thông báo</string>
@@ -173,5 +173,15 @@
     <string name="code">Mã đơn: %1$s</string>
     <string name="yesterday">Hôm qua</string>
     <string name="today">Hôm nay</string>
+    <string name="no_notifications">Chưa có thông báo nào</string>
+
+    <!-- REVIEW -->
+    <string name="overall_rating">Đánh giá tổng thể</string>
+    <string name="based_on_reviews">Dựa trên %1$d đánh giá</string>
+    <string name="rating_excellent">Xuất sắc</string>
+    <string name="rating_good">Tốt</string>
+    <string name="rating_average">Trung bình</string>
+    <string name="rating_below_average">Dưới trung bình</string>
+    <string name="rating_poor">Kém</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.details
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +36,9 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.components.ReadMoreText
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
 import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.presentation.ui.AllReviewActivity
 import com.example.hotelbooking.features.review.presentation.ui.ReviewSection
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.features.room.domain.model.RoomType
@@ -53,7 +56,7 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 fun HotelDetailScreen(
     hotel: Hotel,
     roomState: RoomState<List<RoomType>>,
-    reviewState: ReviewState<List<Review>>,
+    reviewState: ReviewState<HotelReviewSummary>,
     onBackClick: () -> Unit,
     onRoomClick: (String) -> Unit,
     onChatClick: (String, String, String) -> Unit
@@ -119,7 +122,14 @@ fun HotelDetailScreen(
             }
 
             item {
-                ReviewSection(reviewState)
+                ReviewSection(
+                    state = reviewState,
+                    onSeeAllClick = {
+                        val intent = Intent(context, AllReviewActivity::class.java)
+                            .putExtra("hotelId", hotel.id)
+                        context.startActivity(intent)
+                    }
+                )
             }
         }
     }

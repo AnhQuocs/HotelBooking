@@ -37,7 +37,7 @@ fun HotelDetailSection(
     LaunchedEffect(Unit) {
         hotelViewModel.loadHotelById(hotelId)
         roomViewModel.loadRooms(hotelId)
-        reviewViewModel.loadReviewsByServiceId(hotelId)
+        reviewViewModel.loadReviews(hotelId)
     }
 
     when (hotelDetailState) {

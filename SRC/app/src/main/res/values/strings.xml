@@ -118,7 +118,7 @@
     <string name="your_room">Your Room</string>
     <string name="error">Error: %1$s</string>
     <string name="booking_detail_title">Booking Detail</string>
-    <string name="booking_loading">Loading booking data...</string>
+    <string name="booking_loading">Loading booking data…</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>
@@ -164,7 +164,7 @@
     <string name="you">You</string>
     <string name="type_a_message">Type a message…</string>
 
-    <!-- Notification -->
+    <!-- NOTIFICATION -->
     <string name="notification">Notification</string>
     <string name="notification_on">Notifications turned on!</string>
     <string name="notification_off">You have turned off notifications</string>
@@ -173,5 +173,15 @@
     <string name="code">Code: %1$s</string>
     <string name="yesterday">Yesterday</string>
     <string name="today">Today</string>
+    <string name="no_notifications">No notifications yet</string>
+
+    <!-- REVIEW -->
+    <string name="overall_rating">Overall Rating</string>
+    <string name="based_on_reviews">Based on %1$d reviews</string>
+    <string name="rating_excellent">Excellent</string>
+    <string name="rating_good">Good</string>
+    <string name="rating_average">Average</string>
+    <string name="rating_below_average">Below Average</string>
+    <string name="rating_poor">Poor</string>
 
 </resources>

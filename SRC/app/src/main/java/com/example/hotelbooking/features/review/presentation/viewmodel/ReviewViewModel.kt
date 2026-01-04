@@ -2,7 +2,7 @@ package com.example.hotelbooking.features.review.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
 import com.example.hotelbooking.features.review.domain.usecase.ReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,19 +21,17 @@ class ReviewViewModel @Inject constructor (
     private val reviewUseCase: ReviewUseCase
 ): ViewModel() {
 
-    private val _reviewState = MutableStateFlow<ReviewState<List<Review>>>(ReviewState.Loading)
+    private val _reviewState = MutableStateFlow<ReviewState<HotelReviewSummary>>(ReviewState.Loading)
     val reviewState = _reviewState.asStateFlow()
 
-    fun loadReviewsByServiceId(serviceId: String) {
+    fun loadReviews(serviceId: String) {
         viewModelScope.launch {
             _reviewState.value = ReviewState.Loading
-
-            runCatching {
-                reviewUseCase.getReviewsByServiceIdUseCase(serviceId)
-            }.onSuccess { reviews ->
-                _reviewState.value = ReviewState.Success(reviews)
-            }.onFailure { e ->
-                _reviewState.value = ReviewState.Error(e.message ?: "Unknown error")
+            try {
+                val summary = reviewUseCase.getHotelReviewSummaryUseCase(serviceId)
+                _reviewState.value = ReviewState.Success(summary)
+            } catch (e: Exception) {
+                _reviewState.value = ReviewState.Error(e.message ?: "Unknown Error")
             }
         }
     }

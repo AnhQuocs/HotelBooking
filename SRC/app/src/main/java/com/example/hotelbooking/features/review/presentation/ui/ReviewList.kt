@@ -20,13 +20,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTitle
+import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
 import com.example.hotelbooking.features.review.domain.model.Review
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.JostTypography
 
 @Composable
-fun ReviewList(list: List<Review>) {
+fun ReviewList(list: HotelReviewSummary, onSeeAllClick: () -> Unit) {
+    val reviewList = list.reviews
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,9 +37,7 @@ fun ReviewList(list: List<Review>) {
         AppTitle(
             text1 = stringResource(id = R.string.reviews),
             text2 = stringResource(id = R.string.see_all),
-            onClick = {
-
-            }
+            onClick = { onSeeAllClick() }
         )
 
         Column(
@@ -45,7 +46,7 @@ fun ReviewList(list: List<Review>) {
                 .padding(top = Dimen.PaddingS),
             verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
         ) {
-            list.take(4).forEach { review ->
+            reviewList.take(4).forEach { review ->
                 ReviewItem(review)
             }
         }

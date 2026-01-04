@@ -10,3 +10,14 @@ data class Review(
     val comment: String,
     val timestamp: String
 )
+
+data class RatingStats(
+    val averageRating: Double = 0.0,
+    val totalReviews: Int = 0,
+    val percentagePerStar: Map<Int, Float> = emptyMap()
+)
+
+data class HotelReviewSummary(
+    val reviews: List<Review>,
+    val stats: RatingStats
+)

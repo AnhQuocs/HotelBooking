@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,12 +40,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
+import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingDetailActivity
 import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
@@ -88,40 +89,10 @@ fun NotificationScreen(
 
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Dimen.PaddingM)
-                    .height(70.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        Icons.Default.ArrowBackIosNew,
-                        contentDescription = null,
-                        tint = NearBlack,
-                        modifier = Modifier
-                            .size(Dimen.SizeSM)
-                            .clickable { onBackClick() }
-                    )
-
-                    Text(
-                        stringResource(id = R.string.notification),
-                        style = JostTypography.titleLarge.copy(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = NearBlack
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.size(Dimen.SizeSM))
-                }
-            }
+            AppTopBar(
+                text = stringResource(id = R.string.notification),
+                onBackClick = onBackClick
+            )
         },
         containerColor = Color.White
     ) {
@@ -133,21 +104,43 @@ fun NotificationScreen(
                 .padding(top = Dimen.PaddingM),
             verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
         ) {
-            itemsIndexed(notifications) { index, notification ->
-                Column {
-                    NotificationItem(
-                        notification = notification,
-                        onClick = { id ->
-                            notificationViewModel.markAsRead(notification.id)
-                            val intent = Intent(context, BookingDetailActivity::class.java).apply {
-                                putExtra("bookingId", id)
+            if (notifications.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Dimen.PaddingSM)
+                            .padding(top = Dimen.PaddingM)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.no_notifications),
+                            style = JostTypography.bodyLarge.copy(
+                                fontSize = 18.sp,
+                                color = Color.Black,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            } else {
+                itemsIndexed(notifications) { index, notification ->
+                    Column {
+                        NotificationItem(
+                            notification = notification,
+                            onClick = { id ->
+                                notificationViewModel.markAsRead(notification.id)
+                                val intent =
+                                    Intent(context, BookingDetailActivity::class.java).apply {
+                                        putExtra("bookingId", id)
+                                    }
+                                context.startActivity(intent)
                             }
-                            context.startActivity(intent)
-                        }
-                    )
+                        )
 
-                    if (index != notifications.lastIndex) {
-                        LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                        if (index != notifications.lastIndex) {
+                            LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                        }
                     }
                 }
             }
@@ -235,7 +228,10 @@ fun NotificationItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.code, notification.bookingId),
-                        modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
+                        modifier = Modifier.padding(
+                            horizontal = Dimen.PaddingS,
+                            vertical = Dimen.PaddingXS
+                        ),
                         style = JostTypography.labelMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.SemiBold
