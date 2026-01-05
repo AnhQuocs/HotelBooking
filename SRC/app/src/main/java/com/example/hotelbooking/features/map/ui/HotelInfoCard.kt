@@ -52,8 +52,8 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 fun HotelInfoCard(
     hotel: Hotel,
     onCloseClick: () -> Unit,
-    onBookingClick: () -> Unit,
-    onContactClick: () -> Unit,
+    onBookingClick: (String) -> Unit,
+    onContactClick: (String, String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -105,8 +105,8 @@ fun HotelInfoCard(
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
             HotelInfoCardButton(
-                onBookingClick = onBookingClick,
-                onContactClick = onContactClick
+                onBookingClick = { onBookingClick(hotel.id) },
+                onContactClick = { onContactClick(hotel.id, hotel.name, hotel.shortAddress) }
             )
         }
     }

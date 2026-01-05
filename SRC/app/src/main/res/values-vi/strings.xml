@@ -193,5 +193,6 @@
     <string name="hotel_near_you">Khách sạn gần bạn</string>
     <string name="nearby_hotel">Gần đây</string>
     <string name="cannot_load_hotels">Không thể tải dữ liệu khách sạn</string>
+    <string name="your_location">Vị trí của bạn</string>
 
 </resources>

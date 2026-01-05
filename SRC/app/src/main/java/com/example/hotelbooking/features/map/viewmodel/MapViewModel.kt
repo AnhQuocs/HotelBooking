@@ -12,7 +12,7 @@ class MapPreviewViewModel @Inject constructor() : ViewModel() {
 
     val cameraPositionState = CameraPositionState(
         position = CameraPosition.fromLatLngZoom(
-            LatLng(1.35, 103.87),
+            LatLng(20.9611, 105.74746),
             13f
         )
     )
