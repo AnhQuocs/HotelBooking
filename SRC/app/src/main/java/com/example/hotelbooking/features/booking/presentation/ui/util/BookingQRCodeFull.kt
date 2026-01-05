@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingWithHotel
+import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.theme.PrimaryBlue

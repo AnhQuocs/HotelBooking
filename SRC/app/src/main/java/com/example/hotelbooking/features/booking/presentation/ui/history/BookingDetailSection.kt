@@ -26,11 +26,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
+import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryItem
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.DashedLine
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.HotelInfo
 import com.example.hotelbooking.features.booking.presentation.ui.util.BookingQRCodeFull
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingWithHotel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState

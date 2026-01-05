@@ -195,4 +195,10 @@
     <string name="cannot_load_hotels">Không thể tải dữ liệu khách sạn</string>
     <string name="your_location">Vị trí của bạn</string>
 
+    <!-- SETTING-LANGUAGE -->
+    <string name="language">Ngôn ngữ</string>
+    <string name="select_language">Chọn ngôn ngữ</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="apply">Áp dụng</string>
 </resources>

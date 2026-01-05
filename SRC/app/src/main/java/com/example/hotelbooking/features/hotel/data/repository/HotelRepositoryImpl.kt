@@ -66,4 +66,8 @@ class HotelRepositoryImpl(
                 HotelMapper.dtoToUserHotel(id, dto)
             }
     }
+
+    override fun clearCache() {
+        cachedHotels = null
+    }
 }

@@ -150,18 +150,22 @@ fun MessageScreen(
             }
 
             itemsIndexed(list) { index, chat ->
-                Column {
-                    ChatItem(
-                        hotelName = chat.hotelName,
-                        lastTimestamp = chat.lastTimestamp,
-                        lastSenderId = chat.lastSenderId,
-                        lastMessage = chat.lastMessage,
-                        userId = userId,
-                        onOpenChat = { onOpenChat(chat) }
-                    )
+                val hotel = chat.hotel
+                val chat = chat.chat
+                hotel?.let {
+                    Column {
+                        ChatItem(
+                            hotelName = hotel.name,
+                            lastTimestamp = chat.lastTimestamp,
+                            lastSenderId = chat.lastSenderId,
+                            lastMessage = chat.lastMessage,
+                            userId = userId,
+                            onOpenChat = { onOpenChat(chat) }
+                        )
 
-                    if (index != list.lastIndex) {
-                        LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                        if (index != list.lastIndex) {
+                            LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                        }
                     }
                 }
             }

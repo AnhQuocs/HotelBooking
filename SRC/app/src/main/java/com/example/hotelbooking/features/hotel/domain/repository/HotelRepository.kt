@@ -14,4 +14,6 @@ interface HotelRepository {
     // ADMIN
     suspend fun addHotel(adminHotel: AdminHotel)
     suspend fun getHotelsByAdminId(adminId: String): List<Hotel>
+
+    fun clearCache()
 }

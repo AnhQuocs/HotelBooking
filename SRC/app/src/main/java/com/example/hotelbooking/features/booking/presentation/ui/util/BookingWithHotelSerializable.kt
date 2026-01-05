@@ -1,6 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.util
 
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingWithHotel
+import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import kotlinx.serialization.Serializable
 
 @Serializable

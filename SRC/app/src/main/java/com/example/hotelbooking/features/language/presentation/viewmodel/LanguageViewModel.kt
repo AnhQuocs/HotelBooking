@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.language.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
 import com.example.hotelbooking.features.language.domain.model.AppLanguage
 import com.example.hotelbooking.features.language.domain.usecase.GetLanguageUseCase
 import com.example.hotelbooking.features.language.domain.usecase.UpdateLanguageUseCase
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LanguageViewModel @Inject constructor(
     private val getLanguageUseCase: GetLanguageUseCase,
-    private val updateLanguageUseCase: UpdateLanguageUseCase
+    private val updateLanguageUseCase: UpdateLanguageUseCase,
+    private val hotelRepository: HotelRepository
 ): ViewModel() {
 
     private val _currentLanguage = MutableStateFlow(AppLanguage.ENGLISH)
@@ -34,6 +36,7 @@ class LanguageViewModel @Inject constructor(
     fun changeLanguage(language: AppLanguage) {
         viewModelScope.launch {
             updateLanguageUseCase(language)
+            hotelRepository.clearCache()
         }
     }
 }
