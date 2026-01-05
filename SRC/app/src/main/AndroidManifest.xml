@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.map.ui.FullMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.home.search.ui.SearchActivity"
             android:exported="false" />
         <activity

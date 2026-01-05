@@ -94,6 +94,7 @@
 
     <!-- BOOKING -->
     <string name="book_now">Đặt ngay</string>
+    <string name="booking_now">Đặt ngay</string>
     <string name="checking">Đang kiểm tra…</string>
     <string name="check">Kiểm tra</string>
     <string name="rooms_available">Còn phòng! Xem tổng giá bên dưới.</string>
@@ -187,5 +188,10 @@
     <string name="rating_average">Trung bình</string>
     <string name="rating_below_average">Dưới trung bình</string>
     <string name="rating_poor">Kém</string>
+
+    <!-- MAP -->
+    <string name="hotel_near_you">Khách sạn gần bạn</string>
+    <string name="nearby_hotel">Gần đây</string>
+    <string name="cannot_load_hotels">Không thể tải dữ liệu khách sạn</string>
 
 </resources>

@@ -93,6 +93,7 @@
 
     <!-- BOOKING -->
     <string name="book_now">Book Now</string>
+    <string name="booking_now">Booking Now</string>
     <string name="sold_out">Sold Out</string>
     <string name="checking">Checking…</string>
     <string name="check">Check</string>
@@ -187,5 +188,10 @@
     <string name="rating_average">Average</string>
     <string name="rating_below_average">Below Average</string>
     <string name="rating_poor">Poor</string>
+
+    <!-- MAP -->
+    <string name="hotel_near_you">Hotel Near You</string>
+    <string name="nearby_hotel">Nearby Hotel</string>
+    <string name="cannot_load_hotels">Unable to load hotels at the moment</string>
 
 </resources>

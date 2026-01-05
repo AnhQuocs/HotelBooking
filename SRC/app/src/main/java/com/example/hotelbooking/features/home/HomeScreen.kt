@@ -30,7 +30,8 @@ import com.example.hotelbooking.features.hotel.presentation.ui.HotelSection
 import com.example.hotelbooking.features.hotel.presentation.ui.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.recommended.RecommendedSection
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
-import com.example.hotelbooking.features.map.MapPreviewCard
+import com.example.hotelbooking.features.map.ui.FullMapActivity
+import com.example.hotelbooking.features.map.ui.MapPreviewCard
 import com.example.hotelbooking.features.notification.presentation.ui.NotificationActivity
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.google.android.gms.maps.model.LatLng
@@ -126,9 +127,10 @@ fun HomeScreen(
                 MapPreviewCard(
                     cameraPositionState = cameraPositionState,
                     modifier = Modifier.padding(16.dp),
-                    location = LatLng(1.35, 103.87),
+                    location = LatLng(20.9611, 105.74746),
                     onClick = {
-                        // Navigate sang MapScreen full
+                        val intent = Intent(context, FullMapActivity::class.java)
+                        context.startActivity(intent)
                     }
                 )
             }

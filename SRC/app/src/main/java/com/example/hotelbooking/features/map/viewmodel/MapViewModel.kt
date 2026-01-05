@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.map
+package com.example.hotelbooking.features.map.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.CameraPosition
