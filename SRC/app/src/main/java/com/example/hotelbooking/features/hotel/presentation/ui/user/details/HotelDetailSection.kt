@@ -53,13 +53,14 @@ fun HotelDetailSection(
         }
 
         is HotelState.Success<*> -> {
-            val hotel = (hotelDetailState as HotelState.Success<*>).data
+            val hotel = (hotelDetailState as HotelState.Success<Hotel>).data
+
             HotelDetailScreen(
-                hotel as Hotel,
-                roomState,
-                reviewState,
-                onBackClick,
-                onRoomClick,
+                hotel = hotel,
+                roomState = roomState,
+                reviewState = reviewState,
+                onBackClick = onBackClick,
+                onRoomClick = onRoomClick,
                 onChatClick = { hotelId, hotelName, shortAddress ->
                     onChatClick(hotelId, hotelName, shortAddress)
                 }

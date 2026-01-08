@@ -72,7 +72,7 @@ fun FullMapScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        FullMapState(
+        FullMapSection(
             uiState = uiState,
             onBookingClick = {
                 val intent = Intent(context, HotelDetailActivity::class.java)

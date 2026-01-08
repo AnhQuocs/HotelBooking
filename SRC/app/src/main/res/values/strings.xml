@@ -76,7 +76,7 @@
     <string name="read_more">Read more</string>
     <string name="show_less">Show less</string>
     <string name="reviews">Reviews</string>
-    <string name="preview">Preview</string>
+    <string name="rooms">Rooms</string>
 
     <!-- ROOM -->
     <string name="amenities">Amenities</string>
@@ -194,6 +194,8 @@
     <string name="nearby_hotel">Nearby Hotel</string>
     <string name="cannot_load_hotels">Unable to load hotels at the moment</string>
     <string name="your_location">Your Location</string>
+    <string name="open_map">Open Map</string>
+    <string name="location">Location</string>
 
     <!-- SETTING-LANGUAGE -->
     <string name="language">Language</string>

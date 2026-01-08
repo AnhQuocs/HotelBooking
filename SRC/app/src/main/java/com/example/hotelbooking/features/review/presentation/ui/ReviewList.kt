@@ -46,7 +46,7 @@ fun ReviewList(list: HotelReviewSummary, onSeeAllClick: () -> Unit) {
                 .padding(top = Dimen.PaddingS),
             verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
         ) {
-            reviewList.take(4).forEach { review ->
+            reviewList.take(3).forEach { review ->
                 ReviewItem(review)
             }
         }

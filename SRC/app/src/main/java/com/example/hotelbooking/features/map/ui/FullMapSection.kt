@@ -39,7 +39,7 @@ private const val HOTEL_FOCUS_ZOOM = 16f
 private const val HOTEL_OVERVIEW_ZOOM = 6f
 
 @Composable
-fun FullMapState(
+fun FullMapSection(
     uiState: HotelState<List<Hotel>>,
     onBookingClick: (String) -> Unit,
     onContactClick: (String, String, String) -> Unit,

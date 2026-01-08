@@ -34,6 +34,7 @@ import com.example.hotelbooking.features.map.ui.FullMapActivity
 import com.example.hotelbooking.features.map.ui.MapPreviewCard
 import com.example.hotelbooking.features.notification.presentation.ui.NotificationActivity
 import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 
@@ -126,7 +127,7 @@ fun HomeScreen(
 
                 MapPreviewCard(
                     cameraPositionState = cameraPositionState,
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(Dimen.PaddingM),
                     location = LatLng(20.9611, 105.74746),
                     onClick = {
                         val intent = Intent(context, FullMapActivity::class.java)

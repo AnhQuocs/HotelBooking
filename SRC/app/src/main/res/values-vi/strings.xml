@@ -76,7 +76,7 @@
     <string name="read_more">Xem thêm</string>
     <string name="show_less">Thu gọn</string>
     <string name="reviews">Đánh giá</string>
-    <string name="preview">Xem trước</string>
+    <string name="rooms">Phòng ngủ</string>
 
     <!-- ROOM -->
     <string name="amenities">Tiện nghi</string>
@@ -194,6 +194,8 @@
     <string name="nearby_hotel">Gần đây</string>
     <string name="cannot_load_hotels">Không thể tải dữ liệu khách sạn</string>
     <string name="your_location">Vị trí của bạn</string>
+    <string name="open_map">Mở bản đồ</string>
+    <string name="location">Vị trí</string>
 
     <!-- SETTING-LANGUAGE -->
     <string name="language">Ngôn ngữ</string>

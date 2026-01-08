@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
+import com.example.hotelbooking.features.map.viewmodel.MapPreviewViewModel
 import com.example.hotelbooking.features.room.presentation.ui.detail.RoomDetailActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint

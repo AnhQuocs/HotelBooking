@@ -89,7 +89,7 @@ fun HotelInfoCard(
 
                     Spacer(modifier = Modifier.width(AppSpacing.S))
 
-                    HotelInfo(hotel)
+                    HotelInfo(hotel = hotel)
                 }
 
                 Icon(
@@ -128,6 +128,8 @@ fun HotelInfo(hotel: Hotel) {
                 .fillMaxWidth()
         )
 
+        Spacer(modifier = Modifier.height(AppSpacing.XS))
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -145,6 +147,8 @@ fun HotelInfo(hotel: Hotel) {
             )
         }
 
+        Spacer(modifier = Modifier.height(AppSpacing.XS))
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -152,7 +156,7 @@ fun HotelInfo(hotel: Hotel) {
                 buildAnnotatedString {
                     withStyle(
                         style = MaterialTheme.typography.titleSmall.toSpanStyle()
-                            .copy(color = Color.Blue, fontWeight = FontWeight.Bold)
+                            .copy(color = PrimaryBlue, fontWeight = FontWeight.Bold)
                     ) {
                         append("$" + hotel.pricePerNightMin.toString())
                     }
