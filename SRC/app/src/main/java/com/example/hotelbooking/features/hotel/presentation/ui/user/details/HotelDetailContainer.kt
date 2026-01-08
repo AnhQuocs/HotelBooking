@@ -21,8 +21,9 @@ import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewMod
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
-fun HotelDetailSection(
+fun HotelDetailContainer(
     hotelId: String,
+    onOpenMap: (Double, Double) -> Unit,
     onBackClick: () -> Unit,
     onRoomClick: (String) -> Unit,
     onChatClick: (String, String, String) -> Unit,
@@ -34,7 +35,7 @@ fun HotelDetailSection(
     val roomState by roomViewModel.roomsState.collectAsState()
     val reviewState by reviewViewModel.reviewState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(hotelId) {
         hotelViewModel.loadHotelById(hotelId)
         roomViewModel.loadRooms(hotelId)
         reviewViewModel.loadReviews(hotelId)
@@ -59,6 +60,9 @@ fun HotelDetailSection(
                 hotel = hotel,
                 roomState = roomState,
                 reviewState = reviewState,
+                onOpenMap = { lat, lgn ->
+                    onOpenMap(lat, lgn)
+                },
                 onBackClick = onBackClick,
                 onRoomClick = onRoomClick,
                 onChatClick = { hotelId, hotelName, shortAddress ->

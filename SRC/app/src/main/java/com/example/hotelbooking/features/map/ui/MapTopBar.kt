@@ -30,6 +30,7 @@ import com.example.hotelbooking.ui.theme.NearBlack
 @Composable
 fun MapTopBar(
     onBackClick: () -> Unit,
+    text: String,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -61,11 +62,11 @@ fun MapTopBar(
             }
 
             Text(
-                text = stringResource(id = R.string.nearby_hotel),
+                text = text,
                 style = JostTypography.titleLarge.copy(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    color = Color.Black
                 )
             )
 

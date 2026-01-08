@@ -196,6 +196,7 @@
     <string name="your_location">Vị trí của bạn</string>
     <string name="open_map">Mở bản đồ</string>
     <string name="location">Vị trí</string>
+    <string name="hotel_location">Vị trí khách sạn</string>
 
     <!-- SETTING-LANGUAGE -->
     <string name="language">Ngôn ngữ</string>

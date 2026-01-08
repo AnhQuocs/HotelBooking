@@ -196,6 +196,7 @@
     <string name="your_location">Your Location</string>
     <string name="open_map">Open Map</string>
     <string name="location">Location</string>
+    <string name="hotel_location">Hotel Location</string>
 
     <!-- SETTING-LANGUAGE -->
     <string name="language">Language</string>

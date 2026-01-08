@@ -5,10 +5,9 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
-import com.example.hotelbooking.features.map.viewmodel.MapPreviewViewModel
+import com.example.hotelbooking.features.map.ui.hotel.HotelLocationActivity
 import com.example.hotelbooking.features.room.presentation.ui.detail.RoomDetailActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,9 +24,16 @@ class HotelDetailActivity : BaseComponentActivity() {
             val context = LocalContext.current
             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-            HotelDetailSection(
+            HotelDetailContainer(
                 hotelId = hotelId,
                 onBackClick = { finish() },
+                onOpenMap = { lat, lng ->
+                    val intent = Intent(context, HotelLocationActivity::class.java)
+                        .putExtra("lat", lat)
+                        .putExtra("lng", lng)
+                        .putExtra("hotelId", hotelId)
+                    context.startActivity(intent)
+                },
                 onRoomClick = { roomId ->
                     val intent = Intent(context, RoomDetailActivity::class.java)
                         .putExtra("roomId", roomId)

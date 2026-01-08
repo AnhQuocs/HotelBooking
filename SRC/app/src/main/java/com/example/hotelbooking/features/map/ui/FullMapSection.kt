@@ -56,7 +56,7 @@ fun FullMapSection(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = Color.White),
-                contentAlignment = Alignment.CenterEnd
+                contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = PrimaryBlue)
             }
@@ -150,10 +150,9 @@ fun FullMapSection(
         is HotelState.Error -> {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
+                    .fillMaxSize()
                     .background(color = Color.White),
-                contentAlignment = Alignment.CenterEnd
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(id = R.string.cannot_load_hotels),

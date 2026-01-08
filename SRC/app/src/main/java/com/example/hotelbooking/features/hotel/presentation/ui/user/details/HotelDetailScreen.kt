@@ -31,6 +31,7 @@ fun HotelDetailScreen(
     hotel: Hotel,
     roomState: RoomState<List<RoomType>>,
     reviewState: ReviewState<HotelReviewSummary>,
+    onOpenMap: (Double, Double) -> Unit,
     onBackClick: () -> Unit,
     onRoomClick: (String) -> Unit,
     onChatClick: (String, String, String) -> Unit
@@ -65,9 +66,7 @@ fun HotelDetailScreen(
                     name = hotel.name,
                     pricePerNightMin = hotel.pricePerNightMin,
                     address = hotel.address,
-                    onOpenMap = {
-
-                    }
+                    onOpenMap = { onOpenMap(hotel.latitude, hotel.longitude) }
                 )
 
                 Spacer(modifier = Modifier.height(AppSpacing.S))

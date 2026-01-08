@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
@@ -94,6 +95,7 @@ fun FullMapScreen(
 
         MapTopBar(
             onBackClick = { onBackClick() },
+            text = stringResource(id = R.string.nearby_hotel),
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
