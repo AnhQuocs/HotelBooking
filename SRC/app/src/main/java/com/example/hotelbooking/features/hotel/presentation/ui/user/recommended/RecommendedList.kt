@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.recommended
+package com.example.hotelbooking.features.hotel.presentation.ui.user.recommended
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

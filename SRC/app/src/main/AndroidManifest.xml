@@ -41,7 +41,7 @@
             android:name=".features.booking.presentation.ui.history.BookingDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".features.hotel.presentation.ui.details.HotelDetailActivity"
+            android:name=".features.hotel.presentation.ui.user.details.HotelDetailActivity"
             android:exported="false" />
         <activity
             android:name=".features.room.presentation.ui.detail.RoomDetailActivity"

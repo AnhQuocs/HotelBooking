@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.details
+package com.example.hotelbooking.features.hotel.presentation.ui.user.details
 
 import android.content.Intent
 import android.os.Bundle

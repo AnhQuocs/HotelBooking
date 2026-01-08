@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
-import com.example.hotelbooking.features.hotel.presentation.ui.details.HotelDetailActivity
+import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.map.util.bitmapFromVector
 import com.example.hotelbooking.ui.dimens.Dimen

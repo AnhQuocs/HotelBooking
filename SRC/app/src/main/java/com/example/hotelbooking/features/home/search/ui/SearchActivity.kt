@@ -39,8 +39,8 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.home.search.viewmodel.SearchViewModel
-import com.example.hotelbooking.features.hotel.presentation.ui.details.HotelDetailActivity
-import com.example.hotelbooking.features.hotel.presentation.ui.recommended.RecommendedItem
+import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
+import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedItem
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing

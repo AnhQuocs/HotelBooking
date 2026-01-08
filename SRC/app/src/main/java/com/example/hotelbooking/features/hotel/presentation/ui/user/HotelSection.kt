@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.ui
+package com.example.hotelbooking.features.hotel.presentation.ui.user
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,8 +29,7 @@ fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
         is HotelState.Loading -> {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp),
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -39,7 +38,7 @@ fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
                     AppTitleShimmer(
                         modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                     )
-                    Spacer(modifier = Modifier.height(AppSpacing.MediumLarge + 4.dp))
+                    Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         contentPadding = PaddingValues(horizontal = Dimen.PaddingM)

@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.details
+package com.example.hotelbooking.features.hotel.presentation.ui.user.details
 
 import android.content.Context
 import android.content.Intent
@@ -37,7 +37,6 @@ import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.components.ReadMoreText
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
-import com.example.hotelbooking.features.review.domain.model.Review
 import com.example.hotelbooking.features.review.presentation.ui.AllReviewActivity
 import com.example.hotelbooking.features.review.presentation.ui.ReviewSection
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
