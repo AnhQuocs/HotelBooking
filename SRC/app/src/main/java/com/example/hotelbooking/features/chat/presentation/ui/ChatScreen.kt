@@ -188,8 +188,6 @@ fun ChatScreen(
                                     viewModel.sendMessage(
                                         userId = userId,
                                         hotelId = hotelId,
-                                        hotelName = hotelName,
-                                        shortAddress = shortAddress,
                                         senderId = userId,
                                         content = inputText
                                     )

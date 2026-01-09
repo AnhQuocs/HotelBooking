@@ -11,8 +11,6 @@ interface ChatRepository {
     suspend fun createChat(
         userId: String,
         hotelId: String,
-        hotelName: String,
-        shortAddress: String,
         firstMessage: String
     ): Chat
 

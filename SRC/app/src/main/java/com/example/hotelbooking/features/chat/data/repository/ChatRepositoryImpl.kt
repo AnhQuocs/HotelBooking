@@ -32,8 +32,6 @@ class ChatRepositoryImpl(
     override suspend fun createChat(
         userId: String,
         hotelId: String,
-        hotelName: String,
-        shortAddress: String,
         firstMessage: String
     ): Chat {
         val chatId = "${userId}_${hotelId}"
@@ -43,8 +41,6 @@ class ChatRepositoryImpl(
             chatId = chatId,
             userId = userId,
             hotelId = hotelId,
-            hotelName = hotelName,
-            shortAddress = shortAddress,
             lastMessage = firstMessage,
             lastTimestamp = timestamp,
             createdAt = timestamp

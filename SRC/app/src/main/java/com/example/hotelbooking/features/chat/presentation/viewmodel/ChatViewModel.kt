@@ -50,8 +50,6 @@ class ChatViewModel @Inject constructor(
     fun sendMessage(
         userId: String,
         hotelId: String,
-        hotelName: String,
-        shortAddress: String,
         senderId: String,
         content: String
     ) {
@@ -59,8 +57,6 @@ class ChatViewModel @Inject constructor(
             val id = chatUseCases.sendMessageUseCase(
                 userId = userId,
                 hotelId = hotelId,
-                hotelName = hotelName,
-                shortAddress = shortAddress,
                 senderId = senderId,
                 content = content
             )

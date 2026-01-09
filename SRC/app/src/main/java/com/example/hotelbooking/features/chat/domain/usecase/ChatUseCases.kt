@@ -28,8 +28,6 @@ class SendMessageUseCase(
     suspend operator fun invoke(
         userId: String,
         hotelId: String,
-        hotelName: String,
-        shortAddress: String,
         senderId: String,
         content: String
     ): String {
@@ -40,8 +38,6 @@ class SendMessageUseCase(
             ?: repository.createChat(
                 userId = userId,
                 hotelId = hotelId,
-                hotelName = hotelName,
-                shortAddress = shortAddress,
                 firstMessage = content
             )
 

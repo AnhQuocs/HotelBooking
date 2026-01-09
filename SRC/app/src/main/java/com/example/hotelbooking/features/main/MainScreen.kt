@@ -141,11 +141,11 @@ fun MainScreen(
 
                 2 -> MessageScreen(
                     userId = userId,
-                    onOpenChat = { chat ->
+                    onOpenChat = { chat, hotelName, shortAddress ->
                         val intent = Intent(context, ChatActivity::class.java)
                             .putExtra("hotelId", chat.hotelId)
-                            .putExtra("hotelName", chat.hotelName)
-                            .putExtra("shortAddress", chat.shortAddress)
+                            .putExtra("hotelName", hotelName)
+                            .putExtra("shortAddress", shortAddress)
                             .putExtra("userId", chat.userId)
                         context.startActivity(intent)
                     }

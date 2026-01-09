@@ -64,7 +64,7 @@ import com.example.hotelbooking.ui.theme.TextTertiary
 @Composable
 fun MessageScreen(
     userId: String,
-    onOpenChat: (Chat) -> Unit,
+    onOpenChat: (Chat, String, String) -> Unit,
     viewModel: ConversationListViewModel = hiltViewModel()
 ) {
     val list by viewModel.conversations.collectAsState()
@@ -160,7 +160,7 @@ fun MessageScreen(
                             lastSenderId = chat.lastSenderId,
                             lastMessage = chat.lastMessage,
                             userId = userId,
-                            onOpenChat = { onOpenChat(chat) }
+                            onOpenChat = { onOpenChat(chat, hotel.name, hotel.shortAddress) }
                         )
 
                         if (index != list.lastIndex) {
