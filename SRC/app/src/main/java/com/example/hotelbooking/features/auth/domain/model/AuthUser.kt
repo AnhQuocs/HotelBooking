@@ -6,7 +6,7 @@ enum class UserRole {
 }
 
 data class AuthUser(
-    val uid: String?,
+    val uid: String,
     val email: String?,
     val username: String?,
     val role: UserRole

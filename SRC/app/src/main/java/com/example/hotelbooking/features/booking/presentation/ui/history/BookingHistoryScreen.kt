@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
-import com.example.hotelbooking.features.booking.presentation.ui.history.search.SearchBookingSection
+import com.example.hotelbooking.features.booking.presentation.ui.history.search.SearchBookingsSection
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.SearchBookingsViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -118,7 +118,7 @@ fun BookingHistoryScreen(
             if(query.isBlank()) {
                 BookingHistorySection(bookingHistoryState, onDetailClick, null)
             } else {
-                SearchBookingSection(
+                SearchBookingsSection(
                     isNoBookingSearch = query.isNotEmpty(),
                     query = query,
                     searchState = searchState,

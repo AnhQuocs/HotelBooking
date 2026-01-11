@@ -19,6 +19,8 @@ class ChatRepositoryImpl(
     private val db: FirebaseFirestore
 ) : ChatRepository {
 
+    private val cachedChats = mutableMapOf<String, List<Chat>>()
+
     override suspend fun getExistingChat(userId: String, hotelId: String): Chat? {
         val result = db.collection("chats")
             .whereEqualTo("userId", userId)
@@ -100,6 +102,9 @@ class ChatRepositoryImpl(
     }
 
     override fun listenUserChats(userId: String): Flow<List<Chat>> = callbackFlow {
+        // Nếu có cache trước đó, emit ngay
+        cachedChats[userId]?.let { trySendBlocking(it) }
+
         val listener = db.collection("chats")
             .whereEqualTo("userId", userId)
             .orderBy("lastTimestamp", Query.Direction.DESCENDING)
@@ -107,42 +112,32 @@ class ChatRepositoryImpl(
                 try {
                     if (error != null) {
                         Log.e("CHAT_REPO", "Firestore listener error", error)
-                        // Send nothing or keep previous state? gửi empty to be explicit
                         trySendBlocking(emptyList())
                         return@addSnapshotListener
                     }
 
                     if (snapshot == null) {
-                        Log.w("CHAT_REPO", "Snapshot is null")
                         trySendBlocking(emptyList())
                         return@addSnapshotListener
                     }
 
-                    Log.d("CHAT_REPO", "Snapshot docs count = ${snapshot.documents.size}")
                     val list = snapshot.documents.mapNotNull { doc ->
-                        try {
-                            // debug raw fields
-                            Log.d("CHAT_REPO", "Doc id=${doc.id} data=${doc.data}")
-                            doc.toObject(ChatDto::class.java)?.toDomain()
-                        } catch (e: Exception) {
-                            Log.e("CHAT_REPO", "Failed mapping doc ${doc.id}", e)
-                            null
-                        }
+                        doc.toObject(ChatDto::class.java)?.toDomain()
                     }
 
-                    Log.d("CHAT_REPO", "Mapped chats size = ${list.size}")
+                    // 🔹 Lưu vào cache
+                    cachedChats[userId] = list
+
+                    // 🔹 Emit cho Flow
                     trySendBlocking(list)
+
                 } catch (t: Throwable) {
-                    Log.e("CHAT_REPO", "Unhandled error in snapshot listener", t)
-                    // avoid crashing callbackFlow; emit empty
+                    Log.e("CHAT_REPO", "Unhandled error", t)
                     trySendBlocking(emptyList())
                 }
             }
 
-        awaitClose {
-            Log.d("CHAT_REPO", "Listener removed")
-            listener.remove()
-        }
+        awaitClose { listener.remove() }
     }
 
     override fun listenHotelChats(hotelId: String): Flow<List<Chat>> = callbackFlow {

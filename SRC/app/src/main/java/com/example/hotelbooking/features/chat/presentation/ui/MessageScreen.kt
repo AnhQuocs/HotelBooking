@@ -19,8 +19,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -29,9 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +37,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,6 +51,7 @@ import com.example.hotelbooking.features.chat.domain.model.Chat
 import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
 import com.example.hotelbooking.features.chat.presentation.util.getInitials
 import com.example.hotelbooking.features.chat.presentation.viewmodel.ConversationListViewModel
+import com.example.hotelbooking.features.chat.presentation.viewmodel.SearchChatsViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -58,19 +59,22 @@ import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.SurfaceGray
-import com.example.hotelbooking.ui.theme.TextPrimaryDark
 import com.example.hotelbooking.ui.theme.TextTertiary
+import com.example.hotelbooking.utils.getHighlightedText
 
 @Composable
 fun MessageScreen(
     userId: String,
     onOpenChat: (Chat, String, String) -> Unit,
-    viewModel: ConversationListViewModel = hiltViewModel()
+    viewModel: ConversationListViewModel = hiltViewModel(),
+    searchChatsViewModel: SearchChatsViewModel = hiltViewModel()
 ) {
     val list by viewModel.conversations.collectAsState()
-    var query by remember { mutableStateOf("") }
 
-    LaunchedEffect(true) {
+    val query by searchChatsViewModel.searchQuery.collectAsState()
+    val searchState by searchChatsViewModel.searchResultState.collectAsState()
+
+    LaunchedEffect(userId) {
         viewModel.load(userId)
     }
 
@@ -98,76 +102,87 @@ fun MessageScreen(
         },
         containerColor = Color.White,
     ) { paddingValues ->
-        LazyColumn(
+        Column (
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = Dimen.PaddingM)
                 .padding(top = Dimen.PaddingM)
         ) {
-            item {
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    label = { Text(
-                        stringResource(id = R.string.search), fontSize = 15.sp) },
-                    leadingIcon = {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_search),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(TextTertiary),
-                            modifier = Modifier.size(Dimen.SizeSM)
-                        )
-                    },
-                    trailingIcon = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .height(Dimen.HeightXXS)
-                                    .width(1.dp)
-                                    .background(color = Color.LightGray)
-                            )
-
-                            Spacer(modifier = Modifier.width(AppSpacing.XS))
-
-                            Icon(
-                                Icons.Default.FilterAlt,
-                                contentDescription = null,
-                                tint = TextPrimaryDark,
-                                modifier = Modifier.size(Dimen.SizeSM)
-                            )
+            OutlinedTextField(
+                value = query,
+                onValueChange = {
+                    searchChatsViewModel.onSearchQueryChange(it)
+                },
+                label = {
+                    Text(
+                        stringResource(id = R.string.search),
+                        fontSize = 15.sp,
+                        color = Color.Black
+                    )
+                },
+                leadingIcon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_search),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(TextTertiary),
+                        modifier = Modifier.size(Dimen.SizeSM)
+                    )
+                },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { searchChatsViewModel.onSearchQueryChange("") }) {
+                            Icon(Icons.Default.Clear, contentDescription = null)
                         }
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = SurfaceGray,
-                        unfocusedBorderColor = SurfaceGray
-                    ),
-                    shape = RoundedCornerShape(AppShape.ShapeXL2),
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    }
+                },
+                textStyle = TextStyle(color = Color.Black),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = SurfaceGray,
+                    unfocusedBorderColor = SurfaceGray,
+                    cursorColor = Color.Black
+                ),
+                shape = RoundedCornerShape(AppShape.ShapeXL2),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                Spacer(modifier = Modifier.height(AppSpacing.M))
-            }
+            Spacer(modifier = Modifier.height(AppSpacing.M))
 
-            itemsIndexed(list) { index, chat ->
-                val hotel = chat.hotel
-                val chat = chat.chat
-                hotel?.let {
-                    Column {
-                        ChatItem(
-                            hotelName = hotel.name,
-                            lastTimestamp = chat.lastTimestamp,
-                            lastSenderId = chat.lastSenderId,
-                            lastMessage = chat.lastMessage,
-                            userId = userId,
-                            onOpenChat = { onOpenChat(chat, hotel.name, hotel.shortAddress) }
-                        )
+            if (query.isBlank()) {
+                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                    itemsIndexed(list) { index, chat ->
+                        val hotel = chat.hotel
+                        val chat = chat.chat
 
-                        if (index != list.lastIndex) {
-                            LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                        hotel?.let {
+                            Column {
+                                ChatItem(
+                                    hotelName = hotel.name,
+                                    lastTimestamp = chat.lastTimestamp,
+                                    lastSenderId = chat.lastSenderId,
+                                    lastMessage = chat.lastMessage,
+                                    userId = userId,
+                                    query = null,
+                                    onOpenChat = { onOpenChat(chat, hotel.name, hotel.shortAddress) }
+                                )
+
+                                if (index != list.lastIndex) {
+                                    LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                                }
+                            }
                         }
                     }
                 }
+            } else {
+                SearchChatsSection(
+                    isNoBookingSearch = query.isNotEmpty(),
+                    query = query,
+                    searchState = searchState,
+                    userId = userId,
+                    onOpenChat = { chat, hotelName, shortAddress ->
+                        onOpenChat(chat, hotelName, shortAddress)
+                    }
+                )
             }
         }
     }
@@ -180,8 +195,15 @@ fun ChatItem(
     lastSenderId: String,
     lastMessage: String,
     userId: String,
+    query: String?,
     onOpenChat: () -> Unit
 ) {
+    val hotelNameText = if (query.isNullOrEmpty()) {
+        AnnotatedString(hotelName)
+    } else {
+        getHighlightedText(hotelName, query)
+    }
+
     Row(
         modifier = Modifier
             .padding(horizontal = Dimen.PaddingSM, vertical = Dimen.PaddingM)
@@ -216,7 +238,7 @@ fun ChatItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = hotelName,
+                    text = hotelNameText,
                     style = JostTypography.titleMedium.copy(
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,

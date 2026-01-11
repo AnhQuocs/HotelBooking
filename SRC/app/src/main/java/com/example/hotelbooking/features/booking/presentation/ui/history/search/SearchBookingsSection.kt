@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.ui.history.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,7 +16,7 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingH
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
-fun SearchBookingSection(
+fun SearchBookingsSection(
     isNoBookingSearch: Boolean,
     query: String,
     searchState: BookingHistoryState<List<BookingWithHotel>>,

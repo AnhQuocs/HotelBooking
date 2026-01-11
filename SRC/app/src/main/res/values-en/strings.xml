@@ -169,6 +169,7 @@
     <string name="search">Search…</string>
     <string name="you">You</string>
     <string name="type_a_message">Type a message…</string>
+    <string name="msg_no_chats_found">No chats found</string>
 
     <!-- NOTIFICATION -->
     <string name="notification">Notification</string>
