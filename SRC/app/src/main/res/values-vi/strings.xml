@@ -124,6 +124,7 @@
     <string name="error">Lỗi: %1$s</string>
     <string name="booking_detail_title">Thông tin đặt phòng</string>
     <string name="booking_loading">Đang tải thông tin đặt phòng...</string>
+    <string name="msg_no_bookings_found">Không tìm thấy đơn hàng nào</string>
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>

@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,6 +54,7 @@ import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SlateGray
+import com.example.hotelbooking.utils.getHighlightedText
 import com.google.firebase.Timestamp
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -64,7 +66,8 @@ fun Timestamp.toLocalDateTime(): LocalDateTime {
 @Composable
 fun BookingHistorySection(
     state: BookingHistoryState<List<BookingWithHotel>>,
-    onDetailClick: (String, String) -> Unit
+    onDetailClick: (String, String) -> Unit,
+    query: String?
 ) {
     val context = LocalContext.current
 
@@ -106,6 +109,7 @@ fun BookingHistorySection(
                                 booking = item.booking,
                                 hotel = it,
                                 context = context,
+                                query = query,
                                 onDetailClick = {
                                     onDetailClick(
                                         item.booking.bookingId,
@@ -136,6 +140,7 @@ fun BookingHistoryCard(
     booking: Booking,
     hotel: Hotel,
     context: Context,
+    query: String?,
     onDetailClick: () -> Unit
 ) {
     val start = booking.startDate.toLocalDateTime()
@@ -154,6 +159,18 @@ fun BookingHistoryCard(
             stringResource(id = R.string.guest)
         else
             stringResource(id = R.string.guests)
+
+    val hotelName = if (query.isNullOrEmpty()) {
+        AnnotatedString(hotel.name)
+    } else {
+        getHighlightedText(hotel.name, query)
+    }
+
+    val hotelShortAddress = if (query.isNullOrEmpty()) {
+        AnnotatedString(hotel.shortAddress)
+    } else {
+        getHighlightedText(hotel.shortAddress, query)
+    }
 
     Box(
         modifier = Modifier
@@ -189,7 +206,7 @@ fun BookingHistoryCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = hotel.name,
+                        text = hotelName,
                         style = JostTypography.titleMedium.copy(
                             color = Color.Black,
                             fontSize = 17.sp,
@@ -224,7 +241,7 @@ fun BookingHistoryCard(
                     )
                     Spacer(modifier = Modifier.width(AppSpacing.XS))
                     Text(
-                        text = hotel.shortAddress,
+                        text = hotelShortAddress,
                         style = JostTypography.bodyLarge.copy(
                             fontSize = 15.sp,
                             color = SlateGray,

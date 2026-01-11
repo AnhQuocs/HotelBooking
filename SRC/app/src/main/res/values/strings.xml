@@ -124,6 +124,7 @@
     <string name="error">Error: %1$s</string>
     <string name="booking_detail_title">Booking Detail</string>
     <string name="booking_loading">Loading booking data…</string>
+    <string name="msg_no_bookings_found">No bookings found</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>

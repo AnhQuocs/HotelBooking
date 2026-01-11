@@ -34,13 +34,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.LineGray
-import com.example.hotelbooking.features.home.search.ui.getHighlightedText
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.utils.getHighlightedText
 
 @Composable
 fun RecommendedList(list: List<Hotel>, onClick: (String) -> Unit) {

@@ -7,9 +7,12 @@ import com.example.hotelbooking.features.booking.data.mapper.toDto
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.utils.removeAccents
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
@@ -21,6 +24,8 @@ class BookingRepositoryImpl(
 
     private val zoneId = ZoneOffset.UTC
 
+    private val cachedBookings = mutableMapOf<String, List<Booking>>()
+
     override suspend fun checkAvailability(
         hotelId: String,
         roomTypeId: String,
@@ -30,15 +35,13 @@ class BookingRepositoryImpl(
     ): Int {
         val startTs = Timestamp(startDate.atStartOfDay(ZoneOffset.UTC).toInstant())
 
-        val snapshot = bookingsCollection
-            .whereEqualTo("hotelId", hotelId)
+        val snapshot = bookingsCollection.whereEqualTo("hotelId", hotelId)
             .whereEqualTo("roomTypeId", roomTypeId)
-            .whereIn("status", listOf("CONFIRMED", "PENDING"))
-            .whereGreaterThan("endDate", startTs)
-            .get()
-            .await()
+            .whereIn("status", listOf("CONFIRMED", "PENDING")).whereGreaterThan("endDate", startTs)
+            .get().await()
 
-        val bookings = snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
+        val bookings =
+            snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
 
         val requestedNights = startDate.datesUntil(endDate).toList()
         val bookedPerNight = requestedNights.associateWith { 0 }.toMutableMap()
@@ -47,12 +50,8 @@ class BookingRepositoryImpl(
 
         bookings.forEach { booking ->
 
-            if (booking.status == BookingStatus.PENDING &&
-                booking.expireAt != null &&
-                now.seconds > booking.expireAt.seconds
-            ) {
-                bookingsCollection.document(booking.bookingId)
-                    .update("status", "CANCELLED")
+            if (booking.status == BookingStatus.PENDING && booking.expireAt != null && now.seconds > booking.expireAt.seconds) {
+                bookingsCollection.document(booking.bookingId).update("status", "CANCELLED")
                     .addOnFailureListener { e ->
                         Log.e("LazyCheck", "Failed to cleanup booking ${booking.bookingId}")
                     }
@@ -78,9 +77,7 @@ class BookingRepositoryImpl(
     }
 
     override suspend fun createBooking(
-        booking: Booking,
-        availableRooms: Int,
-        expireAt: Timestamp
+        booking: Booking, availableRooms: Int, expireAt: Timestamp
     ): Booking {
         if (availableRooms < 1) {
             throw Exception("Room sold out just now!")
@@ -89,9 +86,7 @@ class BookingRepositoryImpl(
         val docRef = bookingsCollection.document()
 
         val finalBooking = booking.copy(
-            bookingId = docRef.id,
-            status = BookingStatus.PENDING,
-            expireAt = expireAt
+            bookingId = docRef.id, status = BookingStatus.PENDING, expireAt = expireAt
         )
 
         docRef.set(finalBooking.toDto()).await()
@@ -101,8 +96,7 @@ class BookingRepositoryImpl(
 
     override suspend fun cancelBooking(bookingId: String): Boolean {
         return try {
-            bookingsCollection.document(bookingId)
-                .update("status", BookingStatus.CANCELLED.name)
+            bookingsCollection.document(bookingId).update("status", BookingStatus.CANCELLED.name)
                 .await()
             true
         } catch (e: Exception) {
@@ -117,8 +111,7 @@ class BookingRepositoryImpl(
     }
 
     override suspend fun updateStatus(
-        bookingId: String,
-        status: BookingStatus
+        bookingId: String, status: BookingStatus
     ): Booking {
         val docRef = bookingsCollection.document(bookingId)
 
@@ -132,12 +125,17 @@ class BookingRepositoryImpl(
     }
 
     override suspend fun getBookingsByUser(userId: String): List<Booking> {
-        val snapshot = bookingsCollection
-            .whereEqualTo("userId", userId)
-            .orderBy("startDate", com.google.firebase.firestore.Query.Direction.DESCENDING)
-            .get()
+        cachedBookings[userId]?.let { return it }
+
+        val snapshot = bookingsCollection.whereEqualTo("userId", userId)
+            .orderBy("startDate", com.google.firebase.firestore.Query.Direction.DESCENDING).get()
             .await()
-        return snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
+
+        val bookings =
+            snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
+
+        cachedBookings[userId] = bookings
+        return bookings
     }
 
     override suspend fun getBookingsById(bookingId: String): Booking {
@@ -157,15 +155,11 @@ class BookingRepositoryImpl(
         val startTs = Timestamp(startDate.atStartOfDay(zoneId).toInstant())
         val endTs = Timestamp(endDate.plusDays(1).atStartOfDay(zoneId).toInstant())
 
-        val snapshot = bookingsCollection
-            .whereEqualTo("hotelId", hotelId)
-            .whereEqualTo("roomTypeId", roomTypeId)
-            .whereIn("status", statuses.map { it.name })
-            .get()
-            .await()
+        val snapshot = bookingsCollection.whereEqualTo("hotelId", hotelId)
+            .whereEqualTo("roomTypeId", roomTypeId).whereIn("status", statuses.map { it.name })
+            .get().await()
 
-        return snapshot.documents
-            .mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
+        return snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
             .filter {
                 it.startDate.seconds < endTs.seconds && it.endDate.seconds > startTs.seconds
             }
@@ -176,11 +170,8 @@ class BookingRepositoryImpl(
         val cutoffTime = Timestamp(Date(System.currentTimeMillis() - timeoutMillis))
 
         try {
-            val snapshot = bookingsCollection
-                .whereEqualTo("status", "PENDING")
-                .whereLessThan("createdAt", cutoffTime)
-                .get()
-                .await()
+            val snapshot = bookingsCollection.whereEqualTo("status", "PENDING")
+                .whereLessThan("createdAt", cutoffTime).get().await()
 
             if (snapshot.isEmpty) return
 
@@ -201,11 +192,8 @@ class BookingRepositoryImpl(
         return try {
             val now = Timestamp.now()
 
-            val snapshot = firestore.collection("bookings")
-                .whereEqualTo("userId", userId)
-                .whereEqualTo("status", "PENDING")
-                .get()
-                .await()
+            val snapshot = firestore.collection("bookings").whereEqualTo("userId", userId)
+                .whereEqualTo("status", "PENDING").get().await()
 
             if (snapshot.isEmpty) return Result.success(0)
 
@@ -235,5 +223,9 @@ class BookingRepositoryImpl(
     // --- Helper Extensions ---
     private fun Timestamp.toLocalDate(): LocalDate {
         return this.toDate().toInstant().atZone(ZoneOffset.UTC).toLocalDate()
+    }
+
+    override fun clearCache(userId: String) {
+        cachedBookings.remove(userId)
     }
 }

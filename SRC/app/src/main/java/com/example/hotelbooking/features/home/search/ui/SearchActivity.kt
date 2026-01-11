@@ -137,6 +137,7 @@ fun SearchHotelScreen(
                         if (state.data.isEmpty() && query.isNotEmpty()) {
                             Text(
                                 stringResource(id = R.string.msg_no_hotels_found),
+                                color = Color.Black,
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         } else {
