@@ -207,4 +207,24 @@
     <string name="vietnamese">Vietnamese</string>
     <string name="apply">Apply</string>
 
+    <!-- PROFILE -->
+    <string name="hi">Hi %1$s</string>
+    <string name="customer">Customer</string>
+    <string name="payment_info">Payment Information</string>
+    <string name="promotions">Promotions</string>
+    <string name="transactions">Transactions</string>
+    <string name="setting_title">Settings</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="appearance">Appearance</string>
+    <string name="currency">Currency</string>
+    <string name="help_center_title">Help Center</string>
+    <string name="customer_support">Customer Support</string>
+    <string name="security_center">Security Center</string>
+    <string name="complaint_resolution">Complaint Resolution</string>
+    <string name="logout_title">Logout</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_success">Logged out successfully</string>
+    <string name="logout_confirm">Logout</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

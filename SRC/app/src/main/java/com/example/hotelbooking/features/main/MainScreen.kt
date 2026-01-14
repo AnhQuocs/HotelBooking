@@ -151,7 +151,7 @@ fun MainScreen(
                     }
                 )
 
-                3 -> ProfileScreen()
+                3 -> ProfileScreen(navController = navController)
             }
         }
     }

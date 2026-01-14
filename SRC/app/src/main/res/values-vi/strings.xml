@@ -206,4 +206,25 @@
     <string name="english">Tiếng Anh</string>
     <string name="vietnamese">Tiếng Việt</string>
     <string name="apply">Áp dụng</string>
+
+    <!-- PROFILE -->
+    <string name="hi">Chào %1$s</string>
+    <string name="customer">Quý khách</string>
+    <string name="payment_info">Thông tin thanh toán</string>
+    <string name="promotions">Khuyến mãi</string>
+    <string name="transactions">Giao dịch</string>
+    <string name="setting_title">Cài đặt</string>
+    <string name="personal_information">Thông tin cá nhân</string>
+    <string name="appearance">Giao diện</string>
+    <string name="currency">Tiền tệ</string>
+    <string name="help_center_title">Trung tâm trợ giúp</string>
+    <string name="customer_support">Hỗ trợ khách hàng</string>
+    <string name="security_center">Trung tâm bảo mật</string>
+    <string name="complaint_resolution">Giải quyết khiếu nại</string>
+    <string name="logout_title">Đăng xuất</string>
+    <string name="logout_message">Bạn có chắc chắn muốn đăng xuất không?</string>
+    <string name="logout_success">Đăng xuất thành công</string>
+    <string name="logout_confirm">Đăng xuất</string>
+    <string name="cancel">Hủy</string>
+
 </resources>
