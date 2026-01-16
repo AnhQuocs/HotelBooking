@@ -43,6 +43,7 @@ import coil.request.ImageRequest
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.features.booking.domain.model.Booking
+import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryItem
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
@@ -178,7 +179,8 @@ fun BookingHistoryCard(
             .clip(RoundedCornerShape(AppShape.ShapeL))
             .border(0.5.dp, color = Color.LightGray, RoundedCornerShape(AppShape.ShapeL))
             .background(color = Color.White, RoundedCornerShape(AppShape.ShapeL))
-            .clickable { onDetailClick() }
+            .clickable { onDetailClick() },
+        contentAlignment = Alignment.TopEnd
     ) {
         Row(
             modifier = Modifier
@@ -279,6 +281,10 @@ fun BookingHistoryCard(
                     value = "$numberOfGuest $guestText " + stringResource(id = R.string.one_room)
                 )
             }
+        }
+
+        if (booking.status == BookingStatus.CANCELLED) {
+            CancelledRibbon()
         }
     }
 }

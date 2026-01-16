@@ -125,6 +125,11 @@
     <string name="booking_detail_title">Booking Detail</string>
     <string name="booking_loading">Loading booking data…</string>
     <string name="msg_no_bookings_found">No bookings found</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="status_all">All</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_confirmed">Confirmed</string>
+    <string name="status_cancelled">Cancelled</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>

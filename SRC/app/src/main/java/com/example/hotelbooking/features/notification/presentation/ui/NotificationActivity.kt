@@ -49,7 +49,7 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.components.LineGray
-import com.example.hotelbooking.features.booking.presentation.ui.history.BookingDetailActivity
+import com.example.hotelbooking.features.booking.presentation.ui.history.detail.BookingDetailActivity
 import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
 import com.example.hotelbooking.features.notification.domain.model.BookingNotification
 import com.example.hotelbooking.features.notification.presentation.viewmodel.NotificationViewModel

@@ -41,7 +41,7 @@
             android:name=".features.chat.presentation.ui.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".features.booking.presentation.ui.history.BookingDetailActivity"
+            android:name=".features.booking.presentation.ui.history.detail.BookingDetailActivity"
             android:exported="false" />
         <activity
             android:name=".features.hotel.presentation.ui.user.details.HotelDetailActivity"

@@ -3,7 +3,6 @@ package com.example.hotelbooking.features.booking.presentation.ui.history
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,12 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.history.search.SearchBookingsSection
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.SearchBookingsViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
-import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.SurfaceGray
@@ -53,6 +55,37 @@ fun BookingHistoryScreen(
 ) {
     val query by searchBookingsViewModel.searchQuery.collectAsState()
     val searchState by searchBookingsViewModel.searchResultState.collectAsState()
+
+    val statusAll = stringResource(R.string.status_all)
+    val statusPending = stringResource(R.string.status_pending)
+    val statusPaid = stringResource(R.string.status_confirmed)
+    val statusCancelled = stringResource(R.string.status_cancelled)
+
+    var selectedFilter by remember { mutableStateOf(statusAll) }
+
+    @Composable
+    fun getFilteredState(
+        originalState: BookingHistoryState<List<BookingWithHotel>>
+    ): BookingHistoryState<List<BookingWithHotel>> {
+        return remember(originalState, selectedFilter) {
+            if (originalState is BookingHistoryState.Success) {
+                val filteredData = originalState.data.filter { item ->
+                    when (selectedFilter) {
+                        statusPending -> item.booking.status == BookingStatus.PENDING
+                        statusPaid -> item.booking.status == BookingStatus.CONFIRMED
+                        statusCancelled -> item.booking.status == BookingStatus.CANCELLED
+                        else -> true
+                    }
+                }
+                BookingHistoryState.Success(filteredData)
+            } else {
+                originalState
+            }
+        }
+    }
+
+    val filteredHistoryState = getFilteredState(bookingHistoryState)
+    val filteredSearchState = getFilteredState(searchState)
 
     Scaffold(
         topBar = {
@@ -113,15 +146,18 @@ fun BookingHistoryScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(AppSpacing.L))
+            BookingFilterBar(
+                selectedStatus = selectedFilter,
+                onStatusSelected = { selectedFilter = it }
+            )
 
-            if(query.isBlank()) {
-                BookingHistorySection(bookingHistoryState, onDetailClick, null)
+            if (query.isBlank()) {
+                BookingHistorySection(filteredHistoryState, onDetailClick, null)
             } else {
                 SearchBookingsSection(
                     isNoBookingSearch = query.isNotEmpty(),
                     query = query,
-                    searchState = searchState,
+                    searchState = filteredSearchState,
                     onDetailClick = onDetailClick
                 )
             }

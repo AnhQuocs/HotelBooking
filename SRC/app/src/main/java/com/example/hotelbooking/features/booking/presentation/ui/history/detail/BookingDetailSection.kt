@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.booking.presentation.ui.history
+package com.example.hotelbooking.features.booking.presentation.ui.history.detail
 
 import android.content.Context
 import androidx.compose.foundation.layout.Box
@@ -30,6 +30,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryItem
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.DashedLine
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.HotelInfo
+import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDateTime
 import com.example.hotelbooking.features.booking.presentation.ui.util.BookingQRCodeFull
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.room.domain.model.RoomType

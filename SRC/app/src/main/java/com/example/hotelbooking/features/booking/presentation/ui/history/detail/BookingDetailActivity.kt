@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.booking.presentation.ui.history
+package com.example.hotelbooking.features.booking.presentation.ui.history.detail
 
 import android.os.Bundle
 import androidx.activity.compose.setContent

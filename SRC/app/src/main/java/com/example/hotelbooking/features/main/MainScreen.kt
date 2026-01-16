@@ -1,7 +1,6 @@
 package com.example.hotelbooking.features.main
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
@@ -28,7 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.components.UserBottomAppBar
-import com.example.hotelbooking.features.booking.presentation.ui.history.BookingDetailActivity
+import com.example.hotelbooking.features.booking.presentation.ui.history.detail.BookingDetailActivity
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingHistoryScreen
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
