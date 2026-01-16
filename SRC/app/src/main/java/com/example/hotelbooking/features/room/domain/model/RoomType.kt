@@ -3,7 +3,7 @@ package com.example.hotelbooking.features.room.domain.model
 data class RoomType(
     val id: String,
     val hotelId: String,
-    val totalStock: Int,
+    val totalRoom: Int,
     val pricePerNight: Int,
     val capacity: Int,
     val roomSize: Int,

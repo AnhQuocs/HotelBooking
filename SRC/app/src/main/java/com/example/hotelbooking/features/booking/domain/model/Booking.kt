@@ -6,6 +6,10 @@ enum class BookingStatus {
     PENDING, CONFIRMED, CANCELLED
 }
 
+enum class CancelReason {
+    USER, TIMEOUT
+}
+
 data class Booking(
     val bookingId: String,
     val userId: String,
@@ -17,6 +21,7 @@ data class Booking(
     val numberOfGuests: Int,
     val totalPrice: Double,
     val status: BookingStatus,
+    val cancelReason: CancelReason?,
     val createdAt: Timestamp = Timestamp.now(),
     val expireAt: Timestamp? = null
 )

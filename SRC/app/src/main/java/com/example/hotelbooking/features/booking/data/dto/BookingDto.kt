@@ -13,6 +13,7 @@ data class BookingDto(
     val numberOfGuests: Int = 0,
     val totalPrice: Double = 0.0,
     val status: String = "PENDING",
+    val cancelReason: String? = "",
     val createdAt: Timestamp = Timestamp.now(),
     val expireAt: Timestamp? = null
 )

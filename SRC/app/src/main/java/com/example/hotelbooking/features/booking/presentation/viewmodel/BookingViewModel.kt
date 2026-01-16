@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
+import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
@@ -135,6 +136,7 @@ class BookingViewModel @Inject constructor(
                 numberOfGuests = numberOfGuests,
                 totalPrice = totalPrice,
                 status = BookingStatus.PENDING,
+                cancelReason = null,
                 createdAt = Timestamp.now(),
             )
 
@@ -195,6 +197,57 @@ class BookingViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = BookingUiState.Error(
                     e.message ?: "Failed to update booking status"
+                )
+            }
+        }
+    }
+
+    fun cancelBooking(
+        bookingId: String,
+        reason: CancelReason,
+        title: String? = null,
+        message: String? = null
+    ) {
+        viewModelScope.launch {
+            try {
+                _uiState.value = BookingUiState.Loading
+
+                val success = bookingUseCases.cancelBookingUseCase(
+                    bookingId = bookingId,
+                    reason = reason
+                )
+
+                if (success) {
+                    if (reason == CancelReason.USER) {
+                        title?.let {
+                            message?.let { msg ->
+                                notificationUseCases.saveNotificationUseCase(
+                                    title = it,
+                                    message = msg,
+                                    bookingId = bookingId
+                                )
+                            }
+                        }
+
+                        title?.let {
+                            message?.let { msg ->
+                                notificationHelper.showBookingNotification(
+                                    title = it,
+                                    message = msg,
+                                    bookingId = bookingId
+                                )
+                            }
+                        }
+                    }
+
+                    _uiState.value = BookingUiState.Idle
+                } else {
+                    _uiState.value = BookingUiState.Error("Cancel booking failed")
+                }
+
+            } catch (e: Exception) {
+                _uiState.value = BookingUiState.Error(
+                    e.message ?: "Failed to cancel booking"
                 )
             }
         }

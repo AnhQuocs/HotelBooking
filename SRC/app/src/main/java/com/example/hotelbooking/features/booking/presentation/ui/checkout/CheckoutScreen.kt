@@ -50,6 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
+import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
@@ -161,9 +162,9 @@ fun CheckoutScreen(
                     totalTime = timeoutSecond,
                     onTimeout = {
                         bookingViewModel.onTimeout()
-                        bookingViewModel.updateStatus(
+                        bookingViewModel.cancelBooking(
                             bookingId,
-                            BookingStatus.CANCELLED,
+                            reason = CancelReason.TIMEOUT,
                             null,
                             null
                         )

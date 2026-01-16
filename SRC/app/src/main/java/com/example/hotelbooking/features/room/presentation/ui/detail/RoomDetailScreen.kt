@@ -151,7 +151,7 @@ fun RoomDetailScreen(
                         Spacer(modifier = Modifier.height(AppSpacing.XSPlus))
 
                         RoomInfo(
-                            totalStock = room.totalStock,
+                            totalStock = room.totalRoom,
                             bathroomType = room.bathroomType,
                             bedType = room.bedType,
                             capacity = room.capacity,
@@ -218,7 +218,7 @@ fun RoomDetailScreen(
                             bookingViewModel.checkRoomAvailability(
                                 room.hotelId,
                                 room.id,
-                                room.totalStock
+                                room.totalRoom
                             )
                         }
                     )

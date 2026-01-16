@@ -6,13 +6,11 @@ import com.example.hotelbooking.features.booking.data.mapper.toDomain
 import com.example.hotelbooking.features.booking.data.mapper.toDto
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
+import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
-import com.example.hotelbooking.utils.removeAccents
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
@@ -49,31 +47,49 @@ class BookingRepositoryImpl(
         val now = Timestamp.now()
 
         bookings.forEach { booking ->
-
-            if (booking.status == BookingStatus.PENDING && booking.expireAt != null && now.seconds > booking.expireAt.seconds) {
-                bookingsCollection.document(booking.bookingId).update("status", "CANCELLED")
-                    .addOnFailureListener { e ->
-                        Log.e("LazyCheck", "Failed to cleanup booking ${booking.bookingId}")
-                    }
-
-                return@forEach
-            }
-
-            val bStart = booking.startDate.toLocalDate()
-            val bEnd = booking.endDate.toLocalDate()
-
-            if (bStart.isBefore(endDate) && bEnd.isAfter(startDate)) {
-                for (night in requestedNights) {
-                    if (!night.isBefore(bStart) && night.isBefore(bEnd)) {
-                        bookedPerNight[night] = bookedPerNight[night]!! + 1
-                    }
-                }
-            }
+            cancelIfExpired(booking, now)
+            countBookedNights(booking, requestedNights, bookedPerNight)
         }
 
         val maxBookedRooms = bookedPerNight.values.maxOrNull() ?: 0
 
         return (totalRoom - maxBookedRooms).coerceAtLeast(0)
+    }
+
+    private fun cancelIfExpired(booking: Booking, now: Timestamp) {
+        if (
+            booking.status == BookingStatus.PENDING &&
+            booking.expireAt != null &&
+            now.seconds > booking.expireAt.seconds
+        ) {
+            bookingsCollection.document(booking.bookingId)
+                .update(
+                    "status", BookingStatus.CANCELLED.name,
+                    "cancelReason", CancelReason.TIMEOUT.name
+                )
+                .addOnFailureListener {
+                    Log.e("LazyCheck", "Failed to cleanup booking ${booking.bookingId}")
+                }
+        }
+    }
+
+    private fun countBookedNights(
+        booking: Booking,
+        requestedNights: List<LocalDate>,
+        bookedPerNight: MutableMap<LocalDate, Int>
+    ) {
+        val bStart = booking.startDate.toLocalDate()
+        val bEnd = booking.endDate.toLocalDate()
+
+        if (bStart.isBefore(requestedNights.last().plusDays(1)) &&
+            bEnd.isAfter(requestedNights.first())
+        ) {
+            for (night in requestedNights) {
+                if (!night.isBefore(bStart) && night.isBefore(bEnd)) {
+                    bookedPerNight[night] = bookedPerNight[night]!! + 1
+                }
+            }
+        }
     }
 
     override suspend fun createBooking(
@@ -94,9 +110,14 @@ class BookingRepositoryImpl(
         return finalBooking
     }
 
-    override suspend fun cancelBooking(bookingId: String): Boolean {
+    override suspend fun cancelBooking(bookingId: String, reason: CancelReason): Boolean {
         return try {
-            bookingsCollection.document(bookingId).update("status", BookingStatus.CANCELLED.name)
+            bookingsCollection
+                .document(bookingId)
+                .update(
+                    "status", BookingStatus.CANCELLED.name,
+                    "cancelReason", reason.name
+                )
                 .await()
             true
         } catch (e: Exception) {
@@ -192,8 +213,11 @@ class BookingRepositoryImpl(
         return try {
             val now = Timestamp.now()
 
-            val snapshot = firestore.collection("bookings").whereEqualTo("userId", userId)
-                .whereEqualTo("status", "PENDING").get().await()
+            val snapshot = bookingsCollection
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("status", BookingStatus.PENDING.name)
+                .get()
+                .await()
 
             if (snapshot.isEmpty) return Result.success(0)
 
@@ -204,7 +228,10 @@ class BookingRepositoryImpl(
                 val expireAt = document.getTimestamp("expireAt")
 
                 if (expireAt != null && now.seconds > expireAt.seconds) {
-                    batch.update(document.reference, "status", BookingStatus.CANCELLED)
+                    batch.update(document.reference,
+                        "status", BookingStatus.CANCELLED.name,
+                        "cancelReason", CancelReason.TIMEOUT.name
+                    )
                     cancelCount++
                 }
             }
