@@ -10,7 +10,7 @@ fun RoomTypeDto.toRoomType(id: String): RoomType {
     return RoomType(
         id = id,
         hotelId = hotelId.orEmpty(),
-        totalRoom = totalRoom ?: 0,
+        totalRoom = totalStock ?: 0,
         pricePerNight = pricePerNight ?: 0,
         capacity = capacity ?: 0,
         roomSize = roomSize ?: 0,

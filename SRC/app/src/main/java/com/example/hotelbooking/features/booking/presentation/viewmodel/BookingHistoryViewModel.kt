@@ -57,20 +57,4 @@ class BookingHistoryViewModel @Inject constructor(
             }
         }
     }
-
-    fun cancelBooking(bookingId: String, userId: String) {
-        viewModelScope.launch {
-            _state.value = BookingHistoryState.Loading
-            try {
-                val success = bookingUseCases.cancelBookingUseCase(bookingId)
-                if (success) {
-                    loadMyBookings(userId)
-                } else {
-                    _state.value = BookingHistoryState.Error("Failed to cancel booking")
-                }
-            } catch (e: Exception) {
-                _state.value = BookingHistoryState.Error(e.message ?: "Unknown error")
-            }
-        }
-    }
 }

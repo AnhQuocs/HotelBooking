@@ -3,12 +3,14 @@ package com.example.hotelbooking.features.room.presentation.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,8 +20,10 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.features.booking.presentation.ui.book.BookingScreen
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutScreen
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentCompleteScreen
+import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @AndroidEntryPoint
@@ -140,15 +144,19 @@ class RoomDetailActivity : BaseComponentActivity() {
                 }
 
                 composable("payment_complete") {
+                    val scope = rememberCoroutineScope()
+
                     PaymentCompleteScreen(
-                        onBackClick = {
-                            finish()
-                        },
+                        onBackClick = { finish() },
                         onHomeClick = {
-                            val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(intent)
-                            finish()
+                            scope.launch {
+                                BookingRefreshEvent.triggerRefresh()
+
+                                val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                                finish()
+                            }
                         }
                     )
                 }

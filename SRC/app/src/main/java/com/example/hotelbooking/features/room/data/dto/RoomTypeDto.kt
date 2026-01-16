@@ -2,7 +2,7 @@ package com.example.hotelbooking.features.room.data.dto
 
 data class RoomTypeDto(
     val hotelId: String? = null,
-    val totalRoom: Int? = null,
+    val totalStock: Int? = null,
     val pricePerNight: Int? = null,
     val capacity: Int? = null,
     val roomSize: Int? = null,

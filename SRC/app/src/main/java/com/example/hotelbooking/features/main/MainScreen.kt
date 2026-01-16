@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.main
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
@@ -63,6 +64,10 @@ fun MainScreen(
         hotelViewModel.loadHotels()
         hotelViewModel.loadRecommendedHotels(4.7)
         bookingHistoryViewModel.loadMyBookings(userId)
+
+        BookingRefreshEvent.refreshTrigger.collect {
+            bookingHistoryViewModel.loadMyBookings(userId)
+        }
     }
 
     Scaffold(

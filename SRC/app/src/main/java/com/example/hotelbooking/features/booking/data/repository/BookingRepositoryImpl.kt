@@ -107,6 +107,8 @@ class BookingRepositoryImpl(
 
         docRef.set(finalBooking.toDto()).await()
 
+        cachedBookings.remove(booking.userId)
+
         return finalBooking
     }
 
