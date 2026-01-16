@@ -202,54 +202,42 @@ class BookingViewModel @Inject constructor(
         }
     }
 
-    fun cancelBooking(
+    suspend fun cancelBooking(
         bookingId: String,
         reason: CancelReason,
         title: String? = null,
         message: String? = null
-    ) {
-        viewModelScope.launch {
-            try {
-                _uiState.value = BookingUiState.Loading
+    ): Boolean {
+        return try {
+            _uiState.value = BookingUiState.Loading
 
-                val success = bookingUseCases.cancelBookingUseCase(
-                    bookingId = bookingId,
-                    reason = reason
-                )
+            val success = bookingUseCases.cancelBookingUseCase(
+                bookingId = bookingId,
+                reason = reason
+            )
 
-                if (success) {
-                    if (reason == CancelReason.USER) {
-                        title?.let {
-                            message?.let { msg ->
-                                notificationUseCases.saveNotificationUseCase(
-                                    title = it,
-                                    message = msg,
-                                    bookingId = bookingId
-                                )
-                            }
-                        }
-
-                        title?.let {
-                            message?.let { msg ->
-                                notificationHelper.showBookingNotification(
-                                    title = it,
-                                    message = msg,
-                                    bookingId = bookingId
-                                )
-                            }
-                        }
-                    }
-
-                    _uiState.value = BookingUiState.Idle
-                } else {
-                    _uiState.value = BookingUiState.Error("Cancel booking failed")
+            if (success) {
+                if (reason == CancelReason.USER && title != null && message != null) {
+                    notificationUseCases.saveNotificationUseCase(
+                        title = title,
+                        message = message,
+                        bookingId = bookingId
+                    )
+                    notificationHelper.showBookingNotification(
+                        title = title,
+                        message = message,
+                        bookingId = bookingId
+                    )
                 }
-
-            } catch (e: Exception) {
-                _uiState.value = BookingUiState.Error(
-                    e.message ?: "Failed to cancel booking"
-                )
+                _uiState.value = BookingUiState.Idle
+                true
+            } else {
+                _uiState.value = BookingUiState.Error("Failed to cancel the booking")
+                false
             }
+        } catch (e: Exception) {
+            _uiState.value = BookingUiState.Error(e.message ?: "Unknown Error!")
+            false
         }
     }
 

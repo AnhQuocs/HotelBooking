@@ -90,8 +90,8 @@ fun BookingScreen(
     val totalDays = ChronoUnit.DAYS.between(startDate, endDate)
     val totalPrice = totalDays * pricePerNight
 
-    val timeoutSeconds: Long = 10 * 60L
-//    val timeoutSeconds: Long = 30L
+//    val timeoutSeconds: Long = 10 * 60L
+    val timeoutSeconds: Long = 30L
 
     LaunchedEffect(uiState) {
         if (uiState is BookingUiState.BookingSuccess) {

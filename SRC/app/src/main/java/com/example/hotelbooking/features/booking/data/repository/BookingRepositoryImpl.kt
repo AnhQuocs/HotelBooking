@@ -9,6 +9,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
@@ -107,7 +108,7 @@ class BookingRepositoryImpl(
 
         docRef.set(finalBooking.toDto()).await()
 
-        cachedBookings.remove(booking.userId)
+        invalidateCache()
 
         return finalBooking
     }
@@ -121,6 +122,9 @@ class BookingRepositoryImpl(
                     "cancelReason", reason.name
                 )
                 .await()
+
+            invalidateCache()
+
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -143,6 +147,8 @@ class BookingRepositoryImpl(
         val updatedSnapshot = docRef.get().await()
         val updatedBooking = updatedSnapshot.toObject(BookingDto::class.java)
             ?: throw Exception("Booking not found after update")
+
+        invalidateCache()
 
         return updatedBooking.toDomain()
     }
@@ -252,6 +258,11 @@ class BookingRepositoryImpl(
     // --- Helper Extensions ---
     private fun Timestamp.toLocalDate(): LocalDate {
         return this.toDate().toInstant().atZone(ZoneOffset.UTC).toLocalDate()
+    }
+
+    private fun invalidateCache() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        userId?.let { cachedBookings.remove(it) }
     }
 
     override fun clearCache(userId: String) {

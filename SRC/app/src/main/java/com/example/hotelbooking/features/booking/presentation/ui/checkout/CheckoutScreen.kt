@@ -35,6 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,12 +57,14 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingV
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
+import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +89,8 @@ fun CheckoutScreen(
     val bookingState by bookingViewModel.uiState.collectAsState()
 
     var isShowBottomSheet by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(hotelId) {
         hotelViewModel.loadHotelById(hotelId)
@@ -161,20 +166,27 @@ fun CheckoutScreen(
                 CountdownTimer(
                     totalTime = timeoutSecond,
                     onTimeout = {
-                        bookingViewModel.onTimeout()
-                        bookingViewModel.cancelBooking(
-                            bookingId,
-                            reason = CancelReason.TIMEOUT,
-                            null,
-                            null
-                        )
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.payment_time_expired),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        navController.navigate("roomDetail") {
-                            popUpTo("0") { inclusive = true }
+                        scope.launch {
+                            bookingViewModel.onTimeout()
+
+                            val isCancelled = bookingViewModel.cancelBooking(
+                                bookingId = bookingId,
+                                reason = CancelReason.TIMEOUT
+                            )
+
+                            if (isCancelled) {
+                                BookingRefreshEvent.triggerRefresh()
+
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.payment_time_expired),
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                navController.navigate("roomDetail") {
+                                    popUpTo("0") { inclusive = true }
+                                }
+                            }
                         }
                     }
                 )
