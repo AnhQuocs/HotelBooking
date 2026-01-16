@@ -167,7 +167,7 @@ class BookingRepositoryImpl(
         return bookings
     }
 
-    override suspend fun getBookingsById(bookingId: String): Booking {
+    override suspend fun getBookingById(bookingId: String): Booking {
         val snapshot = bookingsCollection.document(bookingId).get().await()
         val bookingDto = snapshot.toObject(BookingDto::class.java)
             ?: throw Exception("Booking with ID $bookingId not found")

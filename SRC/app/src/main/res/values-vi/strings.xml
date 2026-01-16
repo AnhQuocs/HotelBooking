@@ -130,6 +130,8 @@
     <string name="status_pending">Đang chờ</string>
     <string name="status_confirmed">Đã thanh toán</string>
     <string name="status_cancelled">Đã hủy</string>
+    <string name="error_cancel_too_late">Chỉ được phép hủy phòng trước giờ check-in ít nhất 24 giờ.</string>
+    <string name="error_cancel_failed">Không thể hủy đặt phòng. Vui lòng thử lại sau.</string>
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>

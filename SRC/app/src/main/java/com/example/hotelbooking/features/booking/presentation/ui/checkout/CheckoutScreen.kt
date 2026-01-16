@@ -141,7 +141,7 @@ fun CheckoutScreen(
                     Button(
                         onClick = { isShowBottomSheet = true },
                         modifier = Modifier
-                            .width(150.dp)
+                            .width(Dimen.WidthL)
                             .padding(Dimen.PaddingM)
                             .height(Dimen.HeightDefault + 2.dp),
                         shape = RoundedCornerShape(AppShape.ShapeL),

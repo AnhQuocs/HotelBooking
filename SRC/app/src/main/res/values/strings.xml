@@ -130,6 +130,8 @@
     <string name="status_pending">Pending</string>
     <string name="status_confirmed">Confirmed</string>
     <string name="status_cancelled">Cancelled</string>
+    <string name="error_cancel_too_late">Cancellation is only allowed 24 hours before check-in.</string>
+    <string name="error_cancel_failed">Could not cancel the booking. Please try again.</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>

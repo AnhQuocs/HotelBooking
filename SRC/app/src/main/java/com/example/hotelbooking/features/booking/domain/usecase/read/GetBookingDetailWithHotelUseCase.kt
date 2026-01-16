@@ -10,7 +10,7 @@ class GetBookingDetailWithHotelUseCase @Inject constructor(
     private val hotelRepository: HotelRepository
 ) {
     suspend operator fun invoke(bookingId: String): BookingWithHotel {
-        val booking = bookingRepository.getBookingsById(bookingId)
+        val booking = bookingRepository.getBookingById(bookingId)
 
         val hotel = hotelRepository.getHotelById(booking.hotelId)
 

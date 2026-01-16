@@ -1,10 +1,14 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
@@ -217,26 +221,37 @@ class BookingViewModel @Inject constructor(
             )
 
             if (success) {
-                if (reason == CancelReason.USER && title != null && message != null) {
-                    notificationUseCases.saveNotificationUseCase(
-                        title = title,
-                        message = message,
-                        bookingId = bookingId
-                    )
-                    notificationHelper.showBookingNotification(
-                        title = title,
-                        message = message,
-                        bookingId = bookingId
-                    )
+                if (reason == CancelReason.USER) {
+                    if (title != null && message != null) {
+                        notificationUseCases.saveNotificationUseCase(
+                            title = title,
+                            message = message,
+                            bookingId = bookingId
+                        )
+                        notificationHelper.showBookingNotification(
+                            title = title,
+                            message = message,
+                            bookingId = bookingId
+                        )
+                    }
                 }
+
                 _uiState.value = BookingUiState.Idle
                 true
             } else {
-                _uiState.value = BookingUiState.Error("Failed to cancel the booking")
+                val errorUiText = if (reason == CancelReason.USER) {
+                    UiText.StringResource(R.string.error_cancel_too_late)
+                } else {
+                    UiText.StringResource(R.string.error_cancel_failed)
+                }
+
+                _uiState.value = BookingUiState.Error(errorUiText.toString())
                 false
             }
         } catch (e: Exception) {
-            _uiState.value = BookingUiState.Error(e.message ?: "Unknown Error!")
+            _uiState.value = BookingUiState.Error(
+                UiText.DynamicString(e.message ?: "Unknown Error!").toString()
+            )
             false
         }
     }
@@ -251,5 +266,21 @@ class BookingViewModel @Inject constructor(
 
         val days = ChronoUnit.DAYS.between(checkInDate, checkOutDate)
         return if (days > 0) days * pricePerNight else 0L
+    }
+}
+
+sealed class UiText {
+    data class DynamicString(val value: String) : UiText()
+    class StringResource(
+        @StringRes val resId: Int,
+        vararg val args: Any
+    ) : UiText()
+
+    @Composable
+    fun asString(): String {
+        return when (this) {
+            is DynamicString -> value
+            is StringResource -> stringResource(resId, *args)
+        }
     }
 }

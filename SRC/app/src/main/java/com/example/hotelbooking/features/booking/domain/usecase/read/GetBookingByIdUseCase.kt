@@ -7,6 +7,6 @@ class GetBookingByIdUseCase(
     private val repository: BookingRepository
 ) {
     suspend operator fun invoke(bookingId: String): Booking {
-        return repository.getBookingsById(bookingId)
+        return repository.getBookingById(bookingId)
     }
 }
