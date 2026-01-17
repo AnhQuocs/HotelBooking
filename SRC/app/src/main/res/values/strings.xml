@@ -244,5 +244,28 @@
     <string name="empty_payment_title">No payment methods yet</string>
     <string name="empty_payment_description">Add your VISA, Mastercard, or JCB card to make payments faster and more secure.</string>
     <string name="add_new_card">Add new card</string>
+    <string name="card_number">Card number</string>
+    <string name="card_holder_name">Card holder name</string>
+    <string name="card_expiry_date">Expiry date (MMYY)</string>
+    <string name="card_cvv">CVV</string>
+    <string name="save_card">Save card</string>
+    <string name="add_card_success">Card added successfully!</string>
+    <string name="set_as_default">Set as default</string>
+    <string name="use_card_for_all_transactions">Use this card for all transactions</string>
+    <string name="save_changes">Save changes</string>
+    <string name="delete_payment_card">Delete payment card</string>
+    <string name="card_detail">Card Detail</string>
+    <string name="loading_processing">Processing…</string>
+    <string name="delete_card_title">Delete card</string>
+    <string name="delete_card_message">
+        Are you sure you want to delete the card ending in ****%1$s? This action cannot be undone.
+    </string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="cannot_delete_card_title">Cannot delete card</string>
+    <string name="cannot_delete_card_message">
+        This is your default payment method. Please set another card as default before deleting this one.
+    </string>
+    <string name="understood">Got it</string>
 
 </resources>

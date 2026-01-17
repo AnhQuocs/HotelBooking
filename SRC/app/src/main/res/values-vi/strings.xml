@@ -244,5 +244,27 @@
     <string name="empty_payment_title">Chưa có phương thức thanh toán</string>
     <string name="empty_payment_description">Thêm thẻ VISA, Mastercard hoặc JCB của bạn để thực hiện thanh toán nhanh chóng và an toàn hơn.</string>
     <string name="add_new_card">Thêm thẻ mới</string>
-
+    <string name="card_number">Số thẻ</string>
+    <string name="card_holder_name">Tên chủ thẻ</string>
+    <string name="card_expiry_date">Hạn thẻ (MMYY)</string>
+    <string name="card_cvv">CVV</string>
+    <string name="save_card">Lưu thẻ</string>
+    <string name="add_card_success">Thêm thẻ thành công!</string>
+    <string name="set_as_default">Đặt làm mặc định</string>
+    <string name="use_card_for_all_transactions">Sử dụng thẻ này cho mọi giao dịch</string>
+    <string name="save_changes">Lưu thay đổi</string>
+    <string name="delete_payment_card">Xóa thẻ thanh toán</string>
+    <string name="card_detail">Chi tiết thẻ</string>
+    <string name="loading_processing">Đang xử lý…</string>
+    <string name="delete_card_title">Xác nhận xóa thẻ</string>
+    <string name="delete_card_message">
+        Bạn có chắc chắn muốn xóa thẻ đuôi ****%1$s không? Thao tác này không thể hoàn tác.
+    </string>
+    <string name="delete">Xóa</string>
+    <string name="cancel">Hủy</string>
+    <string name="cannot_delete_card_title">Không thể xóa thẻ</string>
+    <string name="cannot_delete_card_message">
+        Đây là phương thức thanh toán mặc định của bạn. Vui lòng thiết lập một thẻ khác làm mặc định trước khi xóa thẻ này.
+    </string>
+    <string name="understood">Đã hiểu</string>
 </resources>

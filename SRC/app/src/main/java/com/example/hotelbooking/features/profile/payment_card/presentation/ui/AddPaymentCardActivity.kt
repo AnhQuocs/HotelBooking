@@ -66,12 +66,14 @@ class AddPaymentCardActivity : BaseComponentActivity() {
         setContent {
             val context = LocalContext.current
             val activity = context as? Activity
+            val toastText = stringResource(id = R.string.add_card_success)
+
             AddPaymentCardScreen(
                 onBackClick = {
                     activity?.finish()
                 },
                 onSuccess = {
-                    Toast.makeText(context, "Thêm thẻ thành công!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
 
                     activity?.setResult(RESULT_OK)
 
@@ -143,7 +145,7 @@ fun AddPaymentCardScreen(
                     userId = "",
                     brand = brand,
                     cardNumber = cardNumber.ifEmpty { "0000000000000000" },
-                    holderName = holderName.removeAccents().uppercase().ifEmpty { "CARD HOLDER" },
+                    holderName = holderName.removeAccents().uppercase().ifEmpty { stringResource(id = R.string.card_holder) },
                     expiryMonth = if (expiryDate.length >= 2) expiryDate.take(2).toIntOrNull()
                         ?: 12 else 12,
                     expiryYear = if (expiryDate.length == 4) "20${expiryDate.takeLast(2)}".toIntOrNull()
@@ -160,7 +162,7 @@ fun AddPaymentCardScreen(
                 onValueChange = {
                     if (it.length <= 16) cardNumber = it.filter { char -> char.isDigit() }
                 },
-                label = { Text("Số thẻ") },
+                label = { Text(stringResource(id = R.string.card_number)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 visualTransformation = CardNumberTransformation()
@@ -171,7 +173,7 @@ fun AddPaymentCardScreen(
             OutlinedTextField(
                 value = holderName,
                 onValueChange = { holderName = it },
-                label = { Text("Tên chủ thẻ") },
+                label = { Text(stringResource(id = R.string.card_holder_name)) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("NGUYEN VAN A") }
             )
@@ -184,7 +186,7 @@ fun AddPaymentCardScreen(
                     onValueChange = {
                         if (it.length <= 4) expiryDate = it.filter { char -> char.isDigit() }
                     },
-                    label = { Text("Hạn thẻ (MMYY)") },
+                    label = { Text(stringResource(id = R.string.card_expiry_date)) },
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -225,7 +227,7 @@ fun AddPaymentCardScreen(
                 if (cardState is PaymentCardState.Loading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                 } else {
-                    Text("Lưu thẻ")
+                    Text(stringResource(id = R.string.save_card))
                 }
             }
         }

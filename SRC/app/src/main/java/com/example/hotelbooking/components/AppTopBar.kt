@@ -5,11 +5,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Icon
@@ -28,7 +30,8 @@ import com.example.hotelbooking.ui.theme.NearBlack
 @Composable
 fun AppTopBar(
     text: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -62,7 +65,12 @@ fun AppTopBar(
                 )
             )
 
-            Spacer(modifier = Modifier.size(Dimen.SizeSM))
+            Box(
+                modifier = Modifier.sizeIn(minWidth = Dimen.SizeSM),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Row(content = actions)
+            }
         }
     }
 }

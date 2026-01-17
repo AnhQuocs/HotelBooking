@@ -38,6 +38,7 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.payment_card.presentation.ui.detail.PaymentCardDetailActivity
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -51,6 +52,15 @@ class PaymentMethodActivity : BaseComponentActivity() {
     private val viewModel: PaymentCardViewModel by viewModels()
 
     private val addCardLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            viewModel.loadPaymentCards(userId)
+        }
+    }
+
+    private val detailCardLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -73,6 +83,11 @@ class PaymentMethodActivity : BaseComponentActivity() {
                 onAddCardClick = {
                     val intent = Intent(this, AddPaymentCardActivity::class.java)
                     addCardLauncher.launch(intent)
+                },
+                onDetailClick = { id ->
+                    val intent = Intent(this, PaymentCardDetailActivity::class.java)
+                        .putExtra("cardId", id)
+                    detailCardLauncher.launch(intent)
                 }
             )
         }
@@ -84,6 +99,7 @@ fun PaymentCardsScreen(
     userId: String,
     onBackClick: () -> Unit,
     onAddCardClick: () -> Unit,
+    onDetailClick: (String) -> Unit,
     paymentCardViewModel: PaymentCardViewModel = hiltViewModel()
 ) {
     val cardsState by paymentCardViewModel.cardsState.collectAsState()
@@ -110,7 +126,8 @@ fun PaymentCardsScreen(
             PaymentCardsSection(
                 state = cardsState,
                 onRetry = { paymentCardViewModel.loadPaymentCards(userId) },
-                onAddCardClick = onAddCardClick
+                onAddCardClick = onAddCardClick,
+                onDetailClick = onDetailClick
             )
         }
     }
@@ -120,7 +137,8 @@ fun PaymentCardsScreen(
 fun PaymentCardsSection(
     state: PaymentCardState<List<PaymentCard>>,
     onAddCardClick: () -> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onDetailClick: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val otherMessage = stringResource(id = R.string.something_went_wrong)
@@ -147,7 +165,7 @@ fun PaymentCardsSection(
                     onAddCardClick = { onAddCardClick() }
                 )
             } else {
-                PaymentCardList(list, onAddCardClick = { onAddCardClick() })
+                PaymentCardList(list, onAddCardClick = { onAddCardClick() }, onDetailClick = onDetailClick)
             }
         }
 

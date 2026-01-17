@@ -61,7 +61,11 @@ import com.example.hotelbooking.ui.theme.VisaBlueDark
 import com.example.hotelbooking.ui.theme.VisaBlueLight
 
 @Composable
-fun PaymentCardList(list: List<PaymentCard>, onAddCardClick: () -> Unit) {
+fun PaymentCardList(
+    list: List<PaymentCard>,
+    onDetailClick: (String) -> Unit,
+    onAddCardClick: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = Dimen.PaddingSM),
@@ -76,7 +80,7 @@ fun PaymentCardList(list: List<PaymentCard>, onAddCardClick: () -> Unit) {
         }
 
         items(list, key = { it.id }) { card ->
-            PaymentCardItem(card = card)
+            PaymentCardItem(card = card, onClick = { onDetailClick(card.id) })
         }
 
         item {
@@ -122,7 +126,9 @@ fun PaymentCardItem(
                 Image(
                     painter = painterResource(id = logoRes),
                     contentDescription = null,
-                    modifier = Modifier.size(Dimen.SizeXXL).align(Alignment.End)
+                    modifier = Modifier
+                        .size(Dimen.SizeXXL)
+                        .align(Alignment.End)
                 )
 
                 if (card.isDefault) {
@@ -132,7 +138,10 @@ fun PaymentCardItem(
                     ) {
                         Text(
                             text = stringResource(id = R.string.card_default),
-                            modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
+                            modifier = Modifier.padding(
+                                horizontal = Dimen.PaddingS,
+                                vertical = Dimen.PaddingXS
+                            ),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White
                         )
@@ -230,9 +239,12 @@ fun PaymentCardItem(
                         Text(
                             text = stringResource(id = R.string.expires),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.LightGray)
+                            color = Color.LightGray
+                        )
                         Text(
-                            text = "${card.expiryMonth.toString().padStart(2, '0')}/${card.expiryYear.toString().takeLast(2)}",
+                            text = "${
+                                card.expiryMonth.toString().padStart(2, '0')
+                            }/${card.expiryYear.toString().takeLast(2)}",
                             style = JostTypography.bodyLarge.copy(
                                 color = Color.White
                             )
