@@ -234,4 +234,15 @@
     <string name="logout_confirm">Logout</string>
     <string name="cancel">Cancel</string>
 
+    <!-- PAYMENT -->
+    <string name="my_cards">My Cards</string>
+    <string name="card_holder">CARD HOLDER</string>
+    <string name="expires">EXPIRES</string>
+    <string name="card_default">Default</string>
+    <string name="try_again">Try again</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="empty_payment_title">No payment methods yet</string>
+    <string name="empty_payment_description">Add your VISA, Mastercard, or JCB card to make payments faster and more secure.</string>
+    <string name="add_new_card">Add new card</string>
+
 </resources>

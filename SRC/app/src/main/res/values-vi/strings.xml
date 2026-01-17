@@ -234,4 +234,15 @@
     <string name="logout_confirm">Đăng xuất</string>
     <string name="cancel">Hủy</string>
 
+    <!-- PAYMENT -->
+    <string name="my_cards">Thẻ của tôi</string>
+    <string name="card_holder">CHỦ THẺ</string>
+    <string name="expires">HẾT HẠN</string>
+    <string name="card_default">Mặc định</string>
+    <string name="try_again">Thử lại</string>
+    <string name="something_went_wrong">Đã có lỗi xảy ra</string>
+    <string name="empty_payment_title">Chưa có phương thức thanh toán</string>
+    <string name="empty_payment_description">Thêm thẻ VISA, Mastercard hoặc JCB của bạn để thực hiện thanh toán nhanh chóng và an toàn hơn.</string>
+    <string name="add_new_card">Thêm thẻ mới</string>
+
 </resources>

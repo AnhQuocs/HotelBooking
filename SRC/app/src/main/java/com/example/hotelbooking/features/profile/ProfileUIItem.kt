@@ -143,7 +143,7 @@ fun Setting(
 @Composable
 fun PaymentInformation(
     onPromotionsClick: () -> Unit,
-    onPaymentInfoClick: () -> Unit,
+    onPaymentMethodClick: () -> Unit,
     onTransactionsClick: () -> Unit,
 ) {
     Column(
@@ -167,12 +167,12 @@ fun PaymentInformation(
                 ProfileItem(
                     Icons.Default.Discount,
                     text = stringResource(id = R.string.promotions),
-                    onClick = { onPaymentInfoClick() })
+                    onClick = { onPromotionsClick() })
                 LineGray()
                 ProfileItem(
                     Icons.Default.Payment,
                     text = stringResource(id = R.string.payment_method),
-                    onClick = { onPromotionsClick() })
+                    onClick = { onPaymentMethodClick() })
                 LineGray()
                 ProfileItem(
                     Icons.Default.Receipt,
