@@ -14,7 +14,7 @@ fun PaymentCard.toDto(userId: String): PaymentCardDto {
         expiryMonth = expiryMonth,
         expiryYear = expiryYear,
         cvv = cvv,
-        isDefault = isDefault
+        default = isDefault
     )
 }
 
@@ -28,6 +28,6 @@ fun PaymentCardDto.toDomain(): PaymentCard {
         expiryMonth = expiryMonth,
         expiryYear = expiryYear,
         cvv = cvv,
-        isDefault = isDefault
+        isDefault = default
     )
 }

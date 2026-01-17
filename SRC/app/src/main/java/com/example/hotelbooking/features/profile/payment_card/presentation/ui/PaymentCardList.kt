@@ -61,10 +61,10 @@ import com.example.hotelbooking.ui.theme.VisaBlueDark
 import com.example.hotelbooking.ui.theme.VisaBlueLight
 
 @Composable
-fun PaymentCardList(list: List<PaymentCard>) {
+fun PaymentCardList(list: List<PaymentCard>, onAddCardClick: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(Dimen.PaddingSM),
+        contentPadding = PaddingValues(vertical = Dimen.PaddingSM),
         verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
     ) {
         item {
@@ -81,12 +81,10 @@ fun PaymentCardList(list: List<PaymentCard>) {
 
         item {
             OutlinedButton(
-                onClick = {
-
-                },
+                onClick = { onAddCardClick() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimen.PaddingS)
+                    .padding(vertical = Dimen.PaddingS)
                     .height(60.dp),
                 shape = RoundedCornerShape(AppShape.ShapeM)
             ) {
@@ -116,13 +114,31 @@ fun PaymentCardItem(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundBrush)
-                .padding(20.dp)
+                .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = logoRes),
-                contentDescription = null,
-                modifier = Modifier.size(Dimen.SizeXXL).align(Alignment.TopEnd)
-            )
+            Column(
+                modifier = Modifier.align(Alignment.TopEnd),
+            ) {
+                Image(
+                    painter = painterResource(id = logoRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(Dimen.SizeXXL).align(Alignment.End)
+                )
+
+                if (card.isDefault) {
+                    Surface(
+                        color = Color.White.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.card_default),
+                            modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
 
             Canvas(
                 modifier = Modifier
@@ -222,21 +238,6 @@ fun PaymentCardItem(
                             )
                         )
                     }
-                }
-            }
-
-            if (card.isDefault) {
-                Surface(
-                    color = Color.White.copy(alpha = 0.2f),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.card_default),
-                        modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White
-                    )
                 }
             }
         }

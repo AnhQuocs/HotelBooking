@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.components.ShimmerItem
+import com.example.hotelbooking.ui.dimens.AppShape
 
 @Composable
 fun PaymentCardShimmerItem() {
@@ -33,7 +34,7 @@ fun PaymentCardShimmerItem() {
     ) { brush ->
         Card(
             modifier = Modifier.border(0.1.dp, color = Color.LightGray, RoundedCornerShape(16.dp)),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(AppShape.ShapeL),
             colors = CardDefaults.cardColors(containerColor = Color.LightGray.copy(alpha = 0.1f))
         ) {
             Box(

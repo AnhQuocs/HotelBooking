@@ -147,7 +147,7 @@ fun PaymentCardsSection(
                     onAddCardClick = { onAddCardClick() }
                 )
             } else {
-                PaymentCardList(list)
+                PaymentCardList(list, onAddCardClick = { onAddCardClick() })
             }
         }
 

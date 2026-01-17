@@ -9,5 +9,5 @@ data class PaymentCardDto(
     val expiryMonth: Int = 0,
     val expiryYear: Int = 0,
     val cvv: String = "",
-    val isDefault: Boolean = false
+    val default: Boolean = false
 )
