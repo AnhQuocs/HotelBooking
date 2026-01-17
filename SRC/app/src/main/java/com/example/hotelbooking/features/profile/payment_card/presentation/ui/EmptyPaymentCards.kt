@@ -26,10 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
+import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.JostTypography
 
 @Composable
 fun EmptyPaymentCards(
@@ -45,7 +46,7 @@ fun EmptyPaymentCards(
     ) {
         Box(
             modifier = Modifier
-                .size(120.dp)
+                .size(Dimen.SizeUltra)
                 .background(
                     color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
                     shape = CircleShape
@@ -55,7 +56,7 @@ fun EmptyPaymentCards(
             Icon(
                 imageVector = Icons.Default.AddCard,
                 contentDescription = null,
-                modifier = Modifier.size(60.dp),
+                modifier = Modifier.size(Dimen.SizeXXLPlus),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
@@ -64,7 +65,7 @@ fun EmptyPaymentCards(
 
         Text(
             text = stringResource(id = R.string.empty_payment_title),
-            style = MaterialTheme.typography.titleMedium,
+            style = JostTypography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
@@ -73,7 +74,7 @@ fun EmptyPaymentCards(
 
         Text(
             text =  stringResource(id = R.string.empty_payment_description),
-            style = MaterialTheme.typography.bodyMedium,
+            style = JostTypography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = Dimen.PaddingM)
@@ -83,7 +84,7 @@ fun EmptyPaymentCards(
 
         Button(
             onClick = onAddCardClick,
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(AppShape.ShapeM),
             contentPadding = PaddingValues(horizontal = Dimen.PaddingM, vertical = AppSpacing.S)
         ) {
             Icon(Icons.Default.Add, contentDescription = null)

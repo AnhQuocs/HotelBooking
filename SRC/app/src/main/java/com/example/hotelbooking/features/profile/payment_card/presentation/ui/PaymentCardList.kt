@@ -39,24 +39,39 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.GoldBorder
+import com.example.hotelbooking.ui.theme.GoldHighlight
+import com.example.hotelbooking.ui.theme.GoldPrimary
+import com.example.hotelbooking.ui.theme.GoldShadow
+import com.example.hotelbooking.ui.theme.JcbGreenDark
+import com.example.hotelbooking.ui.theme.JcbGreenLight
+import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.MasterCardGrayDark
+import com.example.hotelbooking.ui.theme.MasterCardGrayLight
+import com.example.hotelbooking.ui.theme.VisaBlueDark
+import com.example.hotelbooking.ui.theme.VisaBlueLight
 
 @Composable
 fun PaymentCardList(list: List<PaymentCard>) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        contentPadding = PaddingValues(Dimen.PaddingSM),
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
     ) {
         item {
             Text(
-                text = "My Cards",
+                text = stringResource(id = R.string.my_cards),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp, start = 8.dp)
+                modifier = Modifier.padding(bottom = Dimen.PaddingM, start = Dimen.PaddingS)
             )
         }
 
@@ -71,12 +86,12 @@ fun PaymentCardList(list: List<PaymentCard>) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(Dimen.PaddingS)
                     .height(60.dp),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(AppShape.ShapeM)
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
-                Text("Add New Payment Method")
+                Text(stringResource(id = R.string.add_new_card))
             }
         }
     }
@@ -93,10 +108,9 @@ fun PaymentCardItem(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1.586f)
-            .padding(8.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        shape = RoundedCornerShape(AppShape.ShapeL),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
             modifier = Modifier
@@ -107,21 +121,25 @@ fun PaymentCardItem(
             Image(
                 painter = painterResource(id = logoRes),
                 contentDescription = null,
-                modifier = Modifier.size(50.dp).align(Alignment.TopEnd)
+                modifier = Modifier.size(Dimen.SizeXXL).align(Alignment.TopEnd)
             )
 
             Canvas(
                 modifier = Modifier
                     .size(45.dp, 32.dp)
                     .align(Alignment.TopStart)
-                    .clip(RoundedCornerShape(6.dp))
-                    .border(1.dp, Color(0xFFB8860B), RoundedCornerShape(6.dp))
+                    .clip(RoundedCornerShape(AppShape.ShapeXS))
+                    .border(
+                        1.dp,
+                        GoldBorder,
+                        RoundedCornerShape(AppShape.ShapeXS)
+                    )
             ) {
                 val metallicBrush = Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFFFFFACD),
-                        Color(0xFFFFD700),
-                        Color(0xFFDAA520)
+                        GoldHighlight,
+                        GoldPrimary,
+                        GoldShadow
                     ),
                     start = Offset.Zero,
                     end = Offset(size.width, size.height)
@@ -166,9 +184,10 @@ fun PaymentCardItem(
             ) {
                 Text(
                     text = "**** **** **** ${card.cardNumber.takeLast(4)}",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White,
-                    letterSpacing = 2.sp
+                    style = JostTypography.headlineSmall.copy(
+                        color = Color.White,
+                        letterSpacing = 2.sp
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -178,15 +197,29 @@ fun PaymentCardItem(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        Text(text = "CARD HOLDER", style = MaterialTheme.typography.labelSmall, color = Color.LightGray)
-                        Text(text = card.holderName.uppercase(), style = MaterialTheme.typography.bodyLarge, color = Color.White)
+                        Text(
+                            text = stringResource(id = R.string.card_holder),
+                            style = JostTypography.labelMedium.copy(
+                                color = Color.LightGray
+                            )
+                        )
+                        Text(
+                            text = card.holderName.uppercase(),
+                            style = JostTypography.bodyLarge.copy(
+                                color = Color.White
+                            )
+                        )
                     }
                     Column(horizontalAlignment = Alignment.End) {
-                        Text(text = "EXPIRES", style = MaterialTheme.typography.labelSmall, color = Color.LightGray)
+                        Text(
+                            text = stringResource(id = R.string.expires),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.LightGray)
                         Text(
                             text = "${card.expiryMonth.toString().padStart(2, '0')}/${card.expiryYear.toString().takeLast(2)}",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
+                            style = JostTypography.bodyLarge.copy(
+                                color = Color.White
+                            )
                         )
                     }
                 }
@@ -199,8 +232,8 @@ fun PaymentCardItem(
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     Text(
-                        text = "Default",
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                        text = stringResource(id = R.string.card_default),
+                        modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White
                     )
@@ -214,15 +247,32 @@ fun PaymentCardItem(
 fun getCardDesign(brand: PaymentBrand): Pair<Brush, Int> {
     return when (brand) {
         PaymentBrand.VISA -> Pair(
-            Brush.linearGradient(listOf(Color(0xFF1A237E), Color(0xFF283593))),
+            Brush.linearGradient(
+                listOf(
+                    VisaBlueDark,
+                    VisaBlueLight
+                )
+            ),
             R.drawable.ic_visa
         )
+
         PaymentBrand.MASTERCARD -> Pair(
-            Brush.linearGradient(listOf(Color(0xFF37474F), Color(0xFF263238))),
+            Brush.linearGradient(
+                listOf(
+                    MasterCardGrayLight,
+                    MasterCardGrayDark
+                )
+            ),
             R.drawable.ic_mastercard
         )
+
         PaymentBrand.JCB -> Pair(
-            Brush.linearGradient(listOf(Color(0xFF004D40), Color(0xFF00695C))),
+            Brush.linearGradient(
+                listOf(
+                    JcbGreenDark,
+                    JcbGreenLight
+                )
+            ),
             R.drawable.ic_jcb
         )
     }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class PaymentCardState<out T> {
+    data object Idle : PaymentCardState<Nothing>()
     data object Loading : PaymentCardState<Nothing>()
     data class Success<T>(val data: T) : PaymentCardState<T>()
     data class Error(val messageKey: String) : PaymentCardState<Nothing>()
@@ -29,10 +30,9 @@ class PaymentCardViewModel @Inject constructor(
     val cardsState: StateFlow<PaymentCardState<List<PaymentCard>>> =
         _cardsState
 
-    private val _cardState =
-        MutableStateFlow<PaymentCardState<PaymentCard?>>(
-            PaymentCardState.Success(null)
-        )
+    private val _cardState = MutableStateFlow<PaymentCardState<PaymentCard?>>(
+        PaymentCardState.Idle
+    )
     val cardState: StateFlow<PaymentCardState<PaymentCard?>> =
         _cardState
 
@@ -66,11 +66,10 @@ class PaymentCardViewModel @Inject constructor(
             _cardState.value = PaymentCardState.Loading
             try {
                 paymentCardUseCases.updatePaymentCardUseCase(card)
-                _cardState.value =
-                    PaymentCardState.Success(null)
+                _cardState.value = PaymentCardState.Success(null)
             } catch (e: Exception) {
-                _cardState.value =
-                    PaymentCardState.Error("common.error")
+                val messageKey = (e as? PaymentCardException)?.error?.messageKey ?: "common.error"
+                _cardState.value = PaymentCardState.Error(messageKey)
             }
         }
     }
@@ -118,5 +117,9 @@ class PaymentCardViewModel @Inject constructor(
                     PaymentCardState.Error("common.error")
             }
         }
+    }
+
+    fun resetCardState() {
+        _cardState.value = PaymentCardState.Idle
     }
 }

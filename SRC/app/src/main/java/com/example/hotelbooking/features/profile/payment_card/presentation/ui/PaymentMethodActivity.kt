@@ -1,9 +1,12 @@
 package com.example.hotelbooking.features.profile.payment_card.presentation.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
@@ -45,6 +47,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PaymentMethodActivity : BaseComponentActivity() {
+
+    private val viewModel: PaymentCardViewModel by viewModels()
+
+    private val addCardLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            viewModel.loadPaymentCards(userId)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -54,7 +68,12 @@ class PaymentMethodActivity : BaseComponentActivity() {
 
             PaymentCardsScreen(
                 userId = userId,
-                onBackClick = { finish() }
+                onBackClick = { finish() },
+                paymentCardViewModel = viewModel,
+                onAddCardClick = {
+                    val intent = Intent(this, AddPaymentCardActivity::class.java)
+                    addCardLauncher.launch(intent)
+                }
             )
         }
     }
@@ -64,6 +83,7 @@ class PaymentMethodActivity : BaseComponentActivity() {
 fun PaymentCardsScreen(
     userId: String,
     onBackClick: () -> Unit,
+    onAddCardClick: () -> Unit,
     paymentCardViewModel: PaymentCardViewModel = hiltViewModel()
 ) {
     val cardsState by paymentCardViewModel.cardsState.collectAsState()
@@ -87,9 +107,11 @@ fun PaymentCardsScreen(
                 .padding(paddingValues)
                 .padding(Dimen.PaddingM)
         ) {
-            PaymentCardsSection(state = cardsState, onRetry = {
-                paymentCardViewModel.loadPaymentCards(userId)
-            })
+            PaymentCardsSection(
+                state = cardsState,
+                onRetry = { paymentCardViewModel.loadPaymentCards(userId) },
+                onAddCardClick = onAddCardClick
+            )
         }
     }
 }
@@ -97,17 +119,19 @@ fun PaymentCardsScreen(
 @Composable
 fun PaymentCardsSection(
     state: PaymentCardState<List<PaymentCard>>,
+    onAddCardClick: () -> Unit,
     onRetry: () -> Unit
 ) {
     val context = LocalContext.current
     val otherMessage = stringResource(id = R.string.something_went_wrong)
 
     when (state) {
+        is PaymentCardState.Idle -> Unit
+
         is PaymentCardState.Loading -> {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(Dimen.PaddingSM),
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
             ) {
                 repeat(3) {
@@ -120,9 +144,7 @@ fun PaymentCardsSection(
             val list = state.data
             if (list.isEmpty()) {
                 EmptyPaymentCards(
-                    onAddCardClick = {
-                        // Add handle
-                    }
+                    onAddCardClick = { onAddCardClick() }
                 )
             } else {
                 PaymentCardList(list)
@@ -164,7 +186,7 @@ fun ErrorSection(
             imageVector = Icons.Default.Warning,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(Dimen.SizeXXL)
         )
         Spacer(modifier = Modifier.height(AppSpacing.S))
         Text(
