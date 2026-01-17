@@ -56,7 +56,7 @@ import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewSta
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.MistGray
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.RatingYellow
@@ -171,7 +171,7 @@ fun RatingSummarySection(stats: RatingStats) {
     ) {
         Text(
             text = stringResource(R.string.overall_rating),
-            style = JostTypography.titleLarge.copy(
+            style = AfacadTypography.titleLarge.copy(
                 color = Color.Black,
                 fontSize = 18.sp
             )
@@ -179,7 +179,7 @@ fun RatingSummarySection(stats: RatingStats) {
 
         Text(
             text = String.format("%.1f", stats.averageRating),
-            style = JostTypography.displayMedium.copy(fontWeight = FontWeight.Bold)
+            style = AfacadTypography.displayMedium.copy(fontWeight = FontWeight.Bold)
         )
 
         RatingBar(rating = stats.averageRating)
@@ -189,7 +189,7 @@ fun RatingSummarySection(stats: RatingStats) {
                 R.string.based_on_reviews,
                 stats.totalReviews
             ),
-            style = JostTypography.bodySmall,
+            style = AfacadTypography.bodySmall,
             color = Color.Gray
         )
 
@@ -229,7 +229,7 @@ fun RatingDistributionRow(
         Text(
             text = label,
             modifier = Modifier.width(Dimen.WidthM),
-            style = JostTypography.bodyMedium,
+            style = AfacadTypography.bodyMedium,
             color = Color.Gray
         )
 

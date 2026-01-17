@@ -24,7 +24,7 @@ import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
 import com.example.hotelbooking.features.review.domain.model.Review
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun ReviewList(list: HotelReviewSummary, onSeeAllClick: () -> Unit) {
@@ -76,7 +76,7 @@ fun ReviewItem(review: Review) {
             ) {
                 Text(
                     text = review.userName,
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black,
                     )
@@ -84,7 +84,7 @@ fun ReviewItem(review: Review) {
 
                 Text(
                     text = "⭐${review.rating}",
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Black,
@@ -94,7 +94,7 @@ fun ReviewItem(review: Review) {
 
             Text(
                 text = review.comment,
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontSize = 15.sp,
                     color = Color.Gray,
                     lineHeight = 18.sp,

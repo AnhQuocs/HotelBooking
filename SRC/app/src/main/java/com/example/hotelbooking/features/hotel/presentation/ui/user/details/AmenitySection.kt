@@ -29,7 +29,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.LightBlue
 
 data class AmenityUi(
@@ -155,7 +155,7 @@ fun AmenityItem(amenity: AmenityUi, modifier: Modifier) {
 
         Text(
             text = stringResource(id = amenity.titleRes),
-            style = JostTypography.bodyLarge.copy(
+            style = AfacadTypography.bodyLarge.copy(
                 lineHeight = 14.sp,
                 color = Color.Black.copy(alpha = 0.6f),
             ),

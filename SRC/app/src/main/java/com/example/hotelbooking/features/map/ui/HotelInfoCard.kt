@@ -45,7 +45,7 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
@@ -121,7 +121,7 @@ fun HotelInfo(hotel: Hotel) {
             text = hotel.name,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            style = JostTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
+            style = AfacadTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
             color = Color.Black,
             modifier = Modifier
                 .padding(start = Dimen.PaddingXS)
@@ -142,7 +142,7 @@ fun HotelInfo(hotel: Hotel) {
 
             Text(
                 text = hotel.shortAddress,
-                style = JostTypography.labelLarge,
+                style = AfacadTypography.labelLarge,
                 color = Color.Black.copy(alpha = 0.4f)
             )
         }
@@ -174,7 +174,7 @@ fun HotelInfo(hotel: Hotel) {
 
             Text(
                 text = "⭐${hotel.averageRating}",
-                style = JostTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                style = AfacadTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 color = Color.Black,
                 modifier = Modifier
                     .align(Alignment.Top)

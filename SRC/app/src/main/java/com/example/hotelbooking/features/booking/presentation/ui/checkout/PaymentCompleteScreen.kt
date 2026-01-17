@@ -32,7 +32,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextTertiary
 
@@ -105,7 +105,7 @@ fun PaymentCompleteScreen(
 
             Text(
                 text = stringResource(R.string.payment_complete),
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -118,7 +118,7 @@ fun PaymentCompleteScreen(
 
             Text(
                 text = stringResource(R.string.thank_you_for_using_service),
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     color = TextTertiary,
                 ),
                 textAlign = TextAlign.Center,

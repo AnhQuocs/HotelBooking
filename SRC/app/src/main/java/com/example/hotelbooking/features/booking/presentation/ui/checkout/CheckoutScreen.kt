@@ -62,7 +62,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import kotlinx.coroutines.launch
 
@@ -277,7 +277,7 @@ fun CheckoutScreen(
 fun PromoUI() {
     Text(
         text = stringResource(R.string.promo),
-        style = JostTypography.bodyLarge.copy(
+        style = AfacadTypography.bodyLarge.copy(
             fontWeight = FontWeight.Medium,
             color = Color.Black
         )
@@ -308,7 +308,7 @@ fun PromoUI() {
 
             Text(
                 text = stringResource(R.string.select_promo),
-                style = JostTypography.bodyMedium.copy(
+                style = AfacadTypography.bodyMedium.copy(
                     fontSize = 15.sp,
                     color = PrimaryBlue
                 )

@@ -46,7 +46,7 @@ import com.example.hotelbooking.features.auth.util.AuthValidation.validateEmail
 import com.example.hotelbooking.features.auth.util.AuthValidation.validatePassword
 import com.example.hotelbooking.features.auth.util.AuthValidation.validateUsername
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.TextTertiary
@@ -121,12 +121,12 @@ fun SignUpScreen(
                 Text(
                     text = stringResource(id = R.string.already_account) + " ",
                     color = TextTertiary,
-                    style = JostTypography.bodyLarge
+                    style = AfacadTypography.bodyLarge
                 )
                 Text(
                     text = stringResource(id = R.string.sign_in) + " ",
                     color = PrimaryBlue,
-                    style = JostTypography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    style = AfacadTypography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.clickable {
                         navController.navigate("sign_in") {
                             popUpTo("sign_up") { inclusive = true }
@@ -246,7 +246,7 @@ fun SignUpSection(
         )
         Text(
             text = stringResource(id = R.string.register_as_admin),
-            style = JostTypography.labelLarge,
+            style = AfacadTypography.labelLarge,
             color = Color.Black,
             modifier = Modifier.clickable { isAdmin = !isAdmin }
         )

@@ -50,7 +50,7 @@ import com.example.hotelbooking.features.chat.presentation.util.isSameDay
 import com.example.hotelbooking.features.chat.presentation.viewmodel.ChatViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.SurfaceLight
@@ -98,7 +98,7 @@ fun ChatScreen(
 
                     Text(
                         stringResource(id = R.string.chat),
-                        style = JostTypography.titleLarge.copy(
+                        style = AfacadTypography.titleLarge.copy(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = NearBlack

@@ -34,7 +34,7 @@ import coil.request.ImageRequest
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun HotelList(hotels: List<Hotel>, onClick: (String) -> Unit) {
@@ -94,7 +94,7 @@ fun HotelItem(
         ) {
             Text(
                 text = hotel.name,
-                style = JostTypography.titleMedium.copy(
+                style = AfacadTypography.titleMedium.copy(
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold
                 ),
@@ -105,7 +105,7 @@ fun HotelItem(
 
             Text(
                 text = hotel.shortAddress,
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal
                 ),
@@ -121,7 +121,7 @@ fun HotelItem(
             ) {
                 Text(
                     text = "$${hotel.pricePerNightMin}/" + stringResource(id = R.string.night),
-                    style = JostTypography.titleMedium.copy(
+                    style = AfacadTypography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold
                     ),
                     color = Color.White
@@ -129,7 +129,7 @@ fun HotelItem(
 
                 Text(
                     text = "⭐${hotel.averageRating}",
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         fontSize = 15.sp
                     ),
                     color = Color.White

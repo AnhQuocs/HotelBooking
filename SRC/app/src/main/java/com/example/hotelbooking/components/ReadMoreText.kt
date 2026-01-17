@@ -3,9 +3,7 @@ package com.example.hotelbooking.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,11 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.ui.dimens.AppSpacing
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
@@ -35,7 +31,7 @@ fun ReadMoreText(
     Column {
         Text(
             text = description,
-            style = JostTypography.titleMedium.copy(
+            style = AfacadTypography.titleMedium.copy(
                 fontSize = 18.sp,
                 color = Color.Gray,
                 lineHeight = 18.sp,
@@ -55,7 +51,7 @@ fun ReadMoreText(
                     stringResource(id = R.string.show_less)
                 else
                     stringResource(id = R.string.read_more),
-                style = JostTypography.bodyLarge.copy(fontWeight = FontWeight.Medium),
+                style = AfacadTypography.bodyLarge.copy(fontWeight = FontWeight.Medium),
                 color = PrimaryBlue,
                 modifier = Modifier.clickable(
                     indication = null,

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.CancelledRed
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun CancelledRibbon() {
@@ -32,7 +32,7 @@ fun CancelledRibbon() {
     ) {
         Text(
             text = stringResource(id = R.string.cancelled).uppercase(),
-            style = JostTypography.bodySmall.copy(
+            style = AfacadTypography.bodySmall.copy(
                 color = Color.White,
                 fontWeight = FontWeight.Bold
             )

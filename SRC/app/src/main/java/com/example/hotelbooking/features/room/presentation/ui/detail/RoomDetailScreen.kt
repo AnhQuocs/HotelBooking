@@ -40,7 +40,7 @@ import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import java.time.Instant
 import java.time.ZoneId
 
@@ -113,7 +113,7 @@ fun RoomDetailScreen(
 
                             Text(
                                 text = room.name,
-                                style = JostTypography.titleLarge.copy(
+                                style = AfacadTypography.titleLarge.copy(
                                     fontSize = 20.sp,
                                     color = Color.Black,
                                     fontWeight = FontWeight.SemiBold,
@@ -128,7 +128,7 @@ fun RoomDetailScreen(
                             ) {
                                 Text(
                                     "$${room.pricePerNight}",
-                                    style = JostTypography.titleMedium.copy(
+                                    style = AfacadTypography.titleMedium.copy(
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         color = BlueNavy
@@ -136,7 +136,7 @@ fun RoomDetailScreen(
                                 )
                                 Text(
                                     "/" + stringResource(id = R.string.night),
-                                    style = JostTypography.titleMedium.copy(
+                                    style = AfacadTypography.titleMedium.copy(
                                         fontSize = 18.sp,
                                         color = Color.Black
                                     )

@@ -52,7 +52,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.utils.getHighlightedText
@@ -88,7 +88,7 @@ fun BookingHistorySection(
             if (items.isEmpty()) {
                 Text(
                     text = stringResource(id = R.string.no_bookings_yet),
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         color = Color.Black,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.SemiBold
@@ -209,7 +209,7 @@ fun BookingHistoryCard(
                 ) {
                     Text(
                         text = hotelName,
-                        style = JostTypography.titleMedium.copy(
+                        style = AfacadTypography.titleMedium.copy(
                             color = Color.Black,
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -225,7 +225,7 @@ fun BookingHistoryCard(
 
                     Text(
                         text = "⭐${hotel.averageRating}",
-                        style = JostTypography.bodyLarge.copy(
+                        style = AfacadTypography.bodyLarge.copy(
                             fontSize = 15.sp,
                             color = Color.Black
                         )
@@ -244,7 +244,7 @@ fun BookingHistoryCard(
                     Spacer(modifier = Modifier.width(AppSpacing.XS))
                     Text(
                         text = hotelShortAddress,
-                        style = JostTypography.bodyLarge.copy(
+                        style = AfacadTypography.bodyLarge.copy(
                             fontSize = 15.sp,
                             color = SlateGray,
                         ),
@@ -258,7 +258,7 @@ fun BookingHistoryCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "$${hotel.pricePerNightMin}",
-                        style = JostTypography.bodyLarge.copy(
+                        style = AfacadTypography.bodyLarge.copy(
                             color = BlueNavy,
                             fontWeight = FontWeight.SemiBold
                         ),

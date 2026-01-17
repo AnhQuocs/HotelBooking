@@ -7,13 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.TextTertiary
 
 @Composable
@@ -24,7 +22,7 @@ fun AuthTitle(
     Text(
         text = title,
         color = Color.Black,
-        style = JostTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+        style = AfacadTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
     )
 
     Spacer(modifier = Modifier.height(Dimen.PaddingS))
@@ -33,7 +31,7 @@ fun AuthTitle(
         text = desc,
         color = TextTertiary,
         textAlign = TextAlign.Center,
-        style = JostTypography.labelLarge.copy(fontSize = 16.sp),
+        style = AfacadTypography.labelLarge.copy(fontSize = 16.sp),
         modifier = Modifier.fillMaxWidth()
     )
 }

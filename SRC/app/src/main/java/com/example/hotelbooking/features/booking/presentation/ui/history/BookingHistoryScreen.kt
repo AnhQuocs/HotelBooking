@@ -43,7 +43,7 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingH
 import com.example.hotelbooking.features.booking.presentation.viewmodel.SearchBookingsViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.SurfaceGray
 import com.example.hotelbooking.ui.theme.TextTertiary
 
@@ -95,7 +95,7 @@ fun BookingHistoryScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.my_booking),
-                    style = JostTypography.titleLarge.copy(
+                    style = AfacadTypography.titleLarge.copy(
                         color = Color.Black,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold

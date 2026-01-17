@@ -57,7 +57,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BackgroundLight
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.MintGreen
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.ui.theme.PrimaryBlue
@@ -114,7 +114,7 @@ fun NotificationScreen(
                     ) {
                         Text(
                             text = stringResource(id = R.string.no_notifications),
-                            style = JostTypography.bodyLarge.copy(
+                            style = AfacadTypography.bodyLarge.copy(
                                 fontSize = 18.sp,
                                 color = Color.Black,
                                 textAlign = TextAlign.Center
@@ -195,7 +195,7 @@ fun NotificationItem(
                 ) {
                     Text(
                         text = notification.title,
-                        style = JostTypography.titleMedium.copy(
+                        style = AfacadTypography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = NearBlack
                         )
@@ -212,7 +212,7 @@ fun NotificationItem(
 
                 Text(
                     text = notification.message,
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         color = Color.DarkGray,
                         lineHeight = 20.sp
                     ),
@@ -232,7 +232,7 @@ fun NotificationItem(
                             horizontal = Dimen.PaddingS,
                             vertical = Dimen.PaddingXS
                         ),
-                        style = JostTypography.labelMedium.copy(
+                        style = AfacadTypography.labelMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -244,7 +244,7 @@ fun NotificationItem(
 
             Text(
                 text = formatTimestamp24h(notification.timestamp),
-                style = JostTypography.labelMedium.copy(color = Color.Gray)
+                style = AfacadTypography.labelMedium.copy(color = Color.Gray)
             )
         }
     }

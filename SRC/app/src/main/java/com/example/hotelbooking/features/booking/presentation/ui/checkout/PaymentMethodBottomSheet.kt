@@ -47,7 +47,7 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.InputBackground
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SurfaceSoftBlue
 
@@ -78,7 +78,7 @@ fun PaymentMethodBottomSheet(
             ) {
                 Text(
                     text = stringResource(R.string.payment_method),
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
@@ -139,7 +139,7 @@ fun PaymentMethodBottomSheet(
 
                     Text(
                         text = stringResource(R.string.add_debit_card),
-                        style = JostTypography.bodyMedium.copy(
+                        style = AfacadTypography.bodyMedium.copy(
                             fontSize = 15.sp,
                             color = Color.Black
                         )
@@ -233,7 +233,7 @@ fun PaymentCardItem(
 
             Text(
                 text = text,
-                style = JostTypography.bodyMedium.copy(
+                style = AfacadTypography.bodyMedium.copy(
                     fontSize = 15.sp,
                     color = Color.Black,
                 )

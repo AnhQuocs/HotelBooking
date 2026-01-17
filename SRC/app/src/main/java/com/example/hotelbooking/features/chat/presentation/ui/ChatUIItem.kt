@@ -42,7 +42,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.ScrimBlack20
 
 @Composable
@@ -79,7 +79,7 @@ fun MessageBubble(
                 Column {
                     Text(
                         text = message.content,
-                        style = JostTypography.bodyLarge.copy(
+                        style = AfacadTypography.bodyLarge.copy(
                             color = if (isMe) Color.White else Color.Black,
                             fontSize = 16.sp,
                             lineHeight = 20.sp
@@ -132,7 +132,7 @@ fun ChatHeader(
         ) {
             Text(
                 text = initials,
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
@@ -148,7 +148,7 @@ fun ChatHeader(
         ) {
             Text(
                 text = chatName,
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     color = Color.Black,
                     fontWeight = FontWeight.SemiBold,
                 ),
@@ -171,7 +171,7 @@ fun ChatHeader(
 
                 Text(
                     text = subChatName,
-                    style = JostTypography.labelLarge.copy(
+                    style = AfacadTypography.labelLarge.copy(
                         color = Color.Gray,
                     ),
                     maxLines = 1,
@@ -215,7 +215,7 @@ fun DateDivider(date: String) {
             Text(
                 text = date,
                 modifier = Modifier.padding(horizontal = Dimen.PaddingSM, vertical = Dimen.PaddingXS),
-                style = JostTypography.labelMedium.copy(
+                style = AfacadTypography.labelMedium.copy(
                     fontSize = 12.sp,
                     color = Color.Gray,
                     fontWeight = FontWeight.Medium

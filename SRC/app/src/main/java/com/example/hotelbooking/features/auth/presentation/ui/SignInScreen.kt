@@ -42,7 +42,7 @@ import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewMod
 import com.example.hotelbooking.features.auth.util.AuthValidation
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.ActionDanger
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextTertiary
 
@@ -112,12 +112,12 @@ fun SignInScreen(
                 Text(
                     text = stringResource(id = R.string.dont_have_account) + " ",
                     color = TextTertiary,
-                    style = JostTypography.bodyLarge
+                    style = AfacadTypography.bodyLarge
                 )
                 Text(
                     text = stringResource(id = R.string.sign_up) + " ",
                     color = PrimaryBlue,
-                    style = JostTypography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    style = AfacadTypography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.clickable {
                         navController.navigate("sign_up") {
                             popUpTo("sign_in") { inclusive = true }
@@ -198,7 +198,7 @@ fun SignInSection(
     Text(
         text = stringResource(id = R.string.forgot_password),
         color = ActionDanger,
-        style = JostTypography.labelLarge,
+        style = AfacadTypography.labelLarge,
         textAlign = TextAlign.End,
         modifier = Modifier.fillMaxWidth()
     )

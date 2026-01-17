@@ -49,7 +49,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextPrimaryDark
 import com.example.hotelbooking.ui.theme.WarningOrange
@@ -119,7 +119,7 @@ fun HotelInfo(hotel: Hotel, context: Context) {
             Text(
                 text = hotel.name,
                 color = Color.Black,
-                style = JostTypography.titleMedium.copy(
+                style = AfacadTypography.titleMedium.copy(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
                 ),
@@ -138,7 +138,7 @@ fun HotelInfo(hotel: Hotel, context: Context) {
 
                 Text(
                     text = hotel.shortAddress,
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontWeight = FontWeight.Normal,
                         color = Color.Gray
                     )
@@ -148,7 +148,7 @@ fun HotelInfo(hotel: Hotel, context: Context) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "$${hotel.pricePerNightMin}",
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         color = BlueNavy,
                         fontWeight = FontWeight.SemiBold
                     ),
@@ -166,7 +166,7 @@ fun HotelInfo(hotel: Hotel, context: Context) {
 
         Text(
             text = "⭐${hotel.averageRating}",
-            style = JostTypography.labelLarge.copy(fontSize = 15.sp),
+            style = AfacadTypography.labelLarge.copy(fontSize = 15.sp),
             color = Color.Black
         )
     }
@@ -198,7 +198,7 @@ fun CheckoutSummaryCard(
         ) {
             Text(
                 text = stringResource(R.string.your_booking),
-                style = JostTypography.bodyMedium.copy(
+                style = AfacadTypography.bodyMedium.copy(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = PrimaryBlue
@@ -243,7 +243,7 @@ fun CheckoutSummaryCard(
 
             Text(
                 text = stringResource(R.string.price_details),
-                style = JostTypography.bodyMedium.copy(
+                style = AfacadTypography.bodyMedium.copy(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = PrimaryBlue
@@ -258,7 +258,7 @@ fun CheckoutSummaryCard(
             ) {
                 Text(
                     text = stringResource(R.string.price),
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
                         color = TextPrimaryDark
@@ -267,7 +267,7 @@ fun CheckoutSummaryCard(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "$$totalPrice",
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
                         color = TextPrimaryDark
@@ -283,7 +283,7 @@ fun CheckoutSummaryCard(
             ) {
                 Text(
                     text = stringResource(R.string.discount),
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
                         color = TextPrimaryDark
@@ -292,7 +292,7 @@ fun CheckoutSummaryCard(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "-$0.0",
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
                         color = TextPrimaryDark
@@ -308,7 +308,7 @@ fun CheckoutSummaryCard(
             ) {
                 Text(
                     text = stringResource(R.string.total_price),
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimaryDark
@@ -317,7 +317,7 @@ fun CheckoutSummaryCard(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "$$totalPrice",
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = TextPrimaryDark
@@ -351,7 +351,7 @@ fun CheckoutSummaryItem(
 
         Text(
             text = key,
-            style = JostTypography.labelLarge.copy(
+            style = AfacadTypography.labelLarge.copy(
                 fontSize = 15.sp,
                 color = TextPrimaryDark,
                 fontWeight = FontWeight.Normal
@@ -362,7 +362,7 @@ fun CheckoutSummaryItem(
 
         Text(
             text = value,
-            style = JostTypography.labelLarge.copy(
+            style = AfacadTypography.labelLarge.copy(
                 color = TextPrimaryDark,
                 fontWeight = FontWeight.SemiBold
             )

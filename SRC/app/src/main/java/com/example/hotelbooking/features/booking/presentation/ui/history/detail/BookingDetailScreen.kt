@@ -38,7 +38,7 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingH
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
 
 @Composable
@@ -93,7 +93,7 @@ fun BookingDetailScreen(
 
                     Text(
                         stringResource(id = R.string.booking_detail_title),
-                        style = JostTypography.titleMedium.copy(
+                        style = AfacadTypography.titleMedium.copy(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = NearBlack

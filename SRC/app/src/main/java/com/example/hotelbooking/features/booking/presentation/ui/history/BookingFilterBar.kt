@@ -24,7 +24,7 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.InputBackground
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun BookingFilterBar(
@@ -59,7 +59,7 @@ fun BookingFilterBar(
                 Text(
                     text = category,
                     modifier = Modifier.padding(horizontal = 20.dp, vertical =Dimen.PaddingS),
-                    style = JostTypography.bodyMedium.copy(
+                    style = AfacadTypography.bodyMedium.copy(
                         color = if (isSelected) Color.White else Color.Gray,
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                     )

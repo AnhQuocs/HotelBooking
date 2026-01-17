@@ -35,80 +35,64 @@ val Typography = Typography(
     */
 )
 
-val JostTypography = Typography(
-
+val AfacadTypography = Typography(
     displayLarge = TextStyle(
-        fontSize = 57.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Bold
+        fontSize = 60.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
+        fontWeight = FontWeight.Bold,
+        letterSpacing = (-1).sp
     ),
     displayMedium = TextStyle(
-        fontSize = 45.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
+        fontSize = 48.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
         fontWeight = FontWeight.Bold
-    ),
-    displaySmall = TextStyle(
-        fontSize = 36.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.SemiBold
     ),
 
     headlineLarge = TextStyle(
-        fontSize = 32.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.SemiBold
+        fontSize = 34.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = (-0.5).sp
     ),
     headlineMedium = TextStyle(
-        fontSize = 28.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
+        fontSize = 30.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
         fontWeight = FontWeight.SemiBold
-    ),
-    headlineSmall = TextStyle(
-        fontSize = 24.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Medium
     ),
 
     titleLarge = TextStyle(
-        fontSize = 22.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Medium
+        fontSize = 24.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
+        fontWeight = FontWeight.SemiBold,
+        lineHeight = 30.sp
     ),
     titleMedium = TextStyle(
-        fontSize = 16.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Medium
-    ),
-    titleSmall = TextStyle(
-        fontSize = 14.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
+        fontSize = 18.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
         fontWeight = FontWeight.Medium
     ),
 
     bodyLarge = TextStyle(
-        fontSize = 16.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Normal
+        fontSize = 18.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
+        fontWeight = FontWeight.Normal,
+        lineHeight = 26.sp
     ),
     bodyMedium = TextStyle(
-        fontSize = 14.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Normal
-    ),
-    bodySmall = TextStyle(
-        fontSize = 12.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
-        fontWeight = FontWeight.Normal
+        fontSize = 16.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
+        fontWeight = FontWeight.Normal,
+        lineHeight = 22.sp
     ),
 
     labelLarge = TextStyle(
-        fontSize = 14.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
+        fontSize = 15.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
         fontWeight = FontWeight.Medium
     ),
     labelMedium = TextStyle(
-        fontSize = 12.sp,
-        fontFamily = FontFamily(Font(R.font.jost_font)),
+        fontSize = 13.sp,
+        fontFamily = FontFamily(Font(R.font.font_afacad_variable)),
         fontWeight = FontWeight.Medium
-    ),
+    )
 )

@@ -30,7 +30,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun EmptyPaymentCards(
@@ -65,7 +65,7 @@ fun EmptyPaymentCards(
 
         Text(
             text = stringResource(id = R.string.empty_payment_title),
-            style = JostTypography.titleMedium,
+            style = AfacadTypography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
@@ -74,7 +74,7 @@ fun EmptyPaymentCards(
 
         Text(
             text =  stringResource(id = R.string.empty_payment_description),
-            style = JostTypography.bodyMedium,
+            style = AfacadTypography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = Dimen.PaddingM)

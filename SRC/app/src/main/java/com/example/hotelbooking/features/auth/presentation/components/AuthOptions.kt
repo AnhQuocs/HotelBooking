@@ -27,7 +27,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.InputBackground
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.TextTertiary
 
@@ -50,7 +50,7 @@ fun AuthOptions() {
         Text(
             text = stringResource(id = R.string.or),
             color = SlateGray,
-            style = JostTypography.labelLarge.copy(fontWeight = FontWeight.Normal),
+            style = AfacadTypography.labelLarge.copy(fontWeight = FontWeight.Normal),
             modifier = Modifier
                 .padding(horizontal = Dimen.PaddingS)
         )

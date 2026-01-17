@@ -42,7 +42,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.IndigoBlue
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
@@ -81,7 +81,7 @@ fun HotelDetailTopBar(
 
             Text(
                 stringResource(id = R.string.detail),
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontSize = 18.sp,
                     color = NearBlack,
                     fontWeight = FontWeight.SemiBold
@@ -148,7 +148,7 @@ fun HotelThumbnail(
         ) {
             Text(
                 text = "⭐${averageRating}",
-                style = JostTypography.bodyMedium.copy(Color.Black),
+                style = AfacadTypography.bodyMedium.copy(Color.Black),
                 modifier = Modifier.padding(horizontal = padding)
             )
         }
@@ -169,7 +169,7 @@ fun HotelInfo(
     ) {
         Text(
             text = name,
-            style = JostTypography.titleLarge.copy(
+            style = AfacadTypography.titleLarge.copy(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold
             ),
@@ -179,7 +179,7 @@ fun HotelInfo(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "$${pricePerNightMin}/",
-                style = JostTypography.titleLarge.copy(
+                style = AfacadTypography.titleLarge.copy(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 ),
@@ -210,7 +210,7 @@ fun HotelInfo(
 
         Text(
             text = address,
-            style = JostTypography.labelLarge,
+            style = AfacadTypography.labelLarge,
             color = Color.Gray,
             lineHeight = 16.sp,
             modifier = Modifier.weight(1f)

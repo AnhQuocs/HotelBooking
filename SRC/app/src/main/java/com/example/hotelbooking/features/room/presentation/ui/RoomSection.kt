@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +39,7 @@ import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
@@ -205,7 +202,7 @@ fun RightRoomsColumn(
                     Text(
                         text = room.name,
                         color = Color.White,
-                        style = JostTypography.bodySmall.copy(
+                        style = AfacadTypography.bodySmall.copy(
                             fontWeight = FontWeight.Bold,
                             lineHeight = 12.sp,
                             shadow = Shadow(

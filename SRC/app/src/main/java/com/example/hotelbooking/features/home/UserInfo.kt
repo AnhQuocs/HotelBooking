@@ -30,7 +30,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.auth.domain.model.AuthUser
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun UserInfo(
@@ -60,7 +60,7 @@ fun UserInfo(
             Text(
                 text = user.username ?: "",
                 color = Color.Black,
-                style = JostTypography.titleMedium.copy(
+                style = AfacadTypography.titleMedium.copy(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 ),
@@ -68,7 +68,7 @@ fun UserInfo(
 
             Text(
                 text = stringResource(id = R.string.home_topbar_title) + " ✈\uFE0F",
-                style = JostTypography.titleMedium,
+                style = AfacadTypography.titleMedium,
                 color = Color.Gray
             )
         }

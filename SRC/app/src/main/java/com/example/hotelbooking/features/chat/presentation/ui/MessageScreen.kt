@@ -56,7 +56,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.SurfaceGray
 import com.example.hotelbooking.ui.theme.TextTertiary
@@ -90,7 +90,7 @@ fun MessageScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.message),
-                    style = JostTypography.titleLarge.copy(
+                    style = AfacadTypography.titleLarge.copy(
                         color = Color.Black,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold
@@ -221,7 +221,7 @@ fun ChatItem(
         ) {
             Text(
                 text = initials,
-                style = JostTypography.titleMedium.copy(
+                style = AfacadTypography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                 ),
                 color = Color.White
@@ -239,7 +239,7 @@ fun ChatItem(
             ) {
                 Text(
                     text = hotelNameText,
-                    style = JostTypography.titleMedium.copy(
+                    style = AfacadTypography.titleMedium.copy(
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                     ),
@@ -261,7 +261,7 @@ fun ChatItem(
                 } else {
                     lastMessage
                 },
-                style = JostTypography.bodyMedium.copy(
+                style = AfacadTypography.bodyMedium.copy(
                     fontSize = 15.sp,
                     color = Color.Gray,
                 ),

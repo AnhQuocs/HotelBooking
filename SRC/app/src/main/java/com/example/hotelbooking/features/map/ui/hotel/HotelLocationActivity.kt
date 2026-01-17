@@ -56,7 +56,7 @@ import com.example.hotelbooking.features.map.util.bitmapFromVector
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -201,7 +201,7 @@ fun MapSection(
             ) {
                 Text(
                     text = stringResource(id = R.string.cannot_load_hotels),
-                    style = JostTypography.titleMedium
+                    style = AfacadTypography.titleMedium
                 )
             }
         }

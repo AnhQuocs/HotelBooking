@@ -19,13 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
-import com.example.hotelbooking.ui.theme.NearBlack
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun MapTopBar(
@@ -63,7 +61,7 @@ fun MapTopBar(
 
             Text(
                 text = text,
-                style = JostTypography.titleLarge.copy(
+                style = AfacadTypography.titleLarge.copy(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black

@@ -26,14 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.onboarding.presentation.viewmodel.OnboardingViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.MistGray
 import kotlinx.coroutines.launch
 
@@ -130,7 +129,7 @@ fun OnboardingPager(
                         color = Color.White,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
-                        style = JostTypography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+                        style = AfacadTypography.headlineSmall.copy(fontWeight = FontWeight.Bold)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -140,7 +139,7 @@ fun OnboardingPager(
                         color = MistGray,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
-                        style = JostTypography.titleSmall
+                        style = AfacadTypography.titleSmall
                     )
                 }
             }

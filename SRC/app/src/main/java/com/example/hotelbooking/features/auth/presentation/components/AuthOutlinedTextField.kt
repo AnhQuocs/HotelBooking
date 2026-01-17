@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.InputBackground
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.SlateGray
 
 @Composable
@@ -63,7 +63,7 @@ fun AuthOutlinedTextField(
         Text(
             text = title,
             color = Color.Black,
-            style = JostTypography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
+            style = AfacadTypography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
         )
 
         Spacer(modifier = Modifier.height(Dimen.PaddingXS))

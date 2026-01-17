@@ -38,7 +38,7 @@ import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.TextTertiary
 
 @Composable
@@ -80,7 +80,7 @@ fun BookingDetailSection(
         ) {
             Text(
                 stringResource(id = R.string.your_hotel),
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontSize = 15.sp,
                     color = TextTertiary
                 )
@@ -93,7 +93,7 @@ fun BookingDetailSection(
             } else {
                 Text(
                     text = stringResource(id = R.string.hotel_load_error),
-                    style = JostTypography.bodyLarge.copy(
+                    style = AfacadTypography.bodyLarge.copy(
                         fontSize = 15.sp,
                         color = Color.Red
                     )
@@ -104,7 +104,7 @@ fun BookingDetailSection(
 
             Text(
                 stringResource(id = R.string.your_room),
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontSize = 15.sp,
                     color = TextTertiary
                 )
@@ -145,7 +145,7 @@ fun BookingDetailSection(
 
             Text(
                 stringResource(id = R.string.your_booking),
-                style = JostTypography.bodyLarge.copy(
+                style = AfacadTypography.bodyLarge.copy(
                     fontSize = 15.sp,
                     color = TextTertiary
                 )

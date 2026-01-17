@@ -32,7 +32,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun DetailField(
@@ -41,14 +41,14 @@ fun DetailField(
     trailingContent: @Composable (() -> Unit)? = null
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-        Text(text = label, style = JostTypography.labelMedium, color = Color.Gray)
+        Text(text = label, style = AfacadTypography.labelMedium, color = Color.Gray)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = value,
-                style = JostTypography.bodyLarge,
+                style = AfacadTypography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.weight(1f)
             )
@@ -80,7 +80,7 @@ fun LoadingOverlay() {
                 Spacer(modifier = Modifier.height(AppSpacing.S))
                 Text(
                     text = stringResource(R.string.loading_processing),
-                    style = JostTypography.bodyMedium
+                    style = AfacadTypography.bodyMedium
                 )
             }
         }
@@ -98,7 +98,7 @@ fun DeleteConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.delete_card_title),
-                style = JostTypography.titleLarge,
+                style = AfacadTypography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -108,7 +108,7 @@ fun DeleteConfirmationDialog(
                     R.string.delete_card_message,
                     lastFourDigits
                 ),
-                style = JostTypography.bodyMedium
+                style = AfacadTypography.bodyMedium
             )
         },
         confirmButton = {
@@ -118,7 +118,7 @@ fun DeleteConfirmationDialog(
             ) {
                 Text(
                     text = stringResource(R.string.delete),
-                    style = JostTypography.labelLarge,
+                    style = AfacadTypography.labelLarge,
                     color = Color.White
                 )
             }
@@ -127,7 +127,7 @@ fun DeleteConfirmationDialog(
             TextButton(onClick = onDismiss) {
                 Text(
                     text = stringResource(R.string.cancel),
-                    style = JostTypography.labelLarge,
+                    style = AfacadTypography.labelLarge,
                     color = Color.Gray
                 )
             }
@@ -146,21 +146,21 @@ fun DefaultCardWarningDialog(
         title = {
             Text(
                 text = stringResource(R.string.cannot_delete_card_title),
-                style = JostTypography.titleLarge,
+                style = AfacadTypography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         },
         text = {
             Text(
                 text = stringResource(R.string.cannot_delete_card_message),
-                style = JostTypography.bodyMedium
+                style = AfacadTypography.bodyMedium
             )
         },
         confirmButton = {
             Button(onClick = onDismiss) {
                 Text(
                     text = stringResource(R.string.understood),
-                    style = JostTypography.labelLarge
+                    style = AfacadTypography.labelLarge
                 )
             }
         },

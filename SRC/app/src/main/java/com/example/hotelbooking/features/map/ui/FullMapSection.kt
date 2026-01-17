@@ -3,9 +3,7 @@ package com.example.hotelbooking.features.map.ui
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -24,7 +22,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -156,7 +154,7 @@ fun FullMapSection(
             ) {
                 Text(
                     text = stringResource(id = R.string.cannot_load_hotels),
-                    style = JostTypography.titleMedium
+                    style = AfacadTypography.titleMedium
                 )
             }
         }

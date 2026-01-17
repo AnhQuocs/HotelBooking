@@ -49,7 +49,7 @@ import com.example.hotelbooking.features.profile.payment_card.presentation.ui.Pa
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.RoyalBlue
 
 @Composable
@@ -91,7 +91,7 @@ fun ProfileScreen(
                     Column {
                         Text(
                             text = stringResource(id = R.string.hi, username),
-                            style = JostTypography.titleLarge.copy(
+                            style = AfacadTypography.titleLarge.copy(
                                 fontSize = 20.sp,
                                 color = Color.White,
                                 fontWeight = FontWeight.SemiBold
@@ -207,13 +207,13 @@ fun LogoutDialog(
         title = {
             Text(
                 text = stringResource(R.string.logout_title),
-                style = JostTypography.titleLarge.copy(color = Color.Black)
+                style = AfacadTypography.titleLarge.copy(color = Color.Black)
             )
         },
         text = {
             Text(
                 text = stringResource(R.string.logout_message),
-                style = JostTypography.bodyMedium,
+                style = AfacadTypography.bodyMedium,
                 color = Color.Black
             )
         },

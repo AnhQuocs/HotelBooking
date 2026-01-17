@@ -60,7 +60,7 @@ import com.example.hotelbooking.features.profile.payment_card.presentation.viewm
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.utils.showBiometricPrompt
 import dagger.hilt.android.AndroidEntryPoint
@@ -160,7 +160,7 @@ fun PaymentCardDetailScreen(
 
                     Text(
                         stringResource(id = R.string.card_detail),
-                        style = JostTypography.titleMedium.copy(
+                        style = AfacadTypography.titleMedium.copy(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = NearBlack

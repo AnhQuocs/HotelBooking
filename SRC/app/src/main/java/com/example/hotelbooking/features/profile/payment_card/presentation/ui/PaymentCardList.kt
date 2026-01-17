@@ -55,7 +55,7 @@ import com.example.hotelbooking.ui.theme.GoldPrimary
 import com.example.hotelbooking.ui.theme.GoldShadow
 import com.example.hotelbooking.ui.theme.JcbGreenDark
 import com.example.hotelbooking.ui.theme.JcbGreenLight
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.MasterCardGrayDark
 import com.example.hotelbooking.ui.theme.MasterCardGrayLight
 import com.example.hotelbooking.ui.theme.VisaBlueDark
@@ -75,7 +75,7 @@ fun PaymentCardList(
         item {
             Text(
                 text = stringResource(id = R.string.my_cards),
-                style = JostTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                style = AfacadTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                 modifier = Modifier.padding(start = Dimen.PaddingS)
             )
         }
@@ -210,7 +210,7 @@ fun PaymentCardItem(
             ) {
                 Text(
                     text = "**** **** **** ${card.cardNumber.takeLast(4)}",
-                    style = JostTypography.headlineSmall.copy(
+                    style = AfacadTypography.headlineSmall.copy(
                         color = Color.White,
                         letterSpacing = 2.sp
                     )
@@ -225,13 +225,13 @@ fun PaymentCardItem(
                     Column {
                         Text(
                             text = stringResource(id = R.string.card_holder),
-                            style = JostTypography.labelMedium.copy(
+                            style = AfacadTypography.labelMedium.copy(
                                 color = Color.LightGray
                             )
                         )
                         Text(
                             text = card.holderName.uppercase(),
-                            style = JostTypography.bodyLarge.copy(
+                            style = AfacadTypography.bodyLarge.copy(
                                 color = Color.White
                             )
                         )
@@ -246,7 +246,7 @@ fun PaymentCardItem(
                             text = "${
                                 card.expiryMonth.toString().padStart(2, '0')
                             }/${card.expiryYear.toString().takeLast(2)}",
-                            style = JostTypography.bodyLarge.copy(
+                            style = AfacadTypography.bodyLarge.copy(
                                 color = Color.White
                             )
                         )

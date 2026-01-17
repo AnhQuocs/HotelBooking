@@ -43,7 +43,7 @@ import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
 fun HelpCenter(
@@ -202,7 +202,7 @@ fun ProfileItem(icon: ImageVector, text: String, onClick: () -> Unit) {
         Spacer(Modifier.width(AppSpacing.MediumLarge))
 
         Text(
-            text = text, style = JostTypography.titleMedium.copy(
+            text = text, style = AfacadTypography.titleMedium.copy(
                 fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Normal
             )
         )

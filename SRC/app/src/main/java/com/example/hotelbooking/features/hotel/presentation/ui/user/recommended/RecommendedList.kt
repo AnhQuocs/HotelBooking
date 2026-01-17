@@ -39,7 +39,7 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
-import com.example.hotelbooking.ui.theme.JostTypography
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.utils.getHighlightedText
 
 @Composable
@@ -115,7 +115,7 @@ fun RecommendedItem(
                 Text(
                     text = hotelName,
                     color = Color.Black,
-                    style = JostTypography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                    style = AfacadTypography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     modifier = Modifier.padding(start = AppSpacing.XS)
                 )
 
@@ -131,7 +131,7 @@ fun RecommendedItem(
 
                     Text(
                         text = hotelShortAddress,
-                        style = JostTypography.labelLarge.copy(fontWeight = FontWeight.Normal),
+                        style = AfacadTypography.labelLarge.copy(fontWeight = FontWeight.Normal),
                         color = Color.Gray
                     )
                 }
@@ -139,14 +139,14 @@ fun RecommendedItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "$${hotel.pricePerNightMin}/",
-                        style = JostTypography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                        style = AfacadTypography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
                         color = BlueNavy,
                         modifier = Modifier.padding(start = AppSpacing.XS)
                     )
                     Text(
                         stringResource(id = R.string.night),
                         color = Color.Black,
-                        style = JostTypography.labelLarge
+                        style = AfacadTypography.labelLarge
                     )
                 }
             }
