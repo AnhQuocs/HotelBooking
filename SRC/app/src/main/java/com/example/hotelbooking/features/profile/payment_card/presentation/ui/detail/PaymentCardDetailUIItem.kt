@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,7 +19,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,17 +32,29 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.JostTypography
 
 @Composable
-fun DetailField(label: String, value: String) {
-    Column {
-        Text(text = label, style = MaterialTheme.typography.labelMedium, color = Color.Gray)
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium
-        )
-        HorizontalDivider(modifier = Modifier.padding(top = Dimen.PaddingS), thickness = 0.5.dp)
+fun DetailField(
+    label: String,
+    value: String,
+    trailingContent: @Composable (() -> Unit)? = null
+) {
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Text(text = label, style = JostTypography.labelMedium, color = Color.Gray)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = value,
+                style = JostTypography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.weight(1f)
+            )
+            trailingContent?.invoke()
+        }
+        HorizontalDivider(modifier = Modifier.padding(top = 8.dp), thickness = 0.5.dp)
     }
 }
 
@@ -67,7 +80,7 @@ fun LoadingOverlay() {
                 Spacer(modifier = Modifier.height(AppSpacing.S))
                 Text(
                     text = stringResource(R.string.loading_processing),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = JostTypography.bodyMedium
                 )
             }
         }
@@ -85,6 +98,7 @@ fun DeleteConfirmationDialog(
         title = {
             Text(
                 text = stringResource(R.string.delete_card_title),
+                style = JostTypography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -93,7 +107,8 @@ fun DeleteConfirmationDialog(
                 text = stringResource(
                     R.string.delete_card_message,
                     lastFourDigits
-                )
+                ),
+                style = JostTypography.bodyMedium
             )
         },
         confirmButton = {
@@ -101,12 +116,20 @@ fun DeleteConfirmationDialog(
                 onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
             ) {
-                Text(stringResource(R.string.delete), color = Color.White)
+                Text(
+                    text = stringResource(R.string.delete),
+                    style = JostTypography.labelLarge,
+                    color = Color.White
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel), color = Color.Gray)
+                Text(
+                    text = stringResource(R.string.cancel),
+                    style = JostTypography.labelLarge,
+                    color = Color.Gray
+                )
             }
         },
         shape = RoundedCornerShape(AppShape.ShapeL),
@@ -123,15 +146,22 @@ fun DefaultCardWarningDialog(
         title = {
             Text(
                 text = stringResource(R.string.cannot_delete_card_title),
+                style = JostTypography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         },
         text = {
-            Text(stringResource(R.string.cannot_delete_card_message))
+            Text(
+                text = stringResource(R.string.cannot_delete_card_message),
+                style = JostTypography.bodyMedium
+            )
         },
         confirmButton = {
             Button(onClick = onDismiss) {
-                Text(stringResource(R.string.understood))
+                Text(
+                    text = stringResource(R.string.understood),
+                    style = JostTypography.labelLarge
+                )
             }
         },
         shape = RoundedCornerShape(AppShape.ShapeL),

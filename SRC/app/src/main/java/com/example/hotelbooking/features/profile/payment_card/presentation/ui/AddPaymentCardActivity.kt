@@ -19,8 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,8 +52,12 @@ import com.example.hotelbooking.features.profile.payment_card.domain.model.Payme
 import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
+import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.ErrorRed
+import com.example.hotelbooking.ui.theme.PrimaryBlue
+import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.utils.removeAccents
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,6 +112,13 @@ fun AddPaymentCardScreen(
         }
     }
 
+    val textFieldColor = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = PrimaryBlue,
+        unfocusedBorderColor = SlateGray,
+        errorBorderColor = ErrorRed,
+        cursorColor = PrimaryBlue
+    )
+
     val cardState by viewModel.cardState.collectAsState()
     LaunchedEffect(cardState) {
         when (cardState) {
@@ -159,9 +172,11 @@ fun AddPaymentCardScreen(
 
             OutlinedTextField(
                 value = cardNumber,
+                shape = RoundedCornerShape(AppShape.ShapeL),
                 onValueChange = {
                     if (it.length <= 16) cardNumber = it.filter { char -> char.isDigit() }
                 },
+                colors = textFieldColor,
                 label = { Text(stringResource(id = R.string.card_number)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -172,7 +187,9 @@ fun AddPaymentCardScreen(
 
             OutlinedTextField(
                 value = holderName,
+                shape = RoundedCornerShape(AppShape.ShapeL),
                 onValueChange = { holderName = it },
+                colors = textFieldColor,
                 label = { Text(stringResource(id = R.string.card_holder_name)) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("NGUYEN VAN A") }
@@ -186,8 +203,10 @@ fun AddPaymentCardScreen(
                     onValueChange = {
                         if (it.length <= 4) expiryDate = it.filter { char -> char.isDigit() }
                     },
+                    colors = textFieldColor,
                     label = { Text(stringResource(id = R.string.card_expiry_date)) },
-                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(AppShape.ShapeL),
+                    modifier = Modifier.weight(1.5f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Spacer(modifier = Modifier.width(AppSpacing.M))
@@ -195,6 +214,8 @@ fun AddPaymentCardScreen(
                     value = cvv,
                     onValueChange = { if (it.length <= 4) cvv = it.filter { char -> char.isDigit() } },
                     label = { Text("CVV") },
+                    colors = textFieldColor,
+                    shape = RoundedCornerShape(AppShape.ShapeL),
                     modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     visualTransformation = PasswordVisualTransformation()
@@ -221,8 +242,9 @@ fun AddPaymentCardScreen(
                 enabled = cardState !is PaymentCardState.Loading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp)
+                    .height(Dimen.HeightLarge),
+                shape = RoundedCornerShape(AppShape.ShapeL),
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue)
             ) {
                 if (cardState is PaymentCardState.Loading) {
                     CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))

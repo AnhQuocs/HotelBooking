@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
@@ -69,13 +70,13 @@ fun PaymentCardList(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = Dimen.PaddingSM),
-        verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
     ) {
         item {
             Text(
                 text = stringResource(id = R.string.my_cards),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = Dimen.PaddingM, start = Dimen.PaddingS)
+                style = JostTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+                modifier = Modifier.padding(start = Dimen.PaddingS)
             )
         }
 

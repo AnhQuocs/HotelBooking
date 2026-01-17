@@ -261,10 +261,12 @@
         Bạn có chắc chắn muốn xóa thẻ đuôi ****%1$s không? Thao tác này không thể hoàn tác.
     </string>
     <string name="delete">Xóa</string>
-    <string name="cancel">Hủy</string>
     <string name="cannot_delete_card_title">Không thể xóa thẻ</string>
     <string name="cannot_delete_card_message">
         Đây là phương thức thanh toán mặc định của bạn. Vui lòng thiết lập một thẻ khác làm mặc định trước khi xóa thẻ này.
     </string>
     <string name="understood">Đã hiểu</string>
+    <string name="biometric_title">Xác thực bảo mật</string>
+    <string name="biometric_subtitle">Vui lòng quét vân tay để xem số thẻ</string>
+
 </resources>

@@ -1,6 +1,8 @@
 package com.example.hotelbooking.features.profile.payment_card.presentation.ui.detail
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,10 +24,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -57,7 +62,9 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.JostTypography
 import com.example.hotelbooking.ui.theme.NearBlack
+import com.example.hotelbooking.utils.showBiometricPrompt
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class PaymentCardDetailActivity : AppCompatActivity() {
@@ -83,6 +90,8 @@ class PaymentCardDetailActivity : AppCompatActivity() {
     }
 }
 
+private const val CARD_NUMBER_VISIBLE_DURATION = 30000L
+
 @Composable
 fun PaymentCardDetailScreen(
     cardId: String,
@@ -99,6 +108,9 @@ fun PaymentCardDetailScreen(
 
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val activity = remember(context) { context.findActivity() }
 
     LaunchedEffect(cardId) {
         viewModel.loadPaymentCardById(cardId)
@@ -174,6 +186,20 @@ fun PaymentCardDetailScreen(
             .fillMaxSize()
             .padding(top = padding.calculateTopPadding())) {
             cachedCard?.let { card ->
+                var isNumberVisible by remember { mutableStateOf(false) }
+                val displayCardNumber = if (isNumberVisible) {
+                    card.cardNumber.chunked(4).joinToString(" ")
+                } else {
+                    "**** **** **** ${card.cardNumber.takeLast(4)}"
+                }
+
+                LaunchedEffect(isNumberVisible) {
+                    if (isNumberVisible) {
+                        delay(CARD_NUMBER_VISIBLE_DURATION)
+                        isNumberVisible = false
+                    }
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -190,8 +216,25 @@ fun PaymentCardDetailScreen(
                     Spacer(modifier = Modifier.height(AppSpacing.L))
 
                     DetailField(
-                        label = stringResource(id = R.string.card_number),
-                        value = "**** **** **** ${card.cardNumber.takeLast(4)}"
+                        label = "Số thẻ",
+                        value = displayCardNumber,
+                        trailingContent = {
+                            IconButton(onClick = {
+                                if (isNumberVisible) {
+                                    isNumberVisible = false
+                                } else {
+                                    activity?.let {
+                                        showBiometricPrompt(it) { isNumberVisible = true }
+                                    }
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = if (isNumberVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(AppSpacing.M))
@@ -295,4 +338,10 @@ fun PaymentCardDetailScreen(
             }
         }
     }
+}
+
+fun Context.findActivity(): AppCompatActivity? = when (this) {
+    is AppCompatActivity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }

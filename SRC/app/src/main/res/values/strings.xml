@@ -261,11 +261,12 @@
         Are you sure you want to delete the card ending in ****%1$s? This action cannot be undone.
     </string>
     <string name="delete">Delete</string>
-    <string name="cancel">Cancel</string>
     <string name="cannot_delete_card_title">Cannot delete card</string>
     <string name="cannot_delete_card_message">
         This is your default payment method. Please set another card as default before deleting this one.
     </string>
     <string name="understood">Got it</string>
+    <string name="biometric_title">Security Authentication</string>
+    <string name="biometric_subtitle">Please scan your fingerprint to view card details</string>
 
 </resources>
