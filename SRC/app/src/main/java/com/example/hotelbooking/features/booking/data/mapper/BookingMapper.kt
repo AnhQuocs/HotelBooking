@@ -6,6 +6,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.Guest
+import com.example.hotelbooking.features.booking.domain.model.StayStatus
 
 fun Booking.toDto() = BookingDto(
     bookingId = bookingId,
@@ -19,6 +20,7 @@ fun Booking.toDto() = BookingDto(
     totalPrice = totalPrice,
     status = status.name,
     cancelReason = cancelReason?.name,
+    stayStatus = stayStatus.name,
     createdAt = createdAt,
     expireAt = expireAt
 )
@@ -37,6 +39,7 @@ fun BookingDto.toDomain() = Booking(
     totalPrice = totalPrice,
     status = BookingStatus.valueOf(status),
     cancelReason = cancelReason?.let { CancelReason.valueOf(cancelReason) },
+    stayStatus = StayStatus.valueOf(stayStatus),
     createdAt = createdAt,
     expireAt = expireAt
 )

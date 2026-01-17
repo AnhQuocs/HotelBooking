@@ -14,6 +14,7 @@ data class BookingDto(
     val totalPrice: Double = 0.0,
     val status: String = "PENDING",
     val cancelReason: String? = "",
+    val stayStatus: String = "NONE",
     val createdAt: Timestamp = Timestamp.now(),
     val expireAt: Timestamp? = null
 )

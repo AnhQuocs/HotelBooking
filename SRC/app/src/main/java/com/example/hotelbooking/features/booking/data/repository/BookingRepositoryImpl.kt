@@ -7,6 +7,7 @@ import com.example.hotelbooking.features.booking.data.mapper.toDto
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
+import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -143,6 +144,22 @@ class BookingRepositoryImpl(
         val docRef = bookingsCollection.document(bookingId)
 
         docRef.update("status", status.name).await()
+
+        val updatedSnapshot = docRef.get().await()
+        val updatedBooking = updatedSnapshot.toObject(BookingDto::class.java)
+            ?: throw Exception("Booking not found after update")
+
+        invalidateCache()
+
+        return updatedBooking.toDomain()
+    }
+
+    override suspend fun updateStayStatus(
+        bookingId: String, newStatus: StayStatus
+    ): Booking {
+        val docRef = bookingsCollection.document(bookingId)
+
+        docRef.update("stayStatus", newStatus.name).await()
 
         val updatedSnapshot = docRef.get().await()
         val updatedBooking = updatedSnapshot.toObject(BookingDto::class.java)

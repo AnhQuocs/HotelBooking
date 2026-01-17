@@ -268,5 +268,11 @@
     <string name="understood">Đã hiểu</string>
     <string name="biometric_title">Xác thực bảo mật</string>
     <string name="biometric_subtitle">Vui lòng quét vân tay để xem số thẻ</string>
+    <string name="check_in_now">Check-in ngay</string>
+    <string name="wait_for_check_in_time">Chờ đến giờ nhận phòng</string>
+    <string name="overdue_checkout_warning">Bạn đã quá giờ trả phòng!</string>
+    <string name="confirm_check_out">Xác nhận trả phòng (Check-out)</string>
+    <string name="stay_completed">Kỳ nghỉ đã hoàn tất</string>
+    <string name="no_show">Vắng mặt</string>
 
 </resources>

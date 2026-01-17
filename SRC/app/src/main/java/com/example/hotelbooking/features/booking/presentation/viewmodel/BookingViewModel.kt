@@ -13,6 +13,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.Guest
+import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
@@ -140,6 +141,7 @@ class BookingViewModel @Inject constructor(
                 numberOfGuests = numberOfGuests,
                 totalPrice = totalPrice,
                 status = BookingStatus.PENDING,
+                stayStatus = StayStatus.NONE,
                 cancelReason = null,
                 createdAt = Timestamp.now(),
             )

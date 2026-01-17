@@ -3,9 +3,10 @@ package com.example.hotelbooking.features.booking.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
-import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
+import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingDetailWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
+import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateStayStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +21,7 @@ sealed class BookingHistoryState<out T> {
 
 @HiltViewModel
 class BookingHistoryViewModel @Inject constructor(
-    private val bookingUseCases: BookingUseCases,
+    private val updateStayStatusUseCase: UpdateStayStatusUseCase,
     private val getBookingsWithHotelUseCase: GetBookingsWithHotelUseCase,
     private val getBookingDetailWithHotelUseCase: GetBookingDetailWithHotelUseCase
 ) : ViewModel() {
@@ -32,6 +33,23 @@ class BookingHistoryViewModel @Inject constructor(
     private val _bookingDetailState =
         MutableStateFlow<BookingHistoryState<BookingWithHotel>>(BookingHistoryState.Loading)
     val bookingDetailState = _bookingDetailState.asStateFlow()
+
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
+    fun updateStayStatus(bookingId: String, newStatus: StayStatus) {
+        viewModelScope.launch {
+            _isProcessing.value = true
+            try {
+                updateStayStatusUseCase(bookingId, newStatus)
+                val updatedCombined = getBookingDetailWithHotelUseCase(bookingId)
+                _bookingDetailState.value = BookingHistoryState.Success(updatedCombined)
+            } catch (e: Exception) {
+            } finally {
+                _isProcessing.value = false
+            }
+        }
+    }
 
     fun loadMyBookings(userId: String) {
         viewModelScope.launch {

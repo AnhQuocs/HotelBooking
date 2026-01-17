@@ -10,6 +10,10 @@ enum class CancelReason {
     USER, TIMEOUT
 }
 
+enum class StayStatus {
+    NONE, NO_SHOW, CHECK_IN, CHECK_OUT
+}
+
 data class Booking(
     val bookingId: String,
     val userId: String,
@@ -22,6 +26,7 @@ data class Booking(
     val totalPrice: Double,
     val status: BookingStatus,
     val cancelReason: CancelReason?,
+    val stayStatus: StayStatus,
     val createdAt: Timestamp = Timestamp.now(),
     val expireAt: Timestamp? = null
 )

@@ -3,10 +3,16 @@ package com.example.hotelbooking.features.booking.presentation.ui.util
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
@@ -18,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -26,6 +33,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -40,15 +48,24 @@ fun BookingQRCodeFull(bookingWithHotel: BookingWithHotel, modifier: Modifier = M
         generateQRCodeBitmap(prettyData)
     }
 
-    Column(
+    Row(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            bitmap = qrBitmap.asImageBitmap(),
-            contentDescription = null,
-            modifier = modifier.size(150.dp)
-        )
+        Box(
+            modifier = Modifier
+                .border(2.dp, Color.Black)
+                .size(120.dp)
+        ) {
+            Image(
+                bitmap = qrBitmap.asImageBitmap(),
+                contentDescription = null,
+                modifier = modifier.size(120.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(AppSpacing.L))
 
         OutlinedButton(
             onClick = {
@@ -56,11 +73,11 @@ fun BookingQRCodeFull(bookingWithHotel: BookingWithHotel, modifier: Modifier = M
                 saveBitmapToGallery(context, qrBitmap, fileName)
             },
             border = BorderStroke(1.dp, PrimaryBlue),
-            shape = RoundedCornerShape(AppShape.ShapeXL),
+            shape = RoundedCornerShape(AppShape.ShapeL),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = PrimaryBlue
             ),
-            modifier = Modifier.width(145.dp)
+            modifier = Modifier.width(145.dp).padding(top = Dimen.PaddingS)
         ) {
             Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(20.dp))
             Spacer(modifier = Modifier.width(AppSpacing.S))

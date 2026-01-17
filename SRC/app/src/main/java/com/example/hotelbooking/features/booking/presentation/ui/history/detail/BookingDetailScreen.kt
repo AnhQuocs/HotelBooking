@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.history.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +42,7 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun BookingDetailScreen(
@@ -51,6 +54,8 @@ fun BookingDetailScreen(
 ) {
     val roomDetailState by roomViewModel.roomDetailState.collectAsState()
     val bookingDetailState by bookingHistoryViewModel.bookingDetailState.collectAsState()
+
+    val isProcessing by bookingHistoryViewModel.isProcessing.collectAsState()
 
     LaunchedEffect(roomId, bookingId) {
         bookingHistoryViewModel.loadBookingById(bookingId)
@@ -67,91 +72,135 @@ fun BookingDetailScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Dimen.PaddingM)
-                    .height(70.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Row(
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Scaffold(
+            topBar = {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .fillMaxWidth()
+                        .padding(horizontal = Dimen.PaddingM)
+                        .height(70.dp),
+                    contentAlignment = Alignment.BottomCenter
                 ) {
-                    Icon(
-                        Icons.Default.ArrowBackIosNew,
-                        contentDescription = null,
-                        tint = NearBlack,
+                    Row(
                         modifier = Modifier
-                            .size(Dimen.SizeSM)
-                            .clickable { onBackClick() }
-                    )
-
-                    Text(
-                        stringResource(id = R.string.booking_detail_title),
-                        style = AfacadTypography.titleMedium.copy(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = NearBlack
-                        ),
-                    )
-
-                    Icon(
-                        Icons.Default.MoreVert,
-                        contentDescription = null,
-                        modifier = Modifier.size(Dimen.SizeSM),
-                        tint = NearBlack
-                    )
-                }
-            }
-        },
-        containerColor = Color.White
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding())
-                .padding(Dimen.PaddingM),
-            contentAlignment = Alignment.Center
-        ) {
-            when (bookingDetailState) {
-                is BookingHistoryState.Loading -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.size(Dimen.SizeML))
-                        Spacer(modifier = Modifier.height(AppSpacing.S))
-                        Text(stringResource(id = R.string.booking_loading))
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = null,
+                            tint = NearBlack,
+                            modifier = Modifier
+                                .size(Dimen.SizeSM)
+                                .clickable { onBackClick() }
+                        )
+
+                        Text(
+                            stringResource(id = R.string.booking_detail_title),
+                            style = AfacadTypography.titleMedium.copy(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = NearBlack
+                            ),
+                        )
+
+                        Icon(
+                            Icons.Default.MoreVert,
+                            contentDescription = null,
+                            modifier = Modifier.size(Dimen.SizeSM),
+                            tint = NearBlack
+                        )
                     }
                 }
+            },
+            bottomBar = {
+                val currentState = bookingDetailState
 
-                is BookingHistoryState.Success<*> -> {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        val bookingDetail = (bookingDetailState as BookingHistoryState.Success).data
-                        val hotel = bookingDetail.hotel
-                        val booking = bookingDetail.booking
+                if (currentState is BookingHistoryState.Success<*>) {
+                    val data = (currentState as BookingHistoryState.Success<BookingWithHotel>).data
+                    val hotel = data.hotel
+                    val booking = data.booking
 
-                        item {
-                            BookingDetailSection(hotel, booking, roomDetailState)
+                    if (hotel != null) {
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shadowElevation = 8.dp,
+                            color = Color.White
+                        ) {
+                            Box(modifier = Modifier.padding(Dimen.PaddingM)) {
+                                BookingActions(
+                                    booking = booking,
+                                    hotel = hotel,
+                                    isProcessing = isProcessing,
+                                    onAction = { status ->
+                                        bookingHistoryViewModel.updateStayStatus(booking.bookingId, status)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
+            },
+            containerColor = Color.White
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = paddingValues.calculateTopPadding())
+                    .padding(Dimen.PaddingM),
+                contentAlignment = Alignment.Center
+            ) {
+                when (val currentState = bookingDetailState) {
+                    is BookingHistoryState.Loading -> {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.size(Dimen.SizeML))
+                            Spacer(modifier = Modifier.height(AppSpacing.S))
+                            Text(stringResource(id = R.string.booking_loading))
+                        }
+                    }
 
-                is BookingHistoryState.Error -> {
-                    Text(
-                        text = stringResource(
-                            id = R.string.error,
-                            (bookingDetailState as BookingHistoryState.Error).message
+                    is BookingHistoryState.Success<*> -> {
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            val bookingDetail = currentState.data as BookingWithHotel
+                            val hotel = bookingDetail.hotel
+                            val booking = bookingDetail.booking
+
+                            item {
+                                BookingDetailItem(hotel, booking, roomDetailState)
+                            }
+                        }
+                    }
+
+                    is BookingHistoryState.Error -> {
+                        Text(
+                            text = stringResource(
+                                id = R.string.error,
+                                (bookingDetailState as BookingHistoryState.Error).message
+                            )
                         )
-                    )
+                    }
                 }
             }
+        }
+    }
+
+    if (isProcessing) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.25f))
+                .clickable(enabled = false) {},
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = PrimaryBlue)
         }
     }
 }

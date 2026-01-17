@@ -268,5 +268,11 @@
     <string name="understood">Got it</string>
     <string name="biometric_title">Security Authentication</string>
     <string name="biometric_subtitle">Please scan your fingerprint to view card details</string>
+    <string name="check_in_now">Check in now</string>
+    <string name="wait_for_check_in_time">Waiting for check-in time</string>
+    <string name="overdue_checkout_warning">You are past the check-out time!</string>
+    <string name="confirm_check_out">Confirm check-out</string>
+    <string name="stay_completed">Stay completed</string>
+    <string name="no_show">No-show</string>
 
 </resources>

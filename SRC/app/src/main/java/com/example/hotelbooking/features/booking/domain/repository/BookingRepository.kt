@@ -3,6 +3,7 @@ package com.example.hotelbooking.features.booking.domain.repository
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
+import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.google.firebase.Timestamp
 import java.time.LocalDate
 
@@ -22,6 +23,8 @@ interface BookingRepository {
     suspend fun updateBooking(booking: Booking, availableRooms: Int): Booking
 
     suspend fun updateStatus(bookingId: String, status: BookingStatus): Booking
+
+    suspend fun updateStayStatus(bookingId: String, newStatus: StayStatus): Booking
 
     suspend fun getBookingsByUser(userId: String): List<Booking>
 
