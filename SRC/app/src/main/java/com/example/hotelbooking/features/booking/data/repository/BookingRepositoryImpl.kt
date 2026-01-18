@@ -12,6 +12,7 @@ import com.example.hotelbooking.features.booking.domain.repository.BookingReposi
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -133,9 +134,15 @@ class BookingRepositoryImpl(
         }
     }
 
-    override suspend fun updateBooking(booking: Booking, availableRooms: Int): Booking {
-        bookingsCollection.document(booking.bookingId).set(booking.toDto()).await()
-        return booking
+    override suspend fun updateBooking(booking: Booking): Boolean {
+        return try {
+            bookingsCollection.document(booking.bookingId)
+                .set(booking, SetOptions.merge())
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override suspend fun updateStatus(

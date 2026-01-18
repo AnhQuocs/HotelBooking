@@ -22,7 +22,8 @@ fun Booking.toDto() = BookingDto(
     cancelReason = cancelReason?.name,
     stayStatus = stayStatus.name,
     createdAt = createdAt,
-    expireAt = expireAt
+    expireAt = expireAt,
+    updatedAt = updatedAt
 )
 
 fun Guest.toDto() = GuestDto(name, phone, email, age)
@@ -41,7 +42,8 @@ fun BookingDto.toDomain() = Booking(
     cancelReason = cancelReason?.let { CancelReason.valueOf(cancelReason) },
     stayStatus = StayStatus.valueOf(stayStatus),
     createdAt = createdAt,
-    expireAt = expireAt
+    expireAt = expireAt,
+    updatedAt = updatedAt
 )
 
 fun GuestDto.toDomain() = Guest(name, phone, email, age)

@@ -1,14 +1,19 @@
 package com.example.hotelbooking.features.booking.presentation.ui.rebook
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
@@ -24,8 +29,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.booking.domain.model.Booking
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryCard
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.HotelInfo
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.PromoUI
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.room.domain.model.RoomType
+import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilitySection
+import com.example.hotelbooking.features.room.presentation.ui.DateSelectionSection
+import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
@@ -50,6 +66,8 @@ fun RebookBottomBar(
         }
     }
 
+    val nightText = if(nights.toInt() == 1) stringResource(id = R.string.nights) else stringResource(id = R.string.night)
+
     val totalPrice = pricePerNight * nights
     val isAvailable = uiState is BookingUiState.Available
 
@@ -71,7 +89,7 @@ fun RebookBottomBar(
         ) {
             Column {
                 Text(
-                    text = "Total Price",
+                    text = stringResource(id = R.string.total_price),
                     style = AfacadTypography.bodyMedium.copy(color = Color.Gray)
                 )
                 Row(verticalAlignment = Alignment.Bottom) {
@@ -84,7 +102,7 @@ fun RebookBottomBar(
                         )
                     )
                     Text(
-                        text = "/$nights night${if (nights > 1) "s" else ""}",
+                        text = "/$nightText",
                         style = AfacadTypography.bodySmall.copy(color = Color.Gray),
                         modifier = Modifier.padding(bottom = 2.dp, start = 2.dp)
                     )
@@ -112,5 +130,71 @@ fun RebookBottomBar(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun RebookContent(
+    booking: Booking,
+    hotel: Hotel?,
+    room: RoomType,
+    start: LocalDate,
+    end: LocalDate,
+    finalTotalPrice: Double,
+    uiState: BookingUiState,
+    bookingViewModel: BookingViewModel,
+    context: Context,
+    onEditClick: (Int) -> Unit,
+) {
+    val dateStr = "${start.dayOfMonth}-${end.dayOfMonth} ${
+        start.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
+    } ${start.year}"
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(top = Dimen.PaddingM)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = Dimen.PaddingM)) {
+            hotel?.let { HotelInfo(hotel = it, context = context) }
+            Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
+            CheckoutSummaryCard(
+                date = dateStr,
+                numberOfGuest = booking.numberOfGuests,
+                guestName = booking.guest.name,
+                roomName = room.name,
+                phone = booking.guest.phone,
+                totalPrice = "$${finalTotalPrice.toInt()}",
+                isEdit = true,
+                onEditClick = { onEditClick(room.capacity) }
+            )
+
+            Spacer(modifier = Modifier.height(AppSpacing.M))
+
+            PromoUI()
+        }
+
+        Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
+
+        DateSelectionSection(
+            modifier = Modifier.padding(horizontal = Dimen.PaddingM),
+            checkInMillis = start.toMillis(),
+            checkOutMillis = end.toMillis(),
+            onDateConfirm = { newStart, newEnd ->
+                bookingViewModel.onDateSelected(newStart, newEnd)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(AppSpacing.SPlus))
+
+        CheckAvailabilitySection(
+            uiState = uiState,
+            startDate = start,
+            endDate = end,
+            onCheckClick = {
+                bookingViewModel.checkRoomAvailability(room.hotelId, room.id, room.totalRoom)
+            }
+        )
     }
 }

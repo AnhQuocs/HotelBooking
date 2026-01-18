@@ -141,6 +141,12 @@
     <string name="cancel_booking_message">Bạn có chắc chắn muốn hủy đặt phòng này không? Hành động này không thể hoàn tác.</string>
     <string name="cancel_booking_confirm">Hủy đơn</string>
     <string name="rebook">Đặt lại</string>
+    <string name="update_guest_success">Cập nhật thông tin thành công</string>
+    <string name="rebook_success">Đặt lại phòng thành công</string>
+    <string name="update_booking_failed">Không thể cập nhật dữ liệu</string>
+    <string name="system_error">Đã xảy ra lỗi hệ thống</string>
+    <string name="guest_info">Thông tin khách hàng</string>
+    <string name="update">Cập nhật</string>
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>

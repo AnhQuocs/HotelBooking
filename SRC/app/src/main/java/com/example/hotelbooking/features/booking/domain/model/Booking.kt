@@ -28,6 +28,7 @@ data class Booking(
     val cancelReason: CancelReason?,
     val stayStatus: StayStatus,
     val createdAt: Timestamp = Timestamp.now(),
+    val updatedAt: Timestamp? = null,
     val expireAt: Timestamp? = null
 )
 

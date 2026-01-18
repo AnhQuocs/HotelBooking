@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -156,7 +157,7 @@ fun PaymentMethodBottomSheet(
                 Button(
                     onClick = { onNextClick() },
                     modifier = Modifier
-                        .width(Dimen.WidthL)
+                        .widthIn(min = Dimen.WidthL)
                         .height(50.dp),
                     shape = RoundedCornerShape(AppShape.ShapeL),
                     colors = ButtonDefaults.buttonColors(

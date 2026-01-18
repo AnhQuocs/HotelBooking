@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,7 +18,6 @@ import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

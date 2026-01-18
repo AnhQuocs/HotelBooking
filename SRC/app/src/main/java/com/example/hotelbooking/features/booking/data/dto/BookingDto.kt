@@ -16,7 +16,8 @@ data class BookingDto(
     val cancelReason: String? = "",
     val stayStatus: String = "NONE",
     val createdAt: Timestamp = Timestamp.now(),
-    val expireAt: Timestamp? = null
+    val expireAt: Timestamp? = null,
+    val updatedAt: Timestamp? = null,
 )
 
 data class GuestDto(

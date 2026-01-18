@@ -3,6 +3,7 @@ package com.example.hotelbooking.features.booking.presentation.ui.checkout
 import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.ModeEditOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -48,8 +51,8 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextPrimaryDark
 import com.example.hotelbooking.ui.theme.WarningOrange
@@ -179,7 +182,9 @@ fun CheckoutSummaryCard(
     guestName: String,
     roomName: String,
     phone: String,
-    totalPrice: String
+    totalPrice: String,
+    isEdit: Boolean = false,
+    onEditClick: () -> Unit = {}
 ) {
     val guestText = stringResource(
         if (numberOfGuest == 1) R.string.guest else R.string.guests
@@ -196,14 +201,30 @@ fun CheckoutSummaryCard(
                 .fillMaxWidth()
                 .padding(Dimen.PaddingSM)
         ) {
-            Text(
-                text = stringResource(R.string.your_booking),
-                style = AfacadTypography.bodyMedium.copy(
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = PrimaryBlue
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(R.string.your_booking),
+                    style = AfacadTypography.bodyMedium.copy(
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = PrimaryBlue
+                    )
                 )
-            )
+
+                if(isEdit) {
+                    Icon(
+                        Icons.Default.ModeEditOutline,
+                        contentDescription = null,
+                        tint = PrimaryBlue,
+                        modifier = Modifier.size(Dimen.SizeM).clickable { onEditClick() }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(AppSpacing.S))
 
             CheckoutSummaryItem(
                 icon = R.drawable.ic_calendar,
