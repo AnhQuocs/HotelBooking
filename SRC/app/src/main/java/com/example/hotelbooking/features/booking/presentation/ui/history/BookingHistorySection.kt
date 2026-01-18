@@ -73,6 +73,8 @@ fun BookingHistorySection(
     val context = LocalContext.current
 
     when(state) {
+        is BookingHistoryState.Idle -> Unit
+
         is BookingHistoryState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),

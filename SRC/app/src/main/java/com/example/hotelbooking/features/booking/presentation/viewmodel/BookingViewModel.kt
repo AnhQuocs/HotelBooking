@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,10 +9,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
-import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
@@ -20,6 +19,7 @@ import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -205,56 +205,6 @@ class BookingViewModel @Inject constructor(
                     e.message ?: "Failed to update booking status"
                 )
             }
-        }
-    }
-
-    suspend fun cancelBooking(
-        bookingId: String,
-        reason: CancelReason,
-        title: String? = null,
-        message: String? = null
-    ): Boolean {
-        return try {
-            _uiState.value = BookingUiState.Loading
-
-            val success = bookingUseCases.cancelBookingUseCase(
-                bookingId = bookingId,
-                reason = reason
-            )
-
-            if (success) {
-                if (reason == CancelReason.USER) {
-                    if (title != null && message != null) {
-                        notificationUseCases.saveNotificationUseCase(
-                            title = title,
-                            message = message,
-                            bookingId = bookingId
-                        )
-                        notificationHelper.showBookingNotification(
-                            title = title,
-                            message = message,
-                            bookingId = bookingId
-                        )
-                    }
-                }
-
-                _uiState.value = BookingUiState.Idle
-                true
-            } else {
-                val errorUiText = if (reason == CancelReason.USER) {
-                    UiText.StringResource(R.string.error_cancel_too_late)
-                } else {
-                    UiText.StringResource(R.string.error_cancel_failed)
-                }
-
-                _uiState.value = BookingUiState.Error(errorUiText.toString())
-                false
-            }
-        } catch (e: Exception) {
-            _uiState.value = BookingUiState.Error(
-                UiText.DynamicString(e.message ?: "Unknown Error!").toString()
-            )
-            false
         }
     }
 

@@ -52,6 +52,7 @@ import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
@@ -61,8 +62,8 @@ import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import kotlinx.coroutines.launch
 
@@ -80,7 +81,8 @@ fun CheckoutScreen(
     timeoutSecond: Int,
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
-    bookingViewModel: BookingViewModel = hiltViewModel()
+    bookingViewModel: BookingViewModel = hiltViewModel(),
+    bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by hotelViewModel.hotelDetailState.collectAsState()
@@ -91,6 +93,7 @@ fun CheckoutScreen(
     var isShowBottomSheet by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
+    val isCancelling by bookingHistoryViewModel.isCancelling.collectAsState()
 
     LaunchedEffect(hotelId) {
         hotelViewModel.loadHotelById(hotelId)
@@ -169,7 +172,7 @@ fun CheckoutScreen(
                         scope.launch {
                             bookingViewModel.onTimeout()
 
-                            val isCancelled = bookingViewModel.cancelBooking(
+                            val isCancelled = bookingHistoryViewModel.cancelBooking(
                                 bookingId = bookingId,
                                 reason = CancelReason.TIMEOUT
                             )
@@ -260,7 +263,7 @@ fun CheckoutScreen(
             }
         }
 
-        if (bookingState is BookingUiState.Loading) {
+        if (bookingState is BookingUiState.Loading || isCancelling) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

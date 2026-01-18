@@ -123,7 +123,7 @@
     <string name="your_room">Phòng của bạn</string>
     <string name="error">Lỗi: %1$s</string>
     <string name="booking_detail_title">Thông tin đặt phòng</string>
-    <string name="booking_loading">Đang tải thông tin đặt phòng...</string>
+    <string name="booking_loading">Đang tải thông tin đặt phòng…</string>
     <string name="msg_no_bookings_found">Không tìm thấy đơn hàng nào</string>
     <string name="cancelled">Đã hủy</string>
     <string name="status_all">Tất cả</string>
@@ -132,6 +132,15 @@
     <string name="status_cancelled">Đã hủy</string>
     <string name="error_cancel_too_late">Chỉ được phép hủy phòng trước giờ check-in ít nhất 24 giờ.</string>
     <string name="error_cancel_failed">Không thể hủy đặt phòng. Vui lòng thử lại sau.</string>
+    <string name="cancel_success">Hủy đặt phòng thành công</string>
+    <string name="cancel_success_title">Hủy đặt phòng thành công</string>
+    <string name="cancel_success_message">Đơn đặt phòng tại %1$s đã được hủy thành công.</string>
+    <string name="retry">Thử lại</string>
+    <string name="loading_cancelling">Đang hủy đơn...</string>
+    <string name="cancel_booking_title">Xác nhận hủy phòng</string>
+    <string name="cancel_booking_message">Bạn có chắc chắn muốn hủy đặt phòng này không? Hành động này không thể hoàn tác.</string>
+    <string name="cancel_booking_confirm">Hủy đơn</string>
+    <string name="rebook">Đặt lại</string>
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>
@@ -142,7 +151,6 @@
     <string name="qr_check_out">Trả phòng: %1$s</string>
     <string name="qr_guests">Số lượng khách: %1$d</string>
     <string name="qr_invalid">Dữ liệu không hợp lệ</string>
-
     <!-- CHECKOUT -->
     <string name="checkout">Thanh toán</string>
     <string name="next">Tiếp theo</string>

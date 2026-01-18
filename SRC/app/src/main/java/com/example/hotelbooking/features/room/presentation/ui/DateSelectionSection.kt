@@ -34,13 +34,16 @@ import androidx.compose.ui.unit.sp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateSelectionSection(
-    checkInMillis: Long, checkOutMillis: Long, onDateConfirm: (Long, Long) -> Unit
+    modifier: Modifier = Modifier,
+    checkInMillis: Long,
+    checkOutMillis: Long,
+    onDateConfirm: (Long, Long) -> Unit,
 ) {
     var showCheckInDialog by remember { mutableStateOf(false) }
     var showCheckOutDialog by remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp))
             .padding(16.dp),

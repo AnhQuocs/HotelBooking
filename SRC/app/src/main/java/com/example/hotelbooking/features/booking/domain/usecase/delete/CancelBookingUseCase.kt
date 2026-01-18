@@ -5,25 +5,31 @@ import com.example.hotelbooking.features.booking.domain.repository.BookingReposi
 import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDateTime
 import java.time.LocalDateTime
 
+sealed class CancellationResult {
+    object Success : CancellationResult()
+    object TooLate : CancellationResult()
+    data class Failure(val exception: Exception? = null) : CancellationResult()
+}
+
 class CancelBookingUseCase(
     private val repository: BookingRepository
 ) {
-    suspend operator fun invoke(bookingId: String, reason: CancelReason): Boolean {
+    suspend operator fun invoke(bookingId: String, reason: CancelReason): CancellationResult {
         if (reason == CancelReason.TIMEOUT) {
-            return repository.cancelBooking(bookingId, reason)
+            val success = repository.cancelBooking(bookingId, reason)
+            return if (success) CancellationResult.Success else CancellationResult.Failure()
         }
 
         val booking = repository.getBookingById(bookingId)
-
         val now = LocalDateTime.now()
         val checkInTime = booking.startDate.toLocalDateTime()
-
         val cancellationDeadline = checkInTime.minusHours(24)
 
         return if (now.isBefore(cancellationDeadline)) {
-            repository.cancelBooking(bookingId, reason)
+            val success = repository.cancelBooking(bookingId, reason)
+            if (success) CancellationResult.Success else CancellationResult.Failure()
         } else {
-            false
+            CancellationResult.TooLate
         }
     }
 }

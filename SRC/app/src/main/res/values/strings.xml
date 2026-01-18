@@ -132,6 +132,15 @@
     <string name="status_cancelled">Cancelled</string>
     <string name="error_cancel_too_late">Cancellation is only allowed 24 hours before check-in.</string>
     <string name="error_cancel_failed">Could not cancel the booking. Please try again.</string>
+    <string name="cancel_success">Booking cancelled successfully</string>
+    <string name="cancel_success_title">Booking Cancelled</string>
+    <string name="cancel_success_message">Your booking at %1$s has been successfully cancelled.</string>
+    <string name="retry">Retry</string>
+    <string name="loading_cancelling">Cancelling booking...</string>
+    <string name="cancel_booking_title">Cancel booking</string>
+    <string name="cancel_booking_message">Are you sure you want to cancel this booking? This action cannot be undone.</string>
+    <string name="cancel_booking_confirm">Cancel booking</string>
+    <string name="rebook">Rebook</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>

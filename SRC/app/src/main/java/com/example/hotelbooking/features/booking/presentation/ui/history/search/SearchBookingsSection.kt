@@ -27,6 +27,8 @@ fun SearchBookingsSection(
         contentAlignment = Alignment.Center
     ) {
         when(searchState) {
+            is BookingHistoryState.Idle -> Unit
+
             is BookingHistoryState.Loading -> {
                 CircularProgressIndicator(color = PrimaryBlue)
             }
