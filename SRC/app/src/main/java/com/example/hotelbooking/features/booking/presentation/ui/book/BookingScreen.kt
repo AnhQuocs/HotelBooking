@@ -1,7 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.book
 
 import android.net.Uri
-import android.util.Log
 import android.util.Patterns
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -91,7 +90,7 @@ fun BookingScreen(
     val totalPrice = totalDays * pricePerNight
 
 //    val timeoutSeconds: Long = 10 * 60L
-    val timeoutSeconds: Long = 30L
+    val timeoutSeconds: Long = 2 * 60L
 
     LaunchedEffect(uiState) {
         if (uiState is BookingUiState.BookingSuccess) {

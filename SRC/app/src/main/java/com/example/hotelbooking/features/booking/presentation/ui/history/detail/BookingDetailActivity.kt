@@ -29,7 +29,8 @@ class BookingDetailActivity : BaseComponentActivity() {
                     val intent = Intent(context, RebookActivity::class.java)
                         .putExtra("bookingId", bookingId)
                     context.startActivity(intent)
-                }
+                },
+                onRefreshRequest = { recreate() }
             )
         }
     }

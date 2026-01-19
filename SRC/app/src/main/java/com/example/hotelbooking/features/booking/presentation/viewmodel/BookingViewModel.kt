@@ -13,6 +13,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
@@ -39,7 +40,8 @@ sealed class BookingUiState {
 class BookingViewModel @Inject constructor(
     private val bookingUseCases: BookingUseCases,
     private val notificationUseCases: NotificationUseCases,
-    private val notificationHelper: NotificationHelper
+    private val notificationHelper: NotificationHelper,
+    private val timerManager: PaymentTimerManager
 ) : ViewModel() {
 
     private val _isTimeout = MutableStateFlow(false)
@@ -59,6 +61,14 @@ class BookingViewModel @Inject constructor(
 
     var currentAvailableRooms: Int = 0
         private set
+
+    val timeLeft = timerManager.timeLeft
+
+    fun startPaymentTimer(bookingId: String, duration: Int) {
+        if (!timerManager.isRunning()) {
+            timerManager.startTimer(bookingId, duration)
+        }
+    }
 
     fun onDateSelected(startMillis: Long?, endMillis: Long?) {
         if (startMillis != null) {
@@ -175,6 +185,8 @@ class BookingViewModel @Inject constructor(
                 val updatedBooking = bookingUseCases.updateStatusUseCase(bookingId, status)
 
                 if (status == BookingStatus.CONFIRMED) {
+                    timerManager.stopTimer()
+
                     title?.let {
                         message?.let { it1 ->
                             notificationUseCases.saveNotificationUseCase(

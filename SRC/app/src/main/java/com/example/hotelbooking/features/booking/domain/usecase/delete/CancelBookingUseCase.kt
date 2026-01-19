@@ -4,6 +4,7 @@ import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDateTime
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 sealed class CancellationResult {
     object Success : CancellationResult()
@@ -11,7 +12,7 @@ sealed class CancellationResult {
     data class Failure(val exception: Exception? = null) : CancellationResult()
 }
 
-class CancelBookingUseCase(
+class CancelBookingUseCase @Inject constructor(
     private val repository: BookingRepository
 ) {
     suspend operator fun invoke(bookingId: String, reason: CancelReason): CancellationResult {

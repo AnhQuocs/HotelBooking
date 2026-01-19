@@ -95,8 +95,11 @@ fun CheckoutScreen(
     val scope = rememberCoroutineScope()
     val isCancelling by bookingHistoryViewModel.isCancelling.collectAsState()
 
+    val timeLeft by bookingViewModel.timeLeft.collectAsState()
+
     LaunchedEffect(hotelId) {
         hotelViewModel.loadHotelById(hotelId)
+        bookingViewModel.startPaymentTimer(bookingId, timeoutSecond)
     }
 
     LaunchedEffect(bookingState) {
@@ -111,6 +114,33 @@ fun CheckoutScreen(
         }
     }
 
+    LaunchedEffect(timeLeft) {
+        if (timeLeft == 0L) {
+            scope.launch {
+                bookingViewModel.onTimeout()
+
+                val isCancelled = bookingHistoryViewModel.cancelBooking(
+                    bookingId = bookingId,
+                    reason = CancelReason.TIMEOUT
+                )
+
+                if (isCancelled) {
+                    BookingRefreshEvent.triggerRefresh()
+
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.payment_time_expired),
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    navController.navigate("roomDetail") {
+                        popUpTo("0") { inclusive = true }
+                    }
+                }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -120,7 +150,15 @@ fun CheckoutScreen(
                 TopAppBar(
                     title = { Text(stringResource(R.string.checkout)) },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            scope.launch {
+                                BookingRefreshEvent.triggerRefresh()
+                            }
+
+                            navController.navigate("roomDetail") {
+                                popUpTo("0") { inclusive = true }
+                            }
+                        }) {
                             Icon(
                                 Icons.Default.ArrowBack,
                                 contentDescription = stringResource(R.string.back)

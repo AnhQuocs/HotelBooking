@@ -13,6 +13,7 @@ import com.example.hotelbooking.features.booking.domain.usecase.delete.Cancellat
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingDetailWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateStayStatusUseCase
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +38,7 @@ class BookingHistoryViewModel @Inject constructor(
     private val getBookingDetailWithHotelUseCase: GetBookingDetailWithHotelUseCase,
     private val notificationUseCases: NotificationUseCases,
     private val notificationHelper: NotificationHelper,
+    private val timerManager: PaymentTimerManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -53,6 +55,14 @@ class BookingHistoryViewModel @Inject constructor(
 
     private val _isCancelling = MutableStateFlow(false)
     val isCancelling = _isCancelling.asStateFlow()
+
+    val timeLeft = timerManager.timeLeft
+
+    fun startPaymentTimer(bookingId: String, duration: Int) {
+        if (!timerManager.isRunning()) {
+            timerManager.startTimer(bookingId, duration)
+        }
+    }
 
     fun updateStayStatus(bookingId: String, newStatus: StayStatus) {
         viewModelScope.launch {

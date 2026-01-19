@@ -43,6 +43,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryItem
+import com.example.hotelbooking.features.booking.presentation.ui.checkout.CountdownTimer
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.DashedLine
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.HotelInfo
 import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDateTime
@@ -64,7 +65,9 @@ import java.util.Calendar
 fun BookingDetailItem(
     hotel: Hotel?,
     booking: Booking,
-    roomDetailState: RoomState<RoomType>
+    roomDetailState: RoomState<RoomType>,
+    seconds: Int,
+    onTimeOut: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -99,6 +102,15 @@ fun BookingDetailItem(
                 .fillMaxWidth()
                 .padding(Dimen.PaddingSM)
         ) {
+            if (booking.status == BookingStatus.PENDING) {
+                CountdownTimer(
+                    totalTime = seconds,
+                    onTimeout = { onTimeOut() }
+                )
+
+                Spacer(modifier = Modifier.height(AppSpacing.S))
+            }
+
             Text(
                 stringResource(id = R.string.your_hotel),
                 style = AfacadTypography.bodyLarge.copy(
