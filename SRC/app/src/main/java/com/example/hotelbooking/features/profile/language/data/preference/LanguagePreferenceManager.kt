@@ -1,10 +1,10 @@
-package com.example.hotelbooking.features.language.data.preference
+package com.example.hotelbooking.features.profile.language.data.preference
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.example.hotelbooking.features.language.domain.model.AppLanguage
+import com.example.hotelbooking.features.profile.language.domain.model.AppLanguage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

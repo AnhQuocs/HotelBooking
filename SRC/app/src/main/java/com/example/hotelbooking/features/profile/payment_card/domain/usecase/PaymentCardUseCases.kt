@@ -28,64 +28,49 @@ class CreatePaymentCardUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(paymentCard: PaymentCard): Result<Unit> {
-
-        if (!paymentCard.cardNumber.all { it.isDigit() } ||
-            paymentCard.cardNumber.length < 12
-        ) {
-            return Result.failure(
-                PaymentCardException(
-                    PaymentCardError.InvalidCardNumber
-                )
-            )
+        validateCard(paymentCard)?.let { error ->
+            return Result.failure(PaymentCardException(error))
         }
 
-        if (paymentCard.expiryMonth !in 1..12) {
-            return Result.failure(
-                PaymentCardException(
-                    PaymentCardError.InvalidExpiryDate
-                )
-            )
+        return try {
+            val existingCards = repository.getPaymentCards(paymentCard.userId)
+
+            val shouldBeDefault = existingCards.isEmpty() || paymentCard.isDefault
+
+            if (shouldBeDefault) {
+                existingCards.filter { it.isDefault }.forEach { card ->
+                    repository.updatePaymentCard(card.copy(isDefault = false))
+                }
+            }
+
+            repository.createPaymentCard(paymentCard.copy(isDefault = shouldBeDefault))
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private fun validateCard(card: PaymentCard): PaymentCardError? {
+        if (!card.cardNumber.all { it.isDigit() } || card.cardNumber.length < 12) {
+            return PaymentCardError.InvalidCardNumber
+        }
+
+        if (card.expiryMonth !in 1..12) {
+            return PaymentCardError.InvalidExpiryDate
         }
 
         val now = java.time.LocalDate.now()
-
-        if (
-            paymentCard.expiryYear < now.year ||
-            (paymentCard.expiryYear == now.year &&
-                    paymentCard.expiryMonth < now.monthValue)
-        ) {
-            return Result.failure(
-                PaymentCardException(
-                    PaymentCardError.CardExpired
-                )
-            )
+        if (card.expiryYear < now.year ||
+            (card.expiryYear == now.year && card.expiryMonth < now.monthValue)) {
+            return PaymentCardError.CardExpired
         }
 
-        if (!paymentCard.cvv.all { it.isDigit() } ||
-            paymentCard.cvv.length !in 3..4
-        ) {
-            return Result.failure(
-                PaymentCardException(
-                    PaymentCardError.InvalidCvv
-                )
-            )
+        if (!card.cvv.all { it.isDigit() } || card.cvv.length !in 3..4) {
+            return PaymentCardError.InvalidCvv
         }
 
-        if (paymentCard.isDefault) {
-            val cards =
-                repository.getPaymentCards(paymentCard.userId)
-
-            cards
-                .filter { it.isDefault }
-                .forEach {
-                    repository.updatePaymentCard(
-                        it.copy(isDefault = false)
-                    )
-                }
-        }
-
-        repository.createPaymentCard(paymentCard)
-        return Result.success(Unit)
+        return null
     }
 }
 

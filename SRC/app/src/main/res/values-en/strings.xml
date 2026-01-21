@@ -290,4 +290,8 @@
     <string name="stay_completed">Stay completed</string>
     <string name="no_show">No-show</string>
 
+    <!-- PROMOTIONS -->
+    <string name="no_promotions_title">No promotions available</string>
+    <string name="no_promotions_description">There are no discount codes for you at the moment. Please check back later for exciting offers!</string>
+
 </resources>

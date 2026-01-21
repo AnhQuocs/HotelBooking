@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.profile
+package com.example.hotelbooking.features.profile.language.presentation.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.language.domain.model.AppLanguage
-import com.example.hotelbooking.features.language.presentation.viewmodel.LanguageViewModel
+import com.example.hotelbooking.features.profile.language.domain.model.AppLanguage
+import com.example.hotelbooking.features.profile.language.presentation.viewmodel.LanguageViewModel
 import com.example.hotelbooking.features.main.MainActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing

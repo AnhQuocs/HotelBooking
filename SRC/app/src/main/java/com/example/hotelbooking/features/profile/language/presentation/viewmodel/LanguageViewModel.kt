@@ -1,12 +1,12 @@
-package com.example.hotelbooking.features.language.presentation.viewmodel
+package com.example.hotelbooking.features.profile.language.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
-import com.example.hotelbooking.features.language.domain.model.AppLanguage
-import com.example.hotelbooking.features.language.domain.usecase.GetLanguageUseCase
-import com.example.hotelbooking.features.language.domain.usecase.UpdateLanguageUseCase
+import com.example.hotelbooking.features.profile.language.domain.model.AppLanguage
+import com.example.hotelbooking.features.profile.language.domain.usecase.GetLanguageUseCase
+import com.example.hotelbooking.features.profile.language.domain.usecase.UpdateLanguageUseCase
 import com.example.hotelbooking.utils.LangUtils
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel

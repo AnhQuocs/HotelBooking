@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.profile.promotions.presentation.ui.PromotionActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.booking.presentation.ui.rebook.RebookActivity"
             android:exported="false" />
         <activity
@@ -35,7 +38,7 @@
             android:name=".features.map.ui.hotel.HotelLocationActivity"
             android:exported="false" />
         <activity
-            android:name=".features.profile.ChangeLanguageActivity"
+            android:name=".features.profile.language.presentation.ui.ChangeLanguageActivity"
             android:exported="false" />
         <activity
             android:name=".features.map.ui.FullMapActivity"
@@ -52,8 +55,8 @@
         <activity
             android:name=".features.chat.presentation.ui.ChatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".features.booking.presentation.ui.history.detail.BookingDetailActivity"
             android:exported="false" />

@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
+import com.example.hotelbooking.features.profile.language.presentation.ui.ChangeLanguageActivity
 import com.example.hotelbooking.features.profile.payment_card.presentation.ui.PaymentMethodActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing

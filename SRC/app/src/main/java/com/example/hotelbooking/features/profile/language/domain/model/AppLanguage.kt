@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.language.domain.model
+package com.example.hotelbooking.features.profile.language.domain.model
 
 enum class AppLanguage(val code: String) {
     ENGLISH("en"),

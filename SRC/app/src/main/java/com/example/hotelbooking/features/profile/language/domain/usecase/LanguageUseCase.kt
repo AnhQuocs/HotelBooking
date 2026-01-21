@@ -1,7 +1,7 @@
-package com.example.hotelbooking.features.language.domain.usecase
+package com.example.hotelbooking.features.profile.language.domain.usecase
 
-import com.example.hotelbooking.features.language.data.preference.LanguagePreferenceManager
-import com.example.hotelbooking.features.language.domain.model.AppLanguage
+import com.example.hotelbooking.features.profile.language.data.preference.LanguagePreferenceManager
+import com.example.hotelbooking.features.profile.language.domain.model.AppLanguage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

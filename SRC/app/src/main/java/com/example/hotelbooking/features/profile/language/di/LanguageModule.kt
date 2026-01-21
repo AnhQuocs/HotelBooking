@@ -1,7 +1,7 @@
-package com.example.hotelbooking.features.language.di
+package com.example.hotelbooking.features.profile.language.di
 
 import android.content.Context
-import com.example.hotelbooking.features.language.data.preference.LanguagePreferenceManager
+import com.example.hotelbooking.features.profile.language.data.preference.LanguagePreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

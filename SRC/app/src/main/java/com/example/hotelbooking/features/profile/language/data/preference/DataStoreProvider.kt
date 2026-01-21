@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.language.data.preference
+package com.example.hotelbooking.features.profile.language.data.preference
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
