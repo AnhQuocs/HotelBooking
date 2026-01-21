@@ -123,7 +123,8 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
                     val bookingId = backStackEntry.arguments?.getString("bookingId") ?: ""
                     val roomName = Uri.decode(backStackEntry.arguments?.getString("roomName") ?: "")
-                    val guestName = Uri.decode(backStackEntry.arguments?.getString("guestName") ?: "")
+                    val guestName =
+                        Uri.decode(backStackEntry.arguments?.getString("guestName") ?: "")
                     val numberOfGuest = backStackEntry.arguments?.getInt("numberOfGuest") ?: 1
                     val phone = backStackEntry.arguments?.getString("phone") ?: ""
                     val totalPrice = backStackEntry.arguments?.getString("totalPrice") ?: ""
@@ -147,13 +148,20 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val scope = rememberCoroutineScope()
 
                     PaymentCompleteScreen(
-                        onBackClick = { finish() },
+                        onBackClick = {
+                            scope.launch {
+                                BookingRefreshEvent.triggerRefresh()
+                            }
+                            finish()
+                        },
                         onHomeClick = {
                             scope.launch {
                                 BookingRefreshEvent.triggerRefresh()
 
-                                val intent = Intent(this@RoomDetailActivity, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                                val intent =
+                                    Intent(this@RoomDetailActivity, MainActivity::class.java)
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
                                 finish()
                             }

@@ -51,7 +51,9 @@
             android:exported="false" />
         <activity
             android:name=".features.chat.presentation.ui.ChatActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".features.booking.presentation.ui.history.detail.BookingDetailActivity"
             android:exported="false" />

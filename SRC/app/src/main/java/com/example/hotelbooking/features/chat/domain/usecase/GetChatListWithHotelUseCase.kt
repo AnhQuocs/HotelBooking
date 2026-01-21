@@ -2,8 +2,9 @@ package com.example.hotelbooking.features.chat.domain.usecase
 
 import com.example.hotelbooking.features.chat.domain.model.ChatWithHotel
 import com.example.hotelbooking.features.chat.domain.repository.ChatRepository
+import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -11,20 +12,24 @@ class GetChatListWithHotelUseCase @Inject constructor(
     private val hotelRepository: HotelRepository,
     private val chatRepository: ChatRepository
 ) {
-    suspend operator fun invoke(userId: String): List<ChatWithHotel> {
-        val chats = chatRepository.listenUserChats(userId).first()
+    private val hotelCache = mutableMapOf<String, Hotel?>()
 
-        val hotelIds = chats.map { it.hotelId }.distinct()
+    operator fun invoke(userId: String): Flow<List<ChatWithHotel>> {
+        return chatRepository.listenUserChats(userId).map { chats ->
+            val hotelIds = chats.map { it.hotelId }.distinct()
 
-        val hotelsMap = hotelIds.associateWith { id ->
-            hotelRepository.getHotelById(id)
-        }
+            val missingIds = hotelIds.filter { !hotelCache.containsKey(it) }
 
-        return chats.map { chat ->
-            ChatWithHotel(
-                chat = chat,
-                hotel = hotelsMap[chat.hotelId]
-            )
+            missingIds.forEach { id ->
+                hotelCache[id] = hotelRepository.getHotelById(id)
+            }
+
+            chats.map { chat ->
+                ChatWithHotel(
+                    chat = chat,
+                    hotel = hotelCache[chat.hotelId]
+                )
+            }
         }
     }
 }

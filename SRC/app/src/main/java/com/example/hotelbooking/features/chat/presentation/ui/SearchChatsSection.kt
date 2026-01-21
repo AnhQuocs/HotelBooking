@@ -14,14 +14,14 @@ import androidx.compose.ui.res.stringResource
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.domain.model.Chat
 import com.example.hotelbooking.features.chat.domain.model.ChatWithHotel
-import com.example.hotelbooking.features.chat.presentation.viewmodel.ChatState
+import com.example.hotelbooking.features.chat.presentation.viewmodel.SearchChatState
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun SearchChatsSection(
     isNoBookingSearch: Boolean,
     query: String,
-    searchState: ChatState<List<ChatWithHotel>>,
+    searchState: SearchChatState<List<ChatWithHotel>>,
     userId: String,
     onOpenChat: (Chat, String, String) -> Unit
 ) {
@@ -30,11 +30,11 @@ fun SearchChatsSection(
         contentAlignment = Alignment.Center
     ) {
         when (searchState) {
-            is ChatState.Loading -> {
+            is SearchChatState.Loading -> {
                 CircularProgressIndicator(color = PrimaryBlue)
             }
 
-            is ChatState.Success -> {
+            is SearchChatState.Success -> {
                 if (searchState.data.isEmpty() && isNoBookingSearch) {
                     Text(
                         stringResource(id = R.string.msg_no_chats_found),
@@ -71,7 +71,7 @@ fun SearchChatsSection(
                 }
             }
 
-            is ChatState.Error -> {
+            is SearchChatState.Error -> {
                 Text(
                     searchState.message,
                     color = Color.Red,

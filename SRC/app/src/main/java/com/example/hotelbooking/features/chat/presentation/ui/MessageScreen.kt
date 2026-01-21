@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.chat.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,8 +54,8 @@ import com.example.hotelbooking.features.chat.presentation.viewmodel.SearchChats
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.SurfaceGray
 import com.example.hotelbooking.ui.theme.TextTertiary
@@ -77,8 +76,6 @@ fun MessageScreen(
     LaunchedEffect(userId) {
         viewModel.load(userId)
     }
-
-    Log.d("MessageScreen", "${list.size}")
 
     Scaffold(
         topBar = {
@@ -175,7 +172,7 @@ fun MessageScreen(
                 }
             } else {
                 SearchChatsSection(
-                    isNoBookingSearch = query.isNotEmpty(),
+                    isNoBookingSearch = query.isEmpty(),
                     query = query,
                     searchState = searchState,
                     userId = userId,

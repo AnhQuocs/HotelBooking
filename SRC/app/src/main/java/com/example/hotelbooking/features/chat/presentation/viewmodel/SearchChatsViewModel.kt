@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class ChatState<out T> {
-    object Loading : ChatState<Nothing>()
-    data class Success<T>(val data: T) : ChatState<T>()
-    data class Error(val message: String) : ChatState<Nothing>()
+sealed class SearchChatState<out T> {
+    object Loading : SearchChatState<Nothing>()
+    data class Success<T>(val data: T) : SearchChatState<T>()
+    data class Error(val message: String) : SearchChatState<Nothing>()
 }
 
 @OptIn(FlowPreview::class)
@@ -32,7 +32,7 @@ class SearchChatsViewModel @Inject constructor(
     val searchQuery = _searchQuery.asStateFlow()
 
     private val _searchResultState =
-        MutableStateFlow<ChatState<List<ChatWithHotel>>>(ChatState.Success(emptyList()))
+        MutableStateFlow<SearchChatState<List<ChatWithHotel>>>(SearchChatState.Success(emptyList()))
     val searchResultState = _searchResultState.asStateFlow()
 
     init {
@@ -42,20 +42,20 @@ class SearchChatsViewModel @Inject constructor(
                 .distinctUntilChanged()
                 .collectLatest { query ->
                     if (query.isBlank()) {
-                        _searchResultState.value = ChatState.Success(emptyList())
+                        _searchResultState.value = SearchChatState.Success(emptyList())
                         return@collectLatest
                     }
 
-                    _searchResultState.value = ChatState.Loading
+                    _searchResultState.value = SearchChatState.Loading
 
                     runCatching {
                         val user = authRepository.getCurrentUser() ?: error("User not logged in")
                         searchChatsWithHotelUseCase(user.uid, query)
                     }.onSuccess { list ->
-                        _searchResultState.value = ChatState.Success(list)
+                        _searchResultState.value = SearchChatState.Success(list)
                     }.onFailure {
                         _searchResultState.value =
-                            ChatState.Error(it.message ?: "Search failed")
+                            SearchChatState.Error(it.message ?: "Search failed")
                     }
 
                 }

@@ -11,8 +11,15 @@ import com.example.hotelbooking.features.chat.domain.usecase.ChatUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed class ChatState<out T> {
+    data object Loading : ChatState<Nothing>()
+    data class Success<T>(val data: T) : ChatState<T>()
+    data class Error(val message: String) : ChatState<Nothing>()
+}
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
@@ -23,7 +30,9 @@ class ChatViewModel @Inject constructor(
     var chatId by mutableStateOf<String?>(null)
         private set
 
-    val messages = MutableStateFlow<List<ChatMessage>>(emptyList())
+    private val _chatState =
+        MutableStateFlow<ChatState<List<ChatMessage>>>(ChatState.Loading)
+    val chatState: StateFlow<ChatState<List<ChatMessage>>> = _chatState
 
     private var listeningJob: Job? = null
 
@@ -32,17 +41,25 @@ class ChatViewModel @Inject constructor(
 
         listeningJob?.cancel()
         listeningJob = viewModelScope.launch {
-            chatUseCases.listenMessagesUseCase(chatId).collect { list ->
-                messages.value = list
-            }
+            chatUseCases.listenMessagesUseCase(chatId)
+                .collect { list ->
+                    _chatState.value = ChatState.Success(list)
+                }
         }
     }
 
     fun loadExistingChat(userId: String, hotelId: String) {
         viewModelScope.launch {
-            val existing = chatUseCases.getExistingUseCase(userId, hotelId)
-            if (existing != null) {
-                startListening(existing.chatId)
+            _chatState.value = ChatState.Loading
+            try {
+                val existing = chatUseCases.getExistingUseCase(userId, hotelId)
+                if (existing != null) {
+                    startListening(existing.chatId)
+                } else {
+                    _chatState.value = ChatState.Success(emptyList())
+                }
+            } catch (e: Exception) {
+                _chatState.value = ChatState.Error(e.message ?: "Load chat failed")
             }
         }
     }
@@ -54,15 +71,19 @@ class ChatViewModel @Inject constructor(
         content: String
     ) {
         viewModelScope.launch {
-            val id = chatUseCases.sendMessageUseCase(
-                userId = userId,
-                hotelId = hotelId,
-                senderId = senderId,
-                content = content
-            )
+            try {
+                val id = chatUseCases.sendMessageUseCase(
+                    userId = userId,
+                    hotelId = hotelId,
+                    senderId = senderId,
+                    content = content
+                )
 
-            if (chatId == null) {
-                startListening(id)
+                if (chatId == null) {
+                    startListening(id)
+                }
+            } catch (e: Exception) {
+                _chatState.value = ChatState.Error(e.message ?: "Send message failed")
             }
         }
     }
@@ -73,11 +94,15 @@ class ChatViewModel @Inject constructor(
         content: String
     ) {
         viewModelScope.launch {
-            chatRepository.sendMessage(
-                chatId = chatId,
-                senderId = adminId,
-                content = content
-            )
+            try {
+                chatRepository.sendMessage(
+                    chatId = chatId,
+                    senderId = adminId,
+                    content = content
+                )
+            } catch (e: Exception) {
+                _chatState.value = ChatState.Error(e.message ?: "Send admin message failed")
+            }
         }
     }
 
