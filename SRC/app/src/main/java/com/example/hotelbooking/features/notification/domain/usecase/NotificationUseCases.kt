@@ -13,12 +13,14 @@ class SaveNotificationUseCase (
     private val repository: NotificationRepository
 ) {
     suspend operator fun invoke(
+        userId: String,
         title: String,
         message: String,
         bookingId: String
     ) {
         val notification = BookingNotification(
             title = title,
+            userId = userId,
             message = message,
             bookingId = bookingId,
             timestamp = System.currentTimeMillis(),
@@ -31,11 +33,9 @@ class SaveNotificationUseCase (
 class GetNotificationsUseCase (
     private val repository: NotificationRepository
 ) {
-    operator fun invoke() = repository.getAllNotifications()
+    operator fun invoke(userId: String) = repository.getAllNotifications(userId)
 }
 
-class MarkNotificationAsReadUseCase (
-    private val repository: NotificationRepository
-) {
+class MarkNotificationAsReadUseCase(private val repository: NotificationRepository) {
     suspend operator fun invoke(id: Long) = repository.markAsRead(id)
 }

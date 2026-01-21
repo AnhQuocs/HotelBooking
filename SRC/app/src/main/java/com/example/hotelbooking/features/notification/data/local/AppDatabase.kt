@@ -7,7 +7,7 @@ import com.example.hotelbooking.features.notification.data.local.entity.Notifica
 
 @Database(
     entities = [NotificationEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 

@@ -12,8 +12,8 @@ class NotificationRepositoryImpl (
     private val dao: NotificationDao
 ) : NotificationRepository {
 
-    override fun getAllNotifications(): Flow<List<BookingNotification>> {
-        return dao.getAllNotifications().map { entities ->
+    override fun getAllNotifications(userId: String): Flow<List<BookingNotification>> {
+        return dao.getAllNotifications(userId).map { entities ->
             entities.map { it.toDomain() }
         }
     }
@@ -26,7 +26,7 @@ class NotificationRepositoryImpl (
         dao.markAsRead(notificationId)
     }
 
-    override suspend fun countUnread(): Int {
-        return dao.countUnread()
+    override suspend fun countUnread(userId: String): Int {
+        return dao.countUnread(userId)
     }
 }

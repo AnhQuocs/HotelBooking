@@ -4,8 +4,8 @@ import com.example.hotelbooking.features.notification.domain.model.BookingNotifi
 import kotlinx.coroutines.flow.Flow
 
 interface NotificationRepository {
-    fun getAllNotifications(): Flow<List<BookingNotification>>
+    fun getAllNotifications(userId: String): Flow<List<BookingNotification>>
     suspend fun insertNotification(notification: BookingNotification)
     suspend fun markAsRead(notificationId: Long)
-    suspend fun countUnread(): Int
+    suspend fun countUnread(userId: String): Int
 }

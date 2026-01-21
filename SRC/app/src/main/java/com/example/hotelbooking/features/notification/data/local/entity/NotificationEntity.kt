@@ -7,6 +7,7 @@ import com.example.hotelbooking.features.notification.domain.model.BookingNotifi
 @Entity(tableName = "notifications")
 data class NotificationEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val userId: String,
     val title: String,
     val message: String,
     val bookingId: String,
@@ -16,6 +17,7 @@ data class NotificationEntity(
 
 fun NotificationEntity.toDomain() = BookingNotification(
     id = id,
+    userId = userId,
     title = title,
     message = message,
     bookingId = bookingId,
@@ -26,6 +28,7 @@ fun NotificationEntity.toDomain() = BookingNotification(
 fun BookingNotification.toEntity() = NotificationEntity(
     id = id,
     title = title,
+    userId = userId,
     message = message,
     bookingId = bookingId,
     timestamp = timestamp,
