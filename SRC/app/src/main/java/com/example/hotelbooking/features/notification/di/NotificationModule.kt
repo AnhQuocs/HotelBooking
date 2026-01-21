@@ -21,6 +21,7 @@ import javax.inject.Singleton
 object NotificationModule {
 
     @Provides
+    @Singleton
     fun provideNotificationHelper(
         @ApplicationContext context: Context
     ): NotificationHelper {

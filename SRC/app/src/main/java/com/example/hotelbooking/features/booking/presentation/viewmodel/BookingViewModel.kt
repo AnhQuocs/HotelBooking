@@ -18,6 +18,7 @@ import com.example.hotelbooking.features.notification.domain.usecase.Notificatio
 import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -178,6 +179,8 @@ class BookingViewModel @Inject constructor(
         title: String?,
         message: String?
     ) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
         viewModelScope.launch {
             try {
                 _uiState.value = BookingUiState.Loading
@@ -190,6 +193,7 @@ class BookingViewModel @Inject constructor(
                     title?.let {
                         message?.let { it1 ->
                             notificationUseCases.saveNotificationUseCase(
+                                userId = userId,
                                 title = it,
                                 message = it1,
                                 bookingId = updatedBooking.bookingId,

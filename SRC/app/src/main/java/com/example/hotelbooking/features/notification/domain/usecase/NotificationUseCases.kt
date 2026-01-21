@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.notification.domain.usecase
 
 import com.example.hotelbooking.features.notification.domain.model.BookingNotification
 import com.example.hotelbooking.features.notification.domain.repository.NotificationRepository
+import javax.inject.Inject
 
 data class NotificationUseCases(
     val saveNotificationUseCase: SaveNotificationUseCase,
@@ -9,7 +10,7 @@ data class NotificationUseCases(
     val markNotificationAsReadUseCase: MarkNotificationAsReadUseCase
 )
 
-class SaveNotificationUseCase (
+class SaveNotificationUseCase @Inject constructor(
     private val repository: NotificationRepository
 ) {
     suspend operator fun invoke(
@@ -30,7 +31,7 @@ class SaveNotificationUseCase (
     }
 }
 
-class GetNotificationsUseCase (
+class GetNotificationsUseCase(
     private val repository: NotificationRepository
 ) {
     operator fun invoke(userId: String) = repository.getAllNotifications(userId)

@@ -8,7 +8,6 @@ import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
-import com.example.hotelbooking.features.booking.domain.usecase.delete.CancelBookingUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.delete.CancellationResult
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingDetailWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
@@ -16,6 +15,7 @@ import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateSta
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -117,10 +117,12 @@ class BookingHistoryViewModel @Inject constructor(
                 reason = reason
             )
 
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
             when (result) {
                 is CancellationResult.Success -> {
                     if (reason == CancelReason.USER && title != null && message != null) {
-                        notificationUseCases.saveNotificationUseCase(title, message, bookingId)
+                        notificationUseCases.saveNotificationUseCase(userId, title, message, bookingId)
                         notificationHelper.showBookingNotification(title, message, bookingId)
                     }
                     _bookingDetailState.value = BookingHistoryState.Idle
