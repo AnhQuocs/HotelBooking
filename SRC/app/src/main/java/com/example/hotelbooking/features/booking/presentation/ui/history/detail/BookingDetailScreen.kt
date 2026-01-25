@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.booking.presentation.ui.history.detail
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -31,9 +32,13 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingH
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
+import com.example.hotelbooking.features.transaction.domain.model.Transaction
+import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionAction
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionState
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @Composable
@@ -99,7 +104,25 @@ fun BookingDetailScreen(
                         booking = bookingWithHotel.booking,
                         hotel = bookingWithHotel.hotel!!,
                         isStayProcessing = isStayProcessing,
-                        onShowBottomSheetClick = { showBottomSheet = true },
+                        onShowBottomSheetClick = {
+                            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                            val now = System.currentTimeMillis()
+
+                            val template = Transaction(
+                                bookingId = bookingId,
+                                userId = userId,
+                                status = TransactionStatus.PENDING,
+                                totalPrice = bookingWithHotel.booking.totalPrice,
+                                amountPaid = 0.0,
+                                paymentMethod = null,
+                                createdAt = now,
+                                updatedAt = now,
+                                refundedAt = null
+                            )
+
+                            transactionViewModel.prepareTransaction(template)
+                            showBottomSheet = true
+                        },
                         onAction = { status ->
                             bookingHistoryViewModel.updateStayStatus(bookingWithHotel.booking.bookingId, status)
                         },
@@ -140,10 +163,11 @@ fun BookingDetailScreen(
                 onDismissRequest = { showBottomSheet = false },
                 onNextClick = {
                     showBottomSheet = false
-                    createdId?.let { txId ->
+
+                    createdId?.let {
                         transactionViewModel.confirmPayment(
                             bookingId = bookingId,
-                            transactionId = txId,
+                            transactionId = it,
                             title = context.getString(R.string.booking_success_title),
                             message = context.getString(R.string.booking_success_message, hotelName, bookingId)
                         )
@@ -177,7 +201,7 @@ fun BookingDetailScreen(
 private fun DetailSideEffects(
     bookingId: String,
     roomId: String,
-    transactionState: TransactionState<Unit>,
+    transactionState: TransactionState<TransactionAction>,
     bookingDetailState: BookingHistoryState<BookingWithHotel>,
     roomViewModel: RoomViewModel,
     bookingHistoryViewModel: BookingHistoryViewModel,
@@ -199,12 +223,29 @@ private fun DetailSideEffects(
     }
 
     LaunchedEffect(transactionState) {
-        if (transactionState is TransactionState.Success) {
-            Toast.makeText(context, context.getString(R.string.payment_complete), Toast.LENGTH_LONG).show()
-            BookingRefreshEvent.triggerRefresh()
-            bookingHistoryViewModel.loadBookingById(bookingId)
-        } else if (transactionState is TransactionState.Error) {
-            Toast.makeText(context, transactionState.message, Toast.LENGTH_LONG).show()
+        when (transactionState) {
+            is TransactionState.Success -> {
+                when (transactionState.data) {
+                    TransactionAction.CONFIRM -> {
+                        Toast.makeText(context, context.getString(R.string.payment_complete), Toast.LENGTH_LONG).show()
+
+                        BookingRefreshEvent.triggerRefresh()
+                        bookingHistoryViewModel.loadBookingById(bookingId)
+
+                        transactionViewModel.resetActionState()
+                    }
+                    TransactionAction.INITIALIZE -> {
+                        Log.d("DetailSideEffects", "Transaction ID ready: ${transactionViewModel.createdTransactionId.value}")
+                    }
+                    else -> {}
+                }
+            }
+            is TransactionState.Error -> {
+                Toast.makeText(context, transactionState.message, Toast.LENGTH_LONG).show()
+                // Reset về Idle để User có thể nhấn thử lại
+                transactionViewModel.resetActionState()
+            }
+            else -> {}
         }
     }
 

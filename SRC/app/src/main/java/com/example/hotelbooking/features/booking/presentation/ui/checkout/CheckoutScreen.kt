@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.checkout
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -60,6 +61,7 @@ import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewM
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionAction
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionState
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -104,6 +106,9 @@ fun CheckoutScreen(
     val timeLeft by bookingViewModel.timeLeft.collectAsState()
 
     LaunchedEffect(Unit) {
+        transactionViewModel.resetActionState()
+        transactionViewModel.clearCreatedId()
+
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         val now = System.currentTimeMillis()
         val transaction = Transaction(
@@ -126,15 +131,29 @@ fun CheckoutScreen(
         bookingViewModel.startPaymentTimer(bookingId, timeoutSecond)
     }
 
-    LaunchedEffect(bookingState) {
-        if (bookingState is BookingUiState.BookingSuccess && !isTimeout) {
-            navController.navigate("payment_complete") {
-                popUpTo("checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}") {
-                    inclusive = true
+    LaunchedEffect(transactionActionState) {
+        val state = transactionActionState
+        if (state is TransactionState.Success) {
+            when (state.data) {
+                TransactionAction.CONFIRM -> {
+                    navController.navigate("payment_complete") {
+                        popUpTo("checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}") {
+                            inclusive = true
+                        }
+                    }
+                    transactionViewModel.resetActionState()
+                    bookingViewModel.resetState()
                 }
-            }
 
-            bookingViewModel.resetState()
+                TransactionAction.INITIALIZE -> {
+                    Log.d(
+                        "Checkout",
+                        "Transaction Initialized with ID: ${transactionViewModel.createdTransactionId.value}"
+                    )
+                }
+
+                TransactionAction.UPDATE -> {}
+            }
         }
     }
 

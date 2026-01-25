@@ -47,6 +47,24 @@ class TransactionRepositoryImpl(
         Result.failure(e)
     }
 
+    override suspend fun getPendingTransactionByBookingId(
+        bookingId: String,
+        userId: String
+    ): Result<Transaction?> = try {
+        val snapshot = transactionCollection
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("bookingId", bookingId)
+            .whereEqualTo("status", TransactionStatus.PENDING.name)
+            .limit(1)
+            .get().await()
+
+        val transaction = snapshot.documents.firstOrNull()
+            ?.toObject(TransactionDto::class.java)?.toDomain()
+        Result.success(transaction)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
     override suspend fun getTransactionsByUserId(userId: String): Result<List<Transaction>> = try {
         val snapshots = transactionCollection
             .whereEqualTo("userId", userId)
