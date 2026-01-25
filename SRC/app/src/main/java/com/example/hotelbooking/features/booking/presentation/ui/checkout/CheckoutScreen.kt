@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
@@ -59,12 +58,17 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
+import com.example.hotelbooking.features.transaction.domain.model.Transaction
+import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionState
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,20 +86,40 @@ fun CheckoutScreen(
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
     bookingViewModel: BookingViewModel = hiltViewModel(),
-    bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel()
+    bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
+    transactionViewModel: TransactionViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by hotelViewModel.hotelDetailState.collectAsState()
-    val isTimeout by bookingViewModel.isTimeout.collectAsState()
-
     val bookingState by bookingViewModel.uiState.collectAsState()
+    val createdId by transactionViewModel.createdTransactionId.collectAsState()
+    val transactionActionState by transactionViewModel.actionState.collectAsState()
 
+    val isTimeout by bookingViewModel.isTimeout.collectAsState()
     var isShowBottomSheet by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val isCancelling by bookingHistoryViewModel.isCancelling.collectAsState()
 
     val timeLeft by bookingViewModel.timeLeft.collectAsState()
+
+    LaunchedEffect(Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val now = System.currentTimeMillis()
+        val transaction = Transaction(
+            bookingId = bookingId,
+            userId = userId,
+            status = TransactionStatus.PENDING,
+            totalPrice = totalPrice.toDouble(),
+            amountPaid = 0.0,
+            paymentMethod = null,
+            createdAt = now,
+            updatedAt = now,
+            refundedAt = null
+        )
+
+        transactionViewModel.createTransaction(transaction)
+    }
 
     LaunchedEffect(hotelId) {
         hotelViewModel.loadHotelById(hotelId)
@@ -191,7 +215,14 @@ fun CheckoutScreen(
                             contentColor = Color.White
                         )
                     ) {
-                        Text(stringResource(R.string.next))
+                        if (transactionActionState is TransactionState.Loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(Dimen.SizeM),
+                                color = Color.White
+                            )
+                        } else {
+                            Text(stringResource(R.string.next))
+                        }
                     }
                 }
             },
@@ -288,12 +319,21 @@ fun CheckoutScreen(
                             onDismissRequest = { isShowBottomSheet = false },
                             onNextClick = {
                                 isShowBottomSheet = false
-                                bookingViewModel.updateStatus(
-                                    bookingId = bookingId,
-                                    status = BookingStatus.CONFIRMED,
-                                    title = title,
-                                    message = message
-                                )
+
+                                createdId?.let { txId ->
+                                    transactionViewModel.confirmPayment(
+                                        bookingId = bookingId,
+                                        transactionId = txId,
+                                        title = title,
+                                        message = message
+                                    )
+                                } ?: run {
+                                    Toast.makeText(
+                                        context,
+                                        "Transaction not ready",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         )
                     }

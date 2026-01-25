@@ -14,11 +14,8 @@ import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
-import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
-import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,8 +37,6 @@ sealed class BookingUiState {
 @HiltViewModel
 class BookingViewModel @Inject constructor(
     private val bookingUseCases: BookingUseCases,
-    private val notificationUseCases: NotificationUseCases,
-    private val notificationHelper: NotificationHelper,
     private val timerManager: PaymentTimerManager
 ) : ViewModel() {
 
@@ -170,55 +165,6 @@ class BookingViewModel @Inject constructor(
                     _uiState.value =
                         BookingUiState.Error(error.message ?: "Booking failed")
                 }
-        }
-    }
-
-    fun updateStatus(
-        bookingId: String,
-        status: BookingStatus,
-        title: String?,
-        message: String?
-    ) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-        viewModelScope.launch {
-            try {
-                _uiState.value = BookingUiState.Loading
-
-                val updatedBooking = bookingUseCases.updateStatusUseCase(bookingId, status)
-
-                if (status == BookingStatus.CONFIRMED) {
-                    timerManager.stopTimer()
-
-                    title?.let {
-                        message?.let { it1 ->
-                            notificationUseCases.saveNotificationUseCase(
-                                userId = userId,
-                                title = it,
-                                message = it1,
-                                bookingId = updatedBooking.bookingId,
-                            )
-                        }
-                    }
-
-                    title?.let {
-                        message?.let { it1 ->
-                            notificationHelper.showBookingNotification(
-                                title = it,
-                                message = it1,
-                                bookingId = updatedBooking.bookingId
-                            )
-                        }
-                    }
-                }
-
-                _uiState.value = BookingUiState.BookingSuccess(updatedBooking.bookingId)
-
-            } catch (e: Exception) {
-                _uiState.value = BookingUiState.Error(
-                    e.message ?: "Failed to update booking status"
-                )
-            }
         }
     }
 

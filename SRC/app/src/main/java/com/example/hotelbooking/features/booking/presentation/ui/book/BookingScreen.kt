@@ -45,6 +45,8 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.transaction.domain.model.Transaction
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -65,7 +67,8 @@ fun BookingScreen(
     roomName: String,
     price: String,
     capacity: Int,
-    bookingViewModel: BookingViewModel = hiltViewModel()
+    bookingViewModel: BookingViewModel = hiltViewModel(),
+    transactionViewModel: TransactionViewModel = hiltViewModel()
 ) {
     val uiState by bookingViewModel.uiState.collectAsState()
 

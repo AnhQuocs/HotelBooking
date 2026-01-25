@@ -2,22 +2,12 @@ package com.example.hotelbooking.features.booking.presentation.ui.history.detail
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,24 +19,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentMethodBottomSheet
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
-import com.example.hotelbooking.ui.dimens.AppSpacing
-import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionState
+import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import kotlinx.coroutines.launch
 
@@ -56,6 +42,7 @@ fun BookingDetailScreen(
     bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
+    transactionViewModel: TransactionViewModel = hiltViewModel(),
     bookingId: String,
     roomId: String,
     onRebook: () -> Unit,
@@ -64,13 +51,15 @@ fun BookingDetailScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    val bookingState by bookingViewModel.uiState.collectAsState()
     val roomDetailState by roomViewModel.roomDetailState.collectAsState()
     val bookingDetailState by bookingHistoryViewModel.bookingDetailState.collectAsState()
+    val transactionActionState by transactionViewModel.actionState.collectAsState()
+    val createdId by transactionViewModel.createdTransactionId.collectAsState()
 
     val isStayProcessing by bookingHistoryViewModel.isProcessing.collectAsState()
     val isCancelling by bookingHistoryViewModel.isCancelling.collectAsState()
-    val showOverlay = isStayProcessing || isCancelling
+
+    val isGlobalLoading = isStayProcessing || isCancelling || transactionActionState is TransactionState.Loading
 
     var showDialog by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -78,24 +67,21 @@ fun BookingDetailScreen(
     val timeLeft by bookingHistoryViewModel.timeLeft.collectAsState()
     val seconds = (timeLeft % 60).toInt()
 
-    val currentState = bookingDetailState
-
     DetailSideEffects(
         bookingId = bookingId,
         roomId = roomId,
-        bookingState = bookingState,
+        transactionState = transactionActionState,
         bookingDetailState = bookingDetailState,
-        onBackClick = onBackClick,
         roomViewModel = roomViewModel,
         bookingHistoryViewModel = bookingHistoryViewModel,
-        bookingViewModel = bookingViewModel,
+        transactionViewModel = transactionViewModel,
         context = context
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
-                val bookingStatus = (currentState as? BookingHistoryState.Success<*>)
+                val bookingStatus = (bookingDetailState as? BookingHistoryState.Success<*>)
                     ?.let { (it.data as? BookingWithHotel)?.booking?.status }
                 BookingDetailTopBar(
                     onBackClick = onBackClick,
@@ -105,182 +91,84 @@ fun BookingDetailScreen(
                 )
             },
             bottomBar = {
-                if (currentState is BookingHistoryState.Success<*>) {
-                    val data = currentState.data as BookingWithHotel
-                    val hotel = data.hotel
-                    val booking = data.booking
+                if (bookingDetailState is BookingHistoryState.Success<*>) {
+                    val data = bookingDetailState as BookingHistoryState.Success<*>
+                    val bookingWithHotel = data.data as BookingWithHotel
 
-                    if (hotel != null) {
-                        BookingDetailBottomBar(
-                            booking = booking,
-                            hotel = hotel,
-                            isStayProcessing = isStayProcessing,
-                            onShowBottomSheetClick = { showBottomSheet = true },
-                            onAction = { status ->
-                                bookingHistoryViewModel.updateStayStatus(
-                                    booking.bookingId,
-                                    status
-                                )
-                            },
-                            onRebookClick = { onRebook() }
-                        )
-                    }
+                    BookingDetailBottomBar(
+                        booking = bookingWithHotel.booking,
+                        hotel = bookingWithHotel.hotel!!,
+                        isStayProcessing = isStayProcessing,
+                        onShowBottomSheetClick = { showBottomSheet = true },
+                        onAction = { status ->
+                            bookingHistoryViewModel.updateStayStatus(bookingWithHotel.booking.bookingId, status)
+                        },
+                        onRebookClick = { onRebook() }
+                    )
                 }
             },
             containerColor = Color.White
         ) { paddingValues ->
+            BookingDetailMainContent(
+                modifier = Modifier.padding(paddingValues),
+                currentState = bookingDetailState,
+                roomDetailState = roomDetailState,
+                seconds = seconds,
+                bookingId = bookingId,
+                onRefreshRequest = onRefreshRequest,
+                onBackClick = onBackClick,
+                bookingViewModel = bookingViewModel,
+                bookingHistoryViewModel = bookingHistoryViewModel
+            )
+        }
+
+        if (isGlobalLoading) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = Dimen.PaddingM),
-                contentAlignment = Alignment.TopCenter
+                    .background(Color.Black.copy(alpha = 0.3f))
+                    .pointerInput(Unit) {},
+                contentAlignment = Alignment.Center
             ) {
-                when (currentState) {
-                    is BookingHistoryState.Idle, is BookingHistoryState.Loading -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(Dimen.SizeML),
-                                color = PrimaryBlue
-                            )
-                            Spacer(modifier = Modifier.height(AppSpacing.S))
-                            Text(stringResource(id = R.string.booking_loading))
-                        }
-                    }
-
-                    is BookingHistoryState.Success<*> -> {
-                        val data = currentState.data as BookingWithHotel
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-                            item {
-                                BookingDetailItem(
-                                    data.hotel,
-                                    data.booking,
-                                    roomDetailState,
-                                    seconds,
-                                    onTimeOut = {
-                                        if (data.booking.status == BookingStatus.PENDING) {
-                                            scope.launch {
-                                                bookingViewModel.onTimeout()
-
-                                                val isCancelled =
-                                                    bookingHistoryViewModel.cancelBooking(
-                                                        bookingId = bookingId,
-                                                        reason = CancelReason.TIMEOUT
-                                                    )
-
-                                                if (isCancelled) {
-                                                    BookingRefreshEvent.triggerRefresh()
-
-                                                    Toast.makeText(
-                                                        context,
-                                                        context.getString(R.string.payment_time_expired),
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-
-                                                    onRefreshRequest()
-
-                                                    onBackClick()
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-
-                    is BookingHistoryState.Error -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(
-                                Icons.Default.ErrorOutline,
-                                contentDescription = null,
-                                tint = Color.Red,
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(Dimen.PaddingS))
-                            Text(text = currentState.message, textAlign = TextAlign.Center)
-                            TextButton(onClick = { bookingHistoryViewModel.loadBookingById(bookingId) }) {
-                                Text(stringResource(id = R.string.retry), color = PrimaryBlue)
-                            }
-                        }
-                    }
-                }
+                CircularProgressIndicator(color = PrimaryBlue)
             }
         }
 
-        BookingProcessingOverlay(showOverlay, isCancelling)
-
-        if (showBottomSheet) {
-            if (currentState is BookingHistoryState.Success) {
-                val data = currentState.data
-
-                val title = stringResource(R.string.booking_success_title)
-                val message = data.hotel?.let {
-                    stringResource(
-                        R.string.booking_success_message,
-                        it.name,
-                        bookingId
-                    )
-                }
-
-                PaymentMethodBottomSheet(
-                    onDismissRequest = { showBottomSheet = false },
-                    onNextClick = {
-                        showBottomSheet = false
-                        bookingViewModel.updateStatus(
+        if (showBottomSheet && bookingDetailState is BookingHistoryState.Success) {
+            val hotelName = (bookingDetailState as BookingHistoryState.Success<BookingWithHotel>).data.hotel?.name ?: ""
+            PaymentMethodBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                onNextClick = {
+                    showBottomSheet = false
+                    createdId?.let { txId ->
+                        transactionViewModel.confirmPayment(
                             bookingId = bookingId,
-                            status = BookingStatus.CONFIRMED,
-                            title = title,
-                            message = message
+                            transactionId = txId,
+                            title = context.getString(R.string.booking_success_title),
+                            message = context.getString(R.string.booking_success_message, hotelName, bookingId)
                         )
                     }
-                )
-            }
+                }
+            )
         }
 
-        if (currentState is BookingHistoryState.Success<*>) {
-            val data = currentState.data as BookingWithHotel
-            val hotel = data.hotel
-
-            val title = stringResource(R.string.cancel_success_title)
-            val message = hotel?.let {
-                stringResource(R.string.cancel_success_message, it.name)
-            }
-
-            if (showDialog) {
-                ConfirmCancelDialog(
-                    onDismiss = { showDialog = false },
-                    onConfirm = {
-                        scope.launch {
-                            val isCancelled =
-                                bookingHistoryViewModel.cancelBooking(
-                                    bookingId = bookingId,
-                                    reason = CancelReason.USER,
-                                    title = title,
-                                    message = message,
-                                )
-                            if (isCancelled) {
-                                BookingRefreshEvent.triggerRefresh()
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.cancel_success),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-
-                        showDialog = false
+        if (showDialog && bookingDetailState is BookingHistoryState.Success) {
+            val hotelName = (bookingDetailState as BookingHistoryState.Success<BookingWithHotel>).data.hotel?.name ?: ""
+            ConfirmCancelDialog(
+                onDismiss = { showDialog = false },
+                onConfirm = {
+                    showDialog = false
+                    scope.launch {
+                        val isCancelled = bookingHistoryViewModel.cancelBooking(
+                            bookingId = bookingId,
+                            reason = CancelReason.USER,
+                            title = context.getString(R.string.cancel_success_title),
+                            message = context.getString(R.string.cancel_success_message, hotelName)
+                        )
+                        if (isCancelled) BookingRefreshEvent.triggerRefresh()
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
@@ -289,16 +177,16 @@ fun BookingDetailScreen(
 private fun DetailSideEffects(
     bookingId: String,
     roomId: String,
-    bookingState: BookingUiState,
+    transactionState: TransactionState<Unit>,
     bookingDetailState: BookingHistoryState<BookingWithHotel>,
-    onBackClick: () -> Unit,
     roomViewModel: RoomViewModel,
     bookingHistoryViewModel: BookingHistoryViewModel,
-    bookingViewModel: BookingViewModel,
+    transactionViewModel: TransactionViewModel,
     context: Context
 ) {
-    LaunchedEffect(roomId, bookingId) {
+    LaunchedEffect(bookingId) {
         bookingHistoryViewModel.loadBookingById(bookingId)
+        transactionViewModel.recoverTransactionId(bookingId)
     }
 
     LaunchedEffect(bookingDetailState, roomId) {
@@ -310,13 +198,13 @@ private fun DetailSideEffects(
         }
     }
 
-    LaunchedEffect(bookingState) {
-        if (bookingState is BookingUiState.BookingSuccess) {
+    LaunchedEffect(transactionState) {
+        if (transactionState is TransactionState.Success) {
+            Toast.makeText(context, context.getString(R.string.payment_complete), Toast.LENGTH_LONG).show()
             BookingRefreshEvent.triggerRefresh()
-            Toast.makeText(context, context.getString(R.string.payment_complete), Toast.LENGTH_LONG)
-                .show()
-            bookingViewModel.resetState()
-            onBackClick()
+            bookingHistoryViewModel.loadBookingById(bookingId)
+        } else if (transactionState is TransactionState.Error) {
+            Toast.makeText(context, transactionState.message, Toast.LENGTH_LONG).show()
         }
     }
 

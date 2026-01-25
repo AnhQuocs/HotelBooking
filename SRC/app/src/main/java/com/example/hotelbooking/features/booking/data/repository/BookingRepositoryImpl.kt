@@ -9,6 +9,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -277,6 +278,27 @@ class BookingRepositoryImpl(
             e.printStackTrace()
             Result.failure(e)
         }
+    }
+
+    override suspend fun confirmBookingPayment(bookingId: String, transactionId: String): Result<Unit> = try {
+        val batch = firestore.batch()
+
+        val bookingRef = bookingsCollection.document(bookingId)
+        val transactionRef = firestore.collection("transactions").document(transactionId)
+
+        // Update Booking
+        batch.update(bookingRef, "status", "CONFIRMED")
+
+        // Update Transaction
+        batch.update(transactionRef, mapOf(
+            "status" to TransactionStatus.PAID.name,
+            "updatedAt" to System.currentTimeMillis()
+        ))
+
+        batch.commit().await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     // --- Helper Extensions ---

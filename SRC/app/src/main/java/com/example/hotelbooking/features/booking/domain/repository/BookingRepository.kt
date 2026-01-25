@@ -42,5 +42,7 @@ interface BookingRepository {
 
     suspend fun checkAndCancelExpiredBookings(userId: String): Result<Int>
 
+    suspend fun confirmBookingPayment(bookingId: String, transactionId: String): Result<Unit>
+
     fun clearCache(userId: String)
 }
