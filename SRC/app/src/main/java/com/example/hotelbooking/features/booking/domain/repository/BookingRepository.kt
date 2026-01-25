@@ -22,8 +22,6 @@ interface BookingRepository {
 
     suspend fun updateBooking(booking: Booking): Boolean
 
-    suspend fun updateStatus(bookingId: String, status: BookingStatus): Booking
-
     suspend fun updateStayStatus(bookingId: String, newStatus: StayStatus): Booking
 
     suspend fun getBookingsByUser(userId: String): List<Booking>

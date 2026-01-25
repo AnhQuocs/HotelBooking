@@ -12,7 +12,6 @@ import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookings
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.ExpirePendingBookingsUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateBookingUseCase
-import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateStatusUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -43,7 +42,6 @@ object BookingModule {
             createBookingUseCase = CreateBookingUseCase(repository),
             cancelBookingUseCase = CancelBookingUseCase(repository),
             updateBookingUseCase = UpdateBookingUseCase(repository),
-            updateStatusUseCase = UpdateStatusUseCase(repository),
             getBookingsByUserUseCase = GetBookingsByUserUseCase(repository),
             getBookingByIdUseCase = GetBookingByIdUseCase(repository),
             getBookingsUseCase = GetBookingsUseCase(repository),

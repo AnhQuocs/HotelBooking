@@ -146,22 +146,6 @@ class BookingRepositoryImpl(
         }
     }
 
-    override suspend fun updateStatus(
-        bookingId: String, status: BookingStatus
-    ): Booking {
-        val docRef = bookingsCollection.document(bookingId)
-
-        docRef.update("status", status.name).await()
-
-        val updatedSnapshot = docRef.get().await()
-        val updatedBooking = updatedSnapshot.toObject(BookingDto::class.java)
-            ?: throw Exception("Booking not found after update")
-
-        invalidateCache()
-
-        return updatedBooking.toDomain()
-    }
-
     override suspend fun updateStayStatus(
         bookingId: String, newStatus: StayStatus
     ): Booking {
