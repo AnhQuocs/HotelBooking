@@ -45,8 +45,6 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
-import com.example.hotelbooking.features.transaction.domain.model.Transaction
-import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -67,8 +65,7 @@ fun BookingScreen(
     roomName: String,
     price: String,
     capacity: Int,
-    bookingViewModel: BookingViewModel = hiltViewModel(),
-    transactionViewModel: TransactionViewModel = hiltViewModel()
+    bookingViewModel: BookingViewModel = hiltViewModel()
 ) {
     val uiState by bookingViewModel.uiState.collectAsState()
 
@@ -102,11 +99,12 @@ fun BookingScreen(
             } ${startDate.year}"
             val encodedRoomName = Uri.encode(roomName)
             val encodedGuestName = Uri.encode(name)
-            val bookingId = (uiState as BookingUiState.BookingSuccess).bookingId
-            val timeoutSecondsInt: Int = timeoutSeconds.toInt()
+            val successData = (uiState as BookingUiState.BookingSuccess).booking
+            val bookingId = successData.bookingId
+            val expireAtLong = successData.expireAt?.seconds ?: 0L
 
             navController.navigate(
-                "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice&timeoutSecond=$timeoutSecondsInt"
+                "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice&expireAt=$expireAtLong"
             ) {
                 popUpTo("booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&stock={stock}&roomName={roomName}&price={price}") {
                     inclusive = true

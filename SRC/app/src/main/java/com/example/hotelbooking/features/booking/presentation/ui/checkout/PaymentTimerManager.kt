@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.checkout
 
+import android.util.Log
 import com.example.hotelbooking.features.booking.di.ApplicationScope
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.usecase.delete.CancelBookingUseCase
@@ -26,9 +27,9 @@ class PaymentTimerManager @Inject constructor(
     private var timerJob: Job? = null
 
     fun startTimer(bookingId: String, durationSeconds: Int) {
+
         expiryTime = System.currentTimeMillis() + (durationSeconds * 1000L)
         currentBookingId = bookingId
-
         _timeLeft.value = durationSeconds.toLong()
 
         timerJob?.cancel()

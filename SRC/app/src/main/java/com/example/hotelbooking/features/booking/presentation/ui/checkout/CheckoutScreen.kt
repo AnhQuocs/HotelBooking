@@ -70,6 +70,7 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -84,7 +85,7 @@ fun CheckoutScreen(
     numberOfGuest: Int,
     phone: String,
     totalPrice: String,
-    timeoutSecond: Int,
+    expireAt: Long,
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
     bookingViewModel: BookingViewModel = hiltViewModel(),
@@ -96,16 +97,14 @@ fun CheckoutScreen(
     val bookingState by bookingViewModel.uiState.collectAsState()
     val createdId by transactionViewModel.createdTransactionId.collectAsState()
     val transactionActionState by transactionViewModel.actionState.collectAsState()
-
-    val isTimeout by bookingViewModel.isTimeout.collectAsState()
-    var isShowBottomSheet by remember { mutableStateOf(false) }
-
-    val scope = rememberCoroutineScope()
     val isCancelling by bookingHistoryViewModel.isCancelling.collectAsState()
-
     val timeLeft by bookingViewModel.timeLeft.collectAsState()
 
+    var isShowBottomSheet by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
+        bookingViewModel.stopPaymentTimer()
         transactionViewModel.resetActionState()
         transactionViewModel.clearCreatedId()
 
@@ -128,13 +127,13 @@ fun CheckoutScreen(
 
     LaunchedEffect(hotelId) {
         hotelViewModel.loadHotelById(hotelId)
-        bookingViewModel.startPaymentTimer(bookingId, timeoutSecond)
+        val expireTimestamp = Timestamp(expireAt, 0)
+        bookingViewModel.startPaymentTimer(expireTimestamp, bookingId)
     }
 
     LaunchedEffect(transactionActionState) {
-        val state = transactionActionState
-        if (state is TransactionState.Success) {
-            when (state.data) {
+        if (transactionActionState is TransactionState.Success) {
+            when ((transactionActionState as TransactionState.Success).data) {
                 TransactionAction.CONFIRM -> {
                     navController.navigate("payment_complete") {
                         popUpTo("checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}") {
@@ -148,37 +147,33 @@ fun CheckoutScreen(
                 TransactionAction.INITIALIZE -> {
                     Log.d(
                         "Checkout",
-                        "Transaction Initialized with ID: ${transactionViewModel.createdTransactionId.value}"
+                        "Transaction Initialized: ${transactionViewModel.createdTransactionId.value}"
                     )
                 }
 
-                TransactionAction.UPDATE -> {}
+                else -> {}
             }
         }
     }
 
     LaunchedEffect(timeLeft) {
         if (timeLeft == 0L) {
-            scope.launch {
-                bookingViewModel.onTimeout()
+            bookingViewModel.onTimeout()
 
-                val isCancelled = bookingHistoryViewModel.cancelBooking(
-                    bookingId = bookingId,
-                    reason = CancelReason.TIMEOUT
-                )
+            val isCancelled = bookingHistoryViewModel.cancelBooking(
+                bookingId = bookingId,
+                reason = CancelReason.TIMEOUT
+            )
 
-                if (isCancelled) {
-                    BookingRefreshEvent.triggerRefresh()
-
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.payment_time_expired),
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    navController.navigate("roomDetail") {
-                        popUpTo("0") { inclusive = true }
-                    }
+            if (isCancelled) {
+                BookingRefreshEvent.triggerRefresh()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.payment_time_expired),
+                    Toast.LENGTH_LONG
+                ).show()
+                navController.navigate("roomDetail") {
+                    popUpTo("0") { inclusive = true }
                 }
             }
         }
@@ -197,7 +192,6 @@ fun CheckoutScreen(
                             scope.launch {
                                 BookingRefreshEvent.triggerRefresh()
                             }
-
                             navController.navigate("roomDetail") {
                                 popUpTo("0") { inclusive = true }
                             }
@@ -247,6 +241,13 @@ fun CheckoutScreen(
             },
             containerColor = Color.White
         ) { paddingValues ->
+            val initialTime = remember(expireAt) {
+                val remaining = expireAt - (System.currentTimeMillis() / 1000)
+                remaining.toInt().coerceAtLeast(0)
+            }
+
+            val displayTime = if (timeLeft > 0) timeLeft.toInt() else initialTime
+
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
@@ -255,31 +256,8 @@ fun CheckoutScreen(
                     .padding(horizontal = Dimen.PaddingM)
             ) {
                 CountdownTimer(
-                    totalTime = timeoutSecond,
-                    onTimeout = {
-                        scope.launch {
-                            bookingViewModel.onTimeout()
-
-                            val isCancelled = bookingHistoryViewModel.cancelBooking(
-                                bookingId = bookingId,
-                                reason = CancelReason.TIMEOUT
-                            )
-
-                            if (isCancelled) {
-                                BookingRefreshEvent.triggerRefresh()
-
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.payment_time_expired),
-                                    Toast.LENGTH_LONG
-                                ).show()
-
-                                navController.navigate("roomDetail") {
-                                    popUpTo("0") { inclusive = true }
-                                }
-                            }
-                        }
-                    }
+                    totalTime = displayTime,
+                    onTimeout = {}
                 )
 
                 Spacer(modifier = Modifier.height(AppSpacing.L))
@@ -372,6 +350,7 @@ fun CheckoutScreen(
         }
     }
 }
+
 
 @Composable
 fun PromoUI() {

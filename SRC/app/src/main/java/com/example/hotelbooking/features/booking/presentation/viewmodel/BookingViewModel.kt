@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +31,7 @@ sealed class BookingUiState {
     object Loading : BookingUiState()
     data class Available(val count: Int) : BookingUiState()
     data class SoldOut(val message: String) : BookingUiState()
-    data class BookingSuccess(val bookingId: String) : BookingUiState()
+    data class BookingSuccess(val booking: Booking) : BookingUiState()
     data class Error(val message: String) : BookingUiState()
 }
 
@@ -60,10 +61,27 @@ class BookingViewModel @Inject constructor(
 
     val timeLeft = timerManager.timeLeft
 
-    fun startPaymentTimer(bookingId: String, duration: Int) {
-        if (!timerManager.isRunning()) {
-            timerManager.startTimer(bookingId, duration)
+    fun startPaymentTimer(expireAt: Timestamp?, bookingId: String) {
+        if (expireAt == null) {
+            return
         }
+
+        val serverTimeSec = expireAt.seconds
+        val localTimeSec = System.currentTimeMillis() / 1000
+        val remainingSeconds = serverTimeSec - localTimeSec
+
+
+        if (remainingSeconds > 0) {
+            timerManager.startTimer(bookingId, remainingSeconds.toInt())
+        } else {
+            _isTimeout.value = true
+            timerManager.stopTimer()
+            (timerManager.timeLeft as MutableStateFlow).value = 0
+        }
+    }
+
+    fun stopPaymentTimer() {
+        timerManager.stopTimer()
     }
 
     fun onDateSelected(startMillis: Long?, endMillis: Long?) {
@@ -159,7 +177,7 @@ class BookingViewModel @Inject constructor(
             result
                 .onSuccess { booking ->
                     _uiState.value =
-                        BookingUiState.BookingSuccess(booking.bookingId)
+                        BookingUiState.BookingSuccess(booking)
                 }
                 .onFailure { error ->
                     _uiState.value =

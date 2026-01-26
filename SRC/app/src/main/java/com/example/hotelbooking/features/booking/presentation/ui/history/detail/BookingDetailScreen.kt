@@ -70,7 +70,7 @@ fun BookingDetailScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val timeLeft by bookingHistoryViewModel.timeLeft.collectAsState()
-    val seconds = (timeLeft % 60).toInt()
+    val totalSeconds = timeLeft.toInt()
 
     DetailSideEffects(
         bookingId = bookingId,
@@ -136,7 +136,7 @@ fun BookingDetailScreen(
                 modifier = Modifier.padding(paddingValues),
                 currentState = bookingDetailState,
                 roomDetailState = roomDetailState,
-                seconds = seconds,
+                seconds = totalSeconds,
                 bookingId = bookingId,
                 onRefreshRequest = onRefreshRequest,
                 onBackClick = onBackClick,

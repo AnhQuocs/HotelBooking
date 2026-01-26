@@ -3,7 +3,6 @@ package com.example.hotelbooking.features.room.presentation.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -106,7 +105,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                 }
 
                 composable(
-                    route = "checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}&timeoutSecond={timeoutSecond}",
+                    route = "checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}&expireAt={expireAt}",
                     arguments = listOf(
                         navArgument("date") { type = NavType.StringType },
                         navArgument("hotelId") { type = NavType.StringType },
@@ -116,7 +115,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                         navArgument("numberOfGuest") { type = NavType.IntType },
                         navArgument("phone") { type = NavType.StringType },
                         navArgument("totalPrice") { type = NavType.StringType },
-                        navArgument("timeoutSecond") { type = NavType.IntType },
+                        navArgument("expireAt") { type = NavType.LongType },
                     )
                 ) { backStackEntry ->
                     val date = Uri.decode(backStackEntry.arguments?.getString("date") ?: "")
@@ -128,7 +127,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val numberOfGuest = backStackEntry.arguments?.getInt("numberOfGuest") ?: 1
                     val phone = backStackEntry.arguments?.getString("phone") ?: ""
                     val totalPrice = backStackEntry.arguments?.getString("totalPrice") ?: ""
-                    val timeoutSecond = backStackEntry.arguments?.getInt("timeoutSecond") ?: 600
+                    val expireAt = backStackEntry.arguments?.getLong("expireAt") ?: 600
 
                     CheckoutScreen(
                         date = date,
@@ -140,7 +139,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                         phone = phone,
                         totalPrice = totalPrice,
                         navController = navController,
-                        timeoutSecond = timeoutSecond
+                        expireAt = expireAt
                     )
                 }
 
