@@ -16,7 +16,6 @@ class TransactionRepositoryImpl(
 
     private val transactionCollection = firestore.collection("transactions")
 
-    // Trong RepositoryImpl
     override suspend fun createTransaction(transaction: Transaction): Result<String> = try {
         val docRef = transactionCollection.document()
         val dto = transaction.copy(id = docRef.id).toDto()
@@ -75,27 +74,6 @@ class TransactionRepositoryImpl(
             it.toObject(TransactionDto::class.java)?.toDomain()
         }
         Result.success(list)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-
-    override suspend fun updateTransactionStatus(
-        transactionId: String,
-        status: TransactionStatus,
-        amountPaid: Double?
-    ): Result<Unit> = try {
-        val updates = mutableMapOf<String, Any>(
-            "status" to status.name,
-            "updatedAt" to System.currentTimeMillis()
-        )
-        amountPaid?.let { updates["amountPaid"] = it }
-
-        if (status == TransactionStatus.REFUND) {
-            updates["refundedAt"] = System.currentTimeMillis()
-        }
-
-        transactionCollection.document(transactionId).update(updates).await()
-        Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)
     }

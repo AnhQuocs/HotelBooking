@@ -9,8 +9,7 @@ data class TransactionUseCases @Inject constructor(
     val createTransactionUseCase: CreateTransactionUseCase,
     val getTransactionByIdUseCase: GetTransactionByIdUseCase,
     val getTransactionByBookingIdUseCase: GetTransactionByBookingIdUseCase,
-    val getUserTransactionsUseCase: GetUserTransactionsUseCase,
-    val updateTransactionStatusUseCase: UpdateTransactionStatusUseCase
+    val getUserTransactionsUseCase: GetUserTransactionsUseCase
 )
 
 class CreateTransactionUseCase @Inject constructor(private val repository: TransactionRepository) {
@@ -33,9 +32,4 @@ class GetTransactionByBookingIdUseCase @Inject constructor(private val repositor
 class GetUserTransactionsUseCase @Inject constructor(private val repository: TransactionRepository) {
     suspend operator fun invoke(userId: String) =
         repository.getTransactionsByUserId(userId)
-}
-
-class UpdateTransactionStatusUseCase @Inject constructor(private val repository: TransactionRepository) {
-    suspend operator fun invoke(id: String, status: TransactionStatus, amount: Double? = null) =
-        repository.updateTransactionStatus(id, status, amount)
 }

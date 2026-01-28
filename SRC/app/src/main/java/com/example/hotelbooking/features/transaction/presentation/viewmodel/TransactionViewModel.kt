@@ -6,7 +6,6 @@ import com.example.hotelbooking.features.booking.presentation.ui.checkout.Paymen
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
-import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.example.hotelbooking.features.transaction.domain.usecase.CompleteBookingPaymentUseCase
 import com.example.hotelbooking.features.transaction.domain.usecase.PrepareTransactionUseCase
 import com.example.hotelbooking.features.transaction.domain.usecase.TransactionUseCases
@@ -94,15 +93,6 @@ class TransactionViewModel @Inject constructor(
                     _actionState.value = TransactionState.Success(TransactionAction.CONFIRM)
                 }
                 .onFailure { _actionState.value = TransactionState.Error(it.message ?: "Payment Failed") }
-        }
-    }
-
-    fun updateStatus(id: String, status: TransactionStatus) {
-        viewModelScope.launch {
-            _actionState.value = TransactionState.Loading
-            transactionUseCases.updateTransactionStatusUseCase(id, status)
-                .onSuccess { _actionState.value = TransactionState.Success(TransactionAction.UPDATE) }
-                .onFailure { _actionState.value = TransactionState.Error(it.message ?: "Update Failed") }
         }
     }
 
