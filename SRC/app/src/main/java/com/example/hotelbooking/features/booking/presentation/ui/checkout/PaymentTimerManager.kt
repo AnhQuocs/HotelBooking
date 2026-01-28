@@ -1,9 +1,8 @@
 package com.example.hotelbooking.features.booking.presentation.ui.checkout
 
-import android.util.Log
 import com.example.hotelbooking.features.booking.di.ApplicationScope
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
-import com.example.hotelbooking.features.booking.domain.usecase.delete.CancelBookingUseCase
+import com.example.hotelbooking.features.booking.domain.usecase.update.CancelBookingAndTransactionUseCase
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -17,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class PaymentTimerManager @Inject constructor(
     @ApplicationScope private val scope: CoroutineScope,
-    private val bookingHistoryUseCase: CancelBookingUseCase
+    private val cancelBookingAndTransactionUseCase: CancelBookingAndTransactionUseCase
 ) {
     private val _timeLeft = MutableStateFlow<Long>(-1L)
     val timeLeft = _timeLeft.asStateFlow()
@@ -27,7 +26,6 @@ class PaymentTimerManager @Inject constructor(
     private var timerJob: Job? = null
 
     fun startTimer(bookingId: String, durationSeconds: Int) {
-
         expiryTime = System.currentTimeMillis() + (durationSeconds * 1000L)
         currentBookingId = bookingId
         _timeLeft.value = durationSeconds.toLong()
@@ -46,7 +44,10 @@ class PaymentTimerManager @Inject constructor(
 
     private suspend fun handleTimeout() {
         currentBookingId?.let { id ->
-            bookingHistoryUseCase(id, CancelReason.TIMEOUT)
+            cancelBookingAndTransactionUseCase(
+                bookingId = id,
+                cancelReason = CancelReason.TIMEOUT.name
+            )
             BookingRefreshEvent.triggerRefresh()
             currentBookingId = null
         }

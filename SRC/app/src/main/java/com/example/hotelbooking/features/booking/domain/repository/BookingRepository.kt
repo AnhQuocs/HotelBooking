@@ -19,8 +19,6 @@ interface BookingRepository {
 
     suspend fun createBooking(booking: Booking, availableRooms: Int, expireAt: Timestamp): Booking
 
-    suspend fun cancelBooking(bookingId: String, reason: CancelReason): Boolean
-
     suspend fun updateBooking(booking: Booking): Boolean
 
     suspend fun updateStayStatus(bookingId: String, newStatus: StayStatus): Booking

@@ -4,7 +4,6 @@ import com.example.hotelbooking.features.booking.data.repository.BookingReposito
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.booking.domain.usecase.create.CreateBookingUseCase
-import com.example.hotelbooking.features.booking.domain.usecase.delete.CancelBookingUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.CheckAvailabilityUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.CheckExpiredBookingsUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingByIdUseCase
@@ -40,7 +39,6 @@ object BookingModule {
         return BookingUseCases(
             checkAvailabilityUseCase = CheckAvailabilityUseCase(repository),
             createBookingUseCase = CreateBookingUseCase(repository),
-            cancelBookingUseCase = CancelBookingUseCase(repository),
             updateBookingUseCase = UpdateBookingUseCase(repository),
             getBookingsByUserUseCase = GetBookingsByUserUseCase(repository),
             getBookingByIdUseCase = GetBookingByIdUseCase(repository),
