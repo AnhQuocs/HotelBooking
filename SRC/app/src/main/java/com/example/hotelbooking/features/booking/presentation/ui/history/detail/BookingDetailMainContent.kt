@@ -92,7 +92,7 @@ fun BookingDetailMainContent(
 
             is BookingHistoryState.Error -> {
                 ErrorStateUI(
-                    message = currentState.message,
+                    state = currentState,
                     onRetry = { bookingHistoryViewModel.loadBookingById(bookingId) }
                 )
             }
@@ -114,7 +114,10 @@ private fun LoadingStateUI() {
 }
 
 @Composable
-private fun ErrorStateUI(message: String, onRetry: () -> Unit) {
+private fun ErrorStateUI(state: BookingHistoryState.Error, onRetry: () -> Unit) {
+    val message = state.fallbackMessage
+        ?: stringResource(id = state.messageRes)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

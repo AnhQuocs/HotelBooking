@@ -43,7 +43,8 @@ interface BookingRepository {
 
     suspend fun cancelBookingAndTransaction(
         bookingId: String,
-        cancelReason: String
+        cancelReason: String,
+        cancelNote: String?
     ): Result<Unit>
 
     suspend fun rebookTransaction(

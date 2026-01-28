@@ -7,7 +7,13 @@ enum class BookingStatus {
 }
 
 enum class CancelReason {
-    USER, TIMEOUT
+    CHANGE_PLAN,
+    WRONG_INFO,
+    PAYMENT_ISSUE,
+    FIND_BETTER_PRICE,
+    SYSTEM_ERROR,
+    OTHER,
+    TIMEOUT
 }
 
 enum class StayStatus {
@@ -26,6 +32,7 @@ data class Booking(
     val totalPrice: Double,
     val status: BookingStatus,
     val cancelReason: CancelReason?,
+    val cancelNote: String? = null,
     val stayStatus: StayStatus,
     val createdAt: Timestamp = Timestamp.now(),
     val updatedAt: Timestamp? = null,

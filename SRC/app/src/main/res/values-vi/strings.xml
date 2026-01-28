@@ -147,6 +147,17 @@
     <string name="system_error">Đã xảy ra lỗi hệ thống</string>
     <string name="guest_info">Thông tin khách hàng</string>
     <string name="update">Cập nhật</string>
+    <string name="cancel_reason_change_plan">Thay đổi kế hoạch</string>
+    <string name="cancel_reason_wrong_info">Nhập sai thông tin</string>
+    <string name="cancel_reason_payment_issue">Gặp sự cố thanh toán</string>
+    <string name="cancel_reason_find_better_price">Tìm được giá tốt hơn</string>
+    <string name="cancel_reason_system_error">Lỗi hệ thống</string>
+    <string name="cancel_reason_other">Lý do khác</string>
+    <string name="cancel_reason_timeout">Hết thời gian thanh toán</string>
+    <string name="cancel_refund">Hủy đơn / Hoàn tiền</string>
+    <string name="error_unknown">Đã xảy ra lỗi không xác định. Vui lòng thử lại.</string>
+    <string name="error_search_failed">Không thể tìm kiếm. Vui lòng thử lại.</string>
+    <string name="cancel_reason_label">Vui lòng chọn lý do hủy</string>
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>

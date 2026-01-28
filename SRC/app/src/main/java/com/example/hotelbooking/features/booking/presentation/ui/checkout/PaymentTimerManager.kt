@@ -46,7 +46,8 @@ class PaymentTimerManager @Inject constructor(
         currentBookingId?.let { id ->
             cancelBookingAndTransactionUseCase(
                 bookingId = id,
-                cancelReason = CancelReason.TIMEOUT.name
+                cancelReason = CancelReason.TIMEOUT.name,
+                cancelNote = null
             )
             BookingRefreshEvent.triggerRefresh()
             currentBookingId = null

@@ -147,6 +147,17 @@
     <string name="system_error">A system error has occurred</string>
     <string name="guest_info">Guest Information</string>
     <string name="update">Update</string>
+    <string name="cancel_reason_change_plan">Change of plans</string>
+    <string name="cancel_reason_wrong_info">Incorrect information provided</string>
+    <string name="cancel_reason_payment_issue">Payment issue</string>
+    <string name="cancel_reason_find_better_price">Found a better price</string>
+    <string name="cancel_reason_system_error">System error</string>
+    <string name="cancel_reason_other">Other reason</string>
+    <string name="cancel_reason_timeout">Payment time expired</string>
+    <string name="cancel_refund">Cancel / Refund</string>
+    <string name="error_unknown">An unknown error occurred. Please try again.</string>
+    <string name="error_search_failed">Search failed. Please try again.</string>
+    <string name="cancel_reason_label">Please select a cancellation reason</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>

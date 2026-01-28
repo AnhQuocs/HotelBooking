@@ -15,13 +15,13 @@ sealed class CancellationResult {
 class CancelBookingAndTransactionUseCase @Inject constructor(
     private val repository: BookingRepository
 ) {
-    suspend operator fun invoke(bookingId: String, cancelReason: String): CancellationResult {
+    suspend operator fun invoke(bookingId: String, cancelReason: String, cancelNote: String?): CancellationResult {
         return try {
             val booking = repository.getBookingById(bookingId)
 
             when (booking.status) {
                 BookingStatus.PENDING -> {
-                    performCancellation(bookingId, cancelReason)
+                    performCancellation(bookingId, cancelReason, cancelNote)
                 }
 
                 BookingStatus.CONFIRMED -> {
@@ -30,7 +30,7 @@ class CancelBookingAndTransactionUseCase @Inject constructor(
                     val cancellationDeadline = checkInTime.minusHours(24)
 
                     if (now.isBefore(cancellationDeadline)) {
-                        performCancellation(bookingId, cancelReason)
+                        performCancellation(bookingId, cancelReason, cancelNote)
                     } else {
                         CancellationResult.TooLate
                     }
@@ -45,8 +45,8 @@ class CancelBookingAndTransactionUseCase @Inject constructor(
         }
     }
 
-    private suspend fun performCancellation(id: String, reason: String): CancellationResult {
-        val result = repository.cancelBookingAndTransaction(id, reason)
+    private suspend fun performCancellation(id: String, reason: String, note: String?): CancellationResult {
+        val result = repository.cancelBookingAndTransaction(id, reason, note)
         return if (result.isSuccess) {
             CancellationResult.Success
         } else {

@@ -286,7 +286,9 @@ fun RebookScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(currentBooking.message)
+                            Text(currentBooking.fallbackMessage
+                                ?: stringResource(id = currentBooking.messageRes)
+                            )
                         }
                     }
                 }

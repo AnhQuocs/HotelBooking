@@ -269,12 +269,13 @@ class BookingRepositoryImpl(
 
     override suspend fun cancelBookingAndTransaction(
         bookingId: String,
-        cancelReason: String
+        cancelReason: String,
+        cancelNote: String?
     ): Result<Unit> {
         return try {
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-            val bookingRef = firestore.collection("bookings").document(bookingId)
+            val bookingRef = bookingsCollection.document(bookingId)
 
             val transactionQuery = firestore.collection("transactions")
                 .whereEqualTo("userId", currentUserId)
@@ -307,6 +308,7 @@ class BookingRepositoryImpl(
                     bookingRef,
                     "status", "CANCELLED",
                     "cancelReason", cancelReason,
+                    "cancelNote", cancelNote,
                     "updatedAt", Timestamp.now()
                 )
 

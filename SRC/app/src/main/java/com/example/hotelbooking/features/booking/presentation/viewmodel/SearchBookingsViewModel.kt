@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.booking.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.usecase.read.SearchBookingsWithHotelUseCase
 import com.google.firebase.auth.FirebaseAuth
@@ -48,14 +49,19 @@ class SearchBookingsViewModel @Inject constructor(
 
     private fun performSearch(query: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
         viewModelScope.launch {
             _searchResultState.value = BookingHistoryState.Loading
+
             runCatching {
                 searchBookingsWithHotelUseCase(userId, query)
             }.onSuccess { list ->
                 _searchResultState.value = BookingHistoryState.Success(list)
             }.onFailure { e ->
-                _searchResultState.value = BookingHistoryState.Error(e.message ?: "Search failed")
+                _searchResultState.value = BookingHistoryState.Error(
+                    messageRes = R.string.error_search_failed,
+                    fallbackMessage = e.message
+                )
             }
         }
     }

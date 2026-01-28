@@ -129,7 +129,7 @@ fun BookingHistorySection(
         is BookingHistoryState.Error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = state.message,
+                    text = state.fallbackMessage ?: stringResource(id = state.messageRes),
                     color = Color.Red,
                     fontSize = 16.sp
                 )

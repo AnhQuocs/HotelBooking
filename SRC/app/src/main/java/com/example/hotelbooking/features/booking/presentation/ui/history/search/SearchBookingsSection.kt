@@ -50,8 +50,10 @@ fun SearchBookingsSection(
             }
 
             is BookingHistoryState.Error -> {
+                val message = searchState.fallbackMessage
+                    ?: stringResource(id = searchState.messageRes)
                 Text(
-                    searchState.message,
+                    message,
                     color = Color.Red,
                     modifier = Modifier.align(Alignment.Center)
                 )

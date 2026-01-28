@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.R
@@ -28,7 +29,11 @@ sealed class BookingHistoryState<out T> {
     object Idle : BookingHistoryState<Nothing>()
     object Loading : BookingHistoryState<Nothing>()
     data class Success<T>(val data: T) : BookingHistoryState<T>()
-    data class Error(val message: String) : BookingHistoryState<Nothing>()
+
+    data class Error(
+        @StringRes val messageRes: Int,
+        val fallbackMessage: String? = null
+    ) : BookingHistoryState<Nothing>()
 }
 
 @HiltViewModel
@@ -86,7 +91,10 @@ class BookingHistoryViewModel @Inject constructor(
                 val combinedList = getBookingsWithHotelUseCase(userId)
                 _state.value = BookingHistoryState.Success(combinedList)
             } catch (e: Exception) {
-                _state.value = BookingHistoryState.Error(e.message ?: "Unknown error")
+                _state.value = BookingHistoryState.Error(
+                    messageRes = R.string.error_unknown,
+                    fallbackMessage = e.message
+                )
             }
         }
     }
@@ -96,10 +104,12 @@ class BookingHistoryViewModel @Inject constructor(
             _bookingDetailState.value = BookingHistoryState.Loading
             try {
                 val combined = getBookingDetailWithHotelUseCase(bookingId)
-
                 _bookingDetailState.value = BookingHistoryState.Success(combined)
             } catch (e: Exception) {
-                _bookingDetailState.value = BookingHistoryState.Error(e.message ?: "Unknown error")
+                _bookingDetailState.value = BookingHistoryState.Error(
+                    messageRes = R.string.error_unknown,
+                    fallbackMessage = e.message
+                )
             }
         }
     }
@@ -107,6 +117,7 @@ class BookingHistoryViewModel @Inject constructor(
     suspend fun cancelBooking(
         bookingId: String,
         reason: CancelReason,
+        cancelNote: String? = null,
         title: String? = null,
         message: String? = null
     ): Boolean {
@@ -115,14 +126,15 @@ class BookingHistoryViewModel @Inject constructor(
 
             val result = cancelBookingAndTransactionUseCase(
                 bookingId = bookingId,
-                cancelReason = reason.name
+                cancelReason = reason.name,
+                cancelNote = cancelNote
             )
 
             val userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
 
             when (result) {
                 is CancellationResult.Success -> {
-                    if (reason == CancelReason.USER && title != null && message != null) {
+                    if (reason != CancelReason.TIMEOUT && title != null && message != null) {
                         notificationUseCases.saveNotificationUseCase(
                             userId,
                             title,
@@ -143,22 +155,23 @@ class BookingHistoryViewModel @Inject constructor(
 
                 is CancellationResult.TooLate -> {
                     _bookingDetailState.value = BookingHistoryState.Error(
-                        context.getString(R.string.error_cancel_too_late)
+                        messageRes = R.string.error_cancel_too_late
                     )
                     false
                 }
 
                 is CancellationResult.Failure -> {
                     _bookingDetailState.value = BookingHistoryState.Error(
-                        result.exception?.message
-                            ?: context.getString(R.string.error_cancel_failed)
+                        messageRes = R.string.error_cancel_failed,
+                        fallbackMessage = result.exception?.message
                     )
                     false
                 }
             }
         } catch (e: Exception) {
             _bookingDetailState.value = BookingHistoryState.Error(
-                e.message ?: "Unknown Error"
+                messageRes = R.string.error_unknown,
+                fallbackMessage = e.message
             )
             false
         } finally {
