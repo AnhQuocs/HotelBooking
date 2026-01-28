@@ -117,25 +117,6 @@ class BookingRepositoryImpl(
         return finalBooking
     }
 
-    override suspend fun cancelBooking(bookingId: String, reason: CancelReason): Boolean {
-        return try {
-            bookingsCollection
-                .document(bookingId)
-                .update(
-                    "status", BookingStatus.CANCELLED.name,
-                    "cancelReason", reason.name
-                )
-                .await()
-
-            invalidateCache()
-
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
-
     override suspend fun updateBooking(booking: Booking): Boolean {
         return try {
             bookingsCollection.document(booking.bookingId)

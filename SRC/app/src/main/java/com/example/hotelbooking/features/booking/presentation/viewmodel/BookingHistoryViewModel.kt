@@ -33,7 +33,6 @@ sealed class BookingHistoryState<out T> {
 
 @HiltViewModel
 class BookingHistoryViewModel @Inject constructor(
-    private val bookingUseCases: BookingUseCases,
     private val updateStayStatusUseCase: UpdateStayStatusUseCase,
     private val getBookingsWithHotelUseCase: GetBookingsWithHotelUseCase,
     private val getBookingDetailWithHotelUseCase: GetBookingDetailWithHotelUseCase,
