@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,7 +79,11 @@ class RebookActivity : BaseComponentActivity() {
                 composable("rebook_screen") {
                     LaunchedEffect(updateState) {
                         if (updateState is UpdateBookingState.Success) {
-                            Toast.makeText(context, (updateState as UpdateBookingState.Success).message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                (updateState as UpdateBookingState.Success).message,
+                                Toast.LENGTH_SHORT
+                            ).show()
                             updateViewModel.resetState()
                             navController.navigate("payment_complete") {
                                 popUpTo("rebook_screen") {
@@ -114,7 +120,11 @@ class RebookActivity : BaseComponentActivity() {
 
                     LaunchedEffect(updateState) {
                         if (updateState is UpdateBookingState.Success) {
-                            Toast.makeText(context, (updateState as UpdateBookingState.Success).message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                (updateState as UpdateBookingState.Success).message,
+                                Toast.LENGTH_SHORT
+                            ).show()
                             updateViewModel.resetState()
                             navController.popBackStack()
                         }
@@ -152,7 +162,8 @@ class RebookActivity : BaseComponentActivity() {
                                 BookingRefreshEvent.triggerRefresh()
 
                                 val intent = Intent(this@RebookActivity, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
                                 finish()
                             }
@@ -162,7 +173,8 @@ class RebookActivity : BaseComponentActivity() {
                                 BookingRefreshEvent.triggerRefresh()
 
                                 val intent = Intent(this@RebookActivity, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
                                 finish()
                             }
@@ -182,6 +194,7 @@ fun RebookScreen(
     onUpdateBooking: (Booking, Long, Long, Double) -> Unit,
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
+    updateBookingViewModel: UpdateBookingViewModel = hiltViewModel(),
     bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -189,6 +202,7 @@ fun RebookScreen(
     val bookingState by bookingHistoryViewModel.bookingDetailState.collectAsState()
     val roomState by roomViewModel.roomDetailState.collectAsState()
     val uiState by bookingViewModel.uiState.collectAsState()
+    val updateState by updateBookingViewModel.updateState.collectAsState()
 
     val start = bookingViewModel.checkInDate
     val end = bookingViewModel.checkOutDate
@@ -202,96 +216,120 @@ fun RebookScreen(
 
     LaunchedEffect(bookingState) {
         if (bookingState is BookingHistoryState.Success<*>) {
-            val booking = (bookingState as BookingHistoryState.Success<BookingWithHotel>).data.booking
+            val booking =
+                (bookingState as BookingHistoryState.Success<BookingWithHotel>).data.booking
             roomViewModel.loadRoomDetail(booking.roomTypeId)
         }
     }
 
-    Scaffold(
-        topBar = { AppTopBar(text = stringResource(id = R.string.rebook), onBackClick = onBackClick) },
-        bottomBar = {
-            if (roomState is RoomState.Success) {
-                RebookBottomBar(
-                    pricePerNight = (roomState as RoomState.Success<RoomType>).data.pricePerNight,
-                    startDate = start,
-                    endDate = end,
-                    uiState = uiState,
-                    onBookClick = { isShowBottomSheet = true },
-                    onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Scaffold(
+            topBar = {
+                AppTopBar(
+                    text = stringResource(id = R.string.rebook),
+                    onBackClick = onBackClick
                 )
+            },
+            bottomBar = {
+                if (roomState is RoomState.Success) {
+                    RebookBottomBar(
+                        pricePerNight = (roomState as RoomState.Success<RoomType>).data.pricePerNight,
+                        startDate = start,
+                        endDate = end,
+                        uiState = uiState,
+                        onBookClick = { isShowBottomSheet = true },
+                        onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() }
+                    )
+                }
+            },
+            containerColor = Color.White
+        ) { padding ->
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)) {
+                when (val currentBooking = bookingState) {
+                    is BookingHistoryState.Loading, is BookingHistoryState.Idle -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = PrimaryBlue)
+                        }
+                    }
+
+                    is BookingHistoryState.Success<*> -> {
+                        val data = currentBooking.data as BookingWithHotel
+                        val currentRoom = roomState
+
+                        if (currentRoom is RoomState.Success) {
+                            RebookContent(
+                                booking = data.booking,
+                                hotel = data.hotel,
+                                room = currentRoom.data,
+                                start = start,
+                                end = end,
+                                finalTotalPrice = finalTotalPrice,
+                                uiState = uiState,
+                                bookingViewModel = bookingViewModel,
+                                context = context,
+                                onEditClick = { capacity ->
+                                    onEditGuestClick(data.booking, capacity)
+                                }
+                            )
+                        }
+                    }
+
+                    is BookingHistoryState.Error -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(currentBooking.message)
+                        }
+                    }
+                }
             }
-        },
-        containerColor = Color.White
-    ) { padding ->
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-            when (val currentBooking = bookingState) {
-                is BookingHistoryState.Loading, is BookingHistoryState.Idle -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = PrimaryBlue)
-                    }
-                }
 
-                is BookingHistoryState.Success<*> -> {
-                    val data = currentBooking.data as BookingWithHotel
-                    val currentRoom = roomState
+            if (isShowBottomSheet) {
+                if (bookingState is BookingHistoryState.Success) {
+                    val data = (bookingState as BookingHistoryState.Success<BookingWithHotel>).data
 
-                    if (currentRoom is RoomState.Success) {
-                        RebookContent(
-                            booking = data.booking,
-                            hotel = data.hotel,
-                            room = currentRoom.data,
-                            start = start,
-                            end = end,
-                            finalTotalPrice = finalTotalPrice,
-                            uiState = uiState,
-                            bookingViewModel = bookingViewModel,
-                            context = context,
-                            onEditClick = { capacity ->
-                                onEditGuestClick(data.booking, capacity)
-                            }
-                        )
-                    }
-                }
+//                    val title = stringResource(R.string.booking_success_title)
+//                    val message = data.hotel?.let {
+//                        stringResource(
+//                            R.string.booking_success_message,
+//                            it.name,
+//                            bookingId
+//                        )
+//                    }
 
-                is BookingHistoryState.Error -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(currentBooking.message)
-                    }
+                    PaymentMethodBottomSheet(
+                        onDismissRequest = { isShowBottomSheet = false },
+                        onNextClick = {
+                            isShowBottomSheet = false
+                            onUpdateBooking(
+                                data.booking,
+                                start.toMillis(),
+                                end.toMillis(),
+                                finalTotalPrice
+                            )
+                        }
+                    )
                 }
             }
         }
 
-        if (isShowBottomSheet) {
-            if (bookingState is BookingHistoryState.Success) {
-                val data = (bookingState as BookingHistoryState.Success<BookingWithHotel>).data
-
-                val title = stringResource(R.string.booking_success_title)
-                val message = data.hotel?.let {
-                    stringResource(
-                        R.string.booking_success_message,
-                        it.name,
-                        bookingId
-                    )
-                }
-
-                PaymentMethodBottomSheet(
-                    onDismissRequest = { isShowBottomSheet = false },
-                    onNextClick = {
-                        isShowBottomSheet = false
-                        onUpdateBooking(
-                            data.booking,
-                            start.toMillis(),
-                            end.toMillis(),
-                            finalTotalPrice
-                        )
-                    }
-                )
+        if (updateState is UpdateBookingState.Loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Black.copy(alpha = 0.25f))
+                    .pointerInput(Unit) {},
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = PrimaryBlue)
             }
         }
     }

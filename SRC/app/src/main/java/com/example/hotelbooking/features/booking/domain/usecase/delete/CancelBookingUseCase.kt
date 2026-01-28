@@ -2,15 +2,10 @@ package com.example.hotelbooking.features.booking.domain.usecase.delete
 
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.features.booking.domain.usecase.update.CancellationResult
 import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDateTime
 import java.time.LocalDateTime
 import javax.inject.Inject
-
-sealed class CancellationResult {
-    object Success : CancellationResult()
-    object TooLate : CancellationResult()
-    data class Failure(val exception: Exception? = null) : CancellationResult()
-}
 
 class CancelBookingUseCase @Inject constructor(
     private val repository: BookingRepository

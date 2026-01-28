@@ -4,6 +4,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
+import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.google.firebase.Timestamp
 import java.time.LocalDate
 
@@ -41,6 +42,17 @@ interface BookingRepository {
     suspend fun checkAndCancelExpiredBookings(userId: String): Result<Int>
 
     suspend fun confirmBookingPayment(bookingId: String, transactionId: String): Result<Unit>
+
+    suspend fun cancelBookingAndTransaction(
+        bookingId: String,
+        cancelReason: String
+    ): Result<Unit>
+
+    suspend fun rebookTransaction(
+        bookingId: String,
+        updatedBooking: Booking,
+        newTransaction: Transaction
+    ): Result<Unit>
 
     fun clearCache(userId: String)
 }

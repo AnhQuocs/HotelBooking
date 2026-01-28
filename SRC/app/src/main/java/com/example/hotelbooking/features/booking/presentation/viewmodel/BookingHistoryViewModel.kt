@@ -8,9 +8,10 @@ import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
-import com.example.hotelbooking.features.booking.domain.usecase.delete.CancellationResult
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingDetailWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
+import com.example.hotelbooking.features.booking.domain.usecase.update.CancelBookingAndTransactionUseCase
+import com.example.hotelbooking.features.booking.domain.usecase.update.CancellationResult
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateStayStatusUseCase
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
@@ -36,6 +37,7 @@ class BookingHistoryViewModel @Inject constructor(
     private val updateStayStatusUseCase: UpdateStayStatusUseCase,
     private val getBookingsWithHotelUseCase: GetBookingsWithHotelUseCase,
     private val getBookingDetailWithHotelUseCase: GetBookingDetailWithHotelUseCase,
+    private val cancelBookingAndTransactionUseCase: CancelBookingAndTransactionUseCase,
     private val notificationUseCases: NotificationUseCases,
     private val notificationHelper: NotificationHelper,
     private val timerManager: PaymentTimerManager,
@@ -112,19 +114,30 @@ class BookingHistoryViewModel @Inject constructor(
         return try {
             _isCancelling.value = true
 
-            val result = bookingUseCases.cancelBookingUseCase(
+            val result = cancelBookingAndTransactionUseCase(
                 bookingId = bookingId,
-                reason = reason
+                cancelReason = reason.name
             )
 
-            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            val userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
 
             when (result) {
                 is CancellationResult.Success -> {
                     if (reason == CancelReason.USER && title != null && message != null) {
-                        notificationUseCases.saveNotificationUseCase(userId, title, message, bookingId)
-                        notificationHelper.showBookingNotification(title, message, bookingId)
+                        notificationUseCases.saveNotificationUseCase(
+                            userId,
+                            title,
+                            message,
+                            bookingId
+                        )
+                        notificationHelper.showBookingNotification(
+                            title,
+                            message,
+                            bookingId
+                        )
                     }
+
+                    timerManager.stopTimer()
                     _bookingDetailState.value = BookingHistoryState.Idle
                     true
                 }
@@ -138,13 +151,16 @@ class BookingHistoryViewModel @Inject constructor(
 
                 is CancellationResult.Failure -> {
                     _bookingDetailState.value = BookingHistoryState.Error(
-                        context.getString(R.string.error_cancel_failed)
+                        result.exception?.message
+                            ?: context.getString(R.string.error_cancel_failed)
                     )
                     false
                 }
             }
         } catch (e: Exception) {
-            _bookingDetailState.value = BookingHistoryState.Error(e.message ?: "Unknown Error")
+            _bookingDetailState.value = BookingHistoryState.Error(
+                e.message ?: "Unknown Error"
+            )
             false
         } finally {
             _isCancelling.value = false

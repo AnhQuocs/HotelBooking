@@ -189,7 +189,10 @@ fun BookingDetailScreen(
                             title = context.getString(R.string.cancel_success_title),
                             message = context.getString(R.string.cancel_success_message, hotelName)
                         )
-                        if (isCancelled) BookingRefreshEvent.triggerRefresh()
+                        if (isCancelled) {
+                            BookingRefreshEvent.triggerRefresh()
+                            onBackClick()
+                        }
                     }
                 }
             )
@@ -242,7 +245,6 @@ private fun DetailSideEffects(
             }
             is TransactionState.Error -> {
                 Toast.makeText(context, transactionState.message, Toast.LENGTH_LONG).show()
-                // Reset về Idle để User có thể nhấn thử lại
                 transactionViewModel.resetActionState()
             }
             else -> {}

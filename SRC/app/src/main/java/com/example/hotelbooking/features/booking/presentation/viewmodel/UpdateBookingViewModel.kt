@@ -11,8 +11,10 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.features.booking.domain.usecase.update.RebookBookingTransactionUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateBookingUseCase
-import com.google.firebase.Firebase
+import com.example.hotelbooking.features.transaction.domain.model.Transaction
+import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +36,7 @@ sealed class UpdateBookingState {
 class UpdateBookingViewModel @Inject constructor(
     private val updateBookingUseCase: UpdateBookingUseCase,
     private val bookingRepository: BookingRepository,
+    private val rebookBookingTransactionUseCase: RebookBookingTransactionUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     var selectedBooking by mutableStateOf<Booking?>(null)
@@ -68,6 +71,9 @@ class UpdateBookingViewModel @Inject constructor(
         newCheckOut: Long,
         newTotalPrice: Double
     ) {
+        val userId = FirebaseAuth.getInstance().uid ?: ""
+        val now = System.currentTimeMillis()
+
         val updatedBooking = currentBooking.copy(
             startDate = newCheckIn.toTimestamp(),
             endDate = newCheckOut.toTimestamp(),
@@ -77,7 +83,19 @@ class UpdateBookingViewModel @Inject constructor(
             cancelReason = null,
             updatedAt = Timestamp.now()
         )
-        executeRequest(updatedBooking, context.getString(R.string.rebook_success))
+
+        val newTransaction = Transaction(
+            bookingId = currentBooking.bookingId,
+            userId = userId,
+            status = TransactionStatus.PAID,
+            totalPrice = newTotalPrice,
+            amountPaid = 0.0,
+            createdAt = now,
+            updatedAt = now,
+            refundedAt = null
+        )
+
+        executeRebookRequest(updatedBooking, newTransaction, context.getString(R.string.rebook_success))
     }
 
     private fun executeRequest(booking: Booking, successMessage: String) {
@@ -88,6 +106,30 @@ class UpdateBookingViewModel @Inject constructor(
             try {
                 val result = updateBookingUseCase(booking)
                 if (result) {
+                    _updateState.value = UpdateBookingState.Success(successMessage)
+                    bookingRepository.clearCache(userId)
+                } else {
+                    _updateState.value = UpdateBookingState.Error(context.getString(R.string.update_booking_failed))
+                }
+            } catch (e: Exception) {
+                _updateState.value = UpdateBookingState.Error(context.getString(R.string.system_error))
+            }
+        }
+    }
+
+    private fun executeRebookRequest(
+        booking: Booking,
+        transaction: Transaction,
+        successMessage: String
+    ) {
+        val userId = FirebaseAuth.getInstance().uid ?: ""
+
+        viewModelScope.launch {
+            _updateState.value = UpdateBookingState.Loading
+            try {
+                val result = rebookBookingTransactionUseCase(booking.bookingId, booking, transaction)
+
+                if (result.isSuccess) {
                     _updateState.value = UpdateBookingState.Success(successMessage)
                     bookingRepository.clearCache(userId)
                 } else {

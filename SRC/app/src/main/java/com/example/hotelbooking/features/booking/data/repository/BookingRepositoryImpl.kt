@@ -9,6 +9,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -283,6 +284,133 @@ class BookingRepositoryImpl(
         Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)
+    }
+
+    override suspend fun cancelBookingAndTransaction(
+        bookingId: String,
+        cancelReason: String
+    ): Result<Unit> {
+        return try {
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+            val bookingRef = firestore.collection("bookings").document(bookingId)
+
+            val transactionQuery = firestore.collection("transactions")
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("bookingId", bookingId)
+                .whereIn("status", listOf("PENDING", "PAID"))
+                .limit(1)
+                .get()
+                .await()
+
+            val transactionDoc = transactionQuery.documents.firstOrNull()
+            val transactionRef = transactionDoc?.reference
+
+            if (transactionRef == null) {
+                Log.e("CANCEL_DEBUG", "No valid transaction found to cancel.")
+                return Result.failure(Exception("No valid transaction found."))
+            }
+
+            firestore.runTransaction { firestoreTransaction ->
+
+                val bookingSnapshot = firestoreTransaction.get(bookingRef)
+                if (!bookingSnapshot.exists()) {
+                    throw Exception("Booking does not exist.")
+                }
+
+                val currentBookingStatus = bookingSnapshot.getString("status") ?: "PENDING"
+
+                val newTransactionStatus = if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
+
+                firestoreTransaction.update(
+                    bookingRef,
+                    "status", "CANCELLED",
+                    "cancelReason", cancelReason,
+                    "updatedAt", Timestamp.now()
+                )
+
+                firestoreTransaction.update(transactionRef, "status", newTransactionStatus)
+                firestoreTransaction.update(transactionRef, "updatedAt", System.currentTimeMillis())
+
+                if (newTransactionStatus == "REFUND") {
+                    firestoreTransaction.update(transactionRef, "refundedAt", System.currentTimeMillis())
+                }
+
+                null
+            }.await()
+
+            invalidateCache()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Log.e("CANCEL_DEBUG", "!!! ERROR: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun rebookTransaction(
+        bookingId: String,
+        updatedBooking: Booking,
+        newTransaction: Transaction
+    ): Result<Unit> {
+        return try {
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+            Log.d("REBOOK_DEBUG", "=== REBOOK START | bookingId=$bookingId | user=$currentUserId ===")
+
+            val bookingRef = bookingsCollection.document(bookingId)
+            val transactionRef = firestore.collection("transactions").document()
+
+            Log.d("REBOOK_DEBUG", "TxRef created: ${transactionRef.id}")
+
+            firestore.runTransaction { firestoreTransaction ->
+
+                val finalBooking = updatedBooking.copy(
+                    status = BookingStatus.CONFIRMED,
+                    cancelReason = null,
+                    updatedAt = Timestamp.now()
+                )
+                firestoreTransaction.set(bookingRef, finalBooking)
+
+                Log.d("REBOOK_DEBUG", "Booking updated -> CONFIRMED")
+
+                val pendingTx = newTransaction.copy(
+                    id = transactionRef.id,
+                    bookingId = bookingId,
+                    userId = currentUserId,
+                    status = TransactionStatus.PENDING,
+                    createdAt = System.currentTimeMillis(),
+                    updatedAt = System.currentTimeMillis()
+                )
+                firestoreTransaction.set(transactionRef, pendingTx)
+
+                Log.d("REBOOK_DEBUG", "Transaction created -> PENDING")
+
+                firestoreTransaction.update(
+                    transactionRef,
+                    mapOf(
+                        "status" to "PAID",
+                        "updatedAt" to System.currentTimeMillis()
+                    )
+                )
+
+                Log.d("REBOOK_DEBUG", "Transaction updated -> PAID")
+
+                null
+            }.await()
+
+            Log.d("REBOOK_DEBUG", "=== REBOOK SUCCESS | bookingId=$bookingId ===")
+            invalidateCache()
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Log.e(
+                "REBOOK_DEBUG",
+                "!!! REBOOK FAILED | bookingId=$bookingId | reason=${e.message}"
+            )
+            Result.failure(e)
+        }
     }
 
     // --- Helper Extensions ---
