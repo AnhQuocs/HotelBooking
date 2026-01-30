@@ -424,62 +424,70 @@ class BookingRepositoryImpl(
             val bookingRef = bookingsCollection.document(bookingId)
             val transactionRef = firestore.collection("transactions").document()
 
-            firestore.runTransaction { transaction ->
-                val oldBookingSnapshot = transaction.get(bookingRef)
+            firestore.runTransaction { tx ->
+
+                val oldBookingSnapshot = tx.get(bookingRef)
+                if (!oldBookingSnapshot.exists()) throw Exception("Booking not found")
+
                 val oldRoomNumber = oldBookingSnapshot.getString("roomNumber") ?: ""
                 val oldRoomTypeId = oldBookingSnapshot.getString("roomTypeId") ?: ""
-
                 val newRoomNumber = updatedBooking.roomNumber
                 val newRoomTypeId = updatedBooking.roomTypeId
 
-                if (oldRoomNumber.isNotEmpty() && (oldRoomNumber != newRoomNumber || oldRoomTypeId != newRoomTypeId)) {
-                    val oldRoomTypeRef = firestore.collection("roomTypes").document(oldRoomTypeId)
-                    val oldRoomTypeSnap = transaction.get(oldRoomTypeRef)
+                val oldRoomTypeRef = firestore.collection("rooms").document(oldRoomTypeId)
+                val oldRoomTypeSnap = tx.get(oldRoomTypeRef)
 
-                    if (oldRoomTypeSnap.exists()) {
-                        val list = oldRoomTypeSnap.get("roomList")
-                            ?.let { it as? List<*> }
-                            ?.mapNotNull { it as? Map<*, *> }
-                            ?: throw Exception("Room list data error!")
-
-                        val updatedList = list.map { room ->
-                            if (room["roomNumber"] == oldRoomNumber) {
-                                room.toMutableMap().apply { this["isAvailable"] = true }
-                            } else room
-                        }
-                        transaction.update(oldRoomTypeRef, "roomList", updatedList)
-                    }
+                val newRoomTypeSnap = if (oldRoomTypeId == newRoomTypeId) {
+                    oldRoomTypeSnap
+                } else {
+                    tx.get(firestore.collection("rooms").document(newRoomTypeId))
                 }
 
-                val newRoomTypeRef = firestore.collection("roomTypes").document(newRoomTypeId)
-                val newRoomTypeSnap = transaction.get(newRoomTypeRef)
+                val oldRoomList = oldRoomTypeSnap.get("roomList")
+                    ?.let { it as? List<*> }
+                    ?.mapNotNull { it as? Map<*, *> }
+                    ?: throw Exception("Invalid old room list")
 
-                if (newRoomTypeSnap.exists()) {
-                    val list = newRoomTypeSnap.get("roomList")
-                        ?.let { it as? List<*> }
+                val updatedOldRoomList = oldRoomList.map { room ->
+                    if (
+                        room["roomNumber"] == oldRoomNumber &&
+                        (oldRoomNumber != newRoomNumber || oldRoomTypeId != newRoomTypeId)
+                    ) {
+                        room.toMutableMap().apply { this["isAvailable"] = true }
+                    } else room
+                }
+
+                val sourceListForNew = if (oldRoomTypeId == newRoomTypeId) {
+                    updatedOldRoomList
+                } else {
+                    newRoomTypeSnap.get("roomList") ?.let { it as? List<*> }
                         ?.mapNotNull { it as? Map<*, *> }
-                        ?: throw Exception("Room list data error!")
+                        ?: throw Exception("Invalid new room list")
+                }
 
-                    val targetRoom = list.find { it["roomNumber"] == newRoomNumber }
-                    if (targetRoom?.get("isAvailable") == false && oldRoomNumber != newRoomNumber) {
-                        throw Exception("Room $newRoomNumber has already been booked!")
-                    }
+                val updatedNewRoomList = sourceListForNew.map { room ->
+                    if (room["roomNumber"] == newRoomNumber) {
+                        if (room["isAvailable"] == false && oldRoomNumber != newRoomNumber) {
+                            throw Exception("Room $newRoomNumber is already occupied")
+                        }
+                        room.toMutableMap().apply { this["isAvailable"] = false }
+                    } else room
+                }
 
-                    val updatedList = list.map { room ->
-                        if (room["roomNumber"] == newRoomNumber) {
-                            room.toMutableMap().apply { this["isAvailable"] = false }
-                        } else room
-                    }
-                    transaction.update(newRoomTypeRef, "roomList", updatedList)
+                if (oldRoomTypeId == newRoomTypeId) {
+                    tx.update(oldRoomTypeRef, "roomList", updatedNewRoomList)
+                } else {
+                    tx.update(oldRoomTypeRef, "roomList", updatedOldRoomList)
+                    val newRoomTypeRef = firestore.collection("rooms").document(newRoomTypeId)
+                    tx.update(newRoomTypeRef, "roomList", updatedNewRoomList)
                 }
 
                 val finalBooking = updatedBooking.copy(
                     bookingId = bookingId,
                     status = BookingStatus.CONFIRMED,
-                    cancelReason = null,
                     updatedAt = Timestamp.now()
                 )
-                transaction.set(bookingRef, finalBooking.toDto())
+                tx.set(bookingRef, finalBooking.toDto())
 
                 val paidTx = newTransaction.copy(
                     id = transactionRef.id,
@@ -489,7 +497,7 @@ class BookingRepositoryImpl(
                     createdAt = System.currentTimeMillis(),
                     updatedAt = System.currentTimeMillis()
                 )
-                transaction.set(transactionRef, paidTx.toDto())
+                tx.set(transactionRef, paidTx.toDto())
 
                 null
             }.await()
@@ -497,7 +505,7 @@ class BookingRepositoryImpl(
             invalidateCache()
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("REBOOK_DEBUG", "!!! REBOOK FAILED: ${e.message}")
+            Log.e("REBOOK_TX", "Transaction failed: ${e.message}")
             Result.failure(e)
         }
     }

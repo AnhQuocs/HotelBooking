@@ -69,12 +69,16 @@ class UpdateBookingViewModel @Inject constructor(
         currentBooking: Booking,
         newCheckIn: Long,
         newCheckOut: Long,
-        newTotalPrice: Double
+        newTotalPrice: Double,
+        roomSelected: String
     ) {
         val userId = FirebaseAuth.getInstance().uid ?: ""
         val now = System.currentTimeMillis()
 
+        _updateState.value = UpdateBookingState.Loading
+
         val updatedBooking = currentBooking.copy(
+            roomNumber = roomSelected,
             startDate = newCheckIn.toTimestamp(),
             endDate = newCheckOut.toTimestamp(),
             totalPrice = newTotalPrice,
@@ -95,7 +99,17 @@ class UpdateBookingViewModel @Inject constructor(
             refundedAt = null
         )
 
-        executeRebookRequest(updatedBooking, newTransaction, context.getString(R.string.rebook_success))
+        viewModelScope.launch {
+            try {
+                executeRebookRequest(updatedBooking, newTransaction)
+
+                _updateState.value = UpdateBookingState.Success(context.getString(R.string.rebook_success))
+
+            } catch (e: Exception) {
+                _updateState.value =
+                    UpdateBookingState.Error(e.message ?: "Rebook failed")
+            }
+        }
     }
 
     private fun executeRequest(booking: Booking, successMessage: String) {
@@ -117,27 +131,22 @@ class UpdateBookingViewModel @Inject constructor(
         }
     }
 
-    private fun executeRebookRequest(
+    private suspend fun executeRebookRequest(
         booking: Booking,
-        transaction: Transaction,
-        successMessage: String
+        transaction: Transaction
     ) {
         val userId = FirebaseAuth.getInstance().uid ?: ""
 
-        viewModelScope.launch {
-            _updateState.value = UpdateBookingState.Loading
-            try {
-                val result = rebookBookingTransactionUseCase(booking.bookingId, booking, transaction)
+        try {
+            val result = rebookBookingTransactionUseCase(booking.bookingId, booking, transaction)
 
-                if (result.isSuccess) {
-                    _updateState.value = UpdateBookingState.Success(successMessage)
-                    bookingRepository.clearCache(userId)
-                } else {
-                    _updateState.value = UpdateBookingState.Error(context.getString(R.string.update_booking_failed))
-                }
-            } catch (e: Exception) {
-                _updateState.value = UpdateBookingState.Error(context.getString(R.string.system_error))
+            if (result.isSuccess) {
+                bookingRepository.clearCache(userId)
+            } else {
+                throw Exception(context.getString(R.string.update_booking_failed))
             }
+        } catch (e: Exception) {
+            throw e
         }
     }
 

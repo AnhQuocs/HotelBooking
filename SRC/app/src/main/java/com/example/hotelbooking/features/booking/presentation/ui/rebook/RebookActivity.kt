@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -100,12 +101,14 @@ class RebookActivity : BaseComponentActivity() {
                             updateViewModel.selectedBooking = booking
                             navController.navigate("update_guest_info/$capacity")
                         },
-                        onUpdateBooking = { booking, newStart, newEnd, newTotalPrice ->
+                        updateBookingViewModel = updateViewModel,
+                        onUpdateBooking = { booking, newStart, newEnd, newTotalPrice, roomSelected ->
                             updateViewModel.confirmRebook(
                                 currentBooking = booking,
                                 newCheckIn = newStart,
                                 newCheckOut = newEnd,
-                                newTotalPrice = newTotalPrice
+                                newTotalPrice = newTotalPrice,
+                                roomSelected = roomSelected
                             )
                         }
                     )
@@ -191,16 +194,16 @@ fun RebookScreen(
     bookingId: String,
     onBackClick: () -> Unit,
     onEditGuestClick: (Booking, Int) -> Unit,
-    onUpdateBooking: (Booking, Long, Long, Double) -> Unit,
+    onUpdateBooking: (Booking, Long, Long, Double, String) -> Unit,
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
-    updateBookingViewModel: UpdateBookingViewModel = hiltViewModel(),
+    updateBookingViewModel: UpdateBookingViewModel,
     bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
     val bookingState by bookingHistoryViewModel.bookingDetailState.collectAsState()
-    val roomState by roomViewModel.roomDetailState.collectAsState()
+    val roomDetailState by roomViewModel.roomDetailState.collectAsState()
     val uiState by bookingViewModel.uiState.collectAsState()
     val updateState by updateBookingViewModel.updateState.collectAsState()
 
@@ -222,6 +225,30 @@ fun RebookScreen(
         }
     }
 
+    var selectedRoomNumber by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(roomDetailState, bookingState) {
+        val bookingData =
+            (bookingState as? BookingHistoryState.Success<BookingWithHotel>)
+                ?.data
+                ?.booking
+                ?: return@LaunchedEffect
+
+        val roomData =
+            (roomDetailState as? RoomState.Success<RoomType>)
+                ?.data
+                ?: return@LaunchedEffect
+
+        if (selectedRoomNumber == null) {
+            val oldRoom = roomData.roomList.firstOrNull {
+                it.roomNumber == bookingData.roomNumber && it.isAvailable
+            }
+
+            if (oldRoom != null) {
+                selectedRoomNumber = oldRoom.roomNumber
+            }
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -233,22 +260,28 @@ fun RebookScreen(
                 )
             },
             bottomBar = {
-                if (roomState is RoomState.Success) {
+                if (roomDetailState is RoomState.Success) {
                     RebookBottomBar(
-                        pricePerNight = (roomState as RoomState.Success<RoomType>).data.pricePerNight,
+                        pricePerNight = (roomDetailState as RoomState.Success<RoomType>).data.pricePerNight,
                         startDate = start,
                         endDate = end,
                         uiState = uiState,
-                        onBookClick = { isShowBottomSheet = true },
+                        onBookClick = {
+                            if (selectedRoomNumber != null) {
+                                isShowBottomSheet = true
+                            }
+                        },
                         onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() }
                     )
                 }
             },
             containerColor = Color.White
         ) { padding ->
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
                 when (val currentBooking = bookingState) {
                     is BookingHistoryState.Loading, is BookingHistoryState.Idle -> {
                         Box(
@@ -261,7 +294,7 @@ fun RebookScreen(
 
                     is BookingHistoryState.Success<*> -> {
                         val data = currentBooking.data as BookingWithHotel
-                        val currentRoom = roomState
+                        val currentRoom = roomDetailState
 
                         if (currentRoom is RoomState.Success) {
                             RebookContent(
@@ -272,10 +305,15 @@ fun RebookScreen(
                                 end = end,
                                 finalTotalPrice = finalTotalPrice,
                                 uiState = uiState,
+                                roomState = roomDetailState,
                                 bookingViewModel = bookingViewModel,
                                 context = context,
                                 onEditClick = { capacity ->
                                     onEditGuestClick(data.booking, capacity)
+                                },
+                                selectedRoomNumber = selectedRoomNumber,
+                                onRoomSelected = {
+                                    selectedRoomNumber = it
                                 }
                             )
                         }
@@ -286,8 +324,9 @@ fun RebookScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(currentBooking.fallbackMessage
-                                ?: stringResource(id = currentBooking.messageRes)
+                            Text(
+                                currentBooking.fallbackMessage
+                                    ?: stringResource(id = currentBooking.messageRes)
                             )
                         }
                     }
@@ -307,6 +346,8 @@ fun RebookScreen(
 //                        )
 //                    }
 
+                    val roomNumber = selectedRoomNumber
+                        ?: data.booking.roomNumber
                     PaymentMethodBottomSheet(
                         onDismissRequest = { isShowBottomSheet = false },
                         onNextClick = {
@@ -315,7 +356,8 @@ fun RebookScreen(
                                 data.booking,
                                 start.toMillis(),
                                 end.toMillis(),
-                                finalTotalPrice
+                                finalTotalPrice,
+                                roomNumber
                             )
                         }
                     )
