@@ -2,7 +2,6 @@ package com.example.hotelbooking.features.booking.presentation.ui.history.cancel
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +52,7 @@ import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import kotlinx.coroutines.launch
@@ -192,14 +192,14 @@ fun CancelReasonSelector(
     val reasons = CancelReason.entries.filter { it != CancelReason.TIMEOUT }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.S),
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = stringResource(R.string.cancel_reason_label),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = Dimen.PaddingS)
         )
 
         reasons.forEach { reason ->
@@ -207,7 +207,7 @@ fun CancelReasonSelector(
 
             Surface(
                 onClick = { onReasonSelected(reason) },
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(AppShape.ShapeM),
                 border = BorderStroke(
                     width = 1.dp,
                     color = if (isSelected) PrimaryBlue else Color.LightGray.copy(alpha = 0.4f)
@@ -228,7 +228,7 @@ fun CancelReasonSelector(
                                 unselectedColor = Color.Gray
                             )
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(AppSpacing.S))
                         Text(
                             text = stringResource(reason.toUserLabelRes()),
                             style = MaterialTheme.typography.bodyLarge,
@@ -236,15 +236,14 @@ fun CancelReasonSelector(
                         )
                     }
 
-                    // Hiển thị TextField nếu chọn lý do khác
                     if (reason == CancelReason.OTHER && isSelected) {
                         OutlinedTextField(
                             value = otherText,
                             onValueChange = onOtherTextChanged,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 8.dp, start = 12.dp, end = 12.dp, bottom = 8.dp),
-                            shape = RoundedCornerShape(12.dp), // Bo góc đồng bộ
+                                .padding(vertical = Dimen.PaddingS, horizontal = Dimen.PaddingSM),
+                            shape = RoundedCornerShape(AppShape.ShapeM),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = PrimaryBlue,
                                 unfocusedBorderColor = Color.LightGray,
