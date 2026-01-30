@@ -16,9 +16,10 @@ import com.example.hotelbooking.R
 fun InfoTitle(
     modifier: Modifier = Modifier,
     text: String,
-    fontSize: Int = 18
+    fontSize: Int = 18,
+    fontWeight: FontWeight = FontWeight.SemiBold
 ) {
-    val jostFont = FontFamily(Font(R.font.jost_font))
+    val afacadFont = FontFamily(Font(R.font.font_afacad_variable))
 
     Row(
         modifier = modifier.fillMaxWidth()
@@ -26,8 +27,8 @@ fun InfoTitle(
         Text(
             text = text,
             fontSize = fontSize.sp,
-            fontFamily = jostFont,
-            fontWeight = FontWeight.SemiBold,
+            fontFamily = afacadFont,
+            fontWeight = fontWeight,
             color = Color.Black
         )
     }

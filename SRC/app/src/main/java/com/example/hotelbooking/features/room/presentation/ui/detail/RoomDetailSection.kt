@@ -14,8 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
@@ -36,7 +38,7 @@ fun RoomDetailSection(
 
     Log.d("RoomDetailSection", "ID: $roomId")
 
-    when(roomDetailState) {
+    when (roomDetailState) {
         is RoomState.Loading -> {
             Box(
                 modifier = Modifier
@@ -58,7 +60,12 @@ fun RoomDetailSection(
         }
 
         is RoomState.Error -> {
-            Text(text = "Error: ${(roomDetailState as RoomState.Error).message}")
+            Text(
+                text = stringResource(
+                    id = R.string.error,
+                    (roomDetailState as RoomState.Error).message
+                )
+            )
         }
     }
 }

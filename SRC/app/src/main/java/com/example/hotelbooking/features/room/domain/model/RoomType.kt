@@ -4,6 +4,7 @@ data class RoomType(
     val id: String,
     val hotelId: String,
     val totalRoom: Int,
+    val roomList: List<Room>,
     val pricePerNight: Int,
     val capacity: Int,
     val roomSize: Int,
@@ -20,4 +21,9 @@ data class RoomType(
 data class Amenity(
     val name: String,
     val iconUrl: String,
+)
+
+data class Room(
+    val roomNumber: String,
+    val isAvailable: Boolean
 )

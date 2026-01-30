@@ -7,6 +7,7 @@ data class BookingDto(
     val userId: String = "",
     val hotelId: String = "",
     val roomTypeId: String = "",
+    val roomNumber: String = "",
     val startDate: Timestamp = Timestamp.now(),
     val endDate: Timestamp = Timestamp.now(),
     val guest: GuestDto = GuestDto(),

@@ -36,10 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import java.time.LocalDate
 
@@ -197,7 +199,7 @@ fun GuestInformationSection(
     Text(
         text = stringResource(R.string.guest_information),
         color = Color.Black,
-        style = MaterialTheme.typography.titleMedium,
+        style = AfacadTypography.titleMedium.copy(fontSize = 20.sp),
         fontWeight = FontWeight.Bold
     )
 
@@ -213,8 +215,6 @@ fun GuestInformationSection(
         modifier = Modifier.fillMaxWidth()
     )
 
-    Spacer(modifier = Modifier.height(AppSpacing.XS))
-
     AppOutlinedTextField(
         value = email,
         onValueChange = onEmailChange,
@@ -228,8 +228,6 @@ fun GuestInformationSection(
             stringResource(R.string.email_not_valid),
         modifier = Modifier.fillMaxWidth()
     )
-
-    Spacer(modifier = Modifier.height(AppSpacing.XS))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -275,7 +273,8 @@ fun GuestCountSection(
     ) {
         Text(
             text = stringResource(R.string.guests) + ": ",
-            fontWeight = FontWeight.SemiBold,
+            style = AfacadTypography.titleMedium.copy(fontSize = 20.sp),
+            fontWeight = FontWeight.Bold,
             color = Color.Black
         )
 

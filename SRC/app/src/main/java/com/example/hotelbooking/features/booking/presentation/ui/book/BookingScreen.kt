@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -65,7 +67,8 @@ fun BookingScreen(
     roomName: String,
     price: String,
     capacity: Int,
-    bookingViewModel: BookingViewModel = hiltViewModel()
+    bookingViewModel: BookingViewModel = hiltViewModel(),
+    roomViewModel: RoomViewModel = hiltViewModel()
 ) {
     val uiState by bookingViewModel.uiState.collectAsState()
 
@@ -82,8 +85,12 @@ fun BookingScreen(
     val isNameValid = name.isNotBlank()
     val isPhoneValid = phone.isNotBlank()
     val isEmailValid = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    var selectedRoom by remember { mutableStateOf("") }
 
-    val isFormValid = isNameValid && isPhoneValid && isEmailValid
+    val isFormValid = isNameValid &&
+            isPhoneValid &&
+            isEmailValid &&
+            selectedRoom.isNotEmpty()
 
     val pricePerNight = price.toDoubleOrNull() ?: 0.0
     val totalDays = ChronoUnit.DAYS.between(startDate, endDate)
@@ -91,6 +98,12 @@ fun BookingScreen(
 
 //    val timeoutSeconds: Long = 10 * 60L
     val timeoutSeconds: Long = 2 * 60L
+
+    val roomDetailState by roomViewModel.roomDetailState.collectAsState()
+
+    LaunchedEffect(roomId) {
+        roomViewModel.loadRoomDetail(roomId)
+    }
 
     LaunchedEffect(uiState) {
         if (uiState is BookingUiState.BookingSuccess) {
@@ -145,6 +158,7 @@ fun BookingScreen(
                         bookingViewModel.submitBooking(
                             hotelId = hotelId,
                             roomTypeId = roomId,
+                            roomNumber = selectedRoom,
                             userId = userId,
                             startDate = startDate,
                             endDate = endDate,
@@ -191,7 +205,7 @@ fun BookingScreen(
                 .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(horizontal = Dimen.PaddingM)
         ) {
             BookingSummaryCard(
                 roomName = roomName,
@@ -201,7 +215,16 @@ fun BookingScreen(
                 totalPrice = totalPrice
             )
 
-            Spacer(modifier = Modifier.height(AppSpacing.L))
+            Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
+
+            RoomListSelectorSection(
+                state = roomDetailState,
+                onRoomSelected = { roomNumber ->
+                    selectedRoom = roomNumber
+                }
+            )
+
+            Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
             GuestInformationSection(
                 name = name,
@@ -229,13 +252,13 @@ fun BookingScreen(
                 onAgeChange = { ageStr = it }
             )
 
-            Spacer(modifier = Modifier.height(AppSpacing.XS))
-
             GuestCountSection(
                 numberOfGuest = numberOfGuest,
                 capacity = capacity,
                 onValueChange = { numberOfGuest = it }
             )
+
+            Spacer(modifier = Modifier.height(AppSpacing.S))
 
             if (uiState is BookingUiState.Error) {
                 Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))

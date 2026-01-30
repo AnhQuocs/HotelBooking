@@ -123,6 +123,7 @@ class BookingViewModel @Inject constructor(
     fun submitBooking(
         hotelId: String,
         roomTypeId: String,
+        roomNumber: String,
         userId: String,
         startDate: LocalDate,
         endDate: LocalDate,
@@ -153,6 +154,7 @@ class BookingViewModel @Inject constructor(
                 userId = userId,
                 hotelId = hotelId,
                 roomTypeId = roomTypeId,
+                roomNumber = roomNumber,
                 startDate = Timestamp(
                     startDate.atStartOfDay(ZoneOffset.UTC).toInstant()
                 ),

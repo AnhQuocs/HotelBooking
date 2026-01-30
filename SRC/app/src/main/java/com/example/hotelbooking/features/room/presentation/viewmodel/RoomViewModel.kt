@@ -48,10 +48,10 @@ class RoomViewModel @Inject constructor(
 
             runCatching {
                 roomUseCases.getRoomByIdUseCase(roomId = roomId)
-            }.onSuccess { room ->
-                Log.d("RoomViewModel", "$room")
-                if(room != null) {
-                    _roomDetailState.value = RoomState.Success(room)
+            }.onSuccess { roomType ->
+                Log.d("RoomViewModel", "$roomType")
+                if(roomType != null) {
+                    _roomDetailState.value = RoomState.Success(roomType)
                 } else {
                     _roomDetailState.value = RoomState.Error("Room not found")
                 }
