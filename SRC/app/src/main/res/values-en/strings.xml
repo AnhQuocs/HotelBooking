@@ -121,7 +121,7 @@
     <string name="no_bookings_yet">You don’t have any bookings yet.</string>
     <string name="your_hotel">Your Hotel</string>
     <string name="hotel_load_error">An error occurred while loading the hotel!</string>
-    <string name="your_room">Your Room</string>
+    <string name="your_room">Your Room (%1$s)</string>
     <string name="error">Error: %1$s</string>
     <string name="booking_detail_title">Booking Detail</string>
     <string name="booking_loading">Loading booking data…</string>

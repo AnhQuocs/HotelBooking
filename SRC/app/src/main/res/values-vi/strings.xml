@@ -121,7 +121,7 @@
     <string name="no_bookings_yet">Bạn chưa có đặt phòng nào.</string>
     <string name="your_hotel">Khách sạn của bạn</string>
     <string name="hotel_load_error">Đã xảy ra lỗi khi tải thông tin khách sạn!</string>
-    <string name="your_room">Phòng của bạn</string>
+    <string name="your_room">Phòng của bạn (%1$s)</string>
     <string name="error">Lỗi: %1$s</string>
     <string name="booking_detail_title">Thông tin đặt phòng</string>
     <string name="booking_loading">Đang tải thông tin đặt phòng…</string>

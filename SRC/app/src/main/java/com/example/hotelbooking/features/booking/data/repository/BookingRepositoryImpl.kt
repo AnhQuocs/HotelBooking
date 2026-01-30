@@ -9,6 +9,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.features.transaction.data.mapper.toDto
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.google.firebase.Timestamp
@@ -98,23 +99,50 @@ class BookingRepositoryImpl(
     }
 
     override suspend fun createBooking(
-        booking: Booking, availableRooms: Int, expireAt: Timestamp
+        booking: Booking,
+        roomTypeId: String,
+        roomNumber: String,
+        expireAt: Timestamp
     ): Booking {
-        if (availableRooms < 1) {
-            throw Exception("Room sold out just now!")
+        val bookingRef = bookingsCollection.document()
+        val roomTypeRef = firestore.collection("rooms").document(roomTypeId)
+
+        return firestore.runTransaction { transaction ->
+            val roomTypeSnapshot = transaction.get(roomTypeRef)
+            if (!roomTypeSnapshot.exists()) {
+                throw Exception("Room type does not exist!")
+            }
+
+            val roomList = roomTypeSnapshot.get("roomList")
+                ?.let { it as? List<*> }
+                ?.mapNotNull { it as? Map<*, *> }
+                ?: throw Exception("Room list data error!")
+
+            val updatedRoomList = roomList.map { room ->
+                if (room["roomNumber"] == roomNumber) {
+                    val isAvailable = room["isAvailable"] as? Boolean ?: false
+                    if (!isAvailable) {
+                        throw Exception("Room $roomNumber has already been booked!")
+                    }
+                    room.toMutableMap().apply { this["isAvailable"] = false }
+                } else {
+                    room
+                }
+            }
+
+            val finalBooking = booking.copy(
+                bookingId = bookingRef.id,
+                status = BookingStatus.PENDING,
+                expireAt = expireAt
+            )
+
+            transaction.update(roomTypeRef, "roomList", updatedRoomList)
+            transaction.set(bookingRef, finalBooking.toDto())
+
+            finalBooking
+        }.await().also {
+            invalidateCache()
         }
-
-        val docRef = bookingsCollection.document()
-
-        val finalBooking = booking.copy(
-            bookingId = docRef.id, status = BookingStatus.PENDING, expireAt = expireAt
-        )
-
-        docRef.set(finalBooking.toDto()).await()
-
-        invalidateCache()
-
-        return finalBooking
     }
 
     override suspend fun updateBooking(booking: Booking): Boolean {
@@ -220,26 +248,59 @@ class BookingRepositoryImpl(
 
             if (snapshot.isEmpty) return Result.success(0)
 
-            val batch = firestore.batch()
-            var cancelCount = 0
+            val expiredDocs = snapshot.documents.filter { doc ->
+                val expireAt = doc.getTimestamp("expireAt")
+                expireAt != null && now.seconds > expireAt.seconds
+            }
 
-            for (document in snapshot.documents) {
-                val expireAt = document.getTimestamp("expireAt")
+            if (expiredDocs.isEmpty()) return Result.success(0)
 
-                if (expireAt != null && now.seconds > expireAt.seconds) {
-                    batch.update(document.reference,
+            firestore.runTransaction { transaction ->
+                val roomTypeChanges = mutableMapOf<String, MutableList<String>>()
+
+                for (doc in expiredDocs) {
+                    val roomTypeId = doc.getString("roomTypeId") ?: ""
+                    val roomNumber = doc.getString("roomNumber") ?: ""
+
+                    transaction.update(doc.reference,
                         "status", BookingStatus.CANCELLED.name,
-                        "cancelReason", CancelReason.TIMEOUT.name
+                        "cancelReason", CancelReason.TIMEOUT.name,
+                        "updatedAt", Timestamp.now()
                     )
-                    cancelCount++
+
+                    if (roomTypeId.isNotEmpty() && roomNumber.isNotEmpty()) {
+                        roomTypeChanges.getOrPut(roomTypeId) { mutableListOf() }.add(roomNumber)
+                    }
                 }
-            }
 
-            if (cancelCount > 0) {
-                batch.commit().await()
-            }
+                roomTypeChanges.forEach { (typeId, numbersToFree) ->
+                    val roomTypeRef = firestore.collection("rooms").document(typeId)
+                    val roomTypeSnapshot = transaction.get(roomTypeRef)
 
-            Result.success(cancelCount)
+                    if (roomTypeSnapshot.exists()) {
+                        val currentRoomList = roomTypeSnapshot.get("roomList")
+                            ?.let { it as? List<*> }
+                            ?.mapNotNull { it as? Map<*, *> }
+                            ?: throw Exception("Room list data error!")
+
+                        val updatedRoomList = currentRoomList.map { room ->
+                            val rNumber = room["roomNumber"] as? String
+                            if (numbersToFree.contains(rNumber)) {
+                                room.toMutableMap().apply { this["isAvailable"] = true }
+                            } else {
+                                room
+                            }
+                        }
+
+                        transaction.update(roomTypeRef, "roomList", updatedRoomList)
+                    }
+                }
+                null
+            }.await()
+
+            invalidateCache()
+            Result.success(expiredDocs.size)
+
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)
@@ -274,8 +335,7 @@ class BookingRepositoryImpl(
     ): Result<Unit> {
         return try {
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-            val bookingRef = bookingsCollection.document(bookingId)
+            val bookingRef = firestore.collection("bookings").document(bookingId)
 
             val transactionQuery = firestore.collection("transactions")
                 .whereEqualTo("userId", currentUserId)
@@ -294,15 +354,35 @@ class BookingRepositoryImpl(
             }
 
             firestore.runTransaction { firestoreTransaction ->
-
                 val bookingSnapshot = firestoreTransaction.get(bookingRef)
                 if (!bookingSnapshot.exists()) {
                     throw Exception("Booking does not exist.")
                 }
 
+                val roomTypeId = bookingSnapshot.getString("roomTypeId") ?: ""
+                val roomNumber = bookingSnapshot.getString("roomNumber") ?: ""
                 val currentBookingStatus = bookingSnapshot.getString("status") ?: "PENDING"
 
-                val newTransactionStatus = if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
+                if (roomTypeId.isNotEmpty() && roomNumber.isNotEmpty()) {
+                    val roomTypeRef = firestore.collection("rooms").document(roomTypeId)
+                    val roomTypeSnapshot = firestoreTransaction.get(roomTypeRef)
+
+                    if (roomTypeSnapshot.exists()) {
+                        val currentRoomList = roomTypeSnapshot.get("roomList")
+                            ?.let { it as? List<*> }
+                            ?.mapNotNull { it as? Map<*, *> }
+                            ?: throw Exception("Room list data error!")
+
+                        val updatedRoomList = currentRoomList.map { room ->
+                            if (room["roomNumber"] == roomNumber) {
+                                room.toMutableMap().apply { this["isAvailable"] = true }
+                            } else {
+                                room
+                            }
+                        }
+                        firestoreTransaction.update(roomTypeRef, "roomList", updatedRoomList)
+                    }
+                }
 
                 firestoreTransaction.update(
                     bookingRef,
@@ -311,6 +391,8 @@ class BookingRepositoryImpl(
                     "cancelNote", cancelNote,
                     "updatedAt", Timestamp.now()
                 )
+
+                val newTransactionStatus = if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
 
                 firestoreTransaction.update(transactionRef, "status", newTransactionStatus)
                 firestoreTransaction.update(transactionRef, "updatedAt", System.currentTimeMillis())
@@ -339,59 +421,83 @@ class BookingRepositoryImpl(
     ): Result<Unit> {
         return try {
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-            Log.d("REBOOK_DEBUG", "=== REBOOK START | bookingId=$bookingId | user=$currentUserId ===")
-
             val bookingRef = bookingsCollection.document(bookingId)
             val transactionRef = firestore.collection("transactions").document()
 
-            Log.d("REBOOK_DEBUG", "TxRef created: ${transactionRef.id}")
+            firestore.runTransaction { transaction ->
+                val oldBookingSnapshot = transaction.get(bookingRef)
+                val oldRoomNumber = oldBookingSnapshot.getString("roomNumber") ?: ""
+                val oldRoomTypeId = oldBookingSnapshot.getString("roomTypeId") ?: ""
 
-            firestore.runTransaction { firestoreTransaction ->
+                val newRoomNumber = updatedBooking.roomNumber
+                val newRoomTypeId = updatedBooking.roomTypeId
+
+                if (oldRoomNumber.isNotEmpty() && (oldRoomNumber != newRoomNumber || oldRoomTypeId != newRoomTypeId)) {
+                    val oldRoomTypeRef = firestore.collection("roomTypes").document(oldRoomTypeId)
+                    val oldRoomTypeSnap = transaction.get(oldRoomTypeRef)
+
+                    if (oldRoomTypeSnap.exists()) {
+                        val list = oldRoomTypeSnap.get("roomList")
+                            ?.let { it as? List<*> }
+                            ?.mapNotNull { it as? Map<*, *> }
+                            ?: throw Exception("Room list data error!")
+
+                        val updatedList = list.map { room ->
+                            if (room["roomNumber"] == oldRoomNumber) {
+                                room.toMutableMap().apply { this["isAvailable"] = true }
+                            } else room
+                        }
+                        transaction.update(oldRoomTypeRef, "roomList", updatedList)
+                    }
+                }
+
+                val newRoomTypeRef = firestore.collection("roomTypes").document(newRoomTypeId)
+                val newRoomTypeSnap = transaction.get(newRoomTypeRef)
+
+                if (newRoomTypeSnap.exists()) {
+                    val list = newRoomTypeSnap.get("roomList")
+                        ?.let { it as? List<*> }
+                        ?.mapNotNull { it as? Map<*, *> }
+                        ?: throw Exception("Room list data error!")
+
+                    val targetRoom = list.find { it["roomNumber"] == newRoomNumber }
+                    if (targetRoom?.get("isAvailable") == false && oldRoomNumber != newRoomNumber) {
+                        throw Exception("Room $newRoomNumber has already been booked!")
+                    }
+
+                    val updatedList = list.map { room ->
+                        if (room["roomNumber"] == newRoomNumber) {
+                            room.toMutableMap().apply { this["isAvailable"] = false }
+                        } else room
+                    }
+                    transaction.update(newRoomTypeRef, "roomList", updatedList)
+                }
 
                 val finalBooking = updatedBooking.copy(
+                    bookingId = bookingId,
                     status = BookingStatus.CONFIRMED,
                     cancelReason = null,
                     updatedAt = Timestamp.now()
                 )
-                firestoreTransaction.set(bookingRef, finalBooking)
+                transaction.set(bookingRef, finalBooking.toDto())
 
-                Log.d("REBOOK_DEBUG", "Booking updated -> CONFIRMED")
-
-                val pendingTx = newTransaction.copy(
+                val paidTx = newTransaction.copy(
                     id = transactionRef.id,
                     bookingId = bookingId,
                     userId = currentUserId,
-                    status = TransactionStatus.PENDING,
+                    status = TransactionStatus.PAID,
                     createdAt = System.currentTimeMillis(),
                     updatedAt = System.currentTimeMillis()
                 )
-                firestoreTransaction.set(transactionRef, pendingTx)
-
-                Log.d("REBOOK_DEBUG", "Transaction created -> PENDING")
-
-                firestoreTransaction.update(
-                    transactionRef,
-                    mapOf(
-                        "status" to "PAID",
-                        "updatedAt" to System.currentTimeMillis()
-                    )
-                )
-
-                Log.d("REBOOK_DEBUG", "Transaction updated -> PAID")
+                transaction.set(transactionRef, paidTx.toDto())
 
                 null
             }.await()
 
-            Log.d("REBOOK_DEBUG", "=== REBOOK SUCCESS | bookingId=$bookingId ===")
             invalidateCache()
             Result.success(Unit)
-
         } catch (e: Exception) {
-            Log.e(
-                "REBOOK_DEBUG",
-                "!!! REBOOK FAILED | bookingId=$bookingId | reason=${e.message}"
-            )
+            Log.e("REBOOK_DEBUG", "!!! REBOOK FAILED: ${e.message}")
             Result.failure(e)
         }
     }

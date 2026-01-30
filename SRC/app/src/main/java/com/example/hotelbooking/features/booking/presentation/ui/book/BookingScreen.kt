@@ -31,7 +31,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,7 +62,6 @@ fun BookingScreen(
     startDate: LocalDate,
     endDate: LocalDate,
     hotelId: String,
-    availableStock: Int,
     roomName: String,
     price: String,
     capacity: Int,
@@ -165,7 +163,6 @@ fun BookingScreen(
                             guest = guest,
                             numberOfGuests = numberOfGuest,
                             pricePerNight = pricePerNight,
-                            availableRooms = availableStock,
                             timeoutSeconds = timeoutSeconds
                         )
                     },

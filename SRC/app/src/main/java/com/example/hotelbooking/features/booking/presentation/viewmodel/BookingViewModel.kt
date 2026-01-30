@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -130,17 +129,9 @@ class BookingViewModel @Inject constructor(
         guest: Guest,
         numberOfGuests: Int,
         pricePerNight: Double,
-        availableRooms: Int,
         timeoutSeconds: Long
     ) {
         viewModelScope.launch {
-            if (availableRooms <= 0) {
-                _uiState.value = BookingUiState.Error(
-                    "Please check the date again, the room is fully booked."
-                )
-                return@launch
-            }
-
             _uiState.value = BookingUiState.Loading
 
             val totalDays = ChronoUnit.DAYS
@@ -172,7 +163,8 @@ class BookingViewModel @Inject constructor(
 
             val result = bookingUseCases.createBookingUseCase(
                 booking = newBooking,
-                availableRooms = availableRooms,
+                roomTypeId = roomTypeId,
+                roomNumber = roomNumber,
                 timeoutSeconds = timeoutSeconds
             )
 

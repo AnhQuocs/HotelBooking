@@ -17,7 +17,12 @@ interface BookingRepository {
         endDate: LocalDate
     ): Int
 
-    suspend fun createBooking(booking: Booking, availableRooms: Int, expireAt: Timestamp): Booking
+    suspend fun createBooking(
+        booking: Booking,
+        roomTypeId: String,
+        roomNumber: String,
+        expireAt: Timestamp
+    ): Booking
 
     suspend fun updateBooking(booking: Booking): Boolean
 

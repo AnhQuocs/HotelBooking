@@ -67,13 +67,12 @@ fun RoomDetailScreen(
                 onBookNowClick = {
                     val startStr = bookingViewModel.checkInDate.toString()
                     val endStr = bookingViewModel.checkOutDate.toString()
-                    val stock = bookingViewModel.currentAvailableRooms
                     val price = room.pricePerNight.toString()
                     val encodedName = Uri.encode(room.name)
                     val capacity = room.capacity
 
                     navController.navigate(
-                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&stock=$stock&roomName=$encodedName&price=$price&capacity=$capacity"
+                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&roomName=$encodedName&price=$price&capacity=$capacity"
                     )
                 }
             )

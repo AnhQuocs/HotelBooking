@@ -58,13 +58,12 @@ class RoomDetailActivity : BaseComponentActivity() {
                 }
 
                 composable(
-                    route = "booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&stock={stock}&roomName={roomName}&price={price}&capacity={capacity}",
+                    route = "booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&roomName={roomName}&price={price}&capacity={capacity}",
                     arguments = listOf(
                         navArgument("roomId") { type = NavType.StringType },
                         navArgument("start") { type = NavType.StringType },
                         navArgument("end") { type = NavType.StringType },
                         navArgument("hotelId") { type = NavType.StringType },
-                        navArgument("stock") { type = NavType.IntType },
                         navArgument("roomName") { type = NavType.StringType },
                         navArgument("price") { type = NavType.StringType },
                         navArgument("capacity") { type = NavType.IntType }
@@ -86,7 +85,6 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val startStr = backStackEntry.arguments?.getString("start") ?: ""
                     val endStr = backStackEntry.arguments?.getString("end") ?: ""
                     val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
-                    val stock = backStackEntry.arguments?.getInt("stock") ?: 0
                     val roomName = Uri.decode(backStackEntry.arguments?.getString("roomName") ?: "")
                     val price = backStackEntry.arguments?.getString("price") ?: ""
                     val capacity = backStackEntry.arguments?.getInt("capacity") ?: 0
@@ -97,7 +95,6 @@ class RoomDetailActivity : BaseComponentActivity() {
                         startDate = LocalDate.parse(startStr),
                         endDate = LocalDate.parse(endStr),
                         hotelId = hotelId,
-                        availableStock = stock,
                         roomName = roomName,
                         price = price,
                         capacity = capacity
