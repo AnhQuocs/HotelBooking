@@ -9,14 +9,11 @@ class CreateBookingUseCase(
 ) {
     suspend operator fun invoke(
         booking: Booking,
-        availableRooms: Int,
+        roomTypeId: String,
+        roomNumber: String,
         timeoutSeconds: Long
     ): Result<Booking> {
         return try {
-            // 1. Validate Logic
-            if (availableRooms <= 0) {
-                return Result.failure(Exception("No rooms available, please choose another room."))
-            }
             if (booking.totalPrice <= 0) {
                 return Result.failure(Exception("Invalid total price."))
             }
@@ -27,8 +24,7 @@ class CreateBookingUseCase(
                 0
             )
 
-            // 2. Call Repository
-            val result = repository.createBooking(booking, availableRooms, expireAt = expireAt)
+            val result = repository.createBooking(booking, roomTypeId, roomNumber, expireAt)
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)

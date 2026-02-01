@@ -40,6 +40,7 @@ import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilitySection
 import com.example.hotelbooking.features.room.presentation.ui.DateSelectionSection
 import com.example.hotelbooking.features.room.presentation.ui.toMillis
+import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -142,9 +143,12 @@ fun RebookContent(
     end: LocalDate,
     finalTotalPrice: Double,
     uiState: BookingUiState,
+    roomState: RoomState<RoomType>,
     bookingViewModel: BookingViewModel,
     context: Context,
     onEditClick: (Int) -> Unit,
+    selectedRoomNumber: String?,
+    onRoomSelected: (String) -> Unit
 ) {
     val dateStr = "${start.dayOfMonth}-${end.dayOfMonth} ${
         start.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
@@ -173,6 +177,14 @@ fun RebookContent(
             Spacer(modifier = Modifier.height(AppSpacing.M))
 
             PromoUI()
+
+            Spacer(modifier = Modifier.height(AppSpacing.M))
+
+            RebookRoomSelectorSection(
+                state = roomState,
+                roomSelected = selectedRoomNumber ?: booking.roomNumber,
+                onRoomSelected = onRoomSelected
+            )
         }
 
         Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
