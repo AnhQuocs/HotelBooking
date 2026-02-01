@@ -29,72 +29,87 @@ class BookingRepositoryImpl(
 
     private val cachedBookings = mutableMapOf<String, List<Booking>>()
 
-    override suspend fun checkAvailability(
+    override suspend fun getAvailableRoomNumbers(
         hotelId: String,
         roomTypeId: String,
-        totalRoom: Int,
+        allRoomNumbers: List<String>,
         startDate: LocalDate,
         endDate: LocalDate
-    ): Int {
+    ): List<String> {
+
         val startTs = Timestamp(startDate.atStartOfDay(ZoneOffset.UTC).toInstant())
-
-        val snapshot = bookingsCollection.whereEqualTo("hotelId", hotelId)
-            .whereEqualTo("roomTypeId", roomTypeId)
-            .whereIn("status", listOf("CONFIRMED", "PENDING")).whereGreaterThan("endDate", startTs)
-            .get().await()
-
-        val bookings =
-            snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
-
-        val requestedNights = startDate.datesUntil(endDate).toList()
-        val bookedPerNight = requestedNights.associateWith { 0 }.toMutableMap()
-
         val now = Timestamp.now()
 
+        // Log input đầu vào để kiểm tra
+        Log.d("RoomCheck", "Checking Hotel: $hotelId - Type: $roomTypeId from $startDate to $endDate")
+
+        val snapshot = bookingsCollection
+            .whereEqualTo("hotelId", hotelId)
+            .whereEqualTo("roomTypeId", roomTypeId)
+            .whereIn("status", listOf("CONFIRMED", "PENDING"))
+            .whereGreaterThan("endDate", startTs)
+            .get()
+            .await()
+
+        val bookings = snapshot.documents
+            .mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
+
+        val occupiedRoomNumbers = mutableSetOf<String>()
+
         bookings.forEach { booking ->
-            cancelIfExpired(booking, now)
-            countBookedNights(booking, requestedNights, bookedPerNight)
-        }
+            // Logic hủy booking hết hạn (giữ nguyên)
+            if (shouldCancel(booking, now)) {
+                cancelBooking(booking.bookingId)
+                Log.d("RoomCheck", "Cancelled expired booking: ${booking.bookingId}")
+                return@forEach
+            }
 
-        val maxBookedRooms = bookedPerNight.values.maxOrNull() ?: 0
+            val bookingStart = booking.startDate.toLocalDate()
+            val bookingEnd = booking.endDate.toLocalDate()
 
-        return (totalRoom - maxBookedRooms).coerceAtLeast(0)
-    }
-
-    private fun cancelIfExpired(booking: Booking, now: Timestamp) {
-        if (
-            booking.status == BookingStatus.PENDING &&
-            booking.expireAt != null &&
-            now.seconds > booking.expireAt.seconds
-        ) {
-            bookingsCollection.document(booking.bookingId)
-                .update(
-                    "status", BookingStatus.CANCELLED.name,
-                    "cancelReason", CancelReason.TIMEOUT.name
-                )
-                .addOnFailureListener {
-                    Log.e("LazyCheck", "Failed to cleanup booking ${booking.bookingId}")
-                }
-        }
-    }
-
-    private fun countBookedNights(
-        booking: Booking,
-        requestedNights: List<LocalDate>,
-        bookedPerNight: MutableMap<LocalDate, Int>
-    ) {
-        val bStart = booking.startDate.toLocalDate()
-        val bEnd = booking.endDate.toLocalDate()
-
-        if (bStart.isBefore(requestedNights.last().plusDays(1)) &&
-            bEnd.isAfter(requestedNights.first())
-        ) {
-            for (night in requestedNights) {
-                if (!night.isBefore(bStart) && night.isBefore(bEnd)) {
-                    bookedPerNight[night] = bookedPerNight[night]!! + 1
-                }
+            // Logic check trùng lịch (giữ nguyên)
+            if (bookingStart.isBefore(endDate) && bookingEnd.isAfter(startDate)) {
+                occupiedRoomNumbers.add(booking.roomNumber)
             }
         }
+
+        // --- PHẦN TÍNH TOÁN VÀ LOG KẾT QUẢ ---
+
+        // Tính danh sách phòng trống
+        val availableRooms = allRoomNumbers.filterNot { it in occupiedRoomNumbers }
+
+        // Log chi tiết kết quả
+        Log.d(
+            "RoomCheck",
+            """
+        |--- Availability Result ---
+        |Total Rooms: ${allRoomNumbers.size} (${allRoomNumbers.joinToString(", ")})
+        |Occupied:    ${occupiedRoomNumbers.size} (${occupiedRoomNumbers.joinToString(", ")})
+        |Available:   ${availableRooms.size} (${availableRooms.joinToString(", ")})
+        |---------------------------
+        """.trimMargin()
+        )
+
+        return availableRooms
+    }
+
+    private fun shouldCancel(
+        booking: Booking,
+        now: Timestamp
+    ): Boolean {
+        val expireAt = booking.expireAt ?: return false
+
+        return booking.status == BookingStatus.PENDING &&
+                now > expireAt
+    }
+
+    private suspend fun cancelBooking(bookingId: String) {
+        bookingsCollection.document(bookingId)
+            .update(
+                "status", BookingStatus.CANCELLED.name,
+                "cancelReason", CancelReason.TIMEOUT.name
+            )
+            .await()
     }
 
     override suspend fun createBooking(

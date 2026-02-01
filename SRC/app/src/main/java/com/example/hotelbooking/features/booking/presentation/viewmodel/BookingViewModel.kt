@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +14,7 @@ import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
+import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.toLocalDate
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ import javax.inject.Inject
 sealed class BookingUiState {
     object Idle : BookingUiState()
     object Loading : BookingUiState()
-    data class Available(val count: Int) : BookingUiState()
+    data class Available(val roomNumbers: List<String>) : BookingUiState()
     data class SoldOut(val message: String) : BookingUiState()
     data class BookingSuccess(val booking: Booking) : BookingUiState()
     data class Error(val message: String) : BookingUiState()
@@ -43,6 +43,9 @@ class BookingViewModel @Inject constructor(
 
     private val _isTimeout = MutableStateFlow(false)
     val isTimeout = _isTimeout.asStateFlow()
+
+    private val _isSubmitting = MutableStateFlow(false)
+    val isSubmitting = _isSubmitting.asStateFlow()
 
     fun onTimeout() {
         _isTimeout.value = true
@@ -96,24 +99,34 @@ class BookingViewModel @Inject constructor(
 
     fun checkRoomAvailability(
         hotelId: String,
-        roomTypeId: String,
-        totalStock: Int
+        currentRoomType: RoomType,
+        startDate: LocalDate,
+        endDate: LocalDate
     ) {
         viewModelScope.launch {
             _uiState.value = BookingUiState.Loading
 
+            val allRoomNumbers = currentRoomType.roomList.map { it.roomNumber }
+
             val result = bookingUseCases.checkAvailabilityUseCase(
-                hotelId, roomTypeId, totalStock, checkInDate, checkOutDate
+                hotelId,
+                currentRoomType.id,
+                allRoomNumbers,
+                startDate,
+                endDate
             )
 
-            result.onSuccess { count ->
+            result.onSuccess { availableList ->
+
+                val count = availableList.size
                 currentAvailableRooms = count
+
                 if (count > 0) {
-                    _uiState.value = BookingUiState.Available(count)
+                    _uiState.value = BookingUiState.Available(roomNumbers = availableList)
                 } else {
-                    _uiState.value =
-                        BookingUiState.SoldOut("Sorry, there are no rooms available on this date.")
+                    _uiState.value = BookingUiState.SoldOut("Sorry, no rooms available for specific dates.")
                 }
+
             }.onFailure { error ->
                 _uiState.value = BookingUiState.Error(error.message ?: "Room inspection error")
             }
@@ -141,7 +154,7 @@ class BookingViewModel @Inject constructor(
                 return@launch
             }
 
-            _uiState.value = BookingUiState.Loading
+            _isSubmitting.value = true
 
             val totalDays = ChronoUnit.DAYS
                 .between(startDate, endDate)
@@ -178,10 +191,12 @@ class BookingViewModel @Inject constructor(
 
             result
                 .onSuccess { booking ->
+                    _isSubmitting.value = false
                     _uiState.value =
                         BookingUiState.BookingSuccess(booking)
                 }
                 .onFailure { error ->
+                    _isSubmitting.value = false
                     _uiState.value =
                         BookingUiState.Error(error.message ?: "Booking failed")
                 }

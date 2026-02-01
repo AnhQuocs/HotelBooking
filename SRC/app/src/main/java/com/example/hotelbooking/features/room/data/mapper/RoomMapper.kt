@@ -37,7 +37,6 @@ fun AmenityDto.toAmenity(): Amenity {
 
 fun RoomDto.toRoom(): Room {
     return Room(
-        roomNumber = roomNumber.orEmpty(),
-        isAvailable = isAvailable ?: false
+        roomNumber = roomNumber.orEmpty()
     )
 }

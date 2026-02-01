@@ -216,9 +216,10 @@ fun RoomDetailScreen(
                         endDate = end,
                         onCheckClick = {
                             bookingViewModel.checkRoomAvailability(
-                                room.hotelId,
-                                room.id,
-                                room.totalRoom
+                                hotelId = room.hotelId,
+                                currentRoomType = room,
+                                startDate = start,
+                                endDate = end
                             )
                         }
                     )

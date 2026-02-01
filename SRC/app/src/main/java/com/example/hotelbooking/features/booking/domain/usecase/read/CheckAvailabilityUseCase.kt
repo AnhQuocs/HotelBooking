@@ -9,11 +9,10 @@ class CheckAvailabilityUseCase(
     suspend operator fun invoke(
         hotelId: String,
         roomTypeId: String,
-        totalRoom: Int,
+        allRoomNumbers: List<String>,
         startDate: LocalDate,
         endDate: LocalDate
-    ): Result<Int> { // Trả về Result thay vì Int trần
-        // 1. Validate Business Rule
+    ): Result<List<String>> {
         if (startDate.isBefore(LocalDate.now())) {
             return Result.failure(Exception("Check-in date cannot be in the past"))
         }
@@ -21,10 +20,11 @@ class CheckAvailabilityUseCase(
             return Result.failure(Exception("Check-out date must be at least 1 day after check-in"))
         }
 
-        // 2. Call Repo
         return try {
-            val count = repository.checkAvailability(hotelId, roomTypeId, totalRoom, startDate, endDate)
-            Result.success(count)
+            val availableRooms = repository.getAvailableRoomNumbers(
+                hotelId, roomTypeId, allRoomNumbers, startDate, endDate
+            )
+            Result.success(availableRooms)
         } catch (e: Exception) {
             Result.failure(e)
         }

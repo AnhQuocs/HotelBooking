@@ -24,6 +24,5 @@ data class Amenity(
 )
 
 data class Room(
-    val roomNumber: String,
-    val isAvailable: Boolean
+    val roomNumber: String
 )

@@ -31,7 +31,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +45,8 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.room.domain.model.RoomType
+import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -71,6 +72,7 @@ fun BookingScreen(
     roomViewModel: RoomViewModel = hiltViewModel()
 ) {
     val uiState by bookingViewModel.uiState.collectAsState()
+    val isSubmitting by bookingViewModel.isSubmitting.collectAsState()
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -87,10 +89,7 @@ fun BookingScreen(
     val isEmailValid = email.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     var selectedRoom by remember { mutableStateOf("") }
 
-    val isFormValid = isNameValid &&
-            isPhoneValid &&
-            isEmailValid &&
-            selectedRoom.isNotEmpty()
+    val isFormValid = isNameValid && isPhoneValid && isEmailValid && selectedRoom.isNotEmpty()
 
     val pricePerNight = price.toDoubleOrNull() ?: 0.0
     val totalDays = ChronoUnit.DAYS.between(startDate, endDate)
@@ -103,6 +102,19 @@ fun BookingScreen(
 
     LaunchedEffect(roomId) {
         roomViewModel.loadRoomDetail(roomId)
+    }
+
+    LaunchedEffect(roomDetailState) {
+        if (roomDetailState is RoomState.Success) {
+            val roomType = (roomDetailState as RoomState.Success<RoomType>).data
+
+            bookingViewModel.checkRoomAvailability(
+                hotelId = hotelId,
+                currentRoomType = roomType,
+                startDate = startDate,
+                endDate = endDate
+            )
+        }
     }
 
     LaunchedEffect(uiState) {
@@ -129,76 +141,72 @@ fun BookingScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(id = R.string.complete_your_booking)) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black
-                )
+        TopAppBar(
+            title = { Text(stringResource(id = R.string.complete_your_booking)) },
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = null)
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.White,
+                titleContentColor = Color.Black,
+                navigationIconContentColor = Color.Black
             )
-        },
-        bottomBar = {
-            Surface(shadowElevation = 16.dp, color = Color.White) {
-                Button(
-                    onClick = {
-                        val guest = Guest(
-                            name = name,
-                            email = email,
-                            phone = phone,
-                            age = ageStr.toIntOrNull() ?: 18
-                        )
-                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-                        bookingViewModel.submitBooking(
-                            hotelId = hotelId,
-                            roomTypeId = roomId,
-                            roomNumber = selectedRoom,
-                            userId = userId,
-                            startDate = startDate,
-                            endDate = endDate,
-                            guest = guest,
-                            numberOfGuests = numberOfGuest,
-                            pricePerNight = pricePerNight,
-                            availableRooms = availableStock,
-                            timeoutSeconds = timeoutSeconds
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(Dimen.PaddingM)
-                        .height(Dimen.HeightDefault + 2.dp),
-                    shape = RoundedCornerShape(AppShape.ShapeL),
-                    enabled = (uiState !is BookingUiState.Loading) && isFormValid,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BlueNavy,
-                        contentColor = Color.White,
-                        disabledContainerColor = Color.LightGray,
-                        disabledContentColor = Color.White
+        )
+    }, bottomBar = {
+        Surface(shadowElevation = 16.dp, color = Color.White) {
+            Button(
+                onClick = {
+                    val guest = Guest(
+                        name = name,
+                        email = email,
+                        phone = phone,
+                        age = ageStr.toIntOrNull() ?: 18
                     )
-                ) {
-                    if (uiState is BookingUiState.Loading) {
-                        CircularProgressIndicator(
-                            color = Color.White,
-                            modifier = Modifier.size(Dimen.SizeM)
+                    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+                    bookingViewModel.submitBooking(
+                        hotelId = hotelId,
+                        roomTypeId = roomId,
+                        roomNumber = selectedRoom,
+                        userId = userId,
+                        startDate = startDate,
+                        endDate = endDate,
+                        guest = guest,
+                        numberOfGuests = numberOfGuest,
+                        pricePerNight = pricePerNight,
+                        availableRooms = availableStock,
+                        timeoutSeconds = timeoutSeconds
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(Dimen.PaddingM)
+                    .height(Dimen.HeightDefault + 2.dp),
+                shape = RoundedCornerShape(AppShape.ShapeL),
+                enabled = !isSubmitting && (uiState !is BookingUiState.Loading) && isFormValid,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = BlueNavy,
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.LightGray,
+                    disabledContentColor = Color.White
+                )
+            ) {
+                if (isSubmitting) {
+                    CircularProgressIndicator(
+                        color = Color.White, modifier = Modifier.size(Dimen.SizeM)
+                    )
+                } else {
+                    Text(
+                        text = stringResource(
+                            R.string.pay_now, totalPrice
                         )
-                    } else {
-                        Text(
-                            text = stringResource(
-                                R.string.pay_now,
-                                totalPrice
-                            )
-                        )
-                    }
+                    )
                 }
             }
-        },
-        containerColor = Color.White
+        }
+    }, containerColor = Color.White
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -218,11 +226,9 @@ fun BookingScreen(
             Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
             RoomListSelectorSection(
-                state = roomDetailState,
-                onRoomSelected = { roomNumber ->
-                    selectedRoom = roomNumber
-                }
-            )
+                roomState = roomDetailState,
+                bookingUiState = uiState,
+                onRoomSelected = { selectedRoom = it })
 
             Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
@@ -249,14 +255,12 @@ fun BookingScreen(
                 isPhoneDirty = isPhoneDirty,
                 isPhoneValid = isPhoneValid,
                 ageStr = ageStr,
-                onAgeChange = { ageStr = it }
-            )
+                onAgeChange = { ageStr = it })
 
             GuestCountSection(
                 numberOfGuest = numberOfGuest,
                 capacity = capacity,
-                onValueChange = { numberOfGuest = it }
-            )
+                onValueChange = { numberOfGuest = it })
 
             Spacer(modifier = Modifier.height(AppSpacing.S))
 

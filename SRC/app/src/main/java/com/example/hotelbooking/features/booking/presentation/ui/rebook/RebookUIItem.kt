@@ -193,7 +193,12 @@ fun RebookContent(
             startDate = start,
             endDate = end,
             onCheckClick = {
-                bookingViewModel.checkRoomAvailability(room.hotelId, room.id, room.totalRoom)
+                bookingViewModel.checkRoomAvailability(
+                    hotelId = room.hotelId,
+                    currentRoomType = room,
+                    startDate = start,
+                    endDate = end
+                )
             }
         )
     }

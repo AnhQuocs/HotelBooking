@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.ui.book
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
-import com.example.hotelbooking.features.room.domain.model.Room
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -43,23 +43,24 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
-fun RoomListSelectorSection(state: RoomState<RoomType>, onRoomSelected: (String) -> Unit) {
+fun RoomListSelectorSection(
+    roomState: RoomState<RoomType>,
+    bookingUiState: BookingUiState,
+    onRoomSelected: (String) -> Unit
+) {
     var selectedRoom by remember { mutableStateOf<String?>(null) }
 
-    when (state) {
+    when (roomState) {
         is RoomState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+            LoadingBox()
+        }
+
+        is RoomState.Error -> {
+            Text(text = stringResource(id = R.string.error, roomState.message), color = Color.Red)
         }
 
         is RoomState.Success<RoomType> -> {
-            val roomType = state.data
+            val roomType = roomState.data
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 InfoTitle(
@@ -70,50 +71,86 @@ fun RoomListSelectorSection(state: RoomState<RoomType>, onRoomSelected: (String)
 
                 Spacer(modifier = Modifier.height(AppSpacing.S))
 
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(Dimen.PaddingS),
-                    verticalArrangement = Arrangement.spacedBy(AppSpacing.S),
-                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.S),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 300.dp)
-                ) {
-                    items(roomType.roomList) { room ->
-                        Log.d("RoomListSelector", "Status: ${room.roomNumber} / ${room.isAvailable}")
-                        RoomSelectorItem(
-                            room = room,
-                            isSelected = room.roomNumber == selectedRoom,
-                            onClick = { roomNumber ->
-                                selectedRoom = roomNumber
-                                onRoomSelected(roomNumber)
-                            }
+                when (bookingUiState) {
+                    is BookingUiState.Loading, is BookingUiState.Idle -> {
+                        LoadingBox(message = stringResource(id = R.string.checking))
+                    }
+
+                    is BookingUiState.Error -> {
+                        Text(
+                            text = stringResource(id = R.string.error, bookingUiState.message),
+                            color = Color.Red
                         )
                     }
+
+                    is BookingUiState.Available -> {
+                        val availableList = bookingUiState.roomNumbers
+
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(3),
+                            contentPadding = PaddingValues(Dimen.PaddingS),
+                            verticalArrangement = Arrangement.spacedBy(AppSpacing.S),
+                            horizontalArrangement = Arrangement.spacedBy(AppSpacing.S),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 300.dp)
+                        ) {
+                            items(roomType.roomList) { room ->
+                                val isRoomFree = availableList.contains(room.roomNumber)
+
+                                RoomSelectorItem(
+                                    roomNumber = room.roomNumber,
+                                    isSelected = room.roomNumber == selectedRoom,
+                                    isEnabled = isRoomFree,
+                                    onClick = {
+                                        selectedRoom = room.roomNumber
+                                        onRoomSelected(room.roomNumber)
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
         }
+    }
+}
 
-        is RoomState.Error -> {
-            Text(text = stringResource(id = R.string.error, state.message))
+@Composable
+fun LoadingBox(message: String? = null) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(Dimen.HeightXL3),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator(modifier = Modifier.size(Dimen.SizeL))
+            if (message != null) {
+                Spacer(modifier = Modifier.height(Dimen.PaddingS))
+                Text(text = message, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            }
         }
     }
 }
 
 @Composable
 fun RoomSelectorItem(
-    room: Room,
+    roomNumber: String,
     isSelected: Boolean,
-    onClick: (String) -> Unit
+    isEnabled: Boolean,
+    onClick: () -> Unit
 ) {
     val backgroundColor = when {
-        !room.isAvailable -> Color.LightGray
+        !isEnabled -> Color.LightGray
         isSelected -> PrimaryBlue
         else -> Color.White
     }
 
     val textColor = when {
-        !room.isAvailable -> Color.Gray
+        !isEnabled -> Color.Gray
         isSelected -> Color.White
         else -> Color.Black
     }
@@ -122,12 +159,9 @@ fun RoomSelectorItem(
 
     Box(
         modifier = Modifier
-            .size(
-                height = Dimen.HeightText,
-                width = Dimen.WidthM
-            )
+            .size(height = Dimen.HeightText, width = Dimen.WidthM)
             .then(
-                if (room.isAvailable) {
+                if (isEnabled) {
                     Modifier.border(
                         width = 1.dp,
                         color = if (isSelected) PrimaryBlue else Color.Gray,
@@ -135,17 +169,13 @@ fun RoomSelectorItem(
                     )
                 } else Modifier
             )
-            .background(backgroundColor, shape = RoundedCornerShape(AppShape.ShapeS))
-            .alpha(if (room.isAvailable) 1f else 0.5f)
-            .clickable(
-                enabled = room.isAvailable
-            ) {
-                onClick(room.roomNumber)
-            },
+            .background(backgroundColor, shape = shape)
+            .alpha(if (isEnabled) 1f else 0.5f)
+            .clickable(enabled = isEnabled) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = room.roomNumber,
+            text = roomNumber,
             color = textColor,
             modifier = Modifier.padding(Dimen.PaddingS)
         )

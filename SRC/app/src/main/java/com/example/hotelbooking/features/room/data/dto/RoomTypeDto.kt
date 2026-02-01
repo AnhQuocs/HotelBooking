@@ -1,7 +1,5 @@
 package com.example.hotelbooking.features.room.data.dto
 
-import com.google.firebase.firestore.PropertyName
-
 data class RoomTypeDto(
     val hotelId: String? = null,
     val totalStock: Int? = null,
@@ -25,11 +23,5 @@ data class AmenityDto(
 )
 
 data class RoomDto(
-    @get:PropertyName("roomNumber")
-    @set:PropertyName("roomNumber")
-    var roomNumber: String? = null,
-
-    @get:PropertyName("isAvailable")
-    @set:PropertyName("isAvailable")
-    var isAvailable: Boolean? = null
+    var roomNumber: String? = null
 )
