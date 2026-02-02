@@ -64,7 +64,6 @@ fun BookingScreen(
     startDate: LocalDate,
     endDate: LocalDate,
     hotelId: String,
-    availableStock: Int,
     roomName: String,
     price: String,
     capacity: Int,
@@ -176,7 +175,6 @@ fun BookingScreen(
                         guest = guest,
                         numberOfGuests = numberOfGuest,
                         pricePerNight = pricePerNight,
-                        availableRooms = availableStock,
                         timeoutSeconds = timeoutSeconds
                     )
                 },

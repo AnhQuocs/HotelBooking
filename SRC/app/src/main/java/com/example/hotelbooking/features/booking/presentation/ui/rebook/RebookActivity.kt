@@ -43,11 +43,15 @@ import com.example.hotelbooking.features.booking.presentation.ui.checkout.Paymen
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentMethodBottomSheet
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.UpdateBookingState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.UpdateBookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.main.MainActivity
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
+import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
@@ -198,11 +202,13 @@ fun RebookScreen(
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
     updateBookingViewModel: UpdateBookingViewModel,
-    bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel()
+    bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
+    paymentCardViewModel: PaymentCardViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
     val bookingState by bookingHistoryViewModel.bookingDetailState.collectAsState()
+    val cardsState by paymentCardViewModel.cardsState.collectAsState()
     val roomDetailState by roomViewModel.roomDetailState.collectAsState()
     val uiState by bookingViewModel.uiState.collectAsState()
     val updateState by updateBookingViewModel.updateState.collectAsState()
@@ -226,25 +232,18 @@ fun RebookScreen(
     }
 
     var selectedRoomNumber by rememberSaveable { mutableStateOf<String?>(null) }
-    LaunchedEffect(roomDetailState, bookingState) {
-        val bookingData =
-            (bookingState as? BookingHistoryState.Success<BookingWithHotel>)
-                ?.data
-                ?.booking
-                ?: return@LaunchedEffect
+    LaunchedEffect(uiState, roomDetailState, bookingState) {
+        val bookingData = (bookingState as? BookingHistoryState.Success<BookingWithHotel>)
+            ?.data?.booking ?: return@LaunchedEffect
 
-        val roomData =
-            (roomDetailState as? RoomState.Success<RoomType>)
-                ?.data
-                ?: return@LaunchedEffect
+        val availableRoomNumbers = (uiState as? BookingUiState.Available)
+            ?.roomNumbers ?: return@LaunchedEffect
 
         if (selectedRoomNumber == null) {
-            val oldRoom = roomData.roomList.firstOrNull {
-                it.roomNumber == bookingData.roomNumber && it.isAvailable
-            }
+            val isOldRoomStillFree = availableRoomNumbers.contains(bookingData.roomNumber)
 
-            if (oldRoom != null) {
-                selectedRoomNumber = oldRoom.roomNumber
+            if (isOldRoomStillFree) {
+                selectedRoomNumber = bookingData.roomNumber
             }
         }
     }
@@ -334,8 +333,9 @@ fun RebookScreen(
             }
 
             if (isShowBottomSheet) {
-                if (bookingState is BookingHistoryState.Success) {
+                if (bookingState is BookingHistoryState.Success && cardsState is PaymentCardState.Success) {
                     val data = (bookingState as BookingHistoryState.Success<BookingWithHotel>).data
+                    val cards = (cardsState as PaymentCardState.Success<List<PaymentCard>>).data
 
 //                    val title = stringResource(R.string.booking_success_title)
 //                    val message = data.hotel?.let {
@@ -349,6 +349,7 @@ fun RebookScreen(
                     val roomNumber = selectedRoomNumber
                         ?: data.booking.roomNumber
                     PaymentMethodBottomSheet(
+                        cards = cards,
                         onDismissRequest = { isShowBottomSheet = false },
                         onNextClick = {
                             isShowBottomSheet = false

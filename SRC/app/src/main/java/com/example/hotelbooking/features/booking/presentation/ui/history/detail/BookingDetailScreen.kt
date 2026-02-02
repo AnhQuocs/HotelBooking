@@ -32,6 +32,9 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingH
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
+import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
@@ -48,6 +51,7 @@ fun BookingDetailScreen(
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
     transactionViewModel: TransactionViewModel = hiltViewModel(),
+    paymentCardViewModel: PaymentCardViewModel = hiltViewModel(),
     bookingId: String,
     roomId: String,
     onRebook: () -> Unit,
@@ -58,6 +62,7 @@ fun BookingDetailScreen(
     val roomDetailState by roomViewModel.roomDetailState.collectAsState()
     val bookingDetailState by bookingHistoryViewModel.bookingDetailState.collectAsState()
     val transactionActionState by transactionViewModel.actionState.collectAsState()
+    val cardsState by paymentCardViewModel.cardsState.collectAsState()
     val createdId by transactionViewModel.createdTransactionId.collectAsState()
 
     val isStayProcessing by bookingHistoryViewModel.isProcessing.collectAsState()
@@ -163,11 +168,13 @@ fun BookingDetailScreen(
             }
         }
 
-        if (showBottomSheet && bookingDetailState is BookingHistoryState.Success) {
+        if (showBottomSheet && bookingDetailState is BookingHistoryState.Success && cardsState is PaymentCardState.Success) {
             val hotelName =
                 (bookingDetailState as BookingHistoryState.Success<BookingWithHotel>).data.hotel?.name
                     ?: ""
+            val cards = (cardsState as PaymentCardState.Success<List<PaymentCard>>).data
             PaymentMethodBottomSheet(
+                cards = cards,
                 onDismissRequest = { showBottomSheet = false },
                 onNextClick = {
                     showBottomSheet = false

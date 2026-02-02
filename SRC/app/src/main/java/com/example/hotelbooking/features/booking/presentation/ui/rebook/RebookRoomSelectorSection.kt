@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,9 +31,19 @@ import com.example.hotelbooking.ui.dimens.Dimen
 @Composable
 fun RebookRoomSelectorSection(
     state: RoomState<RoomType>,
+    availableRoomNumbers: List<String>,
+    previousRoomNumber: String?,
     roomSelected: String?,
     onRoomSelected: (String) -> Unit
 ) {
+    LaunchedEffect(availableRoomNumbers) {
+        if (roomSelected == null && previousRoomNumber != null) {
+            if (availableRoomNumbers.contains(previousRoomNumber)) {
+                onRoomSelected(previousRoomNumber)
+            }
+        }
+    }
+
     when (state) {
         is RoomState.Loading -> {
             Box(
@@ -65,10 +76,15 @@ fun RebookRoomSelectorSection(
                         .heightIn(max = 300.dp)
                 ) {
                     items(roomType.roomList) { room ->
+                        val isRoomFree = availableRoomNumbers.contains(room.roomNumber)
+
                         RoomSelectorItem(
-                            room = room,
+                            roomNumber = room.roomNumber,
                             isSelected = room.roomNumber == roomSelected,
-                            onClick = onRoomSelected
+                            isEnabled = isRoomFree,
+                            onClick = {
+                                onRoomSelected(room.roomNumber)
+                            }
                         )
                     }
                 }

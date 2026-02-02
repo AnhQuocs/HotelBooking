@@ -59,6 +59,9 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
+import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionAction
@@ -90,7 +93,8 @@ fun CheckoutScreen(
     hotelViewModel: HotelViewModel = hiltViewModel(),
     bookingViewModel: BookingViewModel = hiltViewModel(),
     bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
-    transactionViewModel: TransactionViewModel = hiltViewModel()
+    transactionViewModel: TransactionViewModel = hiltViewModel(),
+    paymentCardViewModel: PaymentCardViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val uiState by hotelViewModel.hotelDetailState.collectAsState()
@@ -102,6 +106,8 @@ fun CheckoutScreen(
 
     var isShowBottomSheet by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    val cardsState by paymentCardViewModel.cardsState.collectAsState()
 
     LaunchedEffect(Unit) {
         bookingViewModel.stopPaymentTimer()
@@ -123,6 +129,7 @@ fun CheckoutScreen(
         )
 
         transactionViewModel.createTransaction(transaction)
+        paymentCardViewModel.loadPaymentCards(userId)
     }
 
     LaunchedEffect(hotelId) {
@@ -302,8 +309,9 @@ fun CheckoutScreen(
                 PromoUI()
 
                 if (isShowBottomSheet) {
-                    if (uiState is HotelState.Success) {
+                    if (uiState is HotelState.Success && cardsState is PaymentCardState.Success) {
                         val hotel = (uiState as HotelState.Success<Hotel>).data
+                        val cards = (cardsState as PaymentCardState.Success<List<PaymentCard>>).data
 
                         val title = stringResource(R.string.booking_success_title)
                         val message = stringResource(
@@ -313,6 +321,7 @@ fun CheckoutScreen(
                         )
 
                         PaymentMethodBottomSheet(
+                            cards = cards,
                             onDismissRequest = { isShowBottomSheet = false },
                             onNextClick = {
                                 isShowBottomSheet = false

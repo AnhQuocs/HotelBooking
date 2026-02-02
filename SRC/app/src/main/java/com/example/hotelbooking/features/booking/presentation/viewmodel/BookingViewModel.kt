@@ -143,13 +143,12 @@ class BookingViewModel @Inject constructor(
         guest: Guest,
         numberOfGuests: Int,
         pricePerNight: Double,
-        availableRooms: Int,
         timeoutSeconds: Long
     ) {
         viewModelScope.launch {
-            if (availableRooms <= 0) {
+            if (roomNumber.isBlank()) {
                 _uiState.value = BookingUiState.Error(
-                    "Please check the date again, the room is fully booked."
+                    "Please select a specific room number."
                 )
                 return@launch
             }
@@ -185,7 +184,8 @@ class BookingViewModel @Inject constructor(
 
             val result = bookingUseCases.createBookingUseCase(
                 booking = newBooking,
-                availableRooms = availableRooms,
+                roomTypeId = roomTypeId,
+                roomNumber = roomNumber,
                 timeoutSeconds = timeoutSeconds
             )
 

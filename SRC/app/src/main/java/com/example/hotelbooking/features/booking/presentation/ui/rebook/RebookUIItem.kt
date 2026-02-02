@@ -180,11 +180,17 @@ fun RebookContent(
 
             Spacer(modifier = Modifier.height(AppSpacing.M))
 
-            RebookRoomSelectorSection(
-                state = roomState,
-                roomSelected = selectedRoomNumber ?: booking.roomNumber,
-                onRoomSelected = onRoomSelected
-            )
+            if (uiState is BookingUiState.Available) {
+                val availableRoomNumbers = uiState.roomNumbers
+
+                RebookRoomSelectorSection(
+                    state = roomState,
+                    availableRoomNumbers = availableRoomNumbers,
+                    previousRoomNumber = booking.roomNumber,
+                    roomSelected = selectedRoomNumber ?: booking.roomNumber,
+                    onRoomSelected = onRoomSelected
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))

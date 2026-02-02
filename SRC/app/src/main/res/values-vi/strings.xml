@@ -191,6 +191,7 @@
     <string name="payment_method">Phương thức thanh toán</string>
     <string name="master_card">Thẻ MasterCard</string>
     <string name="visa">Thẻ Visa</string>
+    <string name="jcb">Thẻ JCB</string>
     <string name="add_debit_card">Thêm thẻ ghi nợ</string>
     <string name="confirm_and_pay">Xác nhận &amp; Thanh toán</string>
     <string name="payment_complete">Thanh toán thành công</string>

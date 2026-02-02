@@ -119,30 +119,14 @@ class BookingRepositoryImpl(
         roomNumber: String,
         expireAt: Timestamp
     ): Booking {
-        val bookingRef = bookingsCollection.document()
-        val roomTypeRef = firestore.collection("rooms").document(roomTypeId)
+        val bookingRef = firestore.collection("bookings").document()
 
         return firestore.runTransaction { transaction ->
+            val roomTypeRef = firestore.collection("rooms").document(roomTypeId)
             val roomTypeSnapshot = transaction.get(roomTypeRef)
+
             if (!roomTypeSnapshot.exists()) {
-                throw Exception("Room type does not exist!")
-            }
-
-            val roomList = roomTypeSnapshot.get("roomList")
-                ?.let { it as? List<*> }
-                ?.mapNotNull { it as? Map<*, *> }
-                ?: throw Exception("Room list data error!")
-
-            val updatedRoomList = roomList.map { room ->
-                if (room["roomNumber"] == roomNumber) {
-                    val isAvailable = room["isAvailable"] as? Boolean ?: false
-                    if (!isAvailable) {
-                        throw Exception("Room $roomNumber has already been booked!")
-                    }
-                    room.toMutableMap().apply { this["isAvailable"] = false }
-                } else {
-                    room
-                }
+                throw Exception("Loại phòng không tồn tại trên hệ thống!")
             }
 
             val finalBooking = booking.copy(
@@ -151,7 +135,6 @@ class BookingRepositoryImpl(
                 expireAt = expireAt
             )
 
-            transaction.update(roomTypeRef, "roomList", updatedRoomList)
             transaction.set(bookingRef, finalBooking.toDto())
 
             finalBooking

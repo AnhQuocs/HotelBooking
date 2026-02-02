@@ -43,24 +43,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.InputBackground
-import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SurfaceSoftBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaymentMethodBottomSheet(
+    cards: List<PaymentCard>,
     onDismissRequest: () -> Unit,
     onNextClick: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
+
+    val sortedCards = cards.sortedByDescending { it.isDefault }
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -97,13 +102,7 @@ fun PaymentMethodBottomSheet(
 
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
-            PaymentMethodRadioButton(
-                icons = listOf(R.drawable.ic_mastercard, R.drawable.ic_visa),
-                options = listOf(
-                    stringResource(R.string.master_card),
-                    stringResource(R.string.visa)
-                )
-            )
+            PaymentMethodRadioButton(cards = sortedCards)
 
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
@@ -151,7 +150,9 @@ fun PaymentMethodBottomSheet(
             Spacer(modifier = Modifier.height(Dimen.HeightML))
 
             Box(
-                modifier = Modifier.fillMaxWidth().padding(bottom = Dimen.PaddingM),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = Dimen.PaddingM),
                 contentAlignment = Alignment.BottomEnd
             ) {
                 Button(
@@ -172,28 +173,28 @@ fun PaymentMethodBottomSheet(
     }
 }
 
-
 @Composable
 fun PaymentMethodRadioButton(
-    icons: List<Int>,
-    options: List<String>
+    cards: List<PaymentCard>
 ) {
-    var selected by remember { mutableStateOf(options.first()) }
+    val defaultCard = cards.firstOrNull { it.isDefault }
+
+    var selected by remember {
+        mutableStateOf(defaultCard ?: cards.first())
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
     ) {
-        options.forEachIndexed { index, item ->
-            val icon = icons[index]
-
+        cards.forEach { card ->
             PaymentCardItem(
-                icon = painterResource(icon),
-                text = item,
+                icon = painterResource(card.brand.icon()),
+                text = card.brand.displayName(),
                 radioButton = {
                     RadioButton(
-                        selected = selected == item,
-                        onClick = { selected = item },
+                        selected = selected == card,
+                        onClick = { selected = card },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = Color(0xFF0A3A7A)
                         )
@@ -246,3 +247,18 @@ fun PaymentCardItem(
         }
     }
 }
+
+@Composable
+fun PaymentBrand.displayName(): String =
+    when (this) {
+        PaymentBrand.MASTERCARD -> stringResource(R.string.master_card)
+        PaymentBrand.VISA -> stringResource(R.string.visa)
+        PaymentBrand.JCB -> stringResource(R.string.jcb)
+    }
+
+fun PaymentBrand.icon(): Int =
+    when (this) {
+        PaymentBrand.MASTERCARD -> R.drawable.ic_mastercard
+        PaymentBrand.VISA -> R.drawable.ic_visa
+        PaymentBrand.JCB -> R.drawable.ic_jcb
+    }
