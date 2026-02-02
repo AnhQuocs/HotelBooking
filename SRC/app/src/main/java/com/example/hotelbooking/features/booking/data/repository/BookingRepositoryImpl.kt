@@ -9,6 +9,7 @@ import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.data.mapper.toDto
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
@@ -126,7 +127,7 @@ class BookingRepositoryImpl(
             val roomTypeSnapshot = transaction.get(roomTypeRef)
 
             if (!roomTypeSnapshot.exists()) {
-                throw Exception("Loại phòng không tồn tại trên hệ thống!")
+                throw Exception("The room type does not exist in the system!")
             }
 
             val finalBooking = booking.copy(
@@ -305,7 +306,7 @@ class BookingRepositoryImpl(
         }
     }
 
-    override suspend fun confirmBookingPayment(bookingId: String, transactionId: String): Result<Unit> = try {
+    override suspend fun confirmBookingPayment(bookingId: String, transactionId: String, brand: PaymentBrand): Result<Unit> = try {
         val batch = firestore.batch()
 
         val bookingRef = bookingsCollection.document(bookingId)
@@ -317,6 +318,7 @@ class BookingRepositoryImpl(
         // Update Transaction
         batch.update(transactionRef, mapOf(
             "status" to TransactionStatus.PAID.name,
+            "paymentMethod" to brand,
             "updatedAt" to System.currentTimeMillis()
         ))
 

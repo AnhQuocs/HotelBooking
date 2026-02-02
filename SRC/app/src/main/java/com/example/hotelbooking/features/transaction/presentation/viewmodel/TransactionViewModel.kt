@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.usecase.CompleteBookingPaymentUseCase
 import com.example.hotelbooking.features.transaction.domain.usecase.PrepareTransactionUseCase
@@ -79,13 +80,14 @@ class TransactionViewModel @Inject constructor(
     fun confirmPayment(
         bookingId: String,
         transactionId: String,
+        brand: PaymentBrand,
         title: String?,
         message: String?
     ) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         viewModelScope.launch {
             _actionState.value = TransactionState.Loading
-            completeBookingPaymentUseCase(bookingId, transactionId)
+            completeBookingPaymentUseCase(bookingId, transactionId, brand)
                 .onSuccess {
                     timerManager.stopTimer()
                     handleNotifications(userId, bookingId, title, message)

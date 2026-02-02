@@ -49,6 +49,7 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.UpdateBo
 import com.example.hotelbooking.features.booking.presentation.viewmodel.UpdateBookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.main.MainActivity
+import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
 import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
@@ -57,6 +58,7 @@ import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -106,13 +108,14 @@ class RebookActivity : BaseComponentActivity() {
                             navController.navigate("update_guest_info/$capacity")
                         },
                         updateBookingViewModel = updateViewModel,
-                        onUpdateBooking = { booking, newStart, newEnd, newTotalPrice, roomSelected ->
+                        onUpdateBooking = { booking, newStart, newEnd, newTotalPrice, roomSelected, brand ->
                             updateViewModel.confirmRebook(
                                 currentBooking = booking,
                                 newCheckIn = newStart,
                                 newCheckOut = newEnd,
                                 newTotalPrice = newTotalPrice,
-                                roomSelected = roomSelected
+                                roomSelected = roomSelected,
+                                brand = brand
                             )
                         }
                     )
@@ -198,7 +201,7 @@ fun RebookScreen(
     bookingId: String,
     onBackClick: () -> Unit,
     onEditGuestClick: (Booking, Int) -> Unit,
-    onUpdateBooking: (Booking, Long, Long, Double, String) -> Unit,
+    onUpdateBooking: (Booking, Long, Long, Double, String, PaymentBrand) -> Unit,
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
     updateBookingViewModel: UpdateBookingViewModel,
@@ -221,6 +224,8 @@ fun RebookScreen(
 
     LaunchedEffect(bookingId) {
         bookingHistoryViewModel.loadBookingById(bookingId)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        paymentCardViewModel.loadPaymentCards(userId)
     }
 
     LaunchedEffect(bookingState) {
@@ -270,7 +275,8 @@ fun RebookScreen(
                                 isShowBottomSheet = true
                             }
                         },
-                        onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() }
+                        onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() },
+                        isEnabled = !selectedRoomNumber.isNullOrEmpty()
                     )
                 }
             },
@@ -351,14 +357,15 @@ fun RebookScreen(
                     PaymentMethodBottomSheet(
                         cards = cards,
                         onDismissRequest = { isShowBottomSheet = false },
-                        onNextClick = {
+                        onNextClick = { brand ->
                             isShowBottomSheet = false
                             onUpdateBooking(
                                 data.booking,
                                 start.toMillis(),
                                 end.toMillis(),
                                 finalTotalPrice,
-                                roomNumber
+                                roomNumber,
+                                brand
                             )
                         }
                     )

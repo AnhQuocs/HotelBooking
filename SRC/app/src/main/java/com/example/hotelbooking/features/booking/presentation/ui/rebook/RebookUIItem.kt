@@ -57,7 +57,8 @@ fun RebookBottomBar(
     endDate: LocalDate?,
     uiState: BookingUiState,
     onBookClick: () -> Unit,
-    onTotalPriceChange: (Long) -> Unit
+    onTotalPriceChange: (Long) -> Unit,
+    isEnabled: Boolean
 ) {
     val nights = remember(startDate, endDate) {
         if (startDate != null && endDate != null && endDate.isAfter(startDate)) {
@@ -112,7 +113,7 @@ fun RebookBottomBar(
 
             Button(
                 onClick = onBookClick,
-                enabled = isAvailable,
+                enabled = isAvailable && isEnabled,
                 modifier = Modifier
                     .width(150.dp)
                     .height(50.dp),

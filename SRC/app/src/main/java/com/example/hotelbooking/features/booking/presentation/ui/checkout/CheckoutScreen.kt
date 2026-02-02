@@ -323,13 +323,14 @@ fun CheckoutScreen(
                         PaymentMethodBottomSheet(
                             cards = cards,
                             onDismissRequest = { isShowBottomSheet = false },
-                            onNextClick = {
+                            onNextClick = { brand ->
                                 isShowBottomSheet = false
 
                                 createdId?.let { txId ->
                                     transactionViewModel.confirmPayment(
                                         bookingId = bookingId,
                                         transactionId = txId,
+                                        brand = brand,
                                         title = title,
                                         message = message
                                     )

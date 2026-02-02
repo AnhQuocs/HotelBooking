@@ -137,13 +137,14 @@
     <string name="cancel_success_title">Hủy đặt phòng thành công</string>
     <string name="cancel_success_message">Đơn đặt phòng tại %1$s đã được hủy thành công.</string>
     <string name="retry">Thử lại</string>
-    <string name="loading_cancelling">Đang hủy đơn...</string>
+    <string name="loading_cancelling">Đang hủy đơn…</string>
     <string name="cancel_booking_title">Xác nhận hủy phòng</string>
     <string name="cancel_booking_message">Bạn có chắc chắn muốn hủy đặt phòng này không? Hành động này không thể hoàn tác.</string>
     <string name="cancel_booking_confirm">Hủy đơn</string>
     <string name="rebook">Đặt lại</string>
     <string name="update_guest_success">Cập nhật thông tin thành công</string>
     <string name="rebook_success">Đặt lại phòng thành công</string>
+    <string name="rebook_failed">Đặt lại phòng không thành công. Vui lòng thử lại.</string>
     <string name="update_booking_failed">Không thể cập nhật dữ liệu</string>
     <string name="system_error">Đã xảy ra lỗi hệ thống</string>
     <string name="guest_info">Thông tin khách hàng</string>

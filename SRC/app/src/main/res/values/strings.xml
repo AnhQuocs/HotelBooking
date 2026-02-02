@@ -137,13 +137,14 @@
     <string name="cancel_success_title">Booking Cancelled</string>
     <string name="cancel_success_message">Your booking at %1$s has been successfully cancelled.</string>
     <string name="retry">Retry</string>
-    <string name="loading_cancelling">Cancelling booking...</string>
+    <string name="loading_cancelling">Cancelling booking…</string>
     <string name="cancel_booking_title">Cancel booking</string>
     <string name="cancel_booking_message">Are you sure you want to cancel this booking? This action cannot be undone.</string>
     <string name="cancel_booking_confirm">Cancel booking</string>
     <string name="rebook">Rebook</string>
     <string name="update_guest_success">Guest information updated successfully</string>
     <string name="rebook_success">Rebooking completed successfully</string>
+    <string name="rebook_failed">Rebooking failed. Please try again.</string>
     <string name="update_booking_failed">Unable to update booking information</string>
     <string name="system_error">A system error has occurred</string>
     <string name="guest_info">Guest Information</string>

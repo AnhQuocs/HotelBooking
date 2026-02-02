@@ -176,13 +176,14 @@ fun BookingDetailScreen(
             PaymentMethodBottomSheet(
                 cards = cards,
                 onDismissRequest = { showBottomSheet = false },
-                onNextClick = {
+                onNextClick = { brand ->
                     showBottomSheet = false
 
                     createdId?.let {
                         transactionViewModel.confirmPayment(
                             bookingId = bookingId,
                             transactionId = it,
+                            brand = brand,
                             title = context.getString(R.string.booking_success_title),
                             message = context.getString(
                                 R.string.booking_success_message,

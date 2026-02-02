@@ -28,6 +28,7 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,13 +60,14 @@ import com.example.hotelbooking.ui.theme.SurfaceSoftBlue
 fun PaymentMethodBottomSheet(
     cards: List<PaymentCard>,
     onDismissRequest: () -> Unit,
-    onNextClick: () -> Unit
+    onNextClick: (PaymentBrand) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
-
     val sortedCards = cards.sortedByDescending { it.isDefault }
+
+    var brand by remember { mutableStateOf<PaymentBrand?>(null) }
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -102,7 +104,7 @@ fun PaymentMethodBottomSheet(
 
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
-            PaymentMethodRadioButton(cards = sortedCards)
+            PaymentMethodRadioButton(cards = sortedCards, onSelectedBrand = { newBrand -> brand = newBrand })
 
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
@@ -156,7 +158,8 @@ fun PaymentMethodBottomSheet(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 Button(
-                    onClick = { onNextClick() },
+                    onClick = { brand?.let { onNextClick(it) } },
+                    enabled = brand != null,
                     modifier = Modifier
                         .widthIn(min = Dimen.WidthL)
                         .height(50.dp),
@@ -175,12 +178,17 @@ fun PaymentMethodBottomSheet(
 
 @Composable
 fun PaymentMethodRadioButton(
-    cards: List<PaymentCard>
+    cards: List<PaymentCard>,
+    onSelectedBrand: (PaymentBrand) -> Unit
 ) {
     val defaultCard = cards.firstOrNull { it.isDefault }
 
     var selected by remember {
         mutableStateOf(defaultCard ?: cards.first())
+    }
+
+    LaunchedEffect(selected) {
+        onSelectedBrand(selected.brand)
     }
 
     Column(
@@ -194,7 +202,10 @@ fun PaymentMethodRadioButton(
                 radioButton = {
                     RadioButton(
                         selected = selected == card,
-                        onClick = { selected = card },
+                        onClick = {
+                            selected = card
+                            onSelectedBrand(card.brand)
+                        },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = Color(0xFF0A3A7A)
                         )

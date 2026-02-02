@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.viewmodel
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +7,6 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
-import com.example.hotelbooking.features.booking.domain.usecase.BookingUseCases
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingDetailWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.CancelBookingAndTransactionUseCase
@@ -19,7 +17,6 @@ import com.example.hotelbooking.features.notification.domain.usecase.Notificatio
 import com.example.hotelbooking.features.notification.util.NotificationHelper
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -44,8 +41,7 @@ class BookingHistoryViewModel @Inject constructor(
     private val cancelBookingAndTransactionUseCase: CancelBookingAndTransactionUseCase,
     private val notificationUseCases: NotificationUseCases,
     private val notificationHelper: NotificationHelper,
-    private val timerManager: PaymentTimerManager,
-    @ApplicationContext private val context: Context
+    private val timerManager: PaymentTimerManager
 ) : ViewModel() {
 
     private val _state =
