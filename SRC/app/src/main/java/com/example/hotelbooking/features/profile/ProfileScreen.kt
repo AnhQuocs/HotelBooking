@@ -51,6 +51,7 @@ import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewMod
 import com.example.hotelbooking.features.profile.language.presentation.ui.ChangeLanguageActivity
 import com.example.hotelbooking.features.profile.payment_card.presentation.ui.PaymentMethodActivity
 import com.example.hotelbooking.features.profile.promotions.presentation.ui.PromotionActivity
+import com.example.hotelbooking.features.transaction.presentation.ui.TransactionHistoryActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -137,7 +138,8 @@ fun ProfileScreen(
                             context.startActivity(intent)
                         },
                         onTransactionsClick = {
-
+                            val intent = Intent(context, TransactionHistoryActivity::class.java)
+                            context.startActivity(intent)
                         }
                     )
                 }

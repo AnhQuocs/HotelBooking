@@ -307,4 +307,11 @@
     <string name="no_promotions_title">Chưa có khuyến mãi nào</string>
     <string name="no_promotions_description">Hiện tại chưa có mã giảm giá nào dành cho bạn. Hãy quay lại sau để nhận những ưu đãi hấp dẫn nhé!</string>
 
+    <!-- TRANSACTIONS -->
+    <string name="transaction_statistics">Thống kê giao dịch</string>
+    <string name="revenue">Doanh thu</string>
+    <string name="pending">Đang xử lý</string>
+    <string name="refunded">Đã hoàn tiền</string>
+    <string name="order_count">%1$d đơn</string>
+
 </resources>

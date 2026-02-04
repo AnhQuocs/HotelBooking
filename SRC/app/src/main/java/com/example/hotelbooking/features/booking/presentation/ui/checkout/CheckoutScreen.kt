@@ -121,7 +121,7 @@ fun CheckoutScreen(
             userId = userId,
             status = TransactionStatus.PENDING,
             totalPrice = totalPrice.toDouble(),
-            amountPaid = 0.0,
+            amountPaid = totalPrice.toDouble(),
             paymentMethod = null,
             createdAt = now,
             updatedAt = now,

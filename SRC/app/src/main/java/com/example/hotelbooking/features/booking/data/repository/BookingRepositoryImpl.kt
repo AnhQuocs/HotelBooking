@@ -16,6 +16,7 @@ import com.example.hotelbooking.features.transaction.domain.model.TransactionSta
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
@@ -174,12 +175,14 @@ class BookingRepositoryImpl(
     override suspend fun getBookingsByUser(userId: String): List<Booking> {
         cachedBookings[userId]?.let { return it }
 
-        val snapshot = bookingsCollection.whereEqualTo("userId", userId)
-            .orderBy("startDate", com.google.firebase.firestore.Query.Direction.DESCENDING).get()
+        val snapshot = bookingsCollection
+            .whereEqualTo("userId", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
             .await()
 
-        val bookings =
-            snapshot.documents.mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
+        val bookings = snapshot.documents
+            .mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
 
         cachedBookings[userId] = bookings
         return bookings

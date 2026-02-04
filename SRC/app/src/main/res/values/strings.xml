@@ -308,4 +308,11 @@
     <string name="no_promotions_title">No promotions available</string>
     <string name="no_promotions_description">There are no discount codes for you at the moment. Please check back later for exciting offers!</string>
 
+    <!-- TRANSACTIONS -->
+    <string name="transaction_statistics">Transaction statistics</string>
+    <string name="revenue">Revenue</string>
+    <string name="pending">Pending</string>
+    <string name="refunded">Refunded</string>
+    <string name="order_count">%1$d orders</string>
+
 </resources>

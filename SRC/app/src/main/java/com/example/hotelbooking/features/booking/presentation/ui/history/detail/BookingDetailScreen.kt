@@ -121,7 +121,7 @@ fun BookingDetailScreen(
                                 userId = userId,
                                 status = TransactionStatus.PENDING,
                                 totalPrice = bookingWithHotel.booking.totalPrice,
-                                amountPaid = 0.0,
+                                amountPaid = bookingWithHotel.booking.totalPrice,
                                 paymentMethod = null,
                                 createdAt = now,
                                 updatedAt = now,

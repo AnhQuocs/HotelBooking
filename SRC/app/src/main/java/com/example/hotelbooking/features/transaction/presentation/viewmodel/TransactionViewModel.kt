@@ -114,6 +114,15 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
+    fun getTransactions(userId: String) {
+        viewModelScope.launch {
+            _historyState.value = TransactionState.Loading
+            transactionUseCases.getUserTransactionsUseCase(userId).onSuccess {
+                _historyState.value = TransactionState.Success(it)
+            }.onFailure { _historyState.value = TransactionState.Error(it.message ?: "Error") }
+        }
+    }
+
     fun recoverTransactionId(bookingId: String) {
         viewModelScope.launch {
             transactionUseCases.getTransactionByBookingIdUseCase(bookingId).onSuccess { transaction ->
