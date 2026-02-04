@@ -395,13 +395,21 @@ class BookingRepositoryImpl(
                     "updatedAt", Timestamp.now()
                 )
 
-                val newTransactionStatus = if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
+                val newTransactionStatus =
+                    if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
 
                 firestoreTransaction.update(transactionRef, "status", newTransactionStatus)
-                firestoreTransaction.update(transactionRef, "updatedAt", System.currentTimeMillis())
 
                 if (newTransactionStatus == "REFUND") {
-                    firestoreTransaction.update(transactionRef, "refundedAt", System.currentTimeMillis())
+                    firestoreTransaction.update(
+                        transactionRef,
+                        "refundedAt", System.currentTimeMillis()
+                    )
+                } else {
+                    firestoreTransaction.update(
+                        transactionRef,
+                        "updatedAt", System.currentTimeMillis()
+                    )
                 }
 
                 null

@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.transaction.presentation.ui
+package com.example.hotelbooking.features.transaction.presentation.ui.history
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
+import com.example.hotelbooking.features.transaction.presentation.ui.getPaymentBrandIcon
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionState
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -63,7 +64,7 @@ fun TransactionHistoryScreen(
     Scaffold(
         topBar = {
             AppTopBar(
-                text = "Transaction",
+                text = stringResource(id = R.string.transactions),
                 onBackClick = onBackClick
             )
         },
@@ -75,32 +76,32 @@ fun TransactionHistoryScreen(
                 .padding(paddingValues)
                 .padding(Dimen.PaddingM)
         ) {
-            Text(
-                stringResource(id = R.string.transaction_statistics),
-                style = AfacadTypography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            if (state is TransactionState.Success) {
-                val list = (state as TransactionState.Success).data
-                QuickStatsRow(list)
-            }
-
             Spacer(modifier = Modifier.height(AppSpacing.S))
 
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
                 when (val currentState = state) {
                     is TransactionState.Loading, TransactionState.Idle -> item {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(color = PrimaryBlue)
+                            CircularProgressIndicator(color = Pri maryBlue)
                         }
                     }
 
                     is TransactionState.Success -> {
                         val transactions = currentState.data
+                        item {
+                            val list = currentState.data
+                            Text(
+                                stringResource(id = R.string.transaction_statistics),
+                                style = AfacadTypography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            QuickStatsRow(list)
+                        }
+
                         items(transactions) { item ->
                             TransactionItem(item, onClick = { onDetailClick(item.id) })
                         }

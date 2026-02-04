@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.transaction.presentation.ui
+package com.example.hotelbooking.features.transaction.presentation.ui.history
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
+import com.example.hotelbooking.features.transaction.presentation.ui.getStatusColor
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -187,7 +187,7 @@ fun ModernStatCard(
                     Spacer(modifier = Modifier.width(AppSpacing.S))
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = AfacadTypography.labelMedium,
                         color = Color.White.copy(alpha = 0.9f),
                         fontWeight = FontWeight.Medium
                     )
@@ -195,7 +195,7 @@ fun ModernStatCard(
 
                 Text(
                     text = value,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = AfacadTypography.titleLarge,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,

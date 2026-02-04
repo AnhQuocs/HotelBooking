@@ -312,7 +312,22 @@
     <string name="transaction_statistics">Transaction statistics</string>
     <string name="revenue">Revenue</string>
     <string name="pending">Pending</string>
+    <string name="pending2">Pending</string>
     <string name="refunded">Refunded</string>
     <string name="order_count">%1$d orders</string>
+    <string name="transaction_detail">Transaction Detail</string>
+    <string name="total_payment">Total payment</string>
+    <string name="transaction_id">Transaction ID</string>
+    <string name="booking_id">Booking ID</string>
+    <string name="payment_method2">Payment method</string>
+    <string name="e_wallet">E-wallet</string>
+    <string name="transaction_history">Transaction history</string>
+    <string name="transaction_created">Transaction created</string>
+    <string name="payment_success">Payment successful</string>
+    <string name="transaction_cancelled">Transaction cancelled</string>
+    <string name="cancelled_transaction">Cancelled transaction</string>
+    <string name="refund_success">Refund successful</string>
+    <string name="incident_report">Incident report</string>
+    <string name="copied">Copied</string>
 
 </resources>

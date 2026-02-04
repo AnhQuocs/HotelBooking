@@ -311,7 +311,22 @@
     <string name="transaction_statistics">Thống kê giao dịch</string>
     <string name="revenue">Doanh thu</string>
     <string name="pending">Đang xử lý</string>
+    <string name="pending2">Đang chờ xử lý</string>
     <string name="refunded">Đã hoàn tiền</string>
     <string name="order_count">%1$d đơn</string>
+    <string name="transaction_detail">Chi tiết giao dịch</string>
+    <string name="total_payment">Tổng thanh toán</string>
+    <string name="transaction_id">Mã giao dịch</string>
+    <string name="booking_id">Mã Booking</string>
+    <string name="payment_method2">Phương thức</string>
+    <string name="e_wallet">Ví điện tử</string>
+    <string name="transaction_history">Lịch sử giao dịch</string>
+    <string name="transaction_created">Giao dịch được tạo</string>
+    <string name="payment_success">Thanh toán thành công</string>
+    <string name="transaction_cancelled">Đã hủy giao dịch</string>
+    <string name="cancelled_transaction">Giao dịch đã hủy</string>
+    <string name="refund_success">Hoàn tiền thành công</string>
+    <string name="incident_report">Báo cáo sự cố</string>
+    <string name="copied">Đã sao chép</string>
 
 </resources>
