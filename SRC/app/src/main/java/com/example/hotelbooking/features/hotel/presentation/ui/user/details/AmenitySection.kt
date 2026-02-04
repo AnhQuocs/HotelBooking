@@ -38,80 +38,87 @@ data class AmenityUi(
     @DrawableRes val iconRes: Int
 )
 
-private val amenityCatalog = listOf(
-    AmenityUi(
-        titles = listOf("Free Wi-Fi", "Wi-Fi miễn phí"),
-        titleRes = R.string.amenity_free_wifi,
-        iconRes = R.drawable.ic_wifi
-    ),
-    AmenityUi(
-        titles = listOf("Swimming Pool", "Hồ bơi"),
-        titleRes = R.string.amenity_swimming_pool,
-        iconRes = R.drawable.ic_swim
-    ),
-    AmenityUi(
-        titles = listOf("Restaurant and Bar", "Nhà hàng và quầy bar"),
-        titleRes = R.string.amenity_restaurant_bar,
-        iconRes = R.drawable.ic_restaurant
-    ),
-    AmenityUi(
-        titles = listOf("Room Service", "Dịch vụ phòng"),
-        titleRes = R.string.amenity_room_service,
-        iconRes = R.drawable.ic_bed
-    ),
-    AmenityUi(
-        titles = listOf("Free Parking", "Bãi đậu xe miễn phí"),
-        titleRes = R.string.amenity_free_parking,
-        iconRes = R.drawable.ic_free_parking
-    ),
-    AmenityUi(
-        titles = listOf("Gym and Spa", "Phòng gym và spa"),
-        titleRes = R.string.amenity_gym_spa,
-        iconRes = R.drawable.ic_gym
-    ),
-    AmenityUi(
-        titles = listOf("Breakfast Included", "Bữa sáng miễn phí"),
-        titleRes = R.string.amenity_breakfast_included,
-        iconRes = R.drawable.ic_breakfast
-    ),
-    AmenityUi(
-        titles = listOf("Ski Storage", "Kho trượt tuyết"),
-        titleRes = R.string.amenity_ski_storage,
-        iconRes = R.drawable.ic_ski_storage
-    ),
-    AmenityUi(
-        titles = listOf("Hot Tub", "Bồn tắm nước nóng"),
-        titleRes = R.string.amenity_hot_tub,
-        iconRes = R.drawable.ic_hot_tub
-    ),
-    AmenityUi(
-        titles = listOf("Restaurant", "Nhà hàng"),
-        titleRes = R.string.amenity_restaurant,
-        iconRes = R.drawable.ic_restaurant
-    ),
-    AmenityUi(
-        titles = listOf("Outdoor Patio", "Sân vườn ngoài trời"),
-        titleRes = R.string.amenity_outdoor_patio,
-        iconRes = R.drawable.ic_outdoor_patio
-    ),
-    AmenityUi(
-        titles = listOf(
-            "Spa and Wellness Center",
-            "Spa & chăm sóc sức khỏe"
+object AmenityProvider {
+    val catalog = listOf(
+        AmenityUi(
+            titles = listOf("Free Wi-Fi", "Wi-Fi miễn phí"),
+            titleRes = R.string.amenity_free_wifi,
+            iconRes = R.drawable.ic_wifi
         ),
-        titleRes = R.string.amenity_spa_wellness,
-        iconRes = R.drawable.ic_spa
+        AmenityUi(
+            titles = listOf("Swimming Pool", "Hồ bơi"),
+            titleRes = R.string.amenity_swimming_pool,
+            iconRes = R.drawable.ic_swim
+        ),
+        AmenityUi(
+            titles = listOf("Restaurant and Bar", "Nhà hàng và quầy bar"),
+            titleRes = R.string.amenity_restaurant_bar,
+            iconRes = R.drawable.ic_restaurant
+        ),
+        AmenityUi(
+            titles = listOf("Room Service", "Dịch vụ phòng"),
+            titleRes = R.string.amenity_room_service,
+            iconRes = R.drawable.ic_bed
+        ),
+        AmenityUi(
+            titles = listOf("Free Parking", "Bãi đậu xe miễn phí"),
+            titleRes = R.string.amenity_free_parking,
+            iconRes = R.drawable.ic_free_parking
+        ),
+        AmenityUi(
+            titles = listOf("Gym and Spa", "Phòng gym và spa"),
+            titleRes = R.string.amenity_gym_spa,
+            iconRes = R.drawable.ic_gym
+        ),
+        AmenityUi(
+            titles = listOf("Breakfast Included", "Bữa sáng miễn phí"),
+            titleRes = R.string.amenity_breakfast_included,
+            iconRes = R.drawable.ic_breakfast
+        ),
+        AmenityUi(
+            titles = listOf("Ski Storage", "Kho trượt tuyết"),
+            titleRes = R.string.amenity_ski_storage,
+            iconRes = R.drawable.ic_ski_storage
+        ),
+        AmenityUi(
+            titles = listOf("Hot Tub", "Bồn tắm nước nóng"),
+            titleRes = R.string.amenity_hot_tub,
+            iconRes = R.drawable.ic_hot_tub
+        ),
+        AmenityUi(
+            titles = listOf("Restaurant", "Nhà hàng"),
+            titleRes = R.string.amenity_restaurant,
+            iconRes = R.drawable.ic_restaurant
+        ),
+        AmenityUi(
+            titles = listOf("Outdoor Patio", "Sân vườn ngoài trời"),
+            titleRes = R.string.amenity_outdoor_patio,
+            iconRes = R.drawable.ic_outdoor_patio
+        ),
+        AmenityUi(
+            titles = listOf(
+                "Spa and Wellness Center",
+                "Spa & chăm sóc sức khỏe"
+            ),
+            titleRes = R.string.amenity_spa_wellness,
+            iconRes = R.drawable.ic_spa
+        )
     )
-)
+
+    fun find(title: String): AmenityUi? {
+        return catalog.find { ui ->
+            ui.titles.any { it.equals(title, ignoreCase = true) }
+        }
+    }
+}
 
 @Composable
 fun AmenitySection(
     amenities: List<String>
 ) {
-    val amenityUiList = remember(amenities) {
-        amenityCatalog.filter { ui ->
-            ui.titles.any { it in amenities }
-        }
+    val displayList = remember(amenities) {
+        amenities
+            .mapNotNull { title -> AmenityProvider.find(title) }
     }
 
     Column {
@@ -123,7 +130,7 @@ fun AmenitySection(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            amenityUiList.forEach { amenity ->
+            displayList.forEach { amenity ->
                 AmenityItem(amenity, modifier = Modifier.weight(1f))
             }
         }

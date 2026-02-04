@@ -1,5 +1,6 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.user
+package com.example.hotelbooking.features.hotel.presentation.ui.user.popular
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
@@ -25,12 +27,12 @@ import com.example.hotelbooking.ui.dimens.Dimen
 
 @Composable
 fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
+    val context = LocalContext.current
+
     when (state) {
         is HotelState.Loading -> {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -59,7 +61,8 @@ fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
                     text1 = stringResource(R.string.most_popular),
                     text2 = stringResource(R.string.see_all),
                     onClick = {
-                        // Navigate
+                        val intent = Intent(context, AllHotelsActivity::class.java)
+                        context.startActivity(intent)
                     },
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                 )

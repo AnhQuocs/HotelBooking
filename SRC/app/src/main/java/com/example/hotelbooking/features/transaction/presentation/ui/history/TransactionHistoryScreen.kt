@@ -85,7 +85,7 @@ fun TransactionHistoryScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(color = Pri maryBlue)
+                            CircularProgressIndicator(color = PrimaryBlue)
                         }
                     }
 

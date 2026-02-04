@@ -26,7 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.home.search.ui.SearchActivity
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
-import com.example.hotelbooking.features.hotel.presentation.ui.user.HotelSection
+import com.example.hotelbooking.features.hotel.presentation.ui.user.popular.HotelSection
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedSection
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState

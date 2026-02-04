@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.user
+package com.example.hotelbooking.features.hotel.presentation.ui.user.popular
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,10 +44,10 @@ fun HotelList(hotels: List<Hotel>, onClick: (String) -> Unit) {
     LazyRow(
         state = listState,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+        contentPadding = PaddingValues(horizontal = Dimen.PaddingM)
     ) {
         items(
-            hotels,
+            hotels.take(5),
             key = { it.id }
         ) { hotelUI ->
             HotelItem(hotelUI, onClick)
