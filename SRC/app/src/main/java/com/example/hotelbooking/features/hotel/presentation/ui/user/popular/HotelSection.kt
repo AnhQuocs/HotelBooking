@@ -61,7 +61,7 @@ fun HotelSection(state: HotelState<List<Hotel>>, onClick: (String) -> Unit) {
                     text1 = stringResource(R.string.most_popular),
                     text2 = stringResource(R.string.see_all),
                     onClick = {
-                        val intent = Intent(context, AllHotelsActivity::class.java)
+                        val intent = Intent(context, AllPopularActivity::class.java)
                         context.startActivity(intent)
                     },
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)

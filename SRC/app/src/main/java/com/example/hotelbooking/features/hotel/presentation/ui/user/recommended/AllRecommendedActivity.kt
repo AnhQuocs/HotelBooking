@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.user.popular
+package com.example.hotelbooking.features.hotel.presentation.ui.user.recommended
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -15,21 +15,21 @@ import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewM
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AllPopularActivity : BaseComponentActivity() {
+class AllRecommendedActivity : BaseComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             val hotelViewModel: HotelViewModel = hiltViewModel()
-            val uiState by hotelViewModel.hotelsState.collectAsState()
+            val uiState by hotelViewModel.recommendedState.collectAsState()
 
             LaunchedEffect(Unit) {
-                hotelViewModel.loadHotels()
+                hotelViewModel.loadRecommendedHotels(4.7)
             }
 
             AllHotelsScreen(
-                title = stringResource(id = R.string.most_popular),
+                title = stringResource(id = R.string.recommended),
                 state = uiState,
                 onBackClick = { finish() })
         }

@@ -14,22 +14,17 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.ErrorRed
@@ -37,20 +32,16 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun AllHotelsScreen(
+    title: String,
     onBackClick: () -> Unit,
-    hotelViewModel: HotelViewModel = hiltViewModel()
+    state: HotelState<List<Hotel>>
 ) {
     val context = LocalContext.current
-    val uiState by hotelViewModel.hotelsState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        hotelViewModel.loadHotels()
-    }
 
     Scaffold(
         topBar = {
             AppTopBar(
-                text = stringResource(id = R.string.most_popular), onBackClick = onBackClick
+                text = title, onBackClick = onBackClick
             )
         }, containerColor = Color.White
     ) { paddingValues ->
@@ -61,7 +52,7 @@ fun AllHotelsScreen(
             contentAlignment = Alignment.Center
         ) {
             AllHotelsSection(
-                state = uiState,
+                state = state,
                 context = context,
                 onClick = { hotelId ->
                     val intent = Intent(context, HotelDetailActivity::class.java)

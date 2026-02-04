@@ -49,7 +49,7 @@ fun RecommendedList(list: List<Hotel>, onClick: (String) -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = Dimen.PaddingM)
     ) {
-        list.forEach { hotel ->
+        list.take(3).forEach { hotel ->
             RecommendedItem(hotel, onClick, null)
         }
     }

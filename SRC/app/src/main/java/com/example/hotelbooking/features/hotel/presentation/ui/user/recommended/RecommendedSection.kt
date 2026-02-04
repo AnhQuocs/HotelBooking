@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.user.recommended
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTitle
@@ -25,6 +27,8 @@ fun RecommendedSection(
     recommendedState: HotelState<List<Hotel>>,
     onClick: (String) -> Unit
 ) {
+    val context = LocalContext.current
+
     when(recommendedState) {
         is HotelState.Loading -> {
             Box(
@@ -53,7 +57,10 @@ fun RecommendedSection(
                 AppTitle(
                     text1 = stringResource(id = R.string.recommended),
                     text2 = stringResource(id = R.string.see_all),
-                    onClick = {},
+                    onClick = {
+                        val intent = Intent(context, AllRecommendedActivity::class.java)
+                        context.startActivity(intent)
+                    },
                     modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                 )
                 Spacer(modifier = Modifier.height(AppSpacing.S))

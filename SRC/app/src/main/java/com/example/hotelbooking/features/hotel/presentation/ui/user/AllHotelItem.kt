@@ -62,6 +62,7 @@ fun AllHotelItem(hotel: Hotel, context: Context, onClick: (String) -> Unit) {
                 .fillMaxWidth()
                 .height(200.dp)
                 .clip(RoundedCornerShape(AppShape.ShapeM))
+                .background(color = Color.Black.copy(alpha = 0.3f))
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)

@@ -23,7 +23,7 @@
             android:name=".features.hotel.presentation.ui.user.recommended.AllRecommendedActivity"
             android:exported="false" />
         <activity
-            android:name=".features.hotel.presentation.ui.user.popular.AllHotelsActivity"
+            android:name=".features.hotel.presentation.ui.user.popular.AllPopularActivity"
             android:exported="false" />
         <activity
             android:name=".features.transaction.presentation.ui.detail.TransactionDetailActivity"
