@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HourglassEmpty
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -61,18 +63,28 @@ fun StatusChip(status: TransactionStatus) {
     Surface(
         color = baseColor.copy(alpha = 0.1f),
         contentColor = baseColor,
-        shape = RoundedCornerShape(50),
-        border = BorderStroke(1.dp, baseColor.copy(alpha = 0.2f))
+        shape = RoundedCornerShape(AppShape.ShapeS),
+        border = BorderStroke(1.dp, baseColor.copy(alpha = 0.15f))
     ) {
-        Text(
-            text = status.name,
-            style = AfacadTypography.labelSmall,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(
-                horizontal = Dimen.PaddingSM,
-                vertical = Dimen.PaddingXSPlus
+        Row(
+            modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .clip(CircleShape)
+                    .background(baseColor)
             )
-        )
+
+            Spacer(modifier = Modifier.width(AppSpacing.XSPlus))
+
+            Text(
+                text = status.name,
+                style = AfacadTypography.labelSmall,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
