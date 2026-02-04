@@ -1,6 +1,7 @@
-package com.example.hotelbooking.features.hotel.presentation.ui.user.popular
+package com.example.hotelbooking.features.hotel.presentation.ui.user
 
 import android.content.Context
+import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
 import androidx.compose.foundation.background
@@ -140,7 +141,7 @@ fun HotelRatingBlurBadge(
                 .matchParentSize()
                 .graphicsLayer {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        renderEffect = android.graphics.RenderEffect
+                        renderEffect = RenderEffect
                             .createBlurEffect(
                                 20f,
                                 20f,
