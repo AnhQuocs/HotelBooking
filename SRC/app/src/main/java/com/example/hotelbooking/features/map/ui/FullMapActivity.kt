@@ -25,6 +25,7 @@ import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.map.util.bitmapFromVector
+import com.example.hotelbooking.features.recent_viewed.presentation.viewmodel.RecentViewedViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -51,7 +52,8 @@ class FullMapActivity : BaseComponentActivity() {
 fun FullMapScreen(
     onBackClick: () -> Unit,
     latLng: LatLng,
-    hotelViewModel: HotelViewModel = hiltViewModel()
+    hotelViewModel: HotelViewModel = hiltViewModel(),
+    recentViewedViewModel: RecentViewedViewModel = hiltViewModel()
 ) {
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
@@ -76,6 +78,7 @@ fun FullMapScreen(
         FullMapSection(
             uiState = uiState,
             onBookingClick = {
+                recentViewedViewModel.addRecentViewed(it)
                 val intent = Intent(context, HotelDetailActivity::class.java)
                     .putExtra("hotelId",  it)
                 context.startActivity(intent)

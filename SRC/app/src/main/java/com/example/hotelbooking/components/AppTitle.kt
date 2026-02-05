@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
+import com.example.hotelbooking.ui.theme.BlueNavy
 
 @Composable
 fun AppTitle(
@@ -21,6 +22,7 @@ fun AppTitle(
     text1: String,
     text2: String,
     onClick: () -> Unit,
+    color: Color = BlueNavy,
     fontSize: Int = 18
 ) {
     val jostFont = FontFamily(Font(R.font.jost_font))
@@ -42,7 +44,7 @@ fun AppTitle(
             text = text2,
             fontSize = 16.sp,
             fontFamily = jostFont,
-            color = Color(0xFF0A3A7A),
+            color = color,
             modifier = Modifier.clickable { onClick() }
         )
     }

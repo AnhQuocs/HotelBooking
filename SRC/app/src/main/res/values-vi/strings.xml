@@ -49,6 +49,9 @@
     <string name="prompt_where_to_go">Bạn muốn đi đâu?</string>
     <string name="msg_no_hotels_found">Không tìm thấy khách sạn nào</string>
     <string name="search_title">Tìm kiếm</string>
+    <string name="recent_viewed_title">Đã xem gần đây</string>
+    <string name="no_recent_viewed">Chưa có lịch sử xem</string>
+    <string name="clear_all">Xóa tất cả</string>
 
     <!-- HOTEL -->
     <string name="most_popular">Phổ biến nhất</string>

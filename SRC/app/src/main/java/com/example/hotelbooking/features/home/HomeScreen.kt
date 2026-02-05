@@ -33,6 +33,7 @@ import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.map.ui.FullMapActivity
 import com.example.hotelbooking.features.map.ui.MapPreviewCard
 import com.example.hotelbooking.features.notification.presentation.ui.NotificationActivity
+import com.example.hotelbooking.features.recent_viewed.presentation.viewmodel.RecentViewedViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.google.android.gms.maps.model.LatLng
@@ -41,6 +42,7 @@ import com.google.maps.android.compose.CameraPositionState
 @Composable
 fun HomeScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
+    recentViewedViewModel: RecentViewedViewModel = hiltViewModel(),
     cameraPositionState: CameraPositionState,
     hotelState: HotelState<List<Hotel>>,
     recommendedState: HotelState<List<Hotel>>,
@@ -100,6 +102,7 @@ fun HomeScreen(
                 HotelSection(
                     state = hotelState,
                     onClick = { hotelId ->
+                        recentViewedViewModel.addRecentViewed(hotelId)
                         val intent = Intent(context, HotelDetailActivity::class.java)
                             .putExtra("hotelId", hotelId)
                         context.startActivity(intent)
@@ -115,6 +118,7 @@ fun HomeScreen(
                 RecommendedSection(
                     recommendedState = recommendedState,
                     onClick = { hotelId ->
+                        recentViewedViewModel.addRecentViewed(hotelId)
                         val intent = Intent(context, HotelDetailActivity::class.java)
                             .putExtra("hotelId", hotelId)
                         context.startActivity(intent)

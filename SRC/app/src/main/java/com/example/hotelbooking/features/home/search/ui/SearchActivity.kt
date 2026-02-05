@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,14 +38,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
+import com.example.hotelbooking.components.AppTitle
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.home.search.viewmodel.SearchViewModel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedItem
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
+import com.example.hotelbooking.features.recent_viewed.presentation.ui.RecentViewedSection
+import com.example.hotelbooking.features.recent_viewed.presentation.viewmodel.RecentViewedViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.ErrorRed
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SurfaceGray
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,12 +71,18 @@ class SearchActivity : BaseComponentActivity() {
 @Composable
 fun SearchHotelScreen(
     onBackClick: () -> Unit,
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    recentViewedViewModel: RecentViewedViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-
     val query by searchViewModel.searchQuery.collectAsState()
     val searchState by searchViewModel.searchResultState.collectAsState()
+
+    val navigateToDetail = { hotelId: String ->
+        val intent = Intent(context, HotelDetailActivity::class.java)
+            .putExtra("hotelId", hotelId)
+        context.startActivity(intent)
+    }
 
     Scaffold(
         topBar = {
@@ -86,9 +98,9 @@ fun SearchHotelScreen(
                 .fillMaxSize()
                 .background(color = Color.White)
                 .padding(paddingValues)
-                .padding(Dimen.PaddingM)
-                .padding(top = Dimen.PaddingM)
+                .padding(horizontal = Dimen.PaddingM)
         ) {
+            Spacer(modifier = Modifier.height(Dimen.PaddingM))
             OutlinedTextField(
                 value = query,
                 onValueChange = { searchViewModel.onSearchQueryChange(it) },
@@ -110,52 +122,53 @@ fun SearchHotelScreen(
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = SurfaceGray,
-                    focusedBorderColor = SurfaceGray
+                    focusedBorderColor = PrimaryBlue
                 ),
-                shape = RoundedCornerShape(AppShape.ShapeXL2)
+                shape = RoundedCornerShape(AppShape.ShapeL),
+                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                when (val state = searchState) {
-                    is HotelState.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-
-                    is HotelState.Error -> {
-                        Text(
-                            state.message,
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-
-                    is HotelState.Success -> {
-                        if (state.data.isEmpty() && query.isNotEmpty()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                if (query.isEmpty()) {
+                    RecentViewedSection(
+                        state = recentViewedViewModel.uiState.value,
+                        onClick = navigateToDetail,
+                        onClear = { recentViewedViewModel.clearRecentViewed() }
+                    )
+                } else {
+                    when (val state = searchState) {
+                        is HotelState.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center),
+                                color = PrimaryBlue
+                            )
+                        }
+                        is HotelState.Error -> {
                             Text(
-                                stringResource(id = R.string.msg_no_hotels_found),
-                                color = Color.Black,
+                                text = state.message,
+                                color = Color.Red,
                                 modifier = Modifier.align(Alignment.Center)
                             )
-                        } else {
-                            LazyColumn {
-                                items(
-                                    items = state.data,
-                                    key = { it.id }
-                                ) { hotel ->
-                                    RecommendedItem(
-                                        hotel = hotel,
-                                        query = query,
-                                        onClick = { hotelId ->
-                                            val intent =
-                                                Intent(context, HotelDetailActivity::class.java)
-                                                    .putExtra("hotelId", hotelId)
-                                            context.startActivity(intent)
-                                        }
-                                    )
+                        }
+                        is HotelState.Success -> {
+                            if (state.data.isEmpty()) {
+                                Text(
+                                    text = stringResource(id = R.string.msg_no_hotels_found),
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            } else {
+                                LazyColumn(
+                                    verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
+                                ) {
+                                    items(items = state.data, key = { it.id }) { hotel ->
+                                        RecommendedItem(
+                                            hotel = hotel,
+                                            query = query,
+                                            onClick = navigateToDetail
+                                        )
+                                    }
                                 }
                             }
                         }
