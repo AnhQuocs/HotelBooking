@@ -53,21 +53,34 @@ class UpdateBookingViewModel @Inject constructor(
     fun updateGuestInfo(
         newName: String,
         newEmail: String,
-        newAge: Int,
+        newDob: Timestamp,
         newPhone: String,
         newNumberOfGuest: Int
     ) {
         selectedBooking?.let { current ->
+
+            val updatedGuests = current.guests.map { guest ->
+                if (guest.isRepresentative) {
+                    guest.copy(
+                        fullName = newName,
+                        email = newEmail,
+                        phone = newPhone,
+                        dayOfBirth = newDob
+                    )
+                } else {
+                    guest
+                }
+            }
+
             val updatedBooking = current.copy(
-                guest = current.guest.copy(
-                    name = newName,
-                    email = newEmail,
-                    phone = newPhone,
-                    age = newAge
-                ),
+                guests = updatedGuests,
                 numberOfGuests = newNumberOfGuest
             )
-            executeRequest(updatedBooking, context.getString(R.string.update_guest_success))
+
+            executeRequest(
+                updatedBooking,
+                context.getString(R.string.update_guest_success)
+            )
         }
     }
 

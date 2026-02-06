@@ -155,6 +155,8 @@ fun RebookContent(
         start.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
     } ${start.year}"
 
+    val mainGuest = booking.guests.firstOrNull { it.isRepresentative }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -164,16 +166,19 @@ fun RebookContent(
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = Dimen.PaddingM)) {
             hotel?.let { HotelInfo(hotel = it, context = context) }
             Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
-            CheckoutSummaryCard(
-                date = dateStr,
-                numberOfGuest = booking.numberOfGuests,
-                guestName = booking.guest.name,
-                roomName = room.name,
-                phone = booking.guest.phone,
-                totalPrice = "$${finalTotalPrice.toInt()}",
-                isEdit = true,
-                onEditClick = { onEditClick(room.capacity) }
-            )
+
+            mainGuest?.let {
+                CheckoutSummaryCard(
+                    date = dateStr,
+                    numberOfGuest = booking.numberOfGuests,
+                    guestName = it.fullName,
+                    roomName = room.name,
+                    phone = it.phone ?: "",
+                    totalPrice = "$${finalTotalPrice.toInt()}",
+                    isEdit = true,
+                    onEditClick = { onEditClick(room.capacity) }
+                )
+            }
 
             Spacer(modifier = Modifier.height(AppSpacing.M))
 

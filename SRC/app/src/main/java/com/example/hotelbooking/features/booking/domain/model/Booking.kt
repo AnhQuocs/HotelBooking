@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.booking.domain.model
 
 import com.google.firebase.Timestamp
+import java.util.UUID
 
 enum class BookingStatus {
     PENDING, CONFIRMED, CANCELLED
@@ -28,7 +29,7 @@ data class Booking(
     val roomNumber: String,
     val startDate: Timestamp,
     val endDate: Timestamp,
-    val guest: Guest,
+    val guests: List<Guest> = emptyList(),
     val numberOfGuests: Int,
     val totalPrice: Double,
     val status: BookingStatus,
@@ -41,8 +42,10 @@ data class Booking(
 )
 
 data class Guest(
-    val name: String,
-    val phone: String,
-    val email: String,
-    val age: Int
+    val id: String = UUID.randomUUID().toString(),
+    val fullName: String,
+    val phone: String? = null,
+    val email: String? = null,
+    val dayOfBirth: Timestamp? = null,
+    val isRepresentative: Boolean = false
 )

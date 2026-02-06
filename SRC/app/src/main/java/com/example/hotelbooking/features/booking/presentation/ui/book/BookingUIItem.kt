@@ -160,7 +160,7 @@ fun AppOutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label, color = Color.Gray) },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(AppShape.ShapeM),
         colors = colors,
         modifier = modifier,
         singleLine = singleLine,
@@ -193,8 +193,8 @@ fun GuestInformationSection(
     onPhoneChange: (String) -> Unit,
     isPhoneDirty: Boolean,
     isPhoneValid: Boolean,
-    ageStr: String,
-    onAgeChange: (String) -> Unit,
+    dob: LocalDate?,
+    onDobChange: (LocalDate) -> Unit
 ) {
     Text(
         text = stringResource(R.string.guest_information),
@@ -229,31 +229,22 @@ fun GuestInformationSection(
         modifier = Modifier.fillMaxWidth()
     )
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top
-    ) {
-        AppOutlinedTextField(
-            value = phone,
-            onValueChange = onPhoneChange,
-            label = stringResource(R.string.phone),
-            leadingIcon = Icons.Default.Phone,
-            keyboardType = KeyboardType.Phone,
-            isError = isPhoneDirty && !isPhoneValid,
-            errorText = stringResource(R.string.phone_required),
-            modifier = Modifier.weight(2f)
-        )
+    AppOutlinedTextField(
+        value = phone,
+        onValueChange = onPhoneChange,
+        label = stringResource(R.string.phone),
+        leadingIcon = Icons.Default.Phone,
+        keyboardType = KeyboardType.Phone,
+        isError = isPhoneDirty && !isPhoneValid,
+        errorText = stringResource(R.string.phone_required),
+        modifier = Modifier.fillMaxWidth()
+    )
 
-        Spacer(modifier = Modifier.width(AppSpacing.M))
-
-        AppOutlinedTextField(
-            value = ageStr,
-            onValueChange = { if (it.all(Char::isDigit)) onAgeChange(it) },
-            label = stringResource(R.string.age),
-            keyboardType = KeyboardType.Number,
-            modifier = Modifier.weight(1f)
-        )
-    }
+    DobPicker(
+        dob = dob,
+        onDobChange = { newDob -> onDobChange(newDob) },
+        modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable

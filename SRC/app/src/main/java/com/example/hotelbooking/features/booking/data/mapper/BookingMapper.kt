@@ -16,7 +16,7 @@ fun Booking.toDto() = BookingDto(
     roomNumber = roomNumber,
     startDate = startDate,
     endDate = endDate,
-    guest = guest.toDto(),
+    guests = guests.map { it.toDto() },
     numberOfGuests = numberOfGuests,
     totalPrice = totalPrice,
     status = status.name,
@@ -28,7 +28,14 @@ fun Booking.toDto() = BookingDto(
     updatedAt = updatedAt
 )
 
-fun Guest.toDto() = GuestDto(name, phone, email, age)
+fun Guest.toDto() = GuestDto(
+    id = id,
+    fullName = fullName,
+    phone = phone,
+    email = email,
+    dayOfBirth = dayOfBirth,
+    representative = isRepresentative
+)
 
 fun BookingDto.toDomain() = Booking(
     bookingId = bookingId,
@@ -38,7 +45,7 @@ fun BookingDto.toDomain() = Booking(
     roomNumber = roomNumber,
     startDate = startDate,
     endDate = endDate,
-    guest = guest.toDomain(),
+    guests = guests.map { it.toDomain() },
     numberOfGuests = numberOfGuests,
     totalPrice = totalPrice,
     status = BookingStatus.valueOf(status),
@@ -50,4 +57,11 @@ fun BookingDto.toDomain() = Booking(
     updatedAt = updatedAt
 )
 
-fun GuestDto.toDomain() = Guest(name, phone, email, age)
+fun GuestDto.toDomain() = Guest(
+    id = id,
+    fullName = fullName,
+    phone = phone,
+    email = email,
+    dayOfBirth = dayOfBirth,
+    isRepresentative = representative
+)

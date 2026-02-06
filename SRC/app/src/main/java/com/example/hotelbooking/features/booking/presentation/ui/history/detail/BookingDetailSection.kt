@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.booking.presentation.ui.history.detail
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -61,7 +62,8 @@ fun BookingDetailItem(
         .replaceFirstChar { it.uppercase() }
     val dateStr = "${start.dayOfMonth}-${end.dayOfMonth} $monthStr ${start.year}"
 
-    val guest = booking.guest
+    val mainGuest = booking.guests.firstOrNull { it.isRepresentative }
+    Log.d("BookingDetail", "Guest Info: $mainGuest")
     val guestText =
         if (booking.numberOfGuests == 1)
             stringResource(id = R.string.guest)
@@ -175,8 +177,8 @@ fun BookingDetailItem(
             )
             CheckoutSummaryItem(
                 icon = R.drawable.ic_user,
-                key = stringResource(id = R.string.name),
-                value = guest.name
+                key = stringResource(id = R.string.full_name),
+                value = mainGuest?.fullName ?: ""
             )
             if (roomDetailState is RoomState.Success) {
                 val room = roomDetailState.data
@@ -189,7 +191,7 @@ fun BookingDetailItem(
             CheckoutSummaryItem(
                 icon = R.drawable.ic_call,
                 key = stringResource(id = R.string.phone),
-                value = guest.phone
+                value = mainGuest?.phone ?: ""
             )
 
             Spacer(modifier = Modifier.height(AppSpacing.M))

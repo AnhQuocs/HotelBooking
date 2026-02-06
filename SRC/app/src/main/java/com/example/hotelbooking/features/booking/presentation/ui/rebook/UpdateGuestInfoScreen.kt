@@ -5,13 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,38 +36,44 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.booking.presentation.ui.book.AppOutlinedTextField
+import com.example.hotelbooking.features.booking.presentation.ui.book.DobPicker
 import com.example.hotelbooking.features.booking.presentation.ui.book.GuestCountSection
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import java.time.LocalDate
 
 @Composable
 fun UpdateGuestInfoScreen(
     name: String,
     email: String,
     phone: String,
-    age: String,
+    dob: LocalDate,
     numberOfGuest: Int,
     capacity: Int,
     isUpdating: Boolean,
-    onUpdate: (String, String, String, String, Int) -> Unit,
+    onUpdate: (String, String, String, LocalDate, Int) -> Unit,
     onBackClick: () -> Unit,
 ) {
     var newName by remember { mutableStateOf(name) }
     var newEmail by remember { mutableStateOf(email) }
     var newPhone by remember { mutableStateOf(phone) }
-    var newAge by remember { mutableStateOf(age) }
-    var newNumberOfGuest by remember { mutableStateOf(numberOfGuest) }
+    var newDob by remember { mutableStateOf<LocalDate?>(dob) }
+    var newNumberOfGuest by remember { mutableIntStateOf(numberOfGuest) }
 
     val isNameValid = newName.isNotBlank()
-    val isPhoneValid = newPhone.isNotBlank() && newPhone.length >= 10
-    val isEmailValid = newEmail.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()
+    val isPhoneValid =
+        newPhone.isNotBlank() && newPhone.length >= 10
 
-    val hasChanges = remember(newName, newEmail, newPhone, newAge, newNumberOfGuest) {
+    val isEmailValid =
+        newEmail.isNotBlank() &&
+                Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()
+
+    val hasChanges = remember(newName, newEmail, newPhone, newDob, newNumberOfGuest) {
         newName != name ||
                 newEmail != email ||
                 newPhone != phone ||
-                newAge != age ||
+                newDob != dob ||
                 newNumberOfGuest != numberOfGuest
     }
     val isFormValid = isNameValid && isPhoneValid && isEmailValid
@@ -88,7 +93,7 @@ fun UpdateGuestInfoScreen(
                     modifier = Modifier.fillMaxWidth().padding(Dimen.PaddingM),
                     enabled = canUpdate && !isUpdating,
                     onClick = {
-                        onUpdate(newName, newEmail, newPhone, newAge, newNumberOfGuest)
+                        newDob?.let { onUpdate(newName, newEmail, newPhone, it, newNumberOfGuest) }
                     }
                 )
             },
@@ -132,27 +137,21 @@ fun UpdateGuestInfoScreen(
 
                 Spacer(modifier = Modifier.height(AppSpacing.XS))
 
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    AppOutlinedTextField(
-                        value = newPhone,
-                        onValueChange = { if (it.length <= 11) newPhone = it },
-                        label = stringResource(R.string.phone),
-                        leadingIcon = Icons.Default.Phone,
-                        keyboardType = KeyboardType.Phone,
-                        isError = !isPhoneValid,
-                        modifier = Modifier.weight(2f)
-                    )
+                AppOutlinedTextField(
+                    value = newPhone,
+                    onValueChange = { if (it.length <= 11) newPhone = it },
+                    label = stringResource(R.string.phone),
+                    leadingIcon = Icons.Default.Phone,
+                    keyboardType = KeyboardType.Phone,
+                    isError = !isPhoneValid,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    Spacer(modifier = Modifier.width(AppSpacing.M))
-
-                    AppOutlinedTextField(
-                        value = newAge,
-                        onValueChange = { if (it.all(Char::isDigit)) newAge = it },
-                        label = stringResource(R.string.age),
-                        keyboardType = KeyboardType.Number,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                DobPicker(
+                    dob = newDob,
+                    onDobChange = { newDob = it  },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.height(AppSpacing.SPlus))
 

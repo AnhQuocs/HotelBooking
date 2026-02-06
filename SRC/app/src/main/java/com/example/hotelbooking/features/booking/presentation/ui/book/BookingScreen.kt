@@ -52,9 +52,12 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.BlueNavy
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +79,7 @@ fun BookingScreen(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
-    var ageStr by remember { mutableStateOf("") }
+    var dob by remember { mutableStateOf<LocalDate?>(null) }
     var numberOfGuest by remember { mutableStateOf(1) }
 
     var isNameDirty by remember { mutableStateOf(false) }
@@ -157,11 +160,16 @@ fun BookingScreen(
         Surface(shadowElevation = 16.dp, color = Color.White) {
             Button(
                 onClick = {
-                    val guest = Guest(
-                        name = name,
+                    val dobTimestamp = dob?.atStartOfDay(ZoneId.systemDefault())
+                        ?.toInstant()
+                        ?.toEpochMilli()
+
+                    val mainGuest = Guest(
+                        fullName = name,
                         email = email,
                         phone = phone,
-                        age = ageStr.toIntOrNull() ?: 18
+                        dayOfBirth = dobTimestamp?.let { Timestamp(Date(it)) },
+                        isRepresentative = true
                     )
                     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
@@ -172,7 +180,7 @@ fun BookingScreen(
                         userId = userId,
                         startDate = startDate,
                         endDate = endDate,
-                        guest = guest,
+                        guests = listOf(mainGuest),
                         numberOfGuests = numberOfGuest,
                         pricePerNight = pricePerNight,
                         timeoutSeconds = timeoutSeconds
@@ -252,8 +260,9 @@ fun BookingScreen(
                 },
                 isPhoneDirty = isPhoneDirty,
                 isPhoneValid = isPhoneValid,
-                ageStr = ageStr,
-                onAgeChange = { ageStr = it })
+                dob = dob,
+                onDobChange = { dob = it }
+            )
 
             GuestCountSection(
                 numberOfGuest = numberOfGuest,

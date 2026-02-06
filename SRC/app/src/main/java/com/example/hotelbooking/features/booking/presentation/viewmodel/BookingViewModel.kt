@@ -140,7 +140,7 @@ class BookingViewModel @Inject constructor(
         userId: String,
         startDate: LocalDate,
         endDate: LocalDate,
-        guest: Guest,
+        guests: List<Guest>,
         numberOfGuests: Int,
         pricePerNight: Double,
         timeoutSeconds: Long
@@ -173,7 +173,7 @@ class BookingViewModel @Inject constructor(
                 endDate = Timestamp(
                     endDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant()
                 ),
-                guest = guest,
+                guests = guests,
                 numberOfGuests = numberOfGuests,
                 totalPrice = totalPrice,
                 status = BookingStatus.PENDING,

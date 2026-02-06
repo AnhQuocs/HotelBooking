@@ -57,11 +57,20 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.utils.getHighlightedText
 import com.google.firebase.Timestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 
 fun Timestamp.toLocalDateTime(): LocalDateTime {
     return LocalDateTime.ofInstant(this.toDate().toInstant(), ZoneId.systemDefault())
+}
+
+fun Timestamp.toLocalDate(): LocalDate {
+    return this
+        .toDate()
+        .toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 }
 
 @Composable

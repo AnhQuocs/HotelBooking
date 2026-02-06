@@ -10,11 +10,11 @@ data class BookingDto(
     val roomNumber: String = "",
     val startDate: Timestamp = Timestamp.now(),
     val endDate: Timestamp = Timestamp.now(),
-    val guest: GuestDto = GuestDto(),
+    val guests: List<GuestDto> = emptyList(),
     val numberOfGuests: Int = 0,
     val totalPrice: Double = 0.0,
     val status: String = "PENDING",
-    val cancelReason: String? = "",
+    val cancelReason: String? = null,
     val cancelNote: String? = "",
     val stayStatus: String = "NONE",
     val createdAt: Timestamp = Timestamp.now(),
@@ -23,8 +23,10 @@ data class BookingDto(
 )
 
 data class GuestDto(
-    val name: String = "",
-    val phone: String = "",
-    val email: String = "",
-    val age: Int = 0
+    val id: String = "",
+    val fullName: String = "",
+    val phone: String? = null,
+    val email: String? = null,
+    val dayOfBirth: Timestamp? = null,
+    val representative: Boolean = false
 )

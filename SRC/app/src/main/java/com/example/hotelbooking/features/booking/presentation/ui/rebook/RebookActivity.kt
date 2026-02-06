@@ -41,6 +41,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentCompleteScreen
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentMethodBottomSheet
+import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDate
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
@@ -58,9 +59,13 @@ import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 @AndroidEntryPoint
 class RebookActivity : BaseComponentActivity() {
@@ -141,25 +146,40 @@ class RebookActivity : BaseComponentActivity() {
                     }
 
                     if (booking != null) {
-                        UpdateGuestInfoScreen(
-                            name = booking.guest.name,
-                            email = booking.guest.email,
-                            phone = booking.guest.phone,
-                            age = booking.guest.age.toString(),
-                            numberOfGuest = booking.numberOfGuests,
-                            capacity = capacity,
-                            isUpdating = updateState is UpdateBookingState.Loading,
-                            onBackClick = { navController.popBackStack() },
-                            onUpdate = { newName, newEmail, newPhone, newAge, newCount ->
-                                updateViewModel.updateGuestInfo(
-                                    newName = newName,
-                                    newEmail = newEmail,
-                                    newAge = newAge.toInt(),
-                                    newPhone = newPhone,
-                                    newNumberOfGuest = newCount
-                                )
-                            }
-                        )
+                        val mainGuest = booking.guests.firstOrNull { it.isRepresentative }
+                        mainGuest?.let {
+                            val dobLocalDate: LocalDate =
+                                mainGuest.dayOfBirth?.toLocalDate() ?: LocalDate.now()
+
+                            UpdateGuestInfoScreen(
+                                name = it.fullName,
+                                email = it.email ?: "",
+                                phone = it.phone ?: "",
+                                dob = dobLocalDate,
+                                numberOfGuest = booking.numberOfGuests,
+                                capacity = capacity,
+                                isUpdating = updateState is UpdateBookingState.Loading,
+                                onBackClick = { navController.popBackStack() },
+                                onUpdate = { newName, newEmail, newPhone, newDob, newCount ->
+                                    val dobTimestamp = Timestamp(
+                                        Date(
+                                            newDob
+                                                .atStartOfDay(ZoneId.systemDefault())
+                                                .toInstant()
+                                                .toEpochMilli()
+                                        )
+                                    )
+
+                                    updateViewModel.updateGuestInfo(
+                                        newName = newName,
+                                        newEmail = newEmail,
+                                        newPhone = newPhone,
+                                        newDob = dobTimestamp,
+                                        newNumberOfGuest = newCount
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
 
