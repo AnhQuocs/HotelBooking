@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +30,8 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentMethodBottomSheet
 import com.example.hotelbooking.features.booking.presentation.ui.history.cancel.CancelBookingActivity
+import com.example.hotelbooking.features.booking.presentation.ui.history.stay.CheckInActivity
+import com.example.hotelbooking.features.booking.presentation.ui.history.stay.StayCheckOutActivity
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
@@ -43,6 +47,7 @@ import com.example.hotelbooking.features.transaction.presentation.viewmodel.Tran
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @Composable
 fun BookingDetailScreen(
@@ -75,6 +80,8 @@ fun BookingDetailScreen(
 
     val timeLeft by bookingHistoryViewModel.timeLeft.collectAsState()
     val totalSeconds = timeLeft.toInt()
+
+    val scope = rememberCoroutineScope()
 
     DetailSideEffects(
         bookingId = bookingId,
@@ -131,11 +138,29 @@ fun BookingDetailScreen(
                             transactionViewModel.prepareTransaction(template)
                             showBottomSheet = true
                         },
-                        onAction = { status ->
-                            bookingHistoryViewModel.updateStayStatus(
-                                bookingWithHotel.booking.bookingId,
-                                status
-                            )
+                        onCheckIn = {
+                            val intent = Intent(context, CheckInActivity::class.java)
+                                .putExtra("bookingId", bookingWithHotel.booking.bookingId)
+                            context.startActivity(intent)
+                        },
+                        onCheckOut = { status ->
+                            scope.launch {
+                                val success = bookingHistoryViewModel.updateStayStatus(
+                                    bookingId = bookingWithHotel.booking.bookingId,
+                                    newStatus = status
+                                )
+                                if(success) {
+                                    val intent = Intent(context, StayCheckOutActivity::class.java)
+                                        .putExtra("hotelId", bookingWithHotel.hotel.id)
+                                    context.startActivity(intent)
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.check_out_failed),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
                         },
                         onRebookClick = { onRebook() }
                     )
@@ -272,6 +297,7 @@ private fun DetailSideEffects(
             bookingDetailState.fallbackMessage
                 ?: stringResource(id = bookingDetailState.messageRes)
         }
+
         else -> null
     }
 

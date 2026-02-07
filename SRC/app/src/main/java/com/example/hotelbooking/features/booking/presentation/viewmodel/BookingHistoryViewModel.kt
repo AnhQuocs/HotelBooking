@@ -66,17 +66,25 @@ class BookingHistoryViewModel @Inject constructor(
         }
     }
 
-    fun updateStayStatus(bookingId: String, newStatus: StayStatus) {
-        viewModelScope.launch {
-            _isProcessing.value = true
-            try {
-                updateStayStatusUseCase(bookingId, newStatus)
-                val updatedCombined = getBookingDetailWithHotelUseCase(bookingId)
-                _bookingDetailState.value = BookingHistoryState.Success(updatedCombined)
-            } catch (e: Exception) {
-            } finally {
-                _isProcessing.value = false
-            }
+    suspend fun updateStayStatus(
+        bookingId: String,
+        newStatus: StayStatus
+    ): Boolean {
+        _isProcessing.value = true
+        return try {
+            updateStayStatusUseCase(bookingId, newStatus)
+
+            val updatedCombined =
+                getBookingDetailWithHotelUseCase(bookingId)
+
+            _bookingDetailState.value =
+                BookingHistoryState.Success(updatedCombined)
+
+            true
+        } catch (e: Exception) {
+            false
+        } finally {
+            _isProcessing.value = false
         }
     }
 

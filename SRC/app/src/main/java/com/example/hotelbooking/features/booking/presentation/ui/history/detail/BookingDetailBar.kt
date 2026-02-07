@@ -152,7 +152,8 @@ fun BookingDetailBottomBar(
     hotel: Hotel,
     isStayProcessing: Boolean,
     onShowBottomSheetClick: () -> Unit,
-    onAction: (StayStatus) -> Unit,
+    onCheckIn: () -> Unit,
+    onCheckOut: (StayStatus) -> Unit,
     onRebookClick: () -> Unit
 ) {
     Surface(
@@ -177,9 +178,8 @@ fun BookingDetailBottomBar(
                     booking = booking,
                     hotel = hotel,
                     isProcessing = isStayProcessing,
-                    onAction = { status ->
-                        onAction(status)
-                    },
+                    onCheckIn = onCheckIn,
+                    onCheckOut = onCheckOut,
                     onRebookClick = { onRebookClick() }
                 )
             }

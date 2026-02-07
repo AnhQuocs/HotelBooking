@@ -166,6 +166,7 @@
     <string name="cancel_reason_label">Please select a cancellation reason</string>
     <string name="date_of_birth">Date of birth</string>
     <string name="select_dob">Select date of birth</string>
+    <string name="check_out_failed">Checkout failed. Please try again.</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>

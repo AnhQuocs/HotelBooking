@@ -15,3 +15,16 @@ fun ReviewDto.toReview(): Review {
         timestamp = timestamp.orEmpty()
     )
 }
+
+fun Review.toDto(): ReviewDto {
+    return ReviewDto(
+        serviceId = serviceId,
+        userId = userId,
+        userName = userName,
+        userProfilePicture = userProfilePicture,
+        serviceType = serviceType,
+        rating = rating,
+        comment = comment,
+        timestamp = timestamp
+    )
+}

@@ -6,6 +6,7 @@ import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
 class FirebaseReviewDataSource {
+
     private val collection = Firebase.firestore.collection("reviews")
 
     suspend fun fetchReviewsByServiceId(serviceId: String): List<ReviewDto> {
@@ -14,6 +15,14 @@ class FirebaseReviewDataSource {
             .get()
             .await()
 
-        return snapshot.documents.mapNotNull { it.toObject(ReviewDto::class.java) }
+        return snapshot.documents.mapNotNull {
+            it.toObject(ReviewDto::class.java)
+        }
+    }
+
+    suspend fun createReview(review: ReviewDto) {
+        collection
+            .add(review)
+            .await()
     }
 }

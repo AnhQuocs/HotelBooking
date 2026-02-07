@@ -10,8 +10,6 @@ import com.example.hotelbooking.features.hotel.domain.usecase.read.GetAllHotelsU
 import com.example.hotelbooking.features.hotel.domain.usecase.read.GetHotelByIdUseCase
 import com.example.hotelbooking.features.hotel.domain.usecase.read.GetHotelsByAdminIdUseCase
 import com.example.hotelbooking.features.hotel.domain.usecase.read.GetRecommendedHotelsUseCase
-import com.example.hotelbooking.features.hotel.domain.usecase.read.SearchHotelsUseCase
-import com.example.hotelbooking.features.hotel.domain.usecase.update.UpdateHotelRatingUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,10 +46,6 @@ object HotelModule {
         addHotelUseCase = AddHotelUseCase(repository),
         getHotelsByAdminIdUseCase = GetHotelsByAdminIdUseCase(repository)
     )
-
-    @Provides
-    fun provideUpdateHotelRatingUseCase(repository: HotelRepository) =
-        UpdateHotelRatingUseCase(repository)
 
     @Provides
     fun provideAddHotelCase(repository: HotelRepository) =

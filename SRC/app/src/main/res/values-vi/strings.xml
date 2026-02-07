@@ -166,6 +166,7 @@
     <string name="cancel_reason_label">Vui lòng chọn lý do hủy</string>
     <string name="date_of_birth">Ngày sinh</string>
     <string name="select_dob">Chọn ngày sinh</string>
+    <string name="check_out_failed">Trả phòng không thành công. Vui lòng thử lại.</string>
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>
