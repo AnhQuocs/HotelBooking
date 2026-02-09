@@ -110,6 +110,7 @@
     <string name="check_out">Trả phòng</string>
     <string name="nights">đêm</string>
     <string name="guest_information">Thông tin khách hàng</string>
+    <string name="check_in_guest_information">Thông tin khách ở</string>
     <string name="full_name">Họ và tên</string>
     <string name="phone">Số điện thoại</string>
     <string name="age">Tuổi</string>
@@ -167,6 +168,17 @@
     <string name="date_of_birth">Ngày sinh</string>
     <string name="select_dob">Chọn ngày sinh</string>
     <string name="check_out_failed">Trả phòng không thành công. Vui lòng thử lại.</string>
+    <string name="people">%1$s người • %2$s</string>
+    <string name="confirm_check_in">Xác nhận check-in</string>
+    <string name="stay_regulation_notice">
+    Theo quy định lưu trú, vui lòng nhập đầy đủ Họ tên và Ngày sinh của tất cả khách hàng.
+</string>
+    <string name="guest_representative">Người đại diện</string>
+    <string name="guest_companion">Khách đi cùng</string>
+    <string name="guest_info_from_booking">Thông tin lấy từ đặt phòng</string>
+    <string name="date_of_birth_required">Ngày sinh (DD/MM/YYYY) *</string>
+    <string name="email_optional">Email (Tùy chọn)</string>
+
     <!-- QR CODE -->
     <string name="download">Tải xuống</string>
     <string name="qr_hotel">Khách sạn: %1$s</string>
@@ -335,5 +347,8 @@
     <string name="refund_success">Hoàn tiền thành công</string>
     <string name="incident_report">Báo cáo sự cố</string>
     <string name="copied">Đã sao chép</string>
+
+    <!-- OTHER -->
+    <string name="loading">Đang tải…</string>
 
 </resources>

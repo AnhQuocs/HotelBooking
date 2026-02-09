@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.booking.presentation.ui.history.stay
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.DatePicker
@@ -38,7 +37,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -53,21 +51,30 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import com.example.hotelbooking.BaseComponentActivity
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Guest
 import com.example.hotelbooking.features.booking.presentation.viewmodel.StayViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
+import com.example.hotelbooking.ui.theme.InputBackground
+import com.example.hotelbooking.ui.theme.LightBlueBackground
+import com.example.hotelbooking.ui.theme.Silver
+import com.example.hotelbooking.ui.theme.SurfaceGray
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -91,7 +98,7 @@ class CheckInActivity : BaseComponentActivity() {
                     lifecycleScope.launch {
                         BookingRefreshEvent.triggerRefresh()
                     }
-                    setResult(Activity.RESULT_OK)
+                    setResult(RESULT_OK)
                     finish()
                 }
             )
@@ -117,7 +124,6 @@ fun GuestCheckInScreen(
     val isSubmitting by stayViewModel.isSubmitting.collectAsState()
     val currentBooking by stayViewModel.bookingState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         containerColor = Color(0xFFF5F7FA),
@@ -128,20 +134,31 @@ fun GuestCheckInScreen(
                     currentBooking?.let { booking ->
                         Column {
                             Text(
-                                text = "Thông tin khách ở",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                text = stringResource(id = R.string.check_in_guest_information),
+                                style = AfacadTypography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
                             Text(
-                                text = "${booking.numberOfGuests} người • ${booking.roomNumber}",
-                                style = MaterialTheme.typography.bodySmall,
+                                text = stringResource(
+                                    id = R.string.people,
+                                    booking.numberOfGuests,
+                                    booking.roomNumber
+                                ),
+                                style = AfacadTypography.bodySmall,
                                 color = Color.Gray
                             )
                         }
-                    } ?: Text("Đang tải...", style = MaterialTheme.typography.titleMedium)
+                    } ?: Text(
+                        stringResource(id = R.string.loading),
+                        style = AfacadTypography.titleMedium
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = null, modifier = Modifier.size(20.dp))
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(Dimen.SizeSM)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -163,16 +180,22 @@ fun GuestCheckInScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(Dimen.PaddingM)
                         .height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(AppShape.ShapeM),
                     colors = ButtonDefaults.buttonColors(containerColor = BlueNavy),
                     enabled = !isSubmitting
                 ) {
                     if (isSubmitting) {
-                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(Dimen.SizeM)
+                        )
                     } else {
-                        Text("Xác nhận Check-in", fontWeight = FontWeight.Bold)
+                        Text(
+                            stringResource(id = R.string.confirm_check_in),
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -182,23 +205,27 @@ fun GuestCheckInScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = Dimen.PaddingM),
+            verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                // Banner thông báo quy định
+                Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
-                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = LightBlueBackground),
+                    shape = RoundedCornerShape(AppShape.ShapeS),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.Top) {
-                        Icon(Icons.Default.Info, contentDescription = null, tint = BlueNavy, modifier = Modifier.size(20.dp))
+                    Row(modifier = Modifier.padding(Dimen.PaddingSM), verticalAlignment = Alignment.Top) {
+                        Icon(
+                            Icons.Default.Info,
+                            contentDescription = null,
+                            tint = BlueNavy,
+                            modifier = Modifier.size(Dimen.SizeSM)
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Theo quy định lưu trú, vui lòng cập nhật đầy đủ thông tin Họ tên và Ngày sinh của tất cả khách hàng.",
-                            style = MaterialTheme.typography.bodySmall,
+                            text = stringResource(id = R.string.stay_regulation_notice),
+                            style = AfacadTypography.bodySmall,
                             color = BlueNavy
                         )
                     }
@@ -259,21 +286,21 @@ fun GuestInfoCard(
 
     Card(
         elevation = CardDefaults.cardElevation(0.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(AppShape.ShapeM),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier.fillMaxWidth(),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE0E0E0))
+        border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceGray)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(Dimen.PaddingM)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(Dimen.SizeL)
                         .background(
-                            if (guest.isRepresentative) BlueNavy else Color(0xFFF0F0F0),
+                            if (guest.isRepresentative) BlueNavy else Silver,
                             CircleShape
                         ),
                     contentAlignment = Alignment.Center
@@ -289,15 +316,21 @@ fun GuestInfoCard(
 
                 Column {
                     Text(
-                        text = if (guest.isRepresentative) "Người đại diện" else "Khách đi cùng",
-                        style = MaterialTheme.typography.bodyLarge,
+                        text = stringResource(
+                            if (guest.isRepresentative)
+                                R.string.guest_representative
+                            else
+                                R.string.guest_companion
+                        ),
+                        style = AfacadTypography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                         color = if (guest.isRepresentative) BlueNavy else Color.Black
                     )
+
                     if (guest.isRepresentative) {
                         Text(
-                            text = "Thông tin lấy từ đặt phòng",
-                            style = MaterialTheme.typography.labelSmall,
+                            text = stringResource(R.string.guest_info_from_booking),
+                            style = AfacadTypography.labelSmall,
                             color = Color.Gray
                         )
                     }
@@ -305,7 +338,7 @@ fun GuestInfoCard(
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = Dimen.PaddingM),
                 color = Color(0xFFF0F0F0)
             )
 
@@ -313,34 +346,38 @@ fun GuestInfoCard(
             OutlinedTextField(
                 value = guest.fullName,
                 onValueChange = { onUpdate(guest.copy(fullName = it)) },
-                label = { Text("Họ và tên *") },
+                label = { Text(stringResource(id = R.string.full_name) + "*") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 enabled = !guest.isRepresentative,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color(0xFFF9F9F9),
+                    disabledContainerColor = InputBackground,
                     disabledTextColor = Color.Black,
                     disabledBorderColor = Color.LightGray,
                     disabledLabelColor = BlueNavy
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(AppShape.ShapeM)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = dobString,
                     onValueChange = {},
-                    label = { Text("Ngày sinh (DD/MM/YYYY) *") },
+                    label = { Text(stringResource(R.string.date_of_birth_required)) },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
                     trailingIcon = {
-                        Icon(Icons.Default.CalendarMonth, contentDescription = null, tint = Color.Gray)
+                        Icon(
+                            Icons.Default.CalendarMonth,
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
                     },
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(AppShape.ShapeM),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White
@@ -355,15 +392,15 @@ fun GuestInfoCard(
             }
 
             if (!guest.isRepresentative) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
                 OutlinedTextField(
                     value = guest.email ?: "",
                     onValueChange = { onUpdate(guest.copy(email = it)) },
-                    label = { Text("Email (Tùy chọn)") },
+                    label = { Text(stringResource(R.string.email_optional)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(AppShape.ShapeM),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White

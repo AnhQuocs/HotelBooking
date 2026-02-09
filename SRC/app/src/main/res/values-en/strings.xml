@@ -110,6 +110,7 @@
     <string name="check_out">Check-out</string>
     <string name="nights">nights</string>
     <string name="guest_information">Guest Information</string>
+    <string name="check_in_guest_information">Guest Information</string>
     <string name="full_name">Full Name</string>
     <string name="name_required">Name is required</string>
     <string name="phone">Phone</string>
@@ -167,6 +168,16 @@
     <string name="date_of_birth">Date of birth</string>
     <string name="select_dob">Select date of birth</string>
     <string name="check_out_failed">Checkout failed. Please try again.</string>
+    <string name="people">%1$s people • %2$s</string>
+    <string name="confirm_check_in">Confirm check-in</string>
+    <string name="stay_regulation_notice">
+    In accordance with accommodation regulations, please provide the full name and date of birth of all guests.
+</string>
+    <string name="guest_representative">Representative</string>
+    <string name="guest_companion">Accompanying guest</string>
+    <string name="guest_info_from_booking">Information from booking</string>
+    <string name="date_of_birth_required">Date of birth (DD/MM/YYYY) *</string>
+    <string name="email_optional">Email (Optional)</string>
     <!-- QR CODE -->
     <string name="download">Download</string>
     <string name="qr_hotel">Hotel: %1$s</string>
@@ -336,5 +347,8 @@
     <string name="refund_success">Refund successful</string>
     <string name="incident_report">Incident report</string>
     <string name="copied">Copied</string>
+
+    <!-- OTHER -->
+    <string name="loading">Loading…</string>
 
 </resources>
