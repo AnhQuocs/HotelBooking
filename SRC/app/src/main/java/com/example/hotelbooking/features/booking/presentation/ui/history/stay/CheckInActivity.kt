@@ -312,7 +312,7 @@ fun GuestInfoCard(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(AppSpacing.M))
 
                 Column {
                     Text(

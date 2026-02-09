@@ -245,6 +245,19 @@
     <string name="rating_average">Average</string>
     <string name="rating_below_average">Below Average</string>
     <string name="rating_poor">Poor</string>
+    <string name="thank_you_for_review">Thank you for your review!</string>
+    <string name="review_title">Rate your stay</string>
+    <string name="review_subtitle">How was your experience here?</string>
+    <string name="rating_very_bad">Very bad 😞</string>
+    <string name="rating_bad">Bad 😕</string>
+    <string name="rating_normal">Average 😐</string>
+    <string name="rating_good">Good 🙂</string>
+    <string name="rating_excellent">Excellent! 😍</string>
+    <string name="rating_hint">Tap a star to rate</string>
+    <string name="review_comment_label">Share more (Optional)</string>
+    <string name="review_comment_placeholder">Clean room, friendly staff...</string>
+    <string name="submit_review">Submit review</string>
+    <string name="skip_review">Skip</string>
 
     <!-- MAP -->
     <string name="hotel_near_you">Hotel Near You</string>

@@ -36,7 +36,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -57,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -64,13 +64,19 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.hotelbooking.BaseComponentActivity
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.UpdateRatingState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.UpdateRatingViewModel
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.RatingYellow
+import com.example.hotelbooking.ui.theme.SurfaceSoftBlue
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -89,7 +95,7 @@ class StayCheckOutActivity : BaseComponentActivity() {
                 hotelViewModel.loadHotelById(hotelId)
             }
 
-            when(val currentState = hotelState) {
+            when (val currentState = hotelState) {
                 is HotelState.Loading -> {
 
                 }
@@ -98,8 +104,7 @@ class StayCheckOutActivity : BaseComponentActivity() {
                     StayCheckOutScreen(
                         hotel = currentState.data,
                         onDismiss = { finish() },
-                        onRatingSuccess = { finish() }
-                    )
+                        onRatingSuccess = { finish() })
                 }
 
                 is HotelState.Error -> {
@@ -120,73 +125,68 @@ fun StayCheckOutScreen(
 ) {
     val updateState by updateRatingViewModel.updateRatingState.collectAsState()
 
-    // State cho cả Rating và Comment
     var rating by remember { mutableDoubleStateOf(0.0) }
     var comment by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val thankYouToastText = stringResource(id = R.string.thank_you_for_review)
 
-    // Xử lý sự kiện thành công
     LaunchedEffect(updateState) {
         if (updateState is UpdateRatingState.Success) {
-            Toast.makeText(context, "Cảm ơn đánh giá của bạn!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, thankYouToastText, Toast.LENGTH_SHORT).show()
             onRatingSuccess()
         }
     }
 
     Scaffold(
-        containerColor = Color(0xFFF5F7FA), // Nền xám nhạt hiện đại
-        topBar = {
-            // Header đơn giản trong suốt
+        containerColor = SurfaceSoftBlue, topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, end = 16.dp),
+                    .padding(top = Dimen.PaddingM, end = Dimen.PaddingM),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 IconButton(
                     onClick = onDismiss,
                     colors = IconButtonDefaults.iconButtonColors(containerColor = Color.White)
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.Gray)
+                    Icon(Icons.Default.Close, contentDescription = "", tint = Color.Gray)
                 }
             }
-        }
-    ) { padding ->
+        }) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState()), // Cho phép cuộn nếu bàn phím che
+                .padding(horizontal = Dimen.SizeL)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.SPlus))
 
             Text(
-                text = "Đánh giá kỳ nghỉ",
-                style = MaterialTheme.typography.headlineSmall,
+                text = stringResource(id = R.string.review_title),
+                style = AfacadTypography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = BlueNavy
             )
 
             Text(
-                text = "Trải nghiệm của bạn tại đây thế nào?",
-                style = MaterialTheme.typography.bodyMedium,
+                text = stringResource(id = R.string.review_subtitle),
+                style = AfacadTypography.bodyMedium,
                 color = Color.Gray,
-                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+                modifier = Modifier.padding(top = Dimen.PaddingS, bottom = Dimen.PaddingL)
             )
 
-            // --- 1. HOTEL CARD INFO ---
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(AppShape.ShapeL),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(Dimen.PaddingM),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
@@ -195,23 +195,23 @@ fun StayCheckOutScreen(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(64.dp)
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(AppShape.ShapeM))
                             .background(Color.LightGray)
                     )
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(AppSpacing.MediumLarge))
 
                     Column {
                         Text(
                             text = hotel.name,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = AfacadTypography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(AppSpacing.XS))
                         Text(
                             text = hotel.address,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = AfacadTypography.bodySmall,
                             color = Color.Gray,
                             maxLines = 1
                         )
@@ -219,47 +219,44 @@ fun StayCheckOutScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.XL))
 
-            // --- 2. RATING SECTION ---
             InteractiveRatingBar(
-                currentRating = rating,
-                onRatingChanged = { rating = it }
-            )
+                currentRating = rating, onRatingChanged = { rating = it })
 
-            // Text phản hồi cảm xúc
             AnimatedContent(
-                targetState = rating,
-                label = "RatingText",
-                modifier = Modifier.padding(top = 16.dp)
+                targetState = rating, label = "", modifier = Modifier.padding(top = 16.dp)
             ) { r ->
                 Text(
                     text = when (r.toInt()) {
-                        1 -> "Rất tệ 😞"
-                        2 -> "Tệ 😕"
-                        3 -> "Bình thường 😐"
-                        4 -> "Hài lòng 🙂"
-                        5 -> "Tuyệt vời! 😍"
-                        else -> "Chạm vào sao để đánh giá"
+                        1 -> stringResource(R.string.rating_very_bad)
+                        2 -> stringResource(R.string.rating_bad)
+                        3 -> stringResource(R.string.rating_normal)
+                        4 -> stringResource(R.string.rating_good)
+                        5 -> stringResource(R.string.rating_excellent)
+                        else -> stringResource(R.string.rating_hint)
                     },
-                    style = MaterialTheme.typography.titleMedium,
-                    color = if(r > 0) BlueNavy else Color.Gray,
+                    style = AfacadTypography.titleMedium,
+                    color = if (r > 0) BlueNavy else Color.Gray,
                     fontWeight = FontWeight.SemiBold
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.XL))
 
-            // --- 3. COMMENT INPUT ---
             OutlinedTextField(
                 value = comment,
                 onValueChange = { comment = it },
-                label = { Text("Chia sẻ thêm (Tùy chọn)") },
-                placeholder = { Text("Phòng sạch sẽ, nhân viên thân thiện...") },
+                label = {
+                    Text(stringResource(R.string.review_comment_label))
+                },
+                placeholder = {
+                    Text(stringResource(R.string.review_comment_placeholder))
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp), // TextArea cao
-                shape = RoundedCornerShape(16.dp),
+                    .height(140.dp),
+                shape = RoundedCornerShape(AppShape.ShapeL),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
@@ -267,25 +264,22 @@ fun StayCheckOutScreen(
                     unfocusedBorderColor = Color.LightGray.copy(alpha = 0.5f)
                 ),
                 maxLines = 5,
-                textStyle = MaterialTheme.typography.bodyMedium
+                textStyle = AfacadTypography.bodyMedium
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.XL))
 
-            // --- 4. ACTION BUTTONS ---
             Button(
                 onClick = {
                     keyboardController?.hide()
                     updateRatingViewModel.submitReview(
-                        hotelId = hotel.id,
-                        rating = rating,
-                        comment = comment // Truyền comment vào ViewModel
+                        hotelId = hotel.id, rating = rating, comment = comment
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(AppShape.ShapeM),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = BlueNavy,
                     disabledContainerColor = Color.Gray.copy(alpha = 0.5f)
@@ -293,31 +287,38 @@ fun StayCheckOutScreen(
                 enabled = rating > 0 && updateState !is UpdateRatingState.Loading
             ) {
                 if (updateState is UpdateRatingState.Loading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(Dimen.SizeM), color = Color.White
+                    )
                 } else {
-                    Text("Gửi đánh giá", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        stringResource(id = R.string.submit_review),
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
 
             TextButton(
-                onClick = onDismiss,
-                modifier = Modifier.padding(top = 12.dp)
+                onClick = onDismiss, modifier = Modifier.padding(top = Dimen.PaddingSM)
             ) {
-                Text("Bỏ qua", color = Color.Gray, fontWeight = FontWeight.Medium)
+                Text(
+                    stringResource(id = R.string.skip_review),
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Medium
+                )
             }
 
-            // Error Message
             if (updateState is UpdateRatingState.Error) {
                 Text(
                     text = (updateState as UpdateRatingState.Error).message,
                     color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 8.dp)
+                    style = AfacadTypography.bodySmall,
+                    modifier = Modifier.padding(top = Dimen.PaddingS)
                 )
             }
 
-            // Spacer bottom để tránh bị sát đáy khi cuộn
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.L))
         }
     }
 }
@@ -331,27 +332,23 @@ fun InteractiveRatingBar(
     starColor: Color = RatingYellow
 ) {
     Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+        horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()
     ) {
         for (i in 1..maxStars) {
             val isSelected = i <= currentRating
-            // Animation: Nếu được chọn thì icon to hơn chút xíu
             val animatedSize by animateDpAsState(
-                targetValue = if (isSelected) starSize else starSize * 0.9f,
-                label = "StarSize"
+                targetValue = if (isSelected) starSize else starSize * 0.9f, label = ""
             )
 
             Icon(
-                imageVector = if (isSelected) Icons.Filled.Star else Icons.Rounded.StarBorder, // Dùng Rounded nhìn mềm hơn
+                imageVector = if (isSelected) Icons.Filled.Star else Icons.Rounded.StarBorder,
                 contentDescription = null,
                 tint = if (isSelected) starColor else Color.Gray.copy(alpha = 0.3f),
                 modifier = Modifier
                     .size(animatedSize)
-                    .clip(CircleShape) // Để hiệu ứng ripple tròn đẹp
+                    .clip(CircleShape)
                     .clickable { onRatingChanged(i.toDouble()) }
-                    .padding(2.dp)
-            )
+                    .padding(Dimen.PaddingXXS))
         }
     }
 }

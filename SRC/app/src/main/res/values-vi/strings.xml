@@ -244,6 +244,19 @@
     <string name="rating_average">Trung bình</string>
     <string name="rating_below_average">Dưới trung bình</string>
     <string name="rating_poor">Kém</string>
+    <string name="thank_you_for_review">Cảm ơn đánh giá của bạn!</string>
+    <string name="review_title">Đánh giá kỳ nghỉ</string>
+    <string name="review_subtitle">Trải nghiệm của bạn tại đây thế nào?</string>
+    <string name="rating_very_bad">Rất tệ 😞</string>
+    <string name="rating_bad">Tệ 😕</string>
+    <string name="rating_normal">Bình thường 😐</string>
+    <string name="rating_good">Hài lòng 🙂</string>
+    <string name="rating_excellent">Tuyệt vời! 😍</string>
+    <string name="rating_hint">Chạm vào sao để đánh giá</string>
+    <string name="review_comment_label">Chia sẻ thêm (Tùy chọn)</string>
+    <string name="review_comment_placeholder">Phòng sạch sẽ, nhân viên thân thiện...</string>
+    <string name="submit_review">Gửi đánh giá</string>
+    <string name="skip_review">Bỏ qua</string>
 
     <!-- MAP -->
     <string name="hotel_near_you">Khách sạn gần bạn</string>
