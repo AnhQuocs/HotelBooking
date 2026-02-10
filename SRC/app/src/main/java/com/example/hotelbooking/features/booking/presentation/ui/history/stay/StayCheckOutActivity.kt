@@ -75,6 +75,7 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.RatingYellow
 import com.example.hotelbooking.ui.theme.SurfaceSoftBlue
 import dagger.hilt.android.AndroidEntryPoint
@@ -97,7 +98,12 @@ class StayCheckOutActivity : BaseComponentActivity() {
 
             when (val currentState = hotelState) {
                 is HotelState.Loading -> {
-
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = PrimaryBlue)
+                    }
                 }
 
                 is HotelState.Success -> {
@@ -108,7 +114,9 @@ class StayCheckOutActivity : BaseComponentActivity() {
                 }
 
                 is HotelState.Error -> {
-
+                    Text(
+                        text = stringResource(id = R.string.error, currentState.message)
+                    )
                 }
             }
         }
