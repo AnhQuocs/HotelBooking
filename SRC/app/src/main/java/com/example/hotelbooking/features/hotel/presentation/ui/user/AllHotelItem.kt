@@ -77,7 +77,7 @@ fun AllHotelItem(hotel: Hotel, context: Context, onClick: (String) -> Unit) {
 
             HotelRatingBlurBadge(
                 modifier = Modifier.align(Alignment.TopStart),
-                rating = hotel.averageRating.toString()
+                rating = "%.1f".format(hotel.averageRating)
             )
         }
 

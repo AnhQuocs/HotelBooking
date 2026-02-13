@@ -147,8 +147,8 @@ fun HotelThumbnail(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "⭐${averageRating}",
-                style = AfacadTypography.bodyMedium.copy(Color.Black),
+                text = "⭐%.1f".format(averageRating),
+                style = AfacadTypography.bodyMedium.copy(color = Color.Black),
                 modifier = Modifier.padding(horizontal = padding)
             )
         }

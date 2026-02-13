@@ -32,6 +32,8 @@ interface BookingRepository {
 
     suspend fun getBookingById(bookingId: String): Booking
 
+    suspend fun getAllBookingsByHotelId(hotelId: String): List<Booking>
+
     suspend fun getBookings(
         hotelId: String,
         roomTypeId: String,

@@ -250,8 +250,8 @@
     <string name="rating_very_bad">Very bad 😞</string>
     <string name="rating_bad">Bad 😕</string>
     <string name="rating_normal">Average 😐</string>
-    <string name="rating_good">Good 🙂</string>
-    <string name="rating_excellent">Excellent! 😍</string>
+    <string name="rating_good2">Good 🙂</string>
+    <string name="rating_excellent2">Excellent! 😍</string>
     <string name="rating_hint">Tap a star to rate</string>
     <string name="review_comment_label">Share more (Optional)</string>
     <string name="review_comment_placeholder">Clean room, friendly staff...</string>

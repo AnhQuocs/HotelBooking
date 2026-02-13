@@ -128,7 +128,7 @@ fun HotelItem(
                 )
 
                 Text(
-                    text = "⭐${hotel.averageRating}",
+                    text = "⭐%.1f".format(hotel.averageRating),
                     style = AfacadTypography.bodyLarge.copy(
                         fontSize = 15.sp
                     ),

@@ -195,6 +195,21 @@ class BookingRepositoryImpl(
         return bookingDto.toDomain()
     }
 
+    override suspend fun getAllBookingsByHotelId(hotelId: String): List<Booking> {
+        return try {
+            val snapshot = bookingsCollection
+                .whereEqualTo("hotelId", hotelId)
+                .get()
+                .await()
+
+            snapshot.toObjects(BookingDto::class.java)
+                .map { it.toDomain() }
+
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     override suspend fun getBookings(
         hotelId: String,
         roomTypeId: String,

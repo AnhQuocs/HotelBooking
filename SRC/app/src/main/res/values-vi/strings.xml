@@ -250,8 +250,8 @@
     <string name="rating_very_bad">Rất tệ 😞</string>
     <string name="rating_bad">Tệ 😕</string>
     <string name="rating_normal">Bình thường 😐</string>
-    <string name="rating_good">Hài lòng 🙂</string>
-    <string name="rating_excellent">Tuyệt vời! 😍</string>
+    <string name="rating_good2">Hài lòng 🙂</string>
+    <string name="rating_excellent2">Tuyệt vời! 😍</string>
     <string name="rating_hint">Chạm vào sao để đánh giá</string>
     <string name="review_comment_label">Chia sẻ thêm (Tùy chọn)</string>
     <string name="review_comment_placeholder">Phòng sạch sẽ, nhân viên thân thiện...</string>
