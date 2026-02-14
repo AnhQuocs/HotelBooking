@@ -32,7 +32,7 @@ import com.example.hotelbooking.features.booking.presentation.ui.history.Booking
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
 import com.example.hotelbooking.features.chat.presentation.ui.MessageScreen
-import com.example.hotelbooking.features.home.HomeScreen
+import com.example.hotelbooking.features.home.user.HomeScreen
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.map.viewmodel.MapPreviewViewModel
 import com.example.hotelbooking.features.notification.presentation.viewmodel.NotificationViewModel

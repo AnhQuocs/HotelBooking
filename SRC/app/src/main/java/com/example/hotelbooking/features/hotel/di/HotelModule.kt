@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.domain.di
+package com.example.hotelbooking.features.hotel.di
 
 import com.example.hotelbooking.features.hotel.data.repository.HotelRepositoryImpl
 import com.example.hotelbooking.features.hotel.data.source.FirebaseHotelDataSource
