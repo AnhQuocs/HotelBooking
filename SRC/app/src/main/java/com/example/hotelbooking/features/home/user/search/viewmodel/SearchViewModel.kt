@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.search.viewmodel
+package com.example.hotelbooking.features.home.user.search.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

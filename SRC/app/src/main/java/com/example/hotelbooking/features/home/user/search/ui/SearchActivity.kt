@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.search.ui
+package com.example.hotelbooking.features.home.user.search.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -38,9 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
-import com.example.hotelbooking.components.AppTitle
 import com.example.hotelbooking.components.AppTopBar
-import com.example.hotelbooking.features.home.search.viewmodel.SearchViewModel
+import com.example.hotelbooking.features.home.user.search.viewmodel.SearchViewModel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedItem
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
@@ -49,7 +48,6 @@ import com.example.hotelbooking.features.recent_viewed.presentation.viewmodel.Re
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.ErrorRed
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SurfaceGray
 import dagger.hilt.android.AndroidEntryPoint

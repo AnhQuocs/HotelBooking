@@ -65,7 +65,7 @@
             android:name=".features.map.ui.FullMapActivity"
             android:exported="false" />
         <activity
-            android:name=".features.home.search.ui.SearchActivity"
+            android:name=".features.home.user.search.ui.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".features.review.presentation.ui.AllReviewActivity"
