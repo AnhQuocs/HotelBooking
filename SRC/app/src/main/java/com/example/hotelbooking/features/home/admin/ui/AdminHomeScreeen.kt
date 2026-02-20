@@ -32,7 +32,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -47,14 +46,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.home.admin.viewmodel.AdminHomeViewModel
 import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.ArrivalBlue
+import com.example.hotelbooking.ui.theme.AvailableGreen
+import com.example.hotelbooking.ui.theme.BrightBlue
+import com.example.hotelbooking.ui.theme.CancelledRed
+import com.example.hotelbooking.ui.theme.HeaderBlue
+import com.example.hotelbooking.ui.theme.RatingYellow
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -84,21 +96,22 @@ fun AdminHomeScreen(
                     Column(
                         modifier = Modifier
                             .clickable { if (allHotels.size > 1) isHotelMenuExpanded = true }
-                            .padding(end = 8.dp)
+                            .padding(end = Dimen.PaddingS)
                     ) {
-                        Text("Dashboard", fontWeight = FontWeight.Bold)
+                        Text(stringResource(id = R.string.dashboard), fontWeight = FontWeight.Bold)
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = currentHotel?.name ?: "Chưa chọn khách sạn",
-                                style = MaterialTheme.typography.bodySmall,
+                                text = currentHotel?.name
+                                    ?: stringResource(id = R.string.hotel_not_selected),
+                                style = AfacadTypography.bodySmall,
                                 color = Color.Gray
                             )
                             if (allHotels.size > 1) {
                                 Icon(
                                     imageVector = Icons.Default.ArrowDropDown,
                                     contentDescription = null,
-                                    modifier = Modifier.size(16.dp),
+                                    modifier = Modifier.size(Dimen.SizeS),
                                     tint = Color.Gray
                                 )
                             }
@@ -126,7 +139,7 @@ fun AdminHomeScreen(
                                         Icon(
                                             Icons.Default.Check,
                                             contentDescription = null,
-                                            tint = Color(0xFF4CAF50)
+                                            tint = AvailableGreen
                                         )
                                     }
                                 }
@@ -150,25 +163,25 @@ fun AdminHomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = Dimen.PaddingM),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
             ) {
-                item { Spacer(modifier = Modifier.height(4.dp)) }
+                item { Spacer(modifier = Modifier.height(AppSpacing.XS)) }
 
                 item {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(AppSpacing.M)) {
                         DashboardCard(
-                            title = "Doanh thu hôm nay",
-                            value = "$${String.format("%,.0f", revenue)}",
+                            title = stringResource(id = R.string.today_revenue),
+                            value = "$${String.format(Locale.US, "%,.0f", revenue)}",
                             icon = Icons.Default.AttachMoney,
-                            iconColor = Color(0xFF4CAF50),
+                            iconColor = AvailableGreen,
                             modifier = Modifier.weight(1f)
                         )
                         DashboardCard(
-                            title = "Booking mới",
+                            title = stringResource(id = R.string.new_booking),
                             value = "$newBookings",
                             icon = Icons.Default.BookOnline,
-                            iconColor = Color(0xFF2196F3),
+                            iconColor = BrightBlue,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -176,63 +189,67 @@ fun AdminHomeScreen(
 
                 item {
                     DashboardCard(
-                        title = "Công suất phòng (Occupancy)",
-                        value = "$occupied / $totalRooms phòng đang dùng",
+                        title = stringResource(R.string.dashboard_occupancy_title),
+                        value = stringResource(
+                            R.string.dashboard_occupancy_value,
+                            occupied,
+                            totalRooms
+                        ),
                         icon = Icons.Default.MeetingRoom,
-                        iconColor = Color(0xFFFF9800),
+                        iconColor = BrightBlue,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
 
-                // 2. OPERATIONS SECTION
                 item {
                     Text(
-                        "Hoạt động hôm nay",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = stringResource(R.string.dashboard_today_activity),
+                        style = AfacadTypography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 item {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         OperationStatCard(
-                            label = "Khách đến",
+                            label = stringResource(R.string.dashboard_arrivals),
                             count = arrivals.size,
-                            color = Color(0xFF1976D2), // Blue
+                            color = ArrivalBlue,
                             modifier = Modifier.weight(1f)
                         )
                         OperationStatCard(
-                            label = "Khách đi",
+                            label = stringResource(R.string.dashboard_departures),
                             count = departures.size,
-                            color = Color(0xFFD32F2F), // Red
+                            color = CancelledRed,
                             modifier = Modifier.weight(1f)
                         )
                     }
                 }
 
-                // 3. CHART SECTION
                 item {
                     Text(
-                        "Biểu đồ doanh thu (7 ngày)",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = stringResource(R.string.dashboard_revenue_chart_title),
+                        style = AfacadTypography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 item {
                     RevenueBarChart(data = chartData)
                 }
 
-                // 4. REVIEWS SECTION
                 item {
                     Text(
-                        "Đánh giá gần đây",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = stringResource(R.string.dashboard_recent_reviews),
+                        style = AfacadTypography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 if (reviews.isEmpty()) {
                     item {
                         Text(
-                            "Chưa có đánh giá nào.",
+                            text = stringResource(R.string.dashboard_no_reviews),
                             fontStyle = FontStyle.Italic,
                             color = Color.Gray
                         )
@@ -243,7 +260,7 @@ fun AdminHomeScreen(
                     }
                 }
 
-                item { Spacer(modifier = Modifier.height(24.dp)) }
+                item { Spacer(modifier = Modifier.height(AppSpacing.L)) }
             }
         }
     }
@@ -262,11 +279,14 @@ fun EmptyDashboardState(onCreateClick: () -> Unit) {
             modifier = Modifier.size(64.dp),
             tint = Color.Gray
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Bạn chưa quản lý khách sạn nào", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
+        Text(
+            text = stringResource(R.string.empty_dashboard_title),
+            style = AfacadTypography.titleMedium
+        )
+        Spacer(modifier = Modifier.height(AppSpacing.L))
         Button(onClick = onCreateClick) {
-            Text("Thêm khách sạn đầu tiên")
+            Text(text = stringResource(R.string.empty_dashboard_action))
         }
     }
 }
@@ -287,8 +307,8 @@ fun DashboardCard(
         Column(modifier = Modifier.padding(16.dp)) {
             Icon(icon, contentDescription = null, tint = iconColor)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(title, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-            Text(value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text(title, style = AfacadTypography.bodySmall, color = Color.Gray)
+            Text(value, style = AfacadTypography.titleLarge, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -302,17 +322,17 @@ fun OperationStatCard(label: String, count: Int, color: Color, modifier: Modifie
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(Dimen.PaddingM)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 count.toString(),
-                style = MaterialTheme.typography.headlineMedium,
+                style = AfacadTypography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = color
             )
-            Text(label, style = MaterialTheme.typography.bodyMedium, color = color)
+            Text(label, style = AfacadTypography.bodyMedium, color = color)
         }
     }
 }
@@ -328,7 +348,7 @@ fun RevenueBarChart(data: List<Pair<String, Double>>) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(Dimen.PaddingM),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             data.forEach { (date, amount) ->
@@ -349,16 +369,19 @@ fun RevenueBarChart(data: List<Pair<String, Double>>) {
                                 .fillMaxWidth()
                                 .fillMaxHeight(heightRatio)
                                 .background(
-                                    Color(0xFF0D47A1),
-                                    RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp)
+                                    HeaderBlue,
+                                    RoundedCornerShape(
+                                        topStart = AppShape.ShapeXXS,
+                                        topEnd = AppShape.ShapeXXS
+                                    )
                                 )
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(AppSpacing.XS))
                     Text(
                         text = date,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = AfacadTypography.labelSmall,
                         fontSize = 10.sp
                     )
                 }
@@ -373,17 +396,17 @@ fun AdminReviewItem(review: Review) {
         colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
+            .padding(bottom = Dimen.PaddingS)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(Dimen.PaddingSM)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(review.userName, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.weight(1f))
-                Text("${review.rating}/5", color = Color(0xFFFFC107), fontWeight = FontWeight.Bold)
+                Text("${review.rating}/5", color = RatingYellow, fontWeight = FontWeight.Bold)
             }
             Text(
-                text = review.comment.ifBlank { "Không có nội dung" },
-                style = MaterialTheme.typography.bodySmall,
+                text = review.comment.ifBlank { stringResource(id = R.string.no_content) },
+                style = AfacadTypography.bodySmall,
                 color = Color.DarkGray,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

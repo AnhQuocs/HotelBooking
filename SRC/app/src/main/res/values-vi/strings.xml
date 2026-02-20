@@ -361,6 +361,23 @@
     <string name="incident_report">Báo cáo sự cố</string>
     <string name="copied">Đã sao chép</string>
 
+    <!-- ADMIN DASHBOARD -->
+    <string name="dashboard">Bảng điều khiển</string>
+    <string name="hotel_not_selected">Chưa chọn khách sạn</string>
+    <string name="today_revenue">Doanh thu hôm nay</string>
+    <string name="new_booking">Booking mới</string>
+    <string name="dashboard_occupancy_title">Công suất phòng (Occupancy)</string>
+    <string name="dashboard_occupancy_value">%1$d / %2$d phòng đang dùng</string>
+    <string name="dashboard_today_activity">Hoạt động hôm nay</string>
+    <string name="dashboard_arrivals">Khách đến</string>
+    <string name="dashboard_departures">Khách đi</string>
+    <string name="dashboard_revenue_chart_title">Biểu đồ doanh thu (7 ngày)</string>
+    <string name="dashboard_recent_reviews">Đánh giá gần đây</string>
+    <string name="dashboard_no_reviews">Chưa có đánh giá nào.</string>
+    <string name="empty_dashboard_title">Bạn chưa quản lý khách sạn nào</string>
+    <string name="empty_dashboard_action">Thêm khách sạn đầu tiên</string>
+    <string name="no_content">Không có nội dung</string>
+
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
 

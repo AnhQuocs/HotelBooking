@@ -362,6 +362,23 @@
     <string name="incident_report">Incident report</string>
     <string name="copied">Copied</string>
 
+    <!-- ADMIN DASHBOARD -->
+    <string name="dashboard">Dashboard</string>
+    <string name="hotel_not_selected">Hotel not selected</string>
+    <string name="today_revenue">Today’s revenue</string>
+    <string name="new_booking">New Booking</string>
+    <string name="dashboard_occupancy_title">Room occupancy</string>
+    <string name="dashboard_occupancy_value">%1$d / %2$d rooms occupied</string>
+    <string name="dashboard_today_activity">Today’s activity</string>
+    <string name="dashboard_arrivals">Arrivals</string>
+    <string name="dashboard_departures">Departures</string>
+    <string name="dashboard_revenue_chart_title">Revenue chart (7 days)</string>
+    <string name="dashboard_recent_reviews">Recent reviews</string>
+    <string name="dashboard_no_reviews">No reviews yet.</string>
+    <string name="empty_dashboard_title">You are not managing any hotels yet</string>
+    <string name="empty_dashboard_action">Add your first hotel</string>
+    <string name="no_content">No content</string>
+
     <!-- OTHER -->
     <string name="loading">Loading…</string>
 
