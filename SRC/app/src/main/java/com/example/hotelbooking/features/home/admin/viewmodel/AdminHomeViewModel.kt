@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
-import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.usecase.AdminHotelUseCases
@@ -19,6 +18,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -48,36 +48,47 @@ class AdminHomeViewModel @Inject constructor(
     private val _bookings = MutableStateFlow<List<Booking>>(emptyList())
     private val _reviews = MutableStateFlow<List<Review>>(emptyList())
     private val _totalRooms = MutableStateFlow(0)
+    val totalRooms = _totalRooms.asStateFlow()
 
-    val todayRevenue = _bookings.map { list ->
-        list.filter { isToday(it.createdAt) && it.status == BookingStatus.CONFIRMED }
+    private val _selectedDate = MutableStateFlow(LocalDate.now())
+    val selectedDate = _selectedDate.asStateFlow()
+
+    fun updateSelectedDate(date: LocalDate) {
+        _selectedDate.value = date
+    }
+
+    val todayRevenue = combine(_bookings, _selectedDate) { list, date ->
+        list.filter { isTargetDate(it.createdAt, date) && it.status == BookingStatus.CONFIRMED }
             .sumOf { it.totalPrice }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
-    val newBookingsCount = _bookings.map { list ->
-        list.count { isToday(it.createdAt) }
+    val newBookingsCount = combine(_bookings, _selectedDate) { list, date ->
+        list.count { isTargetDate(it.createdAt, date) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    val occupiedRoomsCount = _bookings.map { list ->
-        list.count { it.stayStatus == StayStatus.CHECK_IN }
+    val occupiedRoomsCount = combine(_bookings, _selectedDate) { list, date ->
+        list.count {
+            val start =
+                it.startDate.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            val end = it.endDate.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            !date.isBefore(start) && date.isBefore(end) && (it.status == BookingStatus.CONFIRMED)
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    val totalRooms = _totalRooms.asStateFlow()
-
-    val todayArrivals = _bookings.map { list ->
+    val todayArrivals = combine(_bookings, _selectedDate) { list, date ->
         list.filter {
-            isToday(it.startDate) &&
-                    it.status == BookingStatus.CONFIRMED &&
-                    (it.stayStatus == StayStatus.NONE || it.stayStatus == StayStatus.NO_SHOW)
+            isTargetDate(it.startDate, date) && (it.status == BookingStatus.CONFIRMED)
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val todayDepartures = _bookings.map { list ->
-        list.filter { isToday(it.endDate) && it.stayStatus == StayStatus.CHECK_IN }
+    val todayDepartures = combine(_bookings, _selectedDate) { list, date ->
+        list.filter {
+            isTargetDate(it.endDate, date) && (it.status == BookingStatus.CONFIRMED)
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val revenueChartData = _bookings.map { list ->
-        calculate7DaysRevenue(list)
+    val revenueChartData = combine(_bookings, _selectedDate) { list, date ->
+        calculate7DaysRevenue(list, date)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val recentReviews = _reviews.map { list ->
@@ -134,24 +145,31 @@ class AdminHomeViewModel @Inject constructor(
         _totalRooms.value = roomTypes.sumOf { it.totalRoom }
     }
 
-    private fun isToday(timestamp: Timestamp): Boolean {
+    // --- HELPER FUNCTIONS ---
+
+    private fun isTargetDate(timestamp: Timestamp, targetDate: LocalDate): Boolean {
         val zoneId = ZoneId.systemDefault()
         val date = timestamp.toDate().toInstant().atZone(zoneId).toLocalDate()
-        return date == LocalDate.now()
+        return date == targetDate
     }
 
-    private fun calculate7DaysRevenue(bookings: List<Booking>): List<Pair<String, Double>> {
-        val today = LocalDate.now()
+    private fun calculate7DaysRevenue(
+        bookings: List<Booking>, targetDate: LocalDate
+    ): List<Pair<String, Double>> {
         val result = mutableListOf<Pair<String, Double>>()
         val formatter = DateTimeFormatter.ofPattern("dd/MM")
 
         for (i in 6 downTo 0) {
-            val date = today.minusDays(i.toLong())
+            val date = targetDate.minusDays(i.toLong())
             val dateStr = date.format(formatter)
 
             val dailyTotal = bookings.filter {
+
                 it.status == BookingStatus.CONFIRMED &&
-                        it.createdAt.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() == date
+
+                        it.createdAt.toDate().toInstant().atZone(ZoneId.systemDefault())
+                            .toLocalDate() == date
+
             }.sumOf { it.totalPrice }
 
             result.add(dateStr to dailyTotal)
