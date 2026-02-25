@@ -1,6 +1,8 @@
 package com.example.hotelbooking.features.home.admin.ui
 
+import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.home.admin.viewmodel.AdminHomeViewModel
+import com.example.hotelbooking.features.home.admin.viewmodel.DashboardUiState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
@@ -66,57 +69,29 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.jvm.java
 
-enum class BookingFilterType {
-    ARRIVALS,
-    DEPARTURES,
-    NEW_BOOKINGS,
-    OCCUPANCY,
-    REVENUE
-}
+enum class BookingFilterType { ARRIVALS, DEPARTURES, NEW_BOOKINGS, OCCUPANCY, REVENUE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminHomeScreen(
-    viewModel: AdminHomeViewModel = hiltViewModel(),
-    onNavigateToCreateHotel: () -> Unit
+    viewModel: AdminHomeViewModel = hiltViewModel(), onNavigateToCreateHotel: () -> Unit
 ) {
     val context = LocalContext.current
 
-    val isLoading by viewModel.isLoading.collectAsState()
-    val allHotels by viewModel.allManagedHotels.collectAsState()
-    val currentHotel by viewModel.currentHotel.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    val selectedDate by viewModel.selectedDate.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
-
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val dateLabel = if (selectedDate == LocalDate.now()) {
-        stringResource(id = R.string.today)
-    } else {
-        selectedDate.format(dateFormatter)
-    }
-
-    val revenue by viewModel.todayRevenue.collectAsState()
-    val newBookings by viewModel.newBookingsCount.collectAsState()
-    val occupied by viewModel.occupiedRoomsCount.collectAsState()
-    val totalRooms by viewModel.totalRooms.collectAsState()
-    val arrivals by viewModel.todayArrivals.collectAsState()
-    val departures by viewModel.todayDepartures.collectAsState()
-    val chartData by viewModel.revenueChartData.collectAsState()
-    val reviews by viewModel.recentReviews.collectAsState()
-
     var isHotelMenuExpanded by remember { mutableStateOf(false) }
 
     if (showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = selectedDate.atStartOfDay(ZoneId.systemDefault())
-                .toInstant().toEpochMilli()
-        )
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
+        val currentState = uiState
+        if (currentState is DashboardUiState.Success) {
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = currentState.selectedDate.atStartOfDay(ZoneId.systemDefault())
+                    .toInstant().toEpochMilli()
+            )
+            DatePickerDialog(onDismissRequest = { showDatePicker = false }, confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
                         val date = Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDate()
@@ -124,248 +99,238 @@ fun AdminHomeScreen(
                     }
                     showDatePicker = false
                 }) { Text("OK") }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showDatePicker = false
-                }) { Text(stringResource(id = R.string.cancel)) }
+            }, dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(id = R.string.cancel))
+                }
+            }) {
+                DatePicker(state = datePickerState)
             }
-        ) {
-            DatePicker(state = datePickerState)
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Column(
-                        modifier = Modifier
-                            .clickable { if (allHotels.size > 1) isHotelMenuExpanded = true }
-                            .padding(end = Dimen.PaddingS)
-                    ) {
+    when (val state = uiState) {
+        is DashboardUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize().background(color = Color.White), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = BrightBlue)
+            }
+        }
+
+        is DashboardUiState.NoHotels -> {
+            EmptyDashboardState(onNavigateToCreateHotel)
+        }
+
+        is DashboardUiState.Error -> {
+            Box(modifier = Modifier.fillMaxSize().background(color = Color.White), contentAlignment = Alignment.Center) {
+                Text(text = state.message, color = CancelledRed)
+            }
+        }
+
+        is DashboardUiState.Success -> {
+            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val dateLabel = if (state.selectedDate == LocalDate.now()) {
+                stringResource(id = R.string.today)
+            } else {
+                state.selectedDate.format(dateFormatter)
+            }
+
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                        Column(modifier = Modifier
+                            .clickable {
+                                if (state.allHotels.size > 1) isHotelMenuExpanded = true
+                            }
+                            .padding(end = Dimen.PaddingS)) {
+                            Text(
+                                stringResource(id = R.string.dashboard),
+                                fontWeight = FontWeight.Bold,
+                                color = NearBlack
+                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = state.currentHotel.name,
+                                    style = AfacadTypography.bodySmall,
+                                    color = Color.Gray
+                                )
+                                if (state.allHotels.size > 1) {
+                                    Icon(
+                                        Icons.Default.ArrowDropDown,
+                                        null,
+                                        modifier = Modifier.size(Dimen.SizeS),
+                                        tint = Color.Gray
+                                    )
+                                }
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = isHotelMenuExpanded,
+                            onDismissRequest = { isHotelMenuExpanded = false }) {
+                            state.allHotels.forEach { hotel ->
+                                DropdownMenuItem(text = {
+                                    Text(
+                                        text = hotel.name,
+                                        fontWeight = if (hotel.id == state.currentHotel.id) FontWeight.Bold else FontWeight.Normal
+                                    )
+                                }, onClick = {
+                                    viewModel.switchHotel(hotel)
+                                    isHotelMenuExpanded = false
+                                }, leadingIcon = {
+                                    if (hotel.id == state.currentHotel.id) {
+                                        Icon(
+                                            Icons.Default.Check, null, tint = AvailableGreen
+                                        )
+                                    }
+                                })
+                            }
+                        }
+                    }, actions = {
                         Text(
-                            stringResource(id = R.string.dashboard),
+                            text = dateLabel,
+                            style = AfacadTypography.labelLarge,
+                            color = BrightBlue,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        IconButton(onClick = { showDatePicker = true }) {
+                            Icon(Icons.Default.DateRange, null, tint = NearBlack)
+                        }
+                    }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                    )
+                }, containerColor = Color(0xFFF5F7FA)
+            ) { padding ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(horizontal = Dimen.PaddingM),
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
+                ) {
+                    item { Spacer(modifier = Modifier.height(AppSpacing.XS)) }
+
+                    item {
+                        Row(horizontalArrangement = Arrangement.spacedBy(AppSpacing.M)) {
+                            DashboardCard(
+                                title = stringResource(id = R.string.today_revenue),
+                                value = "$${
+                                    String.format(
+                                        Locale.US, "%,.0f", state.stats.todayRevenue
+                                    )
+                                }",
+                                icon = Icons.Default.AttachMoney,
+                                iconColor = AvailableGreen,
+                                modifier = Modifier.weight(1f)
+                            )
+                            DashboardCard(
+                                title = stringResource(id = R.string.new_booking),
+                                value = "${state.stats.newBookingsCount}",
+                                icon = Icons.Default.BookOnline,
+                                iconColor = BrightBlue,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+
+                    item {
+                        DashboardCard(
+                            title = stringResource(R.string.dashboard_occupancy_title),
+                            value = stringResource(
+                                R.string.dashboard_occupancy_value,
+                                state.stats.occupiedCount,
+                                state.stats.totalRooms
+                            ),
+                            icon = Icons.Default.MeetingRoom,
+                            iconColor = BrightBlue,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navigateToBookingList(
+                                        context, BookingFilterType.OCCUPANCY, state
+                                    )
+                                })
+                    }
+
+                    item {
+                        Text(
+                            stringResource(R.string.dashboard_today_activity),
+                            style = AfacadTypography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = NearBlack
                         )
-
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = currentHotel?.name
-                                    ?: stringResource(id = R.string.hotel_not_selected),
-                                style = AfacadTypography.bodySmall,
-                                color = Color.Gray
-                            )
-                            if (allHotels.size > 1) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(Dimen.SizeS),
-                                    tint = Color.Gray
-                                )
-                            }
-                        }
                     }
 
-                    DropdownMenu(
-                        expanded = isHotelMenuExpanded,
-                        onDismissRequest = { isHotelMenuExpanded = false }
-                    ) {
-                        allHotels.forEach { hotel ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = hotel.name,
-                                        fontWeight = if (hotel.id == currentHotel?.id) FontWeight.Bold else FontWeight.Normal
-                                    )
-                                },
-                                onClick = {
-                                    viewModel.switchHotel(hotel)
-                                    isHotelMenuExpanded = false
-                                },
-                                leadingIcon = {
-                                    if (hotel.id == currentHotel?.id) {
-                                        Icon(
-                                            Icons.Default.Check,
-                                            contentDescription = null,
-                                            tint = AvailableGreen
+                    item {
+                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            OperationStatCard(
+                                label = stringResource(R.string.dashboard_arrivals),
+                                count = state.stats.arrivalsCount,
+                                color = ArrivalBlue,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        navigateToBookingList(
+                                            context, BookingFilterType.ARRIVALS, state
                                         )
-                                    }
-                                }
-                            )
+                                    })
+                            OperationStatCard(
+                                label = stringResource(R.string.dashboard_departures),
+                                count = state.stats.departuresCount,
+                                color = CancelledRed,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        navigateToBookingList(
+                                            context, BookingFilterType.DEPARTURES, state
+                                        )
+                                    })
                         }
                     }
-                },
-                actions = {
-                    Text(
-                        text = dateLabel,
-                        style = AfacadTypography.labelLarge,
-                        color = BrightBlue,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    IconButton(onClick = { showDatePicker = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = null,
-                            tint = NearBlack
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-            )
-        },
-        containerColor = Color(0xFFF5F7FA)
-    ) { padding ->
-        if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else if (currentHotel == null) {
-            EmptyDashboardState(onNavigateToCreateHotel)
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = Dimen.PaddingM),
-                verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
-            ) {
-                item { Spacer(modifier = Modifier.height(AppSpacing.XS)) }
 
-                item {
-                    Row(horizontalArrangement = Arrangement.spacedBy(AppSpacing.M)) {
-                        DashboardCard(
-                            title = stringResource(id = R.string.today_revenue),
-                            value = "$${String.format(Locale.US, "%,.0f", revenue)}",
-                            icon = Icons.Default.AttachMoney,
-                            iconColor = AvailableGreen,
-                            modifier = Modifier.weight(1f)
-                        )
-                        DashboardCard(
-                            title = stringResource(id = R.string.new_booking),
-                            value = "$newBookings",
-                            icon = Icons.Default.BookOnline,
-                            iconColor = BrightBlue,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-
-                item {
-                    DashboardCard(
-                        title = stringResource(R.string.dashboard_occupancy_title),
-                        value = stringResource(
-                            R.string.dashboard_occupancy_value,
-                            occupied,
-                            totalRooms
-                        ),
-                        icon = Icons.Default.MeetingRoom,
-                        iconColor = BrightBlue,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                val intent = Intent(
-                                    context,
-                                    AdminBookingListActivity::class.java
-                                ).apply {
-                                    putExtra("FILTER_TYPE", BookingFilterType.OCCUPANCY.name)
-                                    putExtra("HOTEL_ID", currentHotel?.id)
-                                    putExtra("TARGET_DATE", selectedDate.toEpochDay())
-                                }
-                                context.startActivity(intent)
-                            }
-                    )
-                }
-
-                item {
-                    Text(
-                        text = stringResource(R.string.dashboard_today_activity),
-                        style = AfacadTypography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = NearBlack
-                    )
-                }
-
-                item {
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OperationStatCard(
-                            label = stringResource(R.string.dashboard_arrivals),
-                            count = arrivals.size,
-                            color = ArrivalBlue,
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    val intent = Intent(
-                                        context,
-                                        AdminBookingListActivity::class.java
-                                    ).apply {
-                                        putExtra("FILTER_TYPE", BookingFilterType.ARRIVALS.name)
-                                        putExtra("HOTEL_ID", currentHotel?.id)
-                                        putExtra("TARGET_DATE", selectedDate.toEpochDay())
-                                    }
-                                    context.startActivity(intent)
-                                }
-                        )
-                        OperationStatCard(
-                            label = stringResource(R.string.dashboard_departures),
-                            count = departures.size,
-                            color = CancelledRed,
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    val intent = Intent(
-                                        context,
-                                        AdminBookingListActivity::class.java
-                                    ).apply {
-                                        putExtra("FILTER_TYPE", BookingFilterType.DEPARTURES.name)
-                                        putExtra("HOTEL_ID", currentHotel?.id)
-                                        putExtra("TARGET_DATE", selectedDate.toEpochDay())
-                                    }
-                                    context.startActivity(intent)
-                                }
-                        )
-                    }
-                }
-
-                item {
-                    Text(
-                        text = stringResource(R.string.dashboard_revenue_chart_title),
-                        style = AfacadTypography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = NearBlack
-                    )
-                }
-
-                item {
-                    RevenueBarChart(data = chartData)
-                }
-
-                item {
-                    Text(
-                        text = stringResource(R.string.dashboard_recent_reviews),
-                        style = AfacadTypography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = NearBlack
-                    )
-                }
-
-                if (reviews.isEmpty()) {
                     item {
                         Text(
-                            text = stringResource(R.string.dashboard_no_reviews),
-                            fontStyle = FontStyle.Italic,
-                            color = Color.Gray
+                            stringResource(R.string.dashboard_revenue_chart_title),
+                            style = AfacadTypography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = NearBlack
                         )
                     }
-                } else {
-                    items(reviews) { review ->
-                        AdminReviewItem(review)
-                    }
-                }
+                    item { RevenueBarChart(data = state.chartData) }
 
-                item { Spacer(modifier = Modifier.height(AppSpacing.L)) }
+                    item {
+                        Text(
+                            stringResource(R.string.dashboard_recent_reviews),
+                            style = AfacadTypography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = NearBlack
+                        )
+                    }
+                    if (state.recentReviews.isEmpty()) {
+                        item {
+                            Text(
+                                stringResource(R.string.dashboard_no_reviews),
+                                fontStyle = FontStyle.Italic,
+                                color = Color.Gray
+                            )
+                        }
+                    } else {
+                        items(state.recentReviews) { review -> AdminReviewItem(review) }
+                    }
+
+                    item { Spacer(modifier = Modifier.height(AppSpacing.L)) }
+                }
             }
         }
     }
+}
+
+private fun navigateToBookingList(
+    context: Context, filterType: BookingFilterType, state: DashboardUiState.Success
+) {
+    val intent = Intent(context, AdminBookingListActivity::class.java).apply {
+        putExtra("FILTER_TYPE", filterType.name)
+        putExtra("HOTEL_ID", state.currentHotel.id)
+        putExtra("TARGET_DATE", state.selectedDate.toEpochDay())
+    }
+    context.startActivity(intent)
 }
