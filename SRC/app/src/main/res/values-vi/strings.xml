@@ -170,6 +170,7 @@
     <string name="check_out_failed">Trả phòng không thành công. Vui lòng thử lại.</string>
     <string name="people">%1$s người • %2$s</string>
     <string name="confirm_check_in">Xác nhận check-in</string>
+    <string name="early_check_out">Check-out sớm</string>
     <string name="stay_regulation_notice">
     Theo quy định lưu trú, vui lòng nhập đầy đủ Họ tên và Ngày sinh của tất cả khách hàng.
 </string>
@@ -378,6 +379,11 @@
     <string name="empty_dashboard_title">Bạn chưa quản lý khách sạn nào</string>
     <string name="empty_dashboard_action">Thêm khách sạn đầu tiên</string>
     <string name="no_content">Không có nội dung</string>
+    <string name="no_bookings_in_category">Không có đặt phòng trong danh mục này</string>
+    <string name="stay_waiting">Đang chờ</string>
+    <string name="stay_in_house">Đang lưu trú</string>
+    <string name="stay_checked_out">Đã trả phòng</string>
+    <string name="stay_no_show">Vắng mặt</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>

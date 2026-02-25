@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.home.admin.ui
 
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -64,6 +66,15 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.jvm.java
+
+enum class BookingFilterType {
+    ARRIVALS,
+    DEPARTURES,
+    NEW_BOOKINGS,
+    OCCUPANCY,
+    REVENUE
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,6 +82,8 @@ fun AdminHomeScreen(
     viewModel: AdminHomeViewModel = hiltViewModel(),
     onNavigateToCreateHotel: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val isLoading by viewModel.isLoading.collectAsState()
     val allHotels by viewModel.allManagedHotels.collectAsState()
     val currentHotel by viewModel.currentHotel.collectAsState()
@@ -113,7 +126,9 @@ fun AdminHomeScreen(
                 }) { Text("OK") }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text(stringResource(id = R.string.cancel)) }
+                TextButton(onClick = {
+                    showDatePicker = false
+                }) { Text(stringResource(id = R.string.cancel)) }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -247,7 +262,19 @@ fun AdminHomeScreen(
                         ),
                         icon = Icons.Default.MeetingRoom,
                         iconColor = BrightBlue,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                val intent = Intent(
+                                    context,
+                                    AdminBookingListActivity::class.java
+                                ).apply {
+                                    putExtra("FILTER_TYPE", BookingFilterType.OCCUPANCY.name)
+                                    putExtra("HOTEL_ID", currentHotel?.id)
+                                    putExtra("TARGET_DATE", selectedDate.toEpochDay())
+                                }
+                                context.startActivity(intent)
+                            }
                     )
                 }
 
@@ -266,13 +293,37 @@ fun AdminHomeScreen(
                             label = stringResource(R.string.dashboard_arrivals),
                             count = arrivals.size,
                             color = ArrivalBlue,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    val intent = Intent(
+                                        context,
+                                        AdminBookingListActivity::class.java
+                                    ).apply {
+                                        putExtra("FILTER_TYPE", BookingFilterType.ARRIVALS.name)
+                                        putExtra("HOTEL_ID", currentHotel?.id)
+                                        putExtra("TARGET_DATE", selectedDate.toEpochDay())
+                                    }
+                                    context.startActivity(intent)
+                                }
                         )
                         OperationStatCard(
                             label = stringResource(R.string.dashboard_departures),
                             count = departures.size,
                             color = CancelledRed,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable {
+                                    val intent = Intent(
+                                        context,
+                                        AdminBookingListActivity::class.java
+                                    ).apply {
+                                        putExtra("FILTER_TYPE", BookingFilterType.DEPARTURES.name)
+                                        putExtra("HOTEL_ID", currentHotel?.id)
+                                        putExtra("TARGET_DATE", selectedDate.toEpochDay())
+                                    }
+                                    context.startActivity(intent)
+                                }
                         )
                     }
                 }

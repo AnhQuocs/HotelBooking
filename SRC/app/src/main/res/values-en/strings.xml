@@ -170,6 +170,7 @@
     <string name="check_out_failed">Checkout failed. Please try again.</string>
     <string name="people">%1$s people • %2$s</string>
     <string name="confirm_check_in">Confirm check-in</string>
+    <string name="early_check_out">Early Check-out</string>
     <string name="stay_regulation_notice">
     In accordance with accommodation regulations, please provide the full name and date of birth of all guests.
 </string>
@@ -378,6 +379,11 @@
     <string name="empty_dashboard_title">You are not managing any hotels yet</string>
     <string name="empty_dashboard_action">Add your first hotel</string>
     <string name="no_content">No content</string>
+    <string name="no_bookings_in_category">No bookings found for this category</string>
+    <string name="stay_waiting">Waiting</string>
+    <string name="stay_in_house">In-house</string>
+    <string name="stay_checked_out">Checked-out</string>
+    <string name="stay_no_show">No-show</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

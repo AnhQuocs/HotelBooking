@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.hotel.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.hotel.domain.usecase.update.SubmitReviewUseCase
 import com.example.hotelbooking.features.review.domain.model.Review
 import com.google.firebase.Timestamp
@@ -21,7 +22,8 @@ sealed class UpdateRatingState {
 
 @HiltViewModel
 class UpdateRatingViewModel @Inject constructor(
-    private val submitReviewUseCase: SubmitReviewUseCase
+    private val submitReviewUseCase: SubmitReviewUseCase,
+    private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
     private val _updateRatingState =
@@ -32,26 +34,28 @@ class UpdateRatingViewModel @Inject constructor(
         viewModelScope.launch {
             _updateRatingState.value = UpdateRatingState.Loading
 
-            val currentUser = FirebaseAuth.getInstance().currentUser
+            val currentUser = authUseCases.getCurrentUserUseCase()
 
-            val newReview = Review(
-                userId = currentUser?.uid ?: "",
-                userName = currentUser?.displayName ?: "",
-                userProfilePicture = "",
-                serviceId = hotelId,
-                serviceType = "HOTEL",
-                rating = rating.toInt(),
-                comment = comment,
-                timestamp = Timestamp.now().toString()
-            )
+            currentUser?.let {
+                val newReview = Review(
+                    userId = currentUser.uid,
+                    userName = currentUser.username ?: "",
+                    userProfilePicture = "",
+                    serviceId = hotelId,
+                    serviceType = "HOTEL",
+                    rating = rating.toInt(),
+                    comment = comment,
+                    timestamp = Timestamp.now().toString()
+                )
 
-            submitReviewUseCase(newReview)
-                .onSuccess {
-                    _updateRatingState.value = UpdateRatingState.Success
-                }
-                .onFailure {
-                    _updateRatingState.value = UpdateRatingState.Error(it.message ?: "Error")
-                }
+                submitReviewUseCase(newReview)
+                    .onSuccess {
+                        _updateRatingState.value = UpdateRatingState.Success
+                    }
+                    .onFailure {
+                        _updateRatingState.value = UpdateRatingState.Error(it.message ?: "Error")
+                    }
+            }
         }
     }
 }
