@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
@@ -11,6 +12,7 @@ import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingD
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.CancelBookingAndTransactionUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.CancellationResult
+import com.example.hotelbooking.features.booking.domain.usecase.update.CheckOutUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateStayStatusUseCase
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
@@ -39,6 +41,7 @@ class BookingHistoryViewModel @Inject constructor(
     private val getBookingsWithHotelUseCase: GetBookingsWithHotelUseCase,
     private val getBookingDetailWithHotelUseCase: GetBookingDetailWithHotelUseCase,
     private val cancelBookingAndTransactionUseCase: CancelBookingAndTransactionUseCase,
+    private val checkOutUseCase: CheckOutUseCase,
     private val notificationUseCases: NotificationUseCases,
     private val notificationHelper: NotificationHelper,
     private val timerManager: PaymentTimerManager
@@ -81,6 +84,24 @@ class BookingHistoryViewModel @Inject constructor(
                 BookingHistoryState.Success(updatedCombined)
 
             true
+        } catch (e: Exception) {
+            false
+        } finally {
+            _isProcessing.value = false
+        }
+    }
+
+    suspend fun processCheckOut(booking: Booking): Boolean {
+        _isProcessing.value = true
+        return try {
+            val isSuccess = checkOutUseCase(booking)
+
+            if (isSuccess) {
+                val updatedCombined = getBookingDetailWithHotelUseCase(booking.bookingId)
+                _bookingDetailState.value = BookingHistoryState.Success(updatedCombined)
+            }
+
+            isSuccess
         } catch (e: Exception) {
             false
         } finally {

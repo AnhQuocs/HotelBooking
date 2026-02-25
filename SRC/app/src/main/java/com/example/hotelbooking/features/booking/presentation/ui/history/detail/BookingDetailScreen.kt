@@ -142,11 +142,10 @@ fun BookingDetailScreen(
                                 .putExtra("bookingId", bookingWithHotel.booking.bookingId)
                             context.startActivity(intent)
                         },
-                        onCheckOut = { status ->
+                        onCheckOut = {
                             scope.launch {
-                                val success = bookingHistoryViewModel.updateStayStatus(
-                                    bookingId = bookingWithHotel.booking.bookingId,
-                                    newStatus = status
+                                val success = bookingHistoryViewModel.processCheckOut(
+                                    booking = bookingWithHotel.booking
                                 )
                                 if(success) {
                                     val intent = Intent(context, StayCheckOutActivity::class.java)
