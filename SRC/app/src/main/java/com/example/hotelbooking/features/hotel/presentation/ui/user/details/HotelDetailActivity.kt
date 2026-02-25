@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.platform.LocalContext
 import com.example.hotelbooking.BaseComponentActivity
-import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
+import com.example.hotelbooking.features.chat.presentation.ui.user.ChatActivity
 import com.example.hotelbooking.features.map.ui.hotel.HotelLocationActivity
 import com.example.hotelbooking.features.room.presentation.ui.detail.RoomDetailActivity
 import com.google.firebase.auth.FirebaseAuth

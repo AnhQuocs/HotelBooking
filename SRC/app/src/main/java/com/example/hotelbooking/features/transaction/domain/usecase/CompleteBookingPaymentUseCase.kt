@@ -1,7 +1,7 @@
 package com.example.hotelbooking.features.transaction.domain.usecase
 
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 import javax.inject.Inject
 
 class CompleteBookingPaymentUseCase @Inject constructor(private val repository: BookingRepository) {

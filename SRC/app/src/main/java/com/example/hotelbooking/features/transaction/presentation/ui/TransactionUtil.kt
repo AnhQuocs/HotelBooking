@@ -3,7 +3,7 @@ package com.example.hotelbooking.features.transaction.presentation.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.example.hotelbooking.ui.theme.AvailableGreen
 import com.example.hotelbooking.ui.theme.CancelledRed

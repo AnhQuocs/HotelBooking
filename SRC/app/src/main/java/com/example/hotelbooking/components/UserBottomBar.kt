@@ -28,6 +28,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 enum class TabItem(@DrawableRes val iconRes: Int, @StringRes val label: Int) {
     Home(R.drawable.ic_home, R.string.home),
@@ -78,14 +80,14 @@ fun UserBottomAppBar(
                             Image(
                                 painter = painterResource(id = tab.iconRes),
                                 contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                colorFilter = if (selected) ColorFilter.tint(Color(0xFF2853AF)) else ColorFilter.tint(Color(0xFFA0AAB8))
+                                modifier = Modifier.size(Dimen.SizeM),
+                                colorFilter = if (selected) ColorFilter.tint(PrimaryBlue) else ColorFilter.tint(Color(0xFFA0AAB8))
                             )
                             Text(
                                 text = stringResource(id = tab.label),
                                 fontFamily = jostFont,
                                 fontSize = 12.sp,
-                                color = if (selected) Color(0xFF2853AF) else Color(0xFFA0AAB8)
+                                color = if (selected) PrimaryBlue else Color(0xFFA0AAB8)
                             )
                         }
                     }

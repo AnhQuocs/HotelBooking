@@ -362,6 +362,7 @@
     <string name="copied">Đã sao chép</string>
 
     <!-- ADMIN DASHBOARD -->
+    <string name="my_hotels">Khách sạn</string>
     <string name="dashboard">Bảng điều khiển</string>
     <string name="hotel_not_selected">Chưa chọn khách sạn</string>
     <string name="today_revenue">Doanh thu hôm nay</string>

@@ -2,7 +2,6 @@ package com.example.hotelbooking.features.main
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -38,7 +37,6 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.auth.presentation.ui.SignInScreen
 import com.example.hotelbooking.features.auth.presentation.ui.SignUpScreen
-import com.example.hotelbooking.features.home.admin.ui.AdminHomeScreen
 import com.example.hotelbooking.features.main.viewmodel.MainViewModel
 import com.example.hotelbooking.features.onboarding.presentation.ui.OnboardingScreen
 import com.example.hotelbooking.ui.theme.HotelBookingTheme
@@ -155,19 +153,19 @@ fun NavGraphBuilder.userGraph(navController: NavController) {
         route = "user_root"
     ) {
         composable("user_main") {
-            MainScreen(navController = navController)
+            UserMainScreen(navController = navController)
         }
     }
 }
 
 fun NavGraphBuilder.adminGraph(navController: NavController) {
     navigation(
-        startDestination = "admin_home",
+        startDestination = "admin_main",
         route = "admin_root"
     ) {
-        composable("admin_home") {
-            AdminHomeScreen(
-                onNavigateToCreateHotel = {}
+        composable("admin_main") {
+            AdminMainScreen(
+                navController = navController
             )
         }
 //

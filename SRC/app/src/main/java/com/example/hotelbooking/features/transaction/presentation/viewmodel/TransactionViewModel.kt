@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PaymentTimerManager
 import com.example.hotelbooking.features.notification.domain.usecase.NotificationUseCases
 import com.example.hotelbooking.features.notification.util.NotificationHelper
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.usecase.CompleteBookingPaymentUseCase
 import com.example.hotelbooking.features.transaction.domain.usecase.PrepareTransactionUseCase
@@ -40,13 +40,16 @@ class TransactionViewModel @Inject constructor(
     private val timerManager: PaymentTimerManager,
 ) : ViewModel() {
 
-    private val _historyState = MutableStateFlow<TransactionState<List<Transaction>>>(TransactionState.Idle)
+    private val _historyState =
+        MutableStateFlow<TransactionState<List<Transaction>>>(TransactionState.Idle)
     val historyState = _historyState.asStateFlow()
 
-    private val _detailState = MutableStateFlow<TransactionState<Transaction>>(TransactionState.Idle)
+    private val _detailState =
+        MutableStateFlow<TransactionState<Transaction>>(TransactionState.Idle)
     val detailState = _detailState.asStateFlow()
 
-    private val _actionState = MutableStateFlow<TransactionState<TransactionAction>>(TransactionState.Idle)
+    private val _actionState =
+        MutableStateFlow<TransactionState<TransactionAction>>(TransactionState.Idle)
     val actionState = _actionState.asStateFlow()
 
     private val _createdTransactionId = MutableStateFlow<String?>(null)
@@ -94,11 +97,18 @@ class TransactionViewModel @Inject constructor(
 
                     _actionState.value = TransactionState.Success(TransactionAction.CONFIRM)
                 }
-                .onFailure { _actionState.value = TransactionState.Error(it.message ?: "Payment Failed") }
+                .onFailure {
+                    _actionState.value = TransactionState.Error(it.message ?: "Payment Failed")
+                }
         }
     }
 
-    private suspend fun handleNotifications(userId: String, bookingId: String, title: String?, message: String?) {
+    private suspend fun handleNotifications(
+        userId: String,
+        bookingId: String,
+        title: String?,
+        message: String?
+    ) {
         if (title != null && message != null) {
             notificationUseCases.saveNotificationUseCase(userId, title, message, bookingId)
             notificationHelper.showBookingNotification(title, message, bookingId)
@@ -109,7 +119,8 @@ class TransactionViewModel @Inject constructor(
         viewModelScope.launch {
             _detailState.value = TransactionState.Loading
             transactionUseCases.getTransactionByIdUseCase(id).onSuccess {
-                _detailState.value = if (it != null) TransactionState.Success(it) else TransactionState.Error("Not Found")
+                _detailState.value =
+                    if (it != null) TransactionState.Success(it) else TransactionState.Error("Not Found")
             }.onFailure { _detailState.value = TransactionState.Error(it.message ?: "Error") }
         }
     }
@@ -125,13 +136,18 @@ class TransactionViewModel @Inject constructor(
 
     fun recoverTransactionId(bookingId: String) {
         viewModelScope.launch {
-            transactionUseCases.getTransactionByBookingIdUseCase(bookingId).onSuccess { transaction ->
-                if (transaction != null) _createdTransactionId.value = transaction.id
-            }
+            transactionUseCases.getTransactionByBookingIdUseCase(bookingId)
+                .onSuccess { transaction ->
+                    if (transaction != null) _createdTransactionId.value = transaction.id
+                }
         }
     }
 
-    fun clearCreatedId() { _createdTransactionId.value = null }
+    fun clearCreatedId() {
+        _createdTransactionId.value = null
+    }
 
-    fun resetActionState() { _actionState.value = TransactionState.Idle }
+    fun resetActionState() {
+        _actionState.value = TransactionState.Idle
+    }
 }

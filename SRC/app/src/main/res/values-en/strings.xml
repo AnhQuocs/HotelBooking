@@ -362,6 +362,7 @@
     <string name="copied">Copied</string>
 
     <!-- ADMIN DASHBOARD -->
+    <string name="my_hotels">My Hotels</string>
     <string name="dashboard">Dashboard</string>
     <string name="hotel_not_selected">Hotel not selected</string>
     <string name="today_revenue">Today’s revenue</string>

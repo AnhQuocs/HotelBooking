@@ -2,8 +2,8 @@ package com.example.hotelbooking
 
 import android.content.Context
 import androidx.activity.ComponentActivity
-import com.example.hotelbooking.features.profile.language.data.preference.LanguagePreferenceManager
-import com.example.hotelbooking.features.profile.language.domain.model.AppLanguage
+import com.example.hotelbooking.features.profile.feature.language.data.preference.LanguagePreferenceManager
+import com.example.hotelbooking.features.profile.feature.language.domain.model.AppLanguage
 import com.example.hotelbooking.utils.LangUtils
 import com.example.hotelbooking.utils.LanguageManager
 import kotlinx.coroutines.flow.firstOrNull

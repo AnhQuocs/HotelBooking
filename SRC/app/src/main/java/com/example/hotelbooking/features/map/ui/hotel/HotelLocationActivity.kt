@@ -46,7 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.chat.presentation.ui.ChatActivity
+import com.example.hotelbooking.features.chat.presentation.ui.user.ChatActivity
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel

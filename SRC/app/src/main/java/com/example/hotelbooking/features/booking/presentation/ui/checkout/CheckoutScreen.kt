@@ -59,9 +59,9 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
-import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
-import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardState
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionAction

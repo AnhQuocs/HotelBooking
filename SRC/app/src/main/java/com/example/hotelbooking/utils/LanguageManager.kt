@@ -3,7 +3,7 @@ package com.example.hotelbooking.utils
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
-import com.example.hotelbooking.features.profile.language.domain.model.AppLanguage
+import com.example.hotelbooking.features.profile.feature.language.domain.model.AppLanguage
 import java.util.Locale
 
 object LanguageManager {

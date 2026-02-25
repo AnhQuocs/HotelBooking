@@ -14,7 +14,7 @@ import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.booking.domain.usecase.update.RebookBookingTransactionUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateBookingUseCase
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.google.firebase.Timestamp

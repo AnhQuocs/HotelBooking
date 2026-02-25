@@ -44,8 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen

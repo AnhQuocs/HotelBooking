@@ -41,7 +41,7 @@
             android:name=".features.booking.presentation.ui.history.cancel.CancelBookingActivity"
             android:exported="false" />
         <activity
-            android:name=".features.profile.promotions.presentation.ui.PromotionActivity"
+            android:name=".features.profile.feature.promotions.presentation.ui.PromotionActivity"
             android:exported="false" />
         <activity
             android:name=".features.booking.presentation.ui.rebook.RebookActivity"
@@ -59,7 +59,7 @@
             android:name=".features.map.ui.hotel.HotelLocationActivity"
             android:exported="false" />
         <activity
-            android:name=".features.profile.language.presentation.ui.ChangeLanguageActivity"
+            android:name=".features.profile.feature.language.presentation.ui.ChangeLanguageActivity"
             android:exported="false" />
         <activity
             android:name=".features.map.ui.FullMapActivity"
@@ -74,7 +74,7 @@
             android:name=".features.notification.presentation.ui.NotificationActivity"
             android:exported="false" />
         <activity
-            android:name=".features.chat.presentation.ui.ChatActivity"
+            android:name=".features.chat.presentation.ui.user.ChatActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />

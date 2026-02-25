@@ -1,6 +1,6 @@
 package com.example.hotelbooking.features.transaction.domain.model
 
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 
 enum class TransactionStatus {
     PAID, PENDING, CANCELLED, REFUND

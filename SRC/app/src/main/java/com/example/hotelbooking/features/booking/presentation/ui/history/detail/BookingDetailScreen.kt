@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,9 +35,9 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingH
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
-import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
-import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardState
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus

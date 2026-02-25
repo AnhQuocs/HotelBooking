@@ -50,10 +50,10 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.UpdateBo
 import com.example.hotelbooking.features.booking.presentation.viewmodel.UpdateBookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.main.MainActivity
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentCard
-import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardState
-import com.example.hotelbooking.features.profile.payment_card.presentation.viewmodel.PaymentCardViewModel
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardState
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
@@ -85,8 +85,7 @@ class RebookActivity : BaseComponentActivity() {
             val start = "rebook_screen"
 
             NavHost(
-                navController = navController,
-                startDestination = start
+                navController = navController, startDestination = start
             ) {
                 composable("rebook_screen") {
                     LaunchedEffect(updateState) {
@@ -122,8 +121,7 @@ class RebookActivity : BaseComponentActivity() {
                                 roomSelected = roomSelected,
                                 brand = brand
                             )
-                        }
-                    )
+                        })
                 }
 
                 composable(
@@ -163,9 +161,7 @@ class RebookActivity : BaseComponentActivity() {
                                 onUpdate = { newName, newEmail, newPhone, newDob, newCount ->
                                     val dobTimestamp = Timestamp(
                                         Date(
-                                            newDob
-                                                .atStartOfDay(ZoneId.systemDefault())
-                                                .toInstant()
+                                            newDob.atStartOfDay(ZoneId.systemDefault()).toInstant()
                                                 .toEpochMilli()
                                         )
                                     )
@@ -177,8 +173,7 @@ class RebookActivity : BaseComponentActivity() {
                                         newDob = dobTimestamp,
                                         newNumberOfGuest = newCount
                                     )
-                                }
-                            )
+                                })
                         }
                     }
                 }
@@ -186,30 +181,27 @@ class RebookActivity : BaseComponentActivity() {
                 composable("payment_complete") {
                     val scope = rememberCoroutineScope()
 
-                    PaymentCompleteScreen(
-                        onBackClick = {
-                            scope.launch {
-                                BookingRefreshEvent.triggerRefresh()
+                    PaymentCompleteScreen(onBackClick = {
+                        scope.launch {
+                            BookingRefreshEvent.triggerRefresh()
 
-                                val intent = Intent(this@RebookActivity, MainActivity::class.java)
-                                intent.flags =
-                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                                finish()
-                            }
-                        },
-                        onHomeClick = {
-                            scope.launch {
-                                BookingRefreshEvent.triggerRefresh()
-
-                                val intent = Intent(this@RebookActivity, MainActivity::class.java)
-                                intent.flags =
-                                    Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                                finish()
-                            }
+                            val intent = Intent(this@RebookActivity, MainActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
                         }
-                    )
+                    }, onHomeClick = {
+                        scope.launch {
+                            BookingRefreshEvent.triggerRefresh()
+
+                            val intent = Intent(this@RebookActivity, MainActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                    })
                 }
             }
         }
@@ -258,11 +250,12 @@ fun RebookScreen(
 
     var selectedRoomNumber by rememberSaveable { mutableStateOf<String?>(null) }
     LaunchedEffect(uiState, roomDetailState, bookingState) {
-        val bookingData = (bookingState as? BookingHistoryState.Success<BookingWithHotel>)
-            ?.data?.booking ?: return@LaunchedEffect
+        val bookingData =
+            (bookingState as? BookingHistoryState.Success<BookingWithHotel>)?.data?.booking
+                ?: return@LaunchedEffect
 
-        val availableRoomNumbers = (uiState as? BookingUiState.Available)
-            ?.roomNumbers ?: return@LaunchedEffect
+        val availableRoomNumbers =
+            (uiState as? BookingUiState.Available)?.roomNumbers ?: return@LaunchedEffect
 
         if (selectedRoomNumber == null) {
             val isOldRoomStillFree = availableRoomNumbers.contains(bookingData.roomNumber)
@@ -278,29 +271,26 @@ fun RebookScreen(
     ) {
         Scaffold(
             topBar = {
-                AppTopBar(
-                    text = stringResource(id = R.string.rebook),
-                    onBackClick = onBackClick
+            AppTopBar(
+                text = stringResource(id = R.string.rebook), onBackClick = onBackClick
+            )
+        }, bottomBar = {
+            if (roomDetailState is RoomState.Success) {
+                RebookBottomBar(
+                    pricePerNight = (roomDetailState as RoomState.Success<RoomType>).data.pricePerNight,
+                    startDate = start,
+                    endDate = end,
+                    uiState = uiState,
+                    onBookClick = {
+                        if (selectedRoomNumber != null) {
+                            isShowBottomSheet = true
+                        }
+                    },
+                    onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() },
+                    isEnabled = !selectedRoomNumber.isNullOrEmpty()
                 )
-            },
-            bottomBar = {
-                if (roomDetailState is RoomState.Success) {
-                    RebookBottomBar(
-                        pricePerNight = (roomDetailState as RoomState.Success<RoomType>).data.pricePerNight,
-                        startDate = start,
-                        endDate = end,
-                        uiState = uiState,
-                        onBookClick = {
-                            if (selectedRoomNumber != null) {
-                                isShowBottomSheet = true
-                            }
-                        },
-                        onTotalPriceChange = { newPrice -> finalTotalPrice = newPrice.toDouble() },
-                        isEnabled = !selectedRoomNumber.isNullOrEmpty()
-                    )
-                }
-            },
-            containerColor = Color.White
+            }
+        }, containerColor = Color.White
         ) { padding ->
             Box(
                 modifier = Modifier
@@ -310,8 +300,7 @@ fun RebookScreen(
                 when (val currentBooking = bookingState) {
                     is BookingHistoryState.Loading, is BookingHistoryState.Idle -> {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(color = PrimaryBlue)
                         }
@@ -339,15 +328,13 @@ fun RebookScreen(
                                 selectedRoomNumber = selectedRoomNumber,
                                 onRoomSelected = {
                                     selectedRoomNumber = it
-                                }
-                            )
+                                })
                         }
                     }
 
                     is BookingHistoryState.Error -> {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 currentBooking.fallbackMessage
@@ -372,8 +359,7 @@ fun RebookScreen(
 //                        )
 //                    }
 
-                    val roomNumber = selectedRoomNumber
-                        ?: data.booking.roomNumber
+                    val roomNumber = selectedRoomNumber ?: data.booking.roomNumber
                     PaymentMethodBottomSheet(
                         cards = cards,
                         onDismissRequest = { isShowBottomSheet = false },
@@ -387,8 +373,7 @@ fun RebookScreen(
                                 roomNumber,
                                 brand
                             )
-                        }
-                    )
+                        })
                 }
             }
         }

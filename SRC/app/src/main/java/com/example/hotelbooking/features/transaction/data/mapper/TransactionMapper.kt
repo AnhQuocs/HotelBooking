@@ -1,6 +1,6 @@
 package com.example.hotelbooking.features.transaction.data.mapper
 
-import com.example.hotelbooking.features.profile.payment_card.domain.model.PaymentBrand
+import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.data.dto.TransactionDto
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus

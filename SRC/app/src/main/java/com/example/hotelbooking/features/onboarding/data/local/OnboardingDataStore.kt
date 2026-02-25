@@ -3,7 +3,7 @@ package com.example.hotelbooking.features.onboarding.data.local
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import com.example.hotelbooking.features.profile.language.data.preference.languageDataStore
+import com.example.hotelbooking.features.profile.feature.language.data.preference.languageDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
