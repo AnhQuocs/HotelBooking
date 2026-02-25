@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,9 +46,12 @@ import com.example.hotelbooking.features.home.admin.viewmodel.AdminBookingListVi
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.AvailableGreen
 import com.example.hotelbooking.ui.theme.BrightBlue
+import com.example.hotelbooking.ui.theme.NearBlack
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import java.util.Locale
 
 @AndroidEntryPoint
 class AdminBookingListActivity : BaseComponentActivity() {
@@ -146,6 +153,27 @@ fun AdminBookingListScreen(
                     contentPadding = PaddingValues(Dimen.PaddingM),
                     verticalArrangement = Arrangement.spacedBy(Dimen.PaddingS)
                 ) {
+                    if (filterType == BookingFilterType.REVENUE) {
+                        item {
+                            val totalRevenue = bookings.sumOf { it.totalPrice }
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(containerColor = AvailableGreen.copy(alpha = 0.1f)),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text(text = "Total Revenue Today", style = AfacadTypography.bodyMedium, color = NearBlack)
+                                    Text(
+                                        text = "$${String.format(Locale.US, "%,.0f", totalRevenue)}",
+                                        style = AfacadTypography.headlineMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = AvailableGreen
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     items(bookings) { booking ->
                         AdminBookingItemCard(
                             booking = booking,

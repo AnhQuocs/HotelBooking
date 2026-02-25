@@ -111,7 +111,12 @@ fun AdminHomeScreen(
 
     when (val state = uiState) {
         is DashboardUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize().background(color = Color.White), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.White),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator(color = BrightBlue)
             }
         }
@@ -121,7 +126,12 @@ fun AdminHomeScreen(
         }
 
         is DashboardUiState.Error -> {
-            Box(modifier = Modifier.fillMaxSize().background(color = Color.White), contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.White),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(text = state.message, color = CancelledRed)
             }
         }
@@ -138,65 +148,66 @@ fun AdminHomeScreen(
                 topBar = {
                     TopAppBar(
                         title = {
-                        Column(modifier = Modifier
-                            .clickable {
-                                if (state.allHotels.size > 1) isHotelMenuExpanded = true
-                            }
-                            .padding(end = Dimen.PaddingS)) {
-                            Text(
-                                stringResource(id = R.string.dashboard),
-                                fontWeight = FontWeight.Bold,
-                                color = NearBlack
-                            )
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Column(
+                                modifier = Modifier
+                                    .clickable {
+                                        if (state.allHotels.size > 1) isHotelMenuExpanded = true
+                                    }
+                                    .padding(end = Dimen.PaddingS)) {
                                 Text(
-                                    text = state.currentHotel.name,
-                                    style = AfacadTypography.bodySmall,
-                                    color = Color.Gray
+                                    stringResource(id = R.string.dashboard),
+                                    fontWeight = FontWeight.Bold,
+                                    color = NearBlack
                                 )
-                                if (state.allHotels.size > 1) {
-                                    Icon(
-                                        Icons.Default.ArrowDropDown,
-                                        null,
-                                        modifier = Modifier.size(Dimen.SizeS),
-                                        tint = Color.Gray
-                                    )
-                                }
-                            }
-                        }
-
-                        DropdownMenu(
-                            expanded = isHotelMenuExpanded,
-                            onDismissRequest = { isHotelMenuExpanded = false }) {
-                            state.allHotels.forEach { hotel ->
-                                DropdownMenuItem(text = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
-                                        text = hotel.name,
-                                        fontWeight = if (hotel.id == state.currentHotel.id) FontWeight.Bold else FontWeight.Normal
+                                        text = state.currentHotel.name,
+                                        style = AfacadTypography.bodySmall,
+                                        color = Color.Gray
                                     )
-                                }, onClick = {
-                                    viewModel.switchHotel(hotel)
-                                    isHotelMenuExpanded = false
-                                }, leadingIcon = {
-                                    if (hotel.id == state.currentHotel.id) {
+                                    if (state.allHotels.size > 1) {
                                         Icon(
-                                            Icons.Default.Check, null, tint = AvailableGreen
+                                            Icons.Default.ArrowDropDown,
+                                            null,
+                                            modifier = Modifier.size(Dimen.SizeS),
+                                            tint = Color.Gray
                                         )
                                     }
-                                })
+                                }
                             }
-                        }
-                    }, actions = {
-                        Text(
-                            text = dateLabel,
-                            style = AfacadTypography.labelLarge,
-                            color = BrightBlue,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        IconButton(onClick = { showDatePicker = true }) {
-                            Icon(Icons.Default.DateRange, null, tint = NearBlack)
-                        }
-                    }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+
+                            DropdownMenu(
+                                expanded = isHotelMenuExpanded,
+                                onDismissRequest = { isHotelMenuExpanded = false }) {
+                                state.allHotels.forEach { hotel ->
+                                    DropdownMenuItem(text = {
+                                        Text(
+                                            text = hotel.name,
+                                            fontWeight = if (hotel.id == state.currentHotel.id) FontWeight.Bold else FontWeight.Normal
+                                        )
+                                    }, onClick = {
+                                        viewModel.switchHotel(hotel)
+                                        isHotelMenuExpanded = false
+                                    }, leadingIcon = {
+                                        if (hotel.id == state.currentHotel.id) {
+                                            Icon(
+                                                Icons.Default.Check, null, tint = AvailableGreen
+                                            )
+                                        }
+                                    })
+                                }
+                            }
+                        }, actions = {
+                            Text(
+                                text = dateLabel,
+                                style = AfacadTypography.labelLarge,
+                                color = BrightBlue,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            IconButton(onClick = { showDatePicker = true }) {
+                                Icon(Icons.Default.DateRange, null, tint = NearBlack)
+                            }
+                        }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
                     )
                 }, containerColor = Color(0xFFF5F7FA)
             ) { padding ->
@@ -220,14 +231,26 @@ fun AdminHomeScreen(
                                 }",
                                 icon = Icons.Default.AttachMoney,
                                 iconColor = AvailableGreen,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        navigateToBookingList(
+                                            context, BookingFilterType.REVENUE, state
+                                        )
+                                    }
                             )
                             DashboardCard(
                                 title = stringResource(id = R.string.new_booking),
                                 value = "${state.stats.newBookingsCount}",
                                 icon = Icons.Default.BookOnline,
                                 iconColor = BrightBlue,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable {
+                                        navigateToBookingList(
+                                            context, BookingFilterType.NEW_BOOKINGS, state
+                                        )
+                                    }
                             )
                         }
                     }

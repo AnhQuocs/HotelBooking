@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.home.admin.ui
 
-import android.R.attr.text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -170,12 +170,40 @@ fun AdminBookingItemCard(
                         }
                     }
 
-                    else -> {
-                        Text(
-                            text = "Created at: ${adminFormatTimestamp(booking.createdAt)}",
-                            style = AfacadTypography.bodySmall,
-                            color = Color.Gray
-                        )
+                    BookingFilterType.REVENUE -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Transaction Amount:",
+                                style = AfacadTypography.bodySmall,
+                                color = Color.Gray
+                            )
+                            Text(
+                                text = "+$${String.format(Locale.US, "%,.0f", booking.totalPrice)}",
+                                style = AfacadTypography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = AvailableGreen
+                            )
+                        }
+                    }
+
+                    BookingFilterType.NEW_BOOKINGS -> {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.Schedule,
+                                null,
+                                modifier = Modifier.size(14.dp),
+                                tint = Color.Gray
+                            )
+                            Text(
+                                text = " Booked at: ${adminFormatTimestamp(booking.createdAt)}",
+                                style = AfacadTypography.bodySmall,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
             }
