@@ -147,7 +147,7 @@ class RebookActivity : BaseComponentActivity() {
                         val mainGuest = booking.guests.firstOrNull { it.isRepresentative }
                         mainGuest?.let {
                             val dobLocalDate: LocalDate =
-                                mainGuest.dayOfBirth?.toLocalDate() ?: LocalDate.now()
+                                mainGuest.dateOfBirth?.toLocalDate() ?: LocalDate.now()
 
                             UpdateGuestInfoScreen(
                                 name = it.fullName,

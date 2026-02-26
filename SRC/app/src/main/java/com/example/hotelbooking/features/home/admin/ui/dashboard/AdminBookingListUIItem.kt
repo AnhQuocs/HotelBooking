@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.home.admin.ui.dashboard
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
+import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
+import com.example.hotelbooking.features.home.admin.ui.ActionDialog
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -46,12 +53,35 @@ import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+data class ConfirmDialogState(
+    @StringRes val titleRes: Int,
+    @StringRes val messageRes: Int,
+    val onConfirm: () -> Unit
+)
+
 @Composable
 fun AdminBookingItemCard(
-    booking: Booking, filterType: BookingFilterType, onClick: () -> Unit
+    booking: Booking,
+    filterType: BookingFilterType,
+    onClick: () -> Unit,
+    adminBookingDetailViewModel: AdminBookingDetailViewModel
 ) {
     val guestText = if (booking.numberOfGuests > 1) stringResource(id = R.string.guests)
     else stringResource(id = R.string.guest)
+
+    var confirmDialogState by remember { mutableStateOf<ConfirmDialogState?>(null) }
+
+    confirmDialogState?.let { state ->
+        ActionDialog(
+            titleRes = state.titleRes,
+            messageRes = state.messageRes,
+            onDismiss = { confirmDialogState = null },
+            onConfirm = {
+                state.onConfirm()
+                confirmDialogState = null
+            }
+        )
+    }
 
     Card(
         modifier = Modifier
@@ -121,7 +151,13 @@ fun AdminBookingItemCard(
                             Row(horizontalArrangement = Arrangement.spacedBy(AppSpacing.S)) {
                                 OutlinedButton(
                                     onClick = {
-                                        /* Gọi hàm NO_SHOW (TH1) */
+                                        confirmDialogState = ConfirmDialogState(
+                                            titleRes = R.string.no_show,
+                                            messageRes = R.string.confirm_no_show,
+                                            onConfirm = {
+                                                adminBookingDetailViewModel.markAsNoShow(booking.bookingId)
+                                            }
+                                        )
                                     },
                                     colors = ButtonDefaults.outlinedButtonColors(contentColor = CancelledRed),
                                     modifier = Modifier.weight(0.6f)
@@ -136,7 +172,13 @@ fun AdminBookingItemCard(
                         if (booking.stayStatus == StayStatus.CHECK_IN) {
                             Button(
                                 onClick = {
-                                    /* Gọi hàm Check-out (Sử dụng UseCase cắt ngày của ông) */
+                                    confirmDialogState = ConfirmDialogState(
+                                        titleRes = R.string.check_out,
+                                        messageRes = R.string.confirm_check_out,
+                                        onConfirm = {
+                                            adminBookingDetailViewModel.processCheckOut(booking)
+                                        }
+                                    )
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = AvailableGreen),
                                 modifier = Modifier.fillMaxWidth()
@@ -150,7 +192,13 @@ fun AdminBookingItemCard(
                         if (booking.stayStatus == StayStatus.CHECK_IN) {
                             Button(
                                 onClick = {
-                                    /* Gọi CheckOutUseCase để cắt ngày */
+                                    confirmDialogState = ConfirmDialogState(
+                                        titleRes = R.string.early_check_out,
+                                        messageRes = R.string.confirm_early_checkout,
+                                        onConfirm = {
+                                            adminBookingDetailViewModel.processCheckOut(booking)
+                                        }
+                                    )
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                                 modifier = Modifier.fillMaxWidth()
@@ -167,7 +215,7 @@ fun AdminBookingItemCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Transaction Amount:",
+                                text = stringResource(id = R.string.transaction_amount),
                                 style = AfacadTypography.bodySmall,
                                 color = Color.Gray
                             )
@@ -189,7 +237,10 @@ fun AdminBookingItemCard(
                                 tint = Color.Gray
                             )
                             Text(
-                                text = " Booked at: ${adminFormatTimestamp(booking.createdAt)}",
+                                text = stringResource(
+                                    id = R.string.booked_at,
+                                    adminFormatTimestamp(booking.createdAt)
+                                ),
                                 style = AfacadTypography.bodySmall,
                                 color = Color.Gray
                             )
@@ -222,7 +273,6 @@ fun StatusBadge(status: StayStatus) {
         )
     }
 }
-
 
 fun adminFormatTimestamp(timestamp: Timestamp): String {
     val date = timestamp.toDate()

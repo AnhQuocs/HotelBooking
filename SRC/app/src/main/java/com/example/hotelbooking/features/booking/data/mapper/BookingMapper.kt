@@ -33,7 +33,7 @@ fun Guest.toDto() = GuestDto(
     fullName = fullName,
     phone = phone,
     email = email,
-    dayOfBirth = dayOfBirth,
+    dayOfBirth = dateOfBirth,
     representative = isRepresentative
 )
 
@@ -62,6 +62,6 @@ fun GuestDto.toDomain() = Guest(
     fullName = fullName,
     phone = phone,
     email = email,
-    dayOfBirth = dayOfBirth,
+    dateOfBirth = dayOfBirth,
     isRepresentative = representative
 )

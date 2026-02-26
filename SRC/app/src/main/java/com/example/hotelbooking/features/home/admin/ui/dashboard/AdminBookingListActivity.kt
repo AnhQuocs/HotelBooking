@@ -44,8 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingListViewModel
 import com.example.hotelbooking.features.home.admin.ui.detail.AdminBookingDetailActivity
+import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
@@ -95,7 +97,8 @@ fun AdminBookingListScreen(
     filterType: BookingFilterType,
     viewModel: AdminBookingListViewModel,
     onNavigateBack: () -> Unit,
-    onNavigateToDetail: (String) -> Unit
+    onNavigateToDetail: (String) -> Unit,
+    adminBookingDetailViewModel: AdminBookingDetailViewModel = hiltViewModel()
 ) {
     val bookings by viewModel.bookings.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -134,7 +137,10 @@ fun AdminBookingListScreen(
                 .padding(paddingValues)
         ) {
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = BrightBlue)
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = BrightBlue
+                )
             } else if (bookings.isEmpty()) {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
@@ -164,13 +170,27 @@ fun AdminBookingListScreen(
                             val totalRevenue = bookings.sumOf { it.totalPrice }
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = AvailableGreen.copy(alpha = 0.1f)),
-                                shape = RoundedCornerShape(12.dp)
+                                colors = CardDefaults.cardColors(
+                                    containerColor = AvailableGreen.copy(
+                                        alpha = 0.1f
+                                    )
+                                ),
+                                shape = RoundedCornerShape(AppShape.ShapeM)
                             ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Text(text = stringResource(id = R.string.total_revenue_today), style = AfacadTypography.bodyMedium, color = NearBlack)
+                                Column(modifier = Modifier.padding(Dimen.PaddingM)) {
                                     Text(
-                                        text = "$${String.format(Locale.US, "%,.0f", totalRevenue)}",
+                                        text = stringResource(id = R.string.total_revenue_today),
+                                        style = AfacadTypography.bodyMedium,
+                                        color = NearBlack
+                                    )
+                                    Text(
+                                        text = "$${
+                                            String.format(
+                                                Locale.US,
+                                                "%,.0f",
+                                                totalRevenue
+                                            )
+                                        }",
                                         style = AfacadTypography.headlineMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = AvailableGreen
@@ -184,7 +204,8 @@ fun AdminBookingListScreen(
                         AdminBookingItemCard(
                             booking = booking,
                             filterType = filterType,
-                            onClick = { onNavigateToDetail(booking.bookingId) }
+                            onClick = { onNavigateToDetail(booking.bookingId) },
+                            adminBookingDetailViewModel = adminBookingDetailViewModel
                         )
                     }
                     item { Spacer(modifier = Modifier.height(Dimen.PaddingL)) }

@@ -46,6 +46,6 @@ data class Guest(
     val fullName: String,
     val phone: String? = null,
     val email: String? = null,
-    val dayOfBirth: Timestamp? = null,
+    val dateOfBirth: Timestamp? = null,
     val isRepresentative: Boolean = false
 )

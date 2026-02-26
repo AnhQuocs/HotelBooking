@@ -260,7 +260,7 @@ fun GuestInfoCard(
     val calendar = Calendar.getInstance()
 
     fun showDatePicker() {
-        val currentTimestamp = guest.dayOfBirth ?: Timestamp.now()
+        val currentTimestamp = guest.dateOfBirth ?: Timestamp.now()
         calendar.time = currentTimestamp.toDate()
 
         val datePickerDialog = DatePickerDialog(
@@ -268,7 +268,7 @@ fun GuestInfoCard(
             { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                 val newCalendar = Calendar.getInstance()
                 newCalendar.set(year, month, dayOfMonth)
-                onUpdate(guest.copy(dayOfBirth = Timestamp(newCalendar.time)))
+                onUpdate(guest.copy(dateOfBirth = Timestamp(newCalendar.time)))
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -278,8 +278,8 @@ fun GuestInfoCard(
         datePickerDialog.show()
     }
 
-    val dobString = remember(guest.dayOfBirth) {
-        guest.dayOfBirth?.toDate()?.let {
+    val dobString = remember(guest.dateOfBirth) {
+        guest.dateOfBirth?.toDate()?.let {
             SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(it)
         } ?: ""
     }

@@ -41,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
@@ -106,10 +105,15 @@ fun AdminBookingDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Booking Details", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        stringResource(id = R.string.booking_detail_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -163,33 +167,45 @@ fun AdminBookingDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .padding(Dimen.PaddingM),
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
                 ) {
                     item {
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(containerColor = Color.White)
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
+                            Column(modifier = Modifier.padding(Dimen.PaddingM)) {
                                 Text(
                                     "ID: ${booking.bookingId}",
                                     style = AfacadTypography.labelMedium,
                                     color = Color.Gray
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(AppSpacing.S))
                                 Text(
                                     hotel?.name ?: "",
                                     style = AfacadTypography.titleLarge,
                                     fontWeight = FontWeight.Bold
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(AppSpacing.S))
                                 Column(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
                                 ) {
-                                    Text("Check-in: ${adminFormatTimestamp(booking.startDate)}")
-                                    Text("Check-out: ${adminFormatTimestamp(booking.endDate)}")
+                                    Text(
+                                        stringResource(id = R.string.check_in) + ": ${
+                                            adminFormatTimestamp(
+                                                booking.startDate
+                                            )
+                                        }"
+                                    )
+                                    Text(
+                                        stringResource(id = R.string.check_out) + ": ${
+                                            adminFormatTimestamp(
+                                                booking.endDate
+                                            )
+                                        }"
+                                    )
                                 }
                             }
                         }
@@ -217,19 +233,19 @@ fun AdminBookingDetailScreen(
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = CardDefaults.cardColors(containerColor = Color.White)
                                 ) {
-                                    Column(modifier = Modifier.padding(16.dp)) {
+                                    Column(modifier = Modifier.padding(Dimen.PaddingM)) {
                                         Text(
-                                            "Room & Payment",
+                                            stringResource(id = R.string.room_and_payment),
                                             style = AfacadTypography.titleMedium,
                                             fontWeight = FontWeight.Bold
                                         )
-                                        Divider(modifier = Modifier.padding(vertical = 8.dp))
-                                        Text("Room Type: ${room.name}")
+                                        Divider(modifier = Modifier.padding(vertical = AppSpacing.S))
+                                        Text(stringResource(id = R.string.room_type) + ": ${room.name}")
                                         Spacer(modifier = Modifier.height(AppSpacing.S))
-                                        Text("Room Number: ${booking.roomNumber}")
+                                        Text(stringResource(id = R.string.room_number) + ": ${booking.roomNumber}")
                                         Spacer(modifier = Modifier.height(AppSpacing.S))
                                         Text(
-                                            "Total Price: $${booking.totalPrice}",
+                                            stringResource(id = R.string.total_price) + ": $${booking.totalPrice}",
                                             color = AvailableGreen,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -248,32 +264,35 @@ fun AdminBookingDetailScreen(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(containerColor = Color.White)
                         ) {
-                            Column(modifier = Modifier.padding(16.dp)) {
+                            Column(modifier = Modifier.padding(Dimen.PaddingM)) {
                                 Text(
-                                    "Guest Information (${booking.numberOfGuests})",
+                                    stringResource(id = R.string.guest_information) + " (${booking.numberOfGuests})",
                                     style = AfacadTypography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
-                                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                                Divider(modifier = Modifier.padding(vertical = Dimen.PaddingS))
 
                                 booking.guests.forEachIndexed { index, guest ->
                                     Row(
-                                        modifier = Modifier.padding(vertical = 4.dp),
+                                        modifier = Modifier.padding(vertical = Dimen.PaddingXS),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Icon(
                                             Icons.Default.Person,
                                             contentDescription = null,
                                             tint = Color.Gray,
-                                            modifier = Modifier.size(Dimen.SizeL).align(Alignment.Top)
+                                            modifier = Modifier
+                                                .size(Dimen.SizeL)
+                                                .align(Alignment.Top)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Spacer(modifier = Modifier.width(AppSpacing.S))
                                         Column(
                                             verticalArrangement = Arrangement.spacedBy(AppSpacing.XS)
                                         ) {
-                                            val displayName = StringBuilder("Guest ${index + 1}: ${guest.fullName}")
+                                            val displayName =
+                                                StringBuilder(stringResource(id = R.string.guest) + " ${index + 1}: ${guest.fullName}")
                                             if (guest.isRepresentative) {
-                                                displayName.append(" (Representative)")
+                                                displayName.append(" (" + stringResource(id = R.string.guest_representative) + ")")
                                             }
 
                                             Text(
@@ -282,23 +301,27 @@ fun AdminBookingDetailScreen(
                                                 color = if (guest.isRepresentative) BrightBlue else NearBlack
                                             )
 
-                                            guest.dayOfBirth?.let {
+                                            guest.dateOfBirth?.let {
                                                 Text(
-                                                    text = "Day Of Birth: ${formatDate(it)}",
+                                                    text = stringResource(id = R.string.date_of_birth) + ": ${
+                                                        formatDate(
+                                                            it
+                                                        )
+                                                    }",
                                                     style = AfacadTypography.bodySmall,
                                                     color = Color.Gray
                                                 )
                                             }
                                             guest.email?.let {
                                                 Text(
-                                                    text = "Email: $it",
+                                                    text = stringResource(id = R.string.email_label) + ": $it",
                                                     style = AfacadTypography.bodySmall,
                                                     color = Color.Gray
                                                 )
                                             }
                                             guest.phone?.let {
                                                 Text(
-                                                    text = "Phone Number: $it",
+                                                    text = stringResource(id = R.string.phone) + ": $it",
                                                     style = AfacadTypography.bodySmall,
                                                     color = Color.Gray
                                                 )

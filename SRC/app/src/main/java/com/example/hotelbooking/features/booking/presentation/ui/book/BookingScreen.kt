@@ -168,7 +168,7 @@ fun BookingScreen(
                         fullName = name,
                         email = email,
                         phone = phone,
-                        dayOfBirth = dobTimestamp?.let { Timestamp(Date(it)) },
+                        dateOfBirth = dobTimestamp?.let { Timestamp(Date(it)) },
                         isRepresentative = true
                     )
                     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""

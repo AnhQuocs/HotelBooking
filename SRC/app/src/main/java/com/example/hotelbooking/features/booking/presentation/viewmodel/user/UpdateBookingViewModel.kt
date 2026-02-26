@@ -65,7 +65,7 @@ class UpdateBookingViewModel @Inject constructor(
                         fullName = newName,
                         email = newEmail,
                         phone = newPhone,
-                        dayOfBirth = newDob
+                        dateOfBirth = newDob
                     )
                 } else {
                     guest

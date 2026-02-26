@@ -79,9 +79,9 @@ fun DashboardCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(Dimen.PaddingM)) {
             Icon(icon, contentDescription = null, tint = iconColor)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.S))
             Text(title, style = AfacadTypography.bodySmall, color = Color.Gray)
             Text(
                 value,
