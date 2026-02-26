@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingUiState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AvailableGreen

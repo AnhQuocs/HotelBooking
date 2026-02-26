@@ -49,8 +49,8 @@ import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen

@@ -31,9 +31,9 @@ import com.example.hotelbooking.features.booking.presentation.ui.checkout.Paymen
 import com.example.hotelbooking.features.booking.presentation.ui.history.cancel.CancelBookingActivity
 import com.example.hotelbooking.features.booking.presentation.ui.history.stay.CheckInActivity
 import com.example.hotelbooking.features.booking.presentation.ui.history.stay.StayCheckOutActivity
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardState

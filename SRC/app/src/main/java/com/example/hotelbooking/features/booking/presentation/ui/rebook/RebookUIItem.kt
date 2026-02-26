@@ -33,8 +33,8 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryCard
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.HotelInfo
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.PromoUI
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingUiState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilitySection

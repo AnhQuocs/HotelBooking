@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.booking.presentation.viewmodel
+package com.example.hotelbooking.features.booking.presentation.viewmodel.user
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel

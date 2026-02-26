@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import com.example.hotelbooking.components.UserBottomAppBar
 import com.example.hotelbooking.features.booking.presentation.ui.history.detail.BookingDetailActivity
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingHistoryScreen
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryViewModel
 import com.example.hotelbooking.features.chat.presentation.ui.user.ChatActivity
 import com.example.hotelbooking.features.chat.presentation.ui.user.UserMessageScreen
 import com.example.hotelbooking.features.home.user.HomeScreen

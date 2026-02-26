@@ -29,9 +29,9 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState

@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui
+package com.example.hotelbooking.features.home.admin.ui.dashboard
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,6 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.ArrivalBlue
 import com.example.hotelbooking.ui.theme.AvailableGreen
-import com.example.hotelbooking.ui.theme.BrightBlue
 import com.example.hotelbooking.ui.theme.CancelledRed
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.google.firebase.Timestamp
@@ -120,15 +119,6 @@ fun AdminBookingItemCard(
                     BookingFilterType.ARRIVALS -> {
                         if (booking.stayStatus == StayStatus.NONE) {
                             Row(horizontalArrangement = Arrangement.spacedBy(AppSpacing.S)) {
-                                Button(
-                                    onClick = {
-                                        /* Gọi hàm Check-in */
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = BrightBlue),
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text(stringResource(id = R.string.confirm_check_in))
-                                }
                                 OutlinedButton(
                                     onClick = {
                                         /* Gọi hàm NO_SHOW (TH1) */
@@ -234,7 +224,7 @@ fun StatusBadge(status: StayStatus) {
 }
 
 
-private fun adminFormatTimestamp(timestamp: Timestamp): String {
+fun adminFormatTimestamp(timestamp: Timestamp): String {
     val date = timestamp.toDate()
     val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
     return formatter.format(date)

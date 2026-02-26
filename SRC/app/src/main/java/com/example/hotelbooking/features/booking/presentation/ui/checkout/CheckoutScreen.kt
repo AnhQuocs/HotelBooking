@@ -52,9 +52,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryViewModel
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingUiState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel

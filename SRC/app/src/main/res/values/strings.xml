@@ -385,6 +385,8 @@
     <string name="stay_in_house">In-house</string>
     <string name="stay_checked_out">Checked-out</string>
     <string name="stay_no_show">No-show</string>
+    <string name="total_revenue_today">Total Revenue Today</string>
+    <string name="booking_id_not_found">Booking ID not found</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

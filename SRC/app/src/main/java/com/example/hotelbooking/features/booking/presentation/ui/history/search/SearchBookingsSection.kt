@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.history.BookingHistorySection
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryState
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable

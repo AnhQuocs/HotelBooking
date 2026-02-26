@@ -1,11 +1,11 @@
-package com.example.hotelbooking.features.home.admin.viewmodel
+package com.example.hotelbooking.features.booking.presentation.viewmodel.admin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
-import com.example.hotelbooking.features.home.admin.ui.BookingFilterType
+import com.example.hotelbooking.features.home.admin.ui.dashboard.BookingFilterType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

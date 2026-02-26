@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui
+package com.example.hotelbooking.features.home.admin.ui.dashboard
 
 import android.content.Context
 import android.content.Intent
@@ -53,8 +53,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.home.admin.viewmodel.AdminHomeViewModel
-import com.example.hotelbooking.features.home.admin.viewmodel.DashboardUiState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminHomeViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.DashboardUiState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography

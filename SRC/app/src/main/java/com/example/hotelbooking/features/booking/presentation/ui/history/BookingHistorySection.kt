@@ -46,7 +46,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.presentation.ui.checkout.CheckoutSummaryItem
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingHistoryState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing

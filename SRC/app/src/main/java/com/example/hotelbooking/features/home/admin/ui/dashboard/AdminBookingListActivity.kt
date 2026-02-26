@@ -1,5 +1,6 @@
-package com.example.hotelbooking.features.home.admin.ui
+package com.example.hotelbooking.features.home.admin.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -36,13 +37,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.home.admin.viewmodel.AdminBookingListViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingListViewModel
+import com.example.hotelbooking.features.home.admin.ui.detail.AdminBookingDetailActivity
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
@@ -66,6 +69,7 @@ class AdminBookingListActivity : BaseComponentActivity() {
 
         setContent {
             val viewModel: AdminBookingListViewModel = hiltViewModel()
+            val context = LocalContext.current
 
             LaunchedEffect(Unit) {
                 viewModel.loadFilteredBookings(hotelId, filterType, targetDateEpoch)
@@ -76,7 +80,9 @@ class AdminBookingListActivity : BaseComponentActivity() {
                 viewModel = viewModel,
                 onNavigateBack = { finish() },
                 onNavigateToDetail = { bookingId ->
-                    // Sang màn Detail
+                    val intent = Intent(context, AdminBookingDetailActivity::class.java)
+                        .putExtra("BOOKING_ID", bookingId)
+                    context.startActivity(intent)
                 }
             )
         }
@@ -162,7 +168,7 @@ fun AdminBookingListScreen(
                                 shape = RoundedCornerShape(12.dp)
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
-                                    Text(text = "Total Revenue Today", style = AfacadTypography.bodyMedium, color = NearBlack)
+                                    Text(text = stringResource(id = R.string.total_revenue_today), style = AfacadTypography.bodyMedium, color = NearBlack)
                                     Text(
                                         text = "$${String.format(Locale.US, "%,.0f", totalRevenue)}",
                                         style = AfacadTypography.headlineMedium,

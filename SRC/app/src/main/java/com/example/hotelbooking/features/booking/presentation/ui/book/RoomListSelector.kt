@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingUiState
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingUiState
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape

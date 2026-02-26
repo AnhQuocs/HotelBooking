@@ -31,7 +31,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.InfoTitle
 import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.components.ReadMoreText
-import com.example.hotelbooking.features.booking.presentation.viewmodel.BookingViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.BottomBookingBar
 import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilitySection

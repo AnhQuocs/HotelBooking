@@ -64,7 +64,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Guest
-import com.example.hotelbooking.features.booking.presentation.viewmodel.StayViewModel
+import com.example.hotelbooking.features.booking.presentation.viewmodel.user.StayViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing

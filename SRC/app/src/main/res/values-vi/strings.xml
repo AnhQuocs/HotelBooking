@@ -384,7 +384,8 @@
     <string name="stay_in_house">Đang lưu trú</string>
     <string name="stay_checked_out">Đã trả phòng</string>
     <string name="stay_no_show">Vắng mặt</string>
-
+    <string name="total_revenue_today">Tổng doanh thu hôm nay</string>
+    <string name="booking_id_not_found">Không tìm thấy mã đặt phòng</string>
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
 
