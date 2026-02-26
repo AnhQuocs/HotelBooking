@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -195,19 +198,21 @@ class BookingRepositoryImpl(
         return bookingDto.toDomain()
     }
 
-    override suspend fun getAllBookingsByHotelId(hotelId: String): List<Booking> {
-        return try {
-            val snapshot = bookingsCollection
-                .whereEqualTo("hotelId", hotelId)
-                .get()
-                .await()
+    override fun getAllBookingsByHotelId(hotelId: String): Flow<List<Booking>> = callbackFlow {
+        val listener = bookingsCollection
+            .whereEqualTo("hotelId", hotelId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
 
-            snapshot.toObjects(BookingDto::class.java)
-                .map { it.toDomain() }
+                val bookings = snapshot?.toObjects(BookingDto::class.java)
+                    ?.map { it.toDomain() } ?: emptyList()
 
-        } catch (e: Exception) {
-            emptyList()
-        }
+                trySend(bookings)
+            }
+
+        awaitClose { listener.remove() }
     }
 
     override suspend fun getBookings(

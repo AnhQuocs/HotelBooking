@@ -6,6 +6,7 @@ import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentBrand
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.google.firebase.Timestamp
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 interface BookingRepository {
@@ -32,7 +33,7 @@ interface BookingRepository {
 
     suspend fun getBookingById(bookingId: String): Booking
 
-    suspend fun getAllBookingsByHotelId(hotelId: String): List<Booking>
+    fun getAllBookingsByHotelId(hotelId: String): Flow<List<Booking>>
 
     suspend fun getBookings(
         hotelId: String,

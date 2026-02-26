@@ -15,8 +15,8 @@ import com.example.hotelbooking.features.review.domain.repository.ReviewReposito
 import com.example.hotelbooking.features.room.domain.usecase.RoomUseCases
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -195,14 +195,28 @@ class AdminHomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchHotelDetails(hotelId: String) = coroutineScope {
-        val bookingsDeferred = async { bookingRepository.getAllBookingsByHotelId(hotelId) }
-        val reviewsDeferred = async { reviewRepository.getReviewsByServiceId(hotelId) }
-        val roomsDeferred = async { roomUseCases.getRoomsByHotelIdUseCase(hotelId) }
+    private var bookingsJob: Job? = null
 
-        _bookings.value = bookingsDeferred.await()
-        _reviews.value = reviewsDeferred.await()
-        _totalRooms.value = roomsDeferred.await().sumOf { it.totalRoom }
+    private fun fetchHotelDetails(hotelId: String) {
+        bookingsJob?.cancel()
+
+        bookingsJob = viewModelScope.launch {
+            bookingRepository.getAllBookingsByHotelId(hotelId).collect { latestBookings ->
+                _bookings.value = latestBookings
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                val reviewsDeferred = async { reviewRepository.getReviewsByServiceId(hotelId) }
+                val roomsDeferred = async { roomUseCases.getRoomsByHotelIdUseCase(hotelId) }
+
+                _reviews.value = reviewsDeferred.await()
+                _totalRooms.value = roomsDeferred.await().sumOf { it.totalRoom }
+            } catch (e: Exception) {
+                Log.e("AdminHome", "Error fetching extra details: ${e.message}")
+            }
+        }
     }
 
     private fun isTargetDate(timestamp: Timestamp, targetDate: LocalDate): Boolean {
