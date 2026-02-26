@@ -1,19 +1,14 @@
 package com.example.hotelbooking.features.home.admin.ui.dashboard
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material3.Button
@@ -30,14 +25,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.review.domain.model.Review
-import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
-import com.example.hotelbooking.ui.theme.HeaderBlue
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.ui.theme.RatingYellow
 
@@ -113,60 +105,6 @@ fun OperationStatCard(label: String, count: Int, color: Color, modifier: Modifie
                 color = color
             )
             Text(label, style = AfacadTypography.bodyMedium, color = color)
-        }
-    }
-}
-
-@Composable
-fun RevenueBarChart(data: List<Pair<String, Double>>) {
-    val maxVal = data.maxOfOrNull { it.second }?.takeIf { it > 0 } ?: 1.0
-
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        modifier = Modifier.height(200.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(Dimen.PaddingM),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            data.forEach { (date, amount) ->
-                val heightRatio = (amount / maxVal).toFloat().coerceAtLeast(0.02f)
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxHeight()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .width(20.dp),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(heightRatio)
-                                .background(
-                                    HeaderBlue,
-                                    RoundedCornerShape(
-                                        topStart = AppShape.ShapeXXS,
-                                        topEnd = AppShape.ShapeXXS
-                                    )
-                                )
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(AppSpacing.XS))
-                    Text(
-                        text = date,
-                        style = AfacadTypography.labelSmall,
-                        fontSize = 10.sp,
-                        color = NearBlack
-                    )
-                }
-            }
         }
     }
 }
