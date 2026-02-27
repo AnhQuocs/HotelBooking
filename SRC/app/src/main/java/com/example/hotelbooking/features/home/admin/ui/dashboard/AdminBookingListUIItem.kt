@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
+import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
 import com.example.hotelbooking.features.home.admin.ui.ActionDialog
@@ -54,9 +55,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class ConfirmDialogState(
-    @StringRes val titleRes: Int,
-    @StringRes val messageRes: Int,
-    val onConfirm: () -> Unit
+    @StringRes val titleRes: Int, @StringRes val messageRes: Int, val onConfirm: () -> Unit
 )
 
 @Composable
@@ -79,8 +78,7 @@ fun AdminBookingItemCard(
             onConfirm = {
                 state.onConfirm()
                 confirmDialogState = null
-            }
-        )
+            })
     }
 
     Card(
@@ -106,7 +104,7 @@ fun AdminBookingItemCard(
                     color = Color.Gray
                 )
 
-                StatusBadge(status = booking.stayStatus)
+                StatusBadge(bookingStatus = booking.status, stayStatus = booking.stayStatus)
             }
 
             Text(
@@ -156,8 +154,7 @@ fun AdminBookingItemCard(
                                             messageRes = R.string.confirm_no_show,
                                             onConfirm = {
                                                 adminBookingDetailViewModel.markAsNoShow(booking.bookingId)
-                                            }
-                                        )
+                                            })
                                     },
                                     colors = ButtonDefaults.outlinedButtonColors(contentColor = CancelledRed),
                                     modifier = Modifier.weight(0.6f)
@@ -177,8 +174,7 @@ fun AdminBookingItemCard(
                                         messageRes = R.string.confirm_check_out,
                                         onConfirm = {
                                             adminBookingDetailViewModel.processCheckOut(booking)
-                                        }
-                                    )
+                                        })
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = AvailableGreen),
                                 modifier = Modifier.fillMaxWidth()
@@ -197,8 +193,7 @@ fun AdminBookingItemCard(
                                         messageRes = R.string.confirm_early_checkout,
                                         onConfirm = {
                                             adminBookingDetailViewModel.processCheckOut(booking)
-                                        }
-                                    )
+                                        })
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
                                 modifier = Modifier.fillMaxWidth()
@@ -238,11 +233,8 @@ fun AdminBookingItemCard(
                             )
                             Text(
                                 text = stringResource(
-                                    id = R.string.booked_at,
-                                    adminFormatTimestamp(booking.createdAt)
-                                ),
-                                style = AfacadTypography.bodySmall,
-                                color = Color.Gray
+                                    id = R.string.booked_at, adminFormatTimestamp(booking.createdAt)
+                                ), style = AfacadTypography.bodySmall, color = Color.Gray
                             )
                         }
                     }
@@ -253,12 +245,24 @@ fun AdminBookingItemCard(
 }
 
 @Composable
-fun StatusBadge(status: StayStatus) {
-    val (color, textRes) = when (status) {
-        StayStatus.NONE -> Color.Gray to R.string.stay_waiting
-        StayStatus.CHECK_IN -> ArrivalBlue to R.string.stay_in_house
-        StayStatus.CHECK_OUT -> AvailableGreen to R.string.stay_checked_out
-        StayStatus.NO_SHOW -> CancelledRed to R.string.stay_no_show
+fun StatusBadge(bookingStatus: BookingStatus, stayStatus: StayStatus) {
+    val (color, textRes) = when {
+        bookingStatus == BookingStatus.CANCELLED -> {
+            CancelledRed to R.string.status_cancelled
+        }
+
+        bookingStatus == BookingStatus.PENDING -> {
+            Color(0xFFFFA000) to R.string.status_pending
+        }
+
+        else -> {
+            when (stayStatus) {
+                StayStatus.NONE -> Color.Gray to R.string.stay_waiting
+                StayStatus.CHECK_IN -> ArrivalBlue to R.string.stay_in_house
+                StayStatus.CHECK_OUT -> AvailableGreen to R.string.stay_checked_out
+                StayStatus.NO_SHOW -> CancelledRed to R.string.stay_no_show
+            }
+        }
     }
 
     Surface(

@@ -394,9 +394,26 @@
     <string name="room_and_payment">Phòng &amp; Thanh toán</string>
     <string name="waiting_for_arrival_date">Chờ ngày nhận phòng</string>
 
+    <!-- ADMIN HOTEL -->
+    <string name="open_gallery">Mở thư viện</string>
+    <string name="no_hotels_yet">Bạn chưa tạo khách sạn nào</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="add_new_hotel">Thêm khách sạn</string>
+    <string name="previous">Trang trước</string>
+    <string name="basic_information">Thông tin cơ bản</string>
+    <string name="hotel_name">Tên khách sạn</string>
+    <string name="hotel_description">Mô tả khách sạn</string>
+    <string name="name_vietnamese">Tên (Tiếng Việt)</string>
+    <string name="name_english">Tên (Tiếng Anh)</string>
+    <string name="description_vietnamese">Mô tả (Tiếng Việt)</string>
+    <string name="description_english">Mô tả (Tiếng Anh)</string>
+    <string name="enter_hotel_name">Nhập tên khách sạn</string>
+    <string name="enter_description">Nhập mô tả</string>
+
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
     <string name="confirm">Xác nhận</string>
     <string name="status">Trạng thái</string>
+    <string name="submit">Gửi</string>
 
 </resources>

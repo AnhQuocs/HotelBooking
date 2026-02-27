@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
+import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.home.admin.SyncBookingAutoUseCase
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
@@ -113,13 +114,13 @@ class AdminHomeViewModel @Inject constructor(
                             isTargetDate(
                                 it.startDate,
                                 date
-                            ) && it.status == BookingStatus.CONFIRMED
+                            ) && it.status == BookingStatus.CONFIRMED &&
+                                    it.stayStatus == StayStatus.NONE
                         },
                         departuresCount = bookings.count {
-                            isTargetDate(
-                                it.endDate,
-                                date
-                            ) && it.status == BookingStatus.CONFIRMED
+                            isTargetDate(it.endDate, date) &&
+                                    it.status == BookingStatus.CONFIRMED &&
+                                    it.stayStatus == StayStatus.CHECK_IN
                         },
                         occupiedCount = bookings.count {
                             val start =
