@@ -13,14 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,8 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.hotelbooking.R
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -57,12 +61,11 @@ fun FullScreenMapPicker(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
-    // Khởi tạo 2 Geocoder để lấy cả Vi và En
     val geocoderVi = remember { Geocoder(context, Locale("vi", "VN")) }
     val geocoderEn = remember { Geocoder(context, Locale.US) }
 
-    val labelLocating = if (isEnglish) "Locating position..." else "Đang xác định vị trí..."
-    val labelNotFound = if (isEnglish) "Street name not found" else "Không tìm thấy tên đường"
+    val labelLocating = stringResource(id = R.string.locating_position)
+    val labelNotFound = stringResource(id = R.string.address_not_found)
 
     var localDisplayAddress by remember { mutableStateOf(labelLocating) }
     var tempShortVi by remember { mutableStateOf("") }
@@ -73,7 +76,6 @@ fun FullScreenMapPicker(
         position = CameraPosition.fromLatLngZoom(initialLocation, 16f)
     }
 
-    // Xử lý nút Back vật lý
     BackHandler { onClose() }
 
     LaunchedEffect(cameraPositionState.isMoving) {
@@ -90,16 +92,14 @@ fun FullScreenMapPicker(
                     val enResults = geocoderEn.getFromLocation(center.latitude, center.longitude, 1)
 
                     withContext(Dispatchers.Main) {
-                        val viAddr = viResults?.firstOrNull()
-                        val enAddr = enResults?.firstOrNull()
+                        val viAddress = viResults?.firstOrNull()
+                        val enAddress = enResults?.firstOrNull()
 
-                        // 1. Vẫn giữ lại shortAddress (thoroughfare) để trả về khi bấm Confirm (Logic cũ)
-                        tempShortVi = viAddr?.thoroughfare ?: ""
-                        tempShortEn = enAddr?.thoroughfare ?: ""
+                        tempShortVi = viAddress?.thoroughfare ?: ""
+                        tempShortEn = enAddress?.thoroughfare ?: ""
 
-                        // 2. Lấy Full Address để HIỂN THỊ LÊN UI cho giống ảnh 2
-                        val fullVi = viAddr?.getAddressLine(0) ?: tempShortVi
-                        val fullEn = enAddr?.getAddressLine(0) ?: tempShortEn
+                        val fullVi = viAddress?.getAddressLine(0) ?: tempShortVi
+                        val fullEn = enAddress?.getAddressLine(0) ?: tempShortEn
 
                         val displayRaw = if (isEnglish) fullEn else fullVi
                         localDisplayAddress = displayRaw.ifEmpty { labelNotFound }
@@ -116,39 +116,50 @@ fun FullScreenMapPicker(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White)) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(zoomControlsEnabled = false)
         )
 
-        // 1. Overlay Tọa độ (Chính giữa bên trên)
         val currentTarget = cameraPositionState.position.target
         Surface(
-            modifier = Modifier.align(Alignment.TopCenter).padding(top = 16.dp),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = Dimen.PaddingM),
             color = Color.Black.copy(alpha = 0.7f),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(AppShape.ShapeXL)
         ) {
             Text(
-                text = String.format(Locale.US, "%.6f , %.6f", currentTarget.latitude, currentTarget.longitude),
+                text = String.format(
+                    Locale.US,
+                    "%.6f , %.6f",
+                    currentTarget.latitude,
+                    currentTarget.longitude
+                ),
                 color = Color.White,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                style = MaterialTheme.typography.labelSmall
+                modifier = Modifier.padding(
+                    horizontal = Dimen.PaddingSM,
+                    vertical = Dimen.PaddingXSPlus
+                ),
+                style = AfacadTypography.labelSmall
             )
         }
 
-        // 2. Nút Back (Góc trên bên trái)
         SmallFloatingActionButton(
             onClick = onClose,
-            modifier = Modifier.align(Alignment.TopStart).padding(16.dp),
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(vertical = Dimen.PaddingM),
             containerColor = Color.White,
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(AppShape.ShapeM)
         ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            Icon(Icons.Default.ArrowBack, contentDescription = null)
         }
 
-        // 3. Pin chính giữa (Đứng im)
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -159,47 +170,50 @@ fun FullScreenMapPicker(
                 tint = Color.Red,
                 modifier = Modifier.size(48.dp)
             )
-            Spacer(modifier = Modifier.height(24.dp)) // Bù khoảng cách để mũi nhọn của icon chạm đúng tâm
+            Spacer(modifier = Modifier.height(AppSpacing.XL))
         }
 
-        // 4. Card thông tin và nút Chốt vị trí (Bên dưới cùng)
-        // 4. Card thông tin và nút Chốt vị trí (Bên dưới cùng)
         Card(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp).fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(Dimen.PaddingM)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(AppShape.ShapeL),
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier.padding(Dimen.PaddingML)) {
                 Text(
-                    // Đổi label cho hợp với việc hiển thị full
-                    text = if (isEnglish) "Selected Address" else "Địa chỉ đang chọn",
-                    style = MaterialTheme.typography.titleSmall,
+                    text = stringResource(id = R.string.selected_address),
+                    style = AfacadTypography.titleSmall,
                     color = Color.Gray
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(AppSpacing.S))
 
                 Text(
-                    text = localDisplayAddress, // Lúc này nó sẽ chứa Full Address
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = localDisplayAddress,
+                    style = AfacadTypography.bodyMedium,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
-                    maxLines = 3, // Tăng lên 3 dòng để không bị cắt chữ
+                    maxLines = 3,
                     minLines = 2
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
 
-                // Nút Chốt Vị Trí (Giữ nguyên logic, vẫn gửi tempShortVi đi)
                 Button(
                     onClick = {
-                        onLocationSelected(cameraPositionState.position.target, tempShortVi, tempShortEn)
+                        onLocationSelected(
+                            cameraPositionState.position.target,
+                            tempShortVi,
+                            tempShortEn
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(AppShape.ShapeS),
                     enabled = !cameraPositionState.isMoving && !isGeocoding
                 ) {
-                    Text(if (isEnglish) "Confirm Location" else "Chốt vị trí này")
+                    Text(stringResource(id = R.string.confirm_location))
                 }
             }
         }

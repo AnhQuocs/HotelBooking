@@ -1,7 +1,6 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.admin.add
 
 import android.location.Geocoder
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,13 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Map
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -31,9 +27,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,16 +42,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.location.domain.model.District
 import com.example.hotelbooking.features.location.domain.model.Province
 import com.example.hotelbooking.features.location.domain.model.Ward
 import com.example.hotelbooking.features.location.presentation.viewmodel.LocationViewModel
 import com.example.hotelbooking.features.location.utils.LocationTranslator
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.utils.LangUtils
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -83,28 +82,23 @@ fun UpdateLocationScreen(
     val context = LocalContext.current
     val isEnglish = LangUtils.currentLang == "en"
 
-    // Hàm tiện ích hiển thị tên theo ngôn ngữ
     val getDisplayName: (String) -> String = { viName ->
         if (isEnglish) LocationTranslator.toEnglish(viName) else viName
     }
 
     val provinces by locationViewModel.provinces.collectAsState()
 
-    // State chọn địa giới
     var selectedProvince by remember { mutableStateOf<Province?>(null) }
     var selectedDistrict by remember { mutableStateOf<District?>(null) }
     var selectedWard by remember { mutableStateOf<Ward?>(null) }
 
-    // State tọa độ và địa chỉ thô
     var exactLatLng by remember { mutableStateOf(LatLng(21.028511, 105.804817)) }
     var shortAddressVi by remember { mutableStateOf("") }
     var shortAddressEn by remember { mutableStateOf("") }
 
-    // State địa chỉ sau khi Admin đã Edit (Dùng để hiển thị và gửi đi)
     var editedAddressVi by remember { mutableStateOf("") }
     var editedAddressEn by remember { mutableStateOf("") }
 
-    // State điều khiển Map lớn và Dialog Edit
     var showFullScreenMap by remember { mutableStateOf(false) }
     var showEditDialogVi by remember { mutableStateOf(false) }
     var showEditDialogEn by remember { mutableStateOf(false) }
@@ -115,11 +109,14 @@ fun UpdateLocationScreen(
 
     LaunchedEffect(isConfirmed) {
         if (isConfirmed) {
-            android.widget.Toast.makeText(context, "Location updated!", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(
+                context,
+                "Location updated!",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
-    // 1. Tự động cập nhật địa chỉ nháp khi Map hoặc Dropdown thay đổi
     LaunchedEffect(selectedWard, shortAddressVi, shortAddressEn) {
         if (selectedWard != null && selectedDistrict != null && selectedProvince != null) {
             val wardVi = selectedWard!!.name
@@ -131,37 +128,45 @@ fun UpdateLocationScreen(
             val cityEn = LocationTranslator.toEnglish(cityVi)
 
             val sVi = if (shortAddressVi.isNotEmpty()) "$shortAddressVi, " else ""
-            val sEn = if (shortAddressEn.isNotEmpty()) "${LocationTranslator.toEnglishStreet(shortAddressEn)}, " else ""
+            val sEn = if (shortAddressEn.isNotEmpty()) "${
+                LocationTranslator.toEnglishStreet(shortAddressEn)
+            }, " else ""
 
             editedAddressVi = "$sVi$wardVi, $districtVi, $cityVi"
             editedAddressEn = "$sEn$wardEn, $districtEn, $cityEn"
         }
     }
 
-    // 2. Logic "Bay Map" khi chọn xong Phường/Xã
     LaunchedEffect(selectedWard) {
         if (selectedWard != null) {
             val geocoderVi = Geocoder(context, Locale("vi", "VN"))
             withContext(Dispatchers.IO) {
                 try {
-                    val addr = "${selectedWard!!.name}, ${selectedDistrict!!.name}, ${selectedProvince!!.name}, Việt Nam"
-                    val locations = geocoderVi.getFromLocationName(addr, 1)
+                    val address =
+                        "${selectedWard!!.name}, ${selectedDistrict!!.name}, ${selectedProvince!!.name}, Việt Nam"
+                    val locations = geocoderVi.getFromLocationName(address, 1)
                     if (!locations.isNullOrEmpty()) {
                         val target = LatLng(locations[0].latitude, locations[0].longitude)
                         withContext(Dispatchers.Main) {
                             exactLatLng = target
-                            previewCameraState.animate(CameraUpdateFactory.newLatLngZoom(target, 15f))
+                            previewCameraState.animate(
+                                CameraUpdateFactory.newLatLngZoom(
+                                    target,
+                                    15f
+                                )
+                            )
                         }
                     }
-                } catch (e: Exception) { e.printStackTrace() }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
 
-    // --- DIALOG CHỈNH SỬA TAY ---
     if (showEditDialogVi) {
         EditAddressDialog(
-            title = "Sửa địa chỉ Tiếng Việt",
+            title = stringResource(id = R.string.edit_vietnamese_address),
             initialValue = editedAddressVi,
             onDismiss = { showEditDialogVi = false },
             onConfirm = { editedAddressVi = it; showEditDialogVi = false }
@@ -169,14 +174,13 @@ fun UpdateLocationScreen(
     }
     if (showEditDialogEn) {
         EditAddressDialog(
-            title = "Edit English Address",
+            title = stringResource(id = R.string.edit_english_address),
             initialValue = editedAddressEn,
             onDismiss = { showEditDialogEn = false },
             onConfirm = { editedAddressEn = it; showEditDialogEn = false }
         )
     }
 
-    // --- MÀN HÌNH CHỌN VỊ TRÍ CHI TIẾT (FULL SCREEN) ---
     if (showFullScreenMap) {
         FullScreenMapPicker(
             initialLocation = exactLatLng,
@@ -193,16 +197,20 @@ fun UpdateLocationScreen(
         return
     }
 
-    // --- GIAO DIỆN CHÍNH ---
     Column(modifier = Modifier.fillMaxSize()) {
         Card(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(Dimen.PaddingM)
+                .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(4.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                modifier = Modifier.padding(Dimen.PaddingM),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
+            ) {
                 LocationDropdown(
-                    label = if (isEnglish) "Province / City" else "Tỉnh / Thành phố",
+                    label = stringResource(id = R.string.province_city),
                     options = provinces.map { getDisplayName(it.name) },
                     selectedOption = selectedProvince?.let { getDisplayName(it.name) } ?: "",
                     onOptionSelected = { name ->
@@ -213,11 +221,12 @@ fun UpdateLocationScreen(
 
                 if (selectedProvince != null) {
                     LocationDropdown(
-                        label = if (isEnglish) "District" else "Quận / Huyện",
+                        label = stringResource(id = R.string.district),
                         options = selectedProvince!!.districts.map { getDisplayName(it.name) },
                         selectedOption = selectedDistrict?.let { getDisplayName(it.name) } ?: "",
                         onOptionSelected = { name ->
-                            selectedDistrict = selectedProvince!!.districts.find { getDisplayName(it.name) == name }
+                            selectedDistrict =
+                                selectedProvince!!.districts.find { getDisplayName(it.name) == name }
                             selectedWard = null
                         }
                     )
@@ -225,11 +234,12 @@ fun UpdateLocationScreen(
 
                 if (selectedDistrict != null) {
                     LocationDropdown(
-                        label = if (isEnglish) "Ward / Commune" else "Phường / Xã",
+                        label = stringResource(id = R.string.ward_commune),
                         options = selectedDistrict!!.wards.map { getDisplayName(it.name) },
                         selectedOption = selectedWard?.let { getDisplayName(it.name) } ?: "",
                         onOptionSelected = { name ->
-                            selectedWard = selectedDistrict!!.wards.find { getDisplayName(it.name) == name }
+                            selectedWard =
+                                selectedDistrict!!.wards.find { getDisplayName(it.name) == name }
                         }
                     )
                 }
@@ -237,42 +247,68 @@ fun UpdateLocationScreen(
         }
 
         if (selectedWard != null) {
-            // Map Preview Nhỏ
             Box(
-                modifier = Modifier.fillMaxWidth().height(160.dp).padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimen.HeightXL3)
+                    .padding(horizontal = Dimen.PaddingM)
                     .clickable { showFullScreenMap = true }
             ) {
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
                     cameraPositionState = previewCameraState,
-                    uiSettings = MapUiSettings(scrollGesturesEnabled = false, zoomGesturesEnabled = false)
+                    uiSettings = MapUiSettings(
+                        scrollGesturesEnabled = false,
+                        zoomGesturesEnabled = false
+                    )
                 )
-                Icon(Icons.Default.LocationOn, null, tint = Color.Red, modifier = Modifier.align(Alignment.Center).size(32.dp).padding(bottom = 16.dp))
+                Icon(
+                    Icons.Default.LocationOn,
+                    null,
+                    tint = Color.Red,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(Dimen.SizeL)
+                        .padding(bottom = Dimen.PaddingM)
+                )
                 Surface(
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 8.dp),
-                    color = Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(12.dp)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = Dimen.PaddingS),
+                    color = Color.Black.copy(alpha = 0.6f),
+                    shape = RoundedCornerShape(AppShape.ShapeM)
                 ) {
                     Text(
-                        if (isEnglish) "Tap to pinpoint" else "Chạm để ghim vị trí",
-                        color = Color.White, fontSize = 11.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        text = stringResource(id = R.string.tap_to_pinpoint),
+                        style = AfacadTypography.labelMedium.copy(
+                            color = Color.White,
+                            fontSize = 11.sp
+                        ),
+                        modifier = Modifier.padding(
+                            horizontal = Dimen.PaddingS,
+                            vertical = Dimen.PaddingXS
+                        )
                     )
                 }
             }
 
-            // Preview Address Cards (Vi/En)
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Xem trước địa chỉ / Address Preview", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
-                Spacer(modifier = Modifier.height(8.dp))
+            Column(modifier = Modifier.padding(vertical = Dimen.PaddingM)) {
+                Text(
+                    stringResource(id = R.string.address_preview),
+                    style = AfacadTypography.labelMedium,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(AppSpacing.S))
 
                 AddressPreviewCard(
-                    label = "English",
-                    address = "$editedAddressEn, Vietnam",
+                    label = stringResource(id = R.string.english),
+                    address = "$editedAddressEn, " + stringResource(id = R.string.vietnamese),
                     onEdit = { showEditDialogEn = true }
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(AppSpacing.S))
                 AddressPreviewCard(
-                    label = "Tiếng Việt",
-                    address = "$editedAddressVi, Việt Nam",
+                    label = stringResource(id = R.string.vietnamese),
+                    address = "$editedAddressVi, " + stringResource(id = R.string.vietnamese),
                     onEdit = { showEditDialogVi = true }
                 )
             }
@@ -282,7 +318,9 @@ fun UpdateLocationScreen(
 
         Button(
             enabled = selectedWard != null && !isLoading,
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = Dimen.PaddingM),
             onClick = {
                 onLocationConfirmed(
                     exactLatLng.latitude, exactLatLng.longitude,
@@ -293,9 +331,13 @@ fun UpdateLocationScreen(
             }
         ) {
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White, strokeWidth = 2.dp)
+                CircularProgressIndicator(
+                    modifier = Modifier.size(Dimen.SizeM),
+                    color = Color.White,
+                    strokeWidth = 2.dp
+                )
             } else {
-                Text(if (isEnglish) "Confirm & Update" else "Xác nhận & Cập nhật")
+                Text(stringResource(id = R.string.confirm_update))
             }
         }
     }
@@ -307,27 +349,57 @@ fun AddressPreviewCard(label: String, address: String, onEdit: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF7F7F7))
     ) {
-        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.padding(Dimen.PaddingSM),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(label, fontSize = 10.sp, color = Color.Gray)
-                Text(address, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                Text(
+                    label,
+                    style = AfacadTypography.labelMedium.copy(
+                        fontSize = 10.sp,
+                        color = Color.Gray
+                    )
+                )
+                Text(
+                    address,
+                    style = AfacadTypography.labelMedium.copy(
+                        fontWeight = FontWeight.Medium
+                    )
+                )
             }
             IconButton(onClick = onEdit) {
-                Icon(Icons.Default.Edit, null, modifier = Modifier.size(18.dp), tint = Color.Gray)
+                Icon(
+                    Icons.Default.Edit,
+                    null,
+                    modifier = Modifier.size(18.dp),
+                    tint = Color.Gray
+                )
             }
         }
     }
 }
 
 @Composable
-fun EditAddressDialog(title: String, initialValue: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
+fun EditAddressDialog(
+    title: String,
+    initialValue: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
     var text by remember { mutableStateOf(initialValue) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(title, fontSize = 16.sp) },
-        text = { OutlinedTextField(value = text, onValueChange = { text = it }, modifier = Modifier.fillMaxWidth()) },
+        title = { Text(title, style = AfacadTypography.bodyMedium) },
+        text = {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
         confirmButton = { TextButton(onClick = { onConfirm(text) }) { Text("OK") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Hủy") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(id = R.string.cancel)) } }
     )
 }
 

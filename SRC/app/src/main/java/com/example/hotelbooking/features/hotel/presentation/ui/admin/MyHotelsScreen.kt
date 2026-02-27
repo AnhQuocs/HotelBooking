@@ -3,7 +3,6 @@ package com.example.hotelbooking.features.hotel.presentation.ui.admin
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,13 +40,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AdminHotelState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.RoyalBlue
 import com.example.hotelbooking.ui.theme.SurfaceGray
 import com.example.hotelbooking.ui.theme.TextPrimaryDark
@@ -55,9 +54,7 @@ import com.example.hotelbooking.ui.theme.TextTertiary
 
 @Composable
 fun MyHotelsScreen(
-    state: AdminHotelState<List<Hotel>>,
-    onAddImageClick: () -> Unit,
-    onOpenGalleryClick: () -> Unit
+    state: AdminHotelState<List<Hotel>>
 ) {
     var query by remember { mutableStateOf("") }
 
@@ -71,32 +68,15 @@ fun MyHotelsScreen(
                     .height(70.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    AppButton(
-                        text = stringResource(id = R.string.open_gallery),
-                        modifier = Modifier.width(Dimen.WidthL),
-                        color = RoyalBlue,
-                        onClick = { onOpenGalleryClick() },
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.my_hotels),
-                        color = Color.Black,
+                Text(
+                    text = stringResource(id = R.string.my_hotels),
+                    style = AfacadTypography.titleMedium.copy(
                         fontSize = 20.sp,
+                        color = Color.Black,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.SemiBold
                     )
-
-                    AppButton(
-                        text = "Add Image",
-                        modifier = Modifier.width(Dimen.WidthL),
-                        color = RoyalBlue,
-                        onClick = { onAddImageClick() },
-                    )
-                }
+                )
             }
         },
         floatingActionButton = {
@@ -126,7 +106,7 @@ fun MyHotelsScreen(
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                label = { Text(stringResource(id = R.string.search), fontSize = 15.sp) },
+                label = { Text(stringResource(id = R.string.search), style = AfacadTypography.labelLarge) },
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.ic_search),

@@ -116,7 +116,7 @@ fun AdminMainScreen(
                 )
 
                 1 -> {
-                    MyHotelsScreen(state, onAddImageClick, onOpenGalleryClick)
+                    MyHotelsScreen(state)
                 }
 
                 2 -> {

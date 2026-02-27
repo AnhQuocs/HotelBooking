@@ -148,7 +148,7 @@ fun MyHotelCard(
 ) {
     Box(
         modifier = Modifier
-            .width(160.dp)
+            .width(Dimen.WidthL)
             .height(260.dp)
             .clip(RoundedCornerShape(AppShape.ShapeM))
             .clickable(enabled = !expanded) { onClick(hotel.id) }

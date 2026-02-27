@@ -412,6 +412,17 @@
     <string name="locating_position">Đang xác định vị trí…</string>
     <string name="address_not_found">Không tìm thấy tên đường</string>
     <string name="hotel_address">Địa chỉ khách sạn</string>
+    <string name="selected_address">Địa chỉ đang chọn</string>
+    <string name="confirm_location">Xác nhận vị trí</string>
+    <string name="edit_vietnamese_address">Sửa địa chỉ Tiếng Việt</string>
+    <string name="edit_english_address">Sửa địa chỉ Tiếng Anh</string>
+    <string name="province_city">Tỉnh / Thành phố</string>
+    <string name="district">Quận / Huyện</string>
+    <string name="ward_commune">Phường / Xã</string>
+    <string name="tap_to_pinpoint">Chạm để ghim vị trí</string>
+    <string name="address_preview">Xem trước địa chỉ</string>
+    <string name="confirm_update">Xác nhận &amp; Cập nhật</string>
+    <string name="add_image">Thêm ảnh</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
