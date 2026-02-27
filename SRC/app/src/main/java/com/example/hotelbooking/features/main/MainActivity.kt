@@ -165,7 +165,9 @@ fun NavGraphBuilder.adminGraph(navController: NavController) {
     ) {
         composable("admin_main") {
             AdminMainScreen(
-                navController = navController
+                navController = navController,
+                onOpenGalleryClick = {},
+                onAddImageClick = {}
             )
         }
 //

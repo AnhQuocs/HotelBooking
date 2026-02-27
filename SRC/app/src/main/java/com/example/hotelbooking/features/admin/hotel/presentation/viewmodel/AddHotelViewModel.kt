@@ -36,7 +36,10 @@ data class AddHotelUiState(
 
     val thumbnailUrl: String = "",
     val isSubmitting: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+
+    val isLocationLoading: Boolean = false,
+    val isLocationConfirmed: Boolean = false,
 )
 
 sealed class AddHotelState {
@@ -77,28 +80,32 @@ class AddHotelViewModel @Inject constructor(
     }
 
     fun updateLocation(
-        addressVi: String,
-        addressEn: String,
-        shortAddressVi: String,
-        shortAddressEn: String,
-        cityVi: String,
-        cityEn: String,
-        lat: Double,
-        lng: Double
+        addressVi: String, addressEn: String,
+        shortAddressVi: String, shortAddressEn: String,
+        cityVi: String, cityEn: String,
+        lat: Double, lng: Double
     ) {
-        _uiState.update {
-            it.copy(
-                addressVi = addressVi,
-                addressEn = addressEn,
-                shortAddressVi = shortAddressVi,
-                shortAddressEn = shortAddressEn,
-                cityVi = cityVi,
-                cityEn = cityEn,
-                countryVi = "Việt Nam",
-                countryEn = "Vietnam",
-                latitude = lat,
-                longitude = lng
-            )
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLocationLoading = true, isLocationConfirmed = false) }
+
+            kotlinx.coroutines.delay(800)
+
+            _uiState.update {
+                it.copy(
+                    addressVi = addressVi,
+                    addressEn = addressEn,
+                    shortAddressVi = shortAddressVi,
+                    shortAddressEn = shortAddressEn,
+                    cityVi = cityVi,
+                    cityEn = cityEn,
+                    countryVi = "Việt Nam",
+                    countryEn = "Vietnam",
+                    latitude = lat,
+                    longitude = lng,
+                    isLocationLoading = false,
+                    isLocationConfirmed = true
+                )
+            }
         }
     }
 

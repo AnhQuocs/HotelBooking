@@ -129,6 +129,9 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
 
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
+
     // Other
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")

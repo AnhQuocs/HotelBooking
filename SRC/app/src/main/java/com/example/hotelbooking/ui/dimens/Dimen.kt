@@ -10,6 +10,7 @@ object Dimen {
     val PaddingS = 8.dp
     val PaddingSM = 12.dp
     val PaddingM = 16.dp
+    val PaddingML = 20.dp
     val PaddingL = 24.dp
     val PaddingXL = 32.dp
     val PaddingXXL = 48.dp

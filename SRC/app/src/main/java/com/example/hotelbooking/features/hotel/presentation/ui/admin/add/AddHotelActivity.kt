@@ -42,8 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,7 +91,7 @@ fun AddHotelScreen(
         }
 
         1 -> {
-            uiState.latitude != 0.0 && uiState.longitude != 0.0
+            uiState.isLocationConfirmed
         }
 
         2 -> {
@@ -171,7 +169,9 @@ fun AddHotelScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 AppButton(
-                    text = if (currentStep == 3) stringResource(id = R.string.submit) else stringResource(id = R.string.next),
+                    text = if (currentStep == 3) stringResource(id = R.string.submit) else stringResource(
+                        id = R.string.next
+                    ),
                     enabled = isButtonEnabled,
                     textColor = Color.White,
                     shape = AppShape.ShapeM,
@@ -243,22 +243,24 @@ fun AddHotelScreen(
                     )
 
                     1 -> UpdateLocationScreen(
-                        onLocationChanged = { latLng, address ->
+                        isLoading = uiState.isLocationLoading,
+                        isConfirmed = uiState.isLocationConfirmed,
+                        onLocationConfirmed = { lat, lng, addressVi, addressEn, shortAddressVi, shortAddressEn, cityVi, cityEn ->
                             addHotelViewModel.updateLocation(
-                                addressVi = "",
-                                addressEn = "",
-                                shortAddressVi = "",
-                                shortAddressEn = "",
-                                cityVi = "",
-                                cityEn = "",
-                                lat = latLng.latitude,
-                                lng = latLng.longitude
+                                addressVi = addressVi,
+                                addressEn = addressEn,
+                                shortAddressVi = shortAddressVi,
+                                shortAddressEn = shortAddressEn,
+                                cityVi = cityVi,
+                                cityEn = cityEn,
+                                lat = lat,
+                                lng = lng
                             )
                         }
                     )
-
-                    2 -> UpdateDetailsScreen()
-                    3 -> UpdateThumbnailScreen()
+//
+//                    2 -> UpdateDetailsScreen()
+//                    3 -> UpdateThumbnailScreen()
                 }
             }
 

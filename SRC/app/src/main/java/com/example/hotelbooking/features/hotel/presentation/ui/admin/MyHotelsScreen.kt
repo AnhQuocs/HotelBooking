@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.admin
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AdminHotelState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -100,8 +102,8 @@ fun MyHotelsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-//                    val intent = Intent(context, AddHotelActivity::class.java)
-//                    context.startActivity(intent)
+                    val intent = Intent(context, AddHotelActivity::class.java)
+                    context.startActivity(intent)
                 },
                 containerColor = RoyalBlue,
                 contentColor = Color.White

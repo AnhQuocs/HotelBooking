@@ -409,6 +409,9 @@
     <string name="description_english">Description (English)</string>
     <string name="enter_hotel_name">Enter hotel name</string>
     <string name="enter_description">Enter description</string>
+    <string name="locating_position">Locating position…</string>
+    <string name="address_not_found">Street name not found</string>
+    <string name="hotel_address">Hotel Address</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

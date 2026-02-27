@@ -409,6 +409,9 @@
     <string name="description_english">Mô tả (Tiếng Anh)</string>
     <string name="enter_hotel_name">Nhập tên khách sạn</string>
     <string name="enter_description">Nhập mô tả</string>
+    <string name="locating_position">Đang xác định vị trí…</string>
+    <string name="address_not_found">Không tìm thấy tên đường</string>
+    <string name="hotel_address">Địa chỉ khách sạn</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
