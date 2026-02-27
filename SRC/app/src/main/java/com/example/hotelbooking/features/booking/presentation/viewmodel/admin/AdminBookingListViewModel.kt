@@ -67,7 +67,11 @@ class AdminBookingListViewModel @Inject constructor(
                                 !targetDate.isBefore(startDate) && targetDate.isBefore(endDate) && booking.status == BookingStatus.CONFIRMED
                             }
 
-                            BookingFilterType.NEW_BOOKINGS, BookingFilterType.REVENUE -> {
+                            BookingFilterType.NEW_BOOKINGS -> {
+                                createdAt == targetDate
+                            }
+
+                            BookingFilterType.REVENUE -> {
                                 createdAt == targetDate && booking.status == BookingStatus.CONFIRMED
                             }
                         }

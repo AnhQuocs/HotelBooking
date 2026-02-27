@@ -98,7 +98,7 @@ fun AdminMainScreen(
                 )
 
                 1 -> {
-                    MyHotelsScreen()
+//                    MyHotelsScreen()
                 }
 
                 2 -> {

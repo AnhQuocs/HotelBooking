@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
@@ -43,7 +44,7 @@ fun AppButton(
         Text(
             text = text,
             color = textColor,
-            style = MaterialTheme.typography.titleMedium
+            style = AfacadTypography.titleMedium
         )
     }
 }
