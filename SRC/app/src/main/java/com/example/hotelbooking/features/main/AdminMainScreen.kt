@@ -124,7 +124,7 @@ fun AdminMainScreen(
                 }
 
                 3 -> {
-                    AdminProfileScreen()
+                    AdminProfileScreen(navController = navController)
                 }
             }
         }

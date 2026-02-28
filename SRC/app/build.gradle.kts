@@ -132,6 +132,12 @@ dependencies {
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
 
+    // Cloudinary
+    implementation("com.cloudinary:cloudinary-android:2.5.0")
+
+    // Compressor
+    implementation("id.zelory:compressor:3.0.1")
+
     // Other
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")

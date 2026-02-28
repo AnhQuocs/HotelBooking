@@ -61,7 +61,8 @@ import com.example.hotelbooking.ui.theme.RoyalBlue
 
 @Composable
 fun UserProfileScreen(
-    authViewModel: AuthViewModel = hiltViewModel(), navController: NavController
+    authViewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val context = LocalContext.current
     val uiState by authViewModel.uiState.collectAsState()
