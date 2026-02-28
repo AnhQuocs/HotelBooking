@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.components.AdminBottomBar
-import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AdminHotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelViewModel
 import com.example.hotelbooking.features.chat.presentation.ui.admin.AdminMessageScreen
 import com.example.hotelbooking.features.home.admin.ui.dashboard.AdminHomeScreen
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.MyHotelsScreen

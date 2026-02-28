@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AdminHotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
 import com.example.hotelbooking.ui.dimens.AppShape

@@ -24,7 +24,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.ErrorRed

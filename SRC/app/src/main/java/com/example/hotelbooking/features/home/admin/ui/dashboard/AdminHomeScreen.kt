@@ -284,7 +284,7 @@ fun AdminHomeScreen(
                     }
 
                     item {
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(AppSpacing.M)) {
                             OperationStatCard(
                                 label = stringResource(R.string.dashboard_arrivals),
                                 count = state.stats.arrivalsCount,

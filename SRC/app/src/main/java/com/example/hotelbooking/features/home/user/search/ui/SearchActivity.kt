@@ -42,7 +42,7 @@ import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.home.user.search.viewmodel.SearchViewModel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedItem
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
 import com.example.hotelbooking.features.recent_viewed.presentation.ui.RecentViewedSection
 import com.example.hotelbooking.features.recent_viewed.presentation.viewmodel.RecentViewedViewModel
 import com.example.hotelbooking.ui.dimens.AppShape

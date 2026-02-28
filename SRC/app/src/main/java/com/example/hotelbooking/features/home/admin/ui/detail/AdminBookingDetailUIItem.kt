@@ -107,8 +107,8 @@ fun AdminActionBottomBar(
                 Button(
                     onClick = {
                         confirmDialogState = ConfirmDialogState(
-                            titleRes = R.string.check_out,
-                            messageRes = R.string.confirm_check_out,
+                            titleRes = if (isEarlyCheckOut) R.string.early_check_out else R.string.check_out,
+                            messageRes = if (isEarlyCheckOut) R.string.confirm_early_checkout else R.string.confirm_check_out,
                             onConfirm = {
                                 viewModel.processCheckOut(booking)
                             }

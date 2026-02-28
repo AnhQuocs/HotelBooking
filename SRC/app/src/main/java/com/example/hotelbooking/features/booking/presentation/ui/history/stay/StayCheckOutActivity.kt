@@ -66,10 +66,10 @@ import coil.compose.AsyncImage
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.UpdateRatingState
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.UpdateRatingViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.UpdateRatingState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.UpdateRatingViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen

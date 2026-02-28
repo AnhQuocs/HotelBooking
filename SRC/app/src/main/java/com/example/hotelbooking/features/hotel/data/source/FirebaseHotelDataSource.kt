@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.hotel.data.source
 
 import com.example.hotelbooking.features.hotel.data.dto.HotelDto
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
@@ -9,9 +10,13 @@ class FirebaseHotelDataSource {
     private val collection = Firebase.firestore.collection("hotels")
 
     suspend fun fetchAllHotels(): List<Pair<String, HotelDto>> {
-        return collection.get().await().map { doc ->
-            doc.id to doc.toObject(HotelDto::class.java)
-        }
+        return collection
+            .whereEqualTo("status", HotelStatus.ACTIVE.name)
+            .get()
+            .await()
+            .map { doc ->
+                doc.id to doc.toObject(HotelDto::class.java)
+            }
     }
 
     suspend fun fetchHotelById(hotelId: String): HotelDto? {

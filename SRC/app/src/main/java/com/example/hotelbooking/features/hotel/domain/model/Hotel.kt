@@ -1,5 +1,10 @@
 package com.example.hotelbooking.features.hotel.domain.model
 
+enum class HotelStatus {
+    ACTIVE,
+    HIDE
+}
+
 data class Hotel(
     val id: String,
     val name: String,
@@ -18,4 +23,5 @@ data class Hotel(
     val longitude: Double,
     val checkInTime: String,
     val checkOutTime: String,
+    val status: HotelStatus
 )

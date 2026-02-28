@@ -1,5 +1,7 @@
 package com.example.hotelbooking.features.hotel.data.dto
 
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
+
 data class HotelDto(
     val name: Map<String, String> = emptyMap(),
     val description: Map<String, String> = emptyMap(),
@@ -17,5 +19,6 @@ data class HotelDto(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val checkInTime: String = "",
-    val checkOutTime: String = ""
+    val checkOutTime: String = "",
+    val status: String = HotelStatus.HIDE.name
 )

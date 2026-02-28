@@ -16,5 +16,6 @@ data class AdminHotel(
     val latitude: Double,
     val longitude: Double,
     val checkInTime: String,
-    val checkOutTime: String
+    val checkOutTime: String,
+    val status: HotelStatus
 )

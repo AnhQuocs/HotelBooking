@@ -11,7 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.presentation.ui.user.AllHotelsScreen
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

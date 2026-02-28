@@ -29,7 +29,7 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.popular.HotelSection
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedSection
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
 import com.example.hotelbooking.features.map.ui.FullMapActivity
 import com.example.hotelbooking.features.map.ui.MapPreviewCard
 import com.example.hotelbooking.features.notification.presentation.ui.NotificationActivity

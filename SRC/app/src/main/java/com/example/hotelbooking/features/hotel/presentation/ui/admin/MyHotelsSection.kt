@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AdminHotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing

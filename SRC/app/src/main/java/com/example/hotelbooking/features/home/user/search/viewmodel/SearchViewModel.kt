@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.usecase.read.SearchHotelsUseCase
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow

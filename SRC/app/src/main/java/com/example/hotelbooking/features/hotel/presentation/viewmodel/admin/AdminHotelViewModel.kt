@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.admin.hotel.presentation.viewmodel
+package com.example.hotelbooking.features.hotel.presentation.viewmodel.admin
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

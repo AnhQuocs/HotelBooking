@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
 import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AddHotelUiState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelUiState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.theme.AfacadTypography
 

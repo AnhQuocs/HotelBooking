@@ -3,6 +3,7 @@ package com.example.hotelbooking.features.hotel.data.mapper
 import com.example.hotelbooking.features.hotel.data.dto.HotelDto
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.utils.LangUtils
 
 object HotelMapper {
@@ -24,7 +25,10 @@ object HotelMapper {
             latitude = dto.latitude,
             longitude = dto.longitude,
             checkInTime = dto.checkInTime,
-            checkOutTime = dto.checkOutTime
+            checkOutTime = dto.checkOutTime,
+            status = runCatching {
+                HotelStatus.valueOf(dto.status)
+            }.getOrDefault(HotelStatus.HIDE)
         )
     }
 
@@ -43,7 +47,8 @@ object HotelMapper {
             latitude = adminHotel.latitude,
             longitude = adminHotel.longitude,
             checkInTime = adminHotel.checkInTime,
-            checkOutTime = adminHotel.checkOutTime
+            checkOutTime = adminHotel.checkOutTime,
+            status = adminHotel.status.name
         )
     }
 }

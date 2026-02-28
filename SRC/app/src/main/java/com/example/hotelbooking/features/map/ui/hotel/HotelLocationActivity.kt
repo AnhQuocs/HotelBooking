@@ -48,8 +48,8 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.presentation.ui.user.ChatActivity
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelState
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
 import com.example.hotelbooking.features.map.ui.HotelInfo
 import com.example.hotelbooking.features.map.ui.MapTopBar
 import com.example.hotelbooking.features.map.util.bitmapFromVector

@@ -49,8 +49,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
-import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AddHotelState
-import com.example.hotelbooking.features.admin.hotel.presentation.viewmodel.AddHotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelState
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelViewModel
 import com.example.hotelbooking.features.hotel.presentation.util.AddHotelValidation
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen

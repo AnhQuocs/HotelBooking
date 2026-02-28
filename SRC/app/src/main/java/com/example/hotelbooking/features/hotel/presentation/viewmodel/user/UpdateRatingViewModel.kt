@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.hotel.presentation.viewmodel
+package com.example.hotelbooking.features.hotel.presentation.viewmodel.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,7 +6,6 @@ import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.hotel.domain.usecase.update.SubmitReviewUseCase
 import com.example.hotelbooking.features.review.domain.model.Review
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -23,7 +23,7 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.presentation.ui.user.ChatActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.HotelViewModel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
 import com.example.hotelbooking.features.map.util.bitmapFromVector
 import com.example.hotelbooking.features.recent_viewed.presentation.viewmodel.RecentViewedViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
