@@ -6,7 +6,10 @@ import com.example.hotelbooking.features.auth.data.mapper.toDto
 import com.example.hotelbooking.features.auth.domain.model.AuthUser
 import com.example.hotelbooking.features.auth.domain.model.UserRole
 import com.example.hotelbooking.features.auth.domain.repository.AuthRepository
+import com.example.hotelbooking.features.hotel.domain.model.AdminAmenityConfig
+import com.example.hotelbooking.features.hotel.domain.model.CustomAmenity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
@@ -16,6 +19,7 @@ class AuthRepositoryImpl(
     private val firestore: FirebaseFirestore
 ) : AuthRepository {
 
+    // =============== USER ===============
     override suspend fun signUp(username: String, email: String, password: String): AuthUser {
         try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
@@ -131,5 +135,27 @@ class AuthRepositoryImpl(
 
     override suspend fun signOut() {
         auth.signOut()
+    }
+
+    // =============== ADMIN ===============
+    override suspend fun getCustomAmenities(adminId: String): List<CustomAmenity> {
+        return try {
+            val snapshot = firestore.collection("users")
+                .document(adminId)
+                .get()
+                .await()
+
+            val config = snapshot.toObject(AdminAmenityConfig::class.java)
+            config?.customAmenities ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun addCustomAmenity(adminId: String, amenity: CustomAmenity) {
+        firestore.collection("users")
+            .document(adminId)
+            .update("customAmenities", FieldValue.arrayUnion(amenity))
+            .await()
     }
 }

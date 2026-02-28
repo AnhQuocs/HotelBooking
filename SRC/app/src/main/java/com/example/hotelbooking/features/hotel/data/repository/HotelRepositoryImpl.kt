@@ -67,6 +67,12 @@ class HotelRepositoryImpl(
             }
     }
 
+    override suspend fun getAdminHotelById(hotelId: String): AdminHotel? {
+        val dto = dataSource.fetchHotelById(hotelId) ?: return null
+
+        return HotelMapper.dtoToAdminHotel(hotelId, dto)
+    }
+
     override fun clearCache() {
         cachedHotels = null
     }

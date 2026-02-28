@@ -91,6 +91,7 @@ fun MyHotelsSection(state: AdminHotelState<List<Hotel>>) {
                     columns = GridCells.Fixed(2),
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge),
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge),
                     contentPadding = PaddingValues(bottom = Dimen.PaddingM)
                 ) {
                     items(

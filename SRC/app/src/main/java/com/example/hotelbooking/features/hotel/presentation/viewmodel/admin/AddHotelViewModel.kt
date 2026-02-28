@@ -2,8 +2,13 @@ package com.example.hotelbooking.features.hotel.presentation.viewmodel.admin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.features.auth.domain.repository.AuthRepository
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
+import com.example.hotelbooking.features.hotel.domain.model.CustomAmenity
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.hotel.domain.usecase.create.AddHotelUseCase
+import com.example.hotelbooking.features.hotel.domain.usecase.read.GetAdminHotelByIdUseCase
+import com.example.hotelbooking.features.hotel.presentation.ui.user.details.AmenityProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,8 +57,12 @@ sealed class AddHotelState {
 
 @HiltViewModel
 class AddHotelViewModel @Inject constructor(
-    private val addHotelUseCase: AddHotelUseCase
+    private val addHotelUseCase: AddHotelUseCase,
+    private val getAdminHotelByIdUseCase: GetAdminHotelByIdUseCase,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
+
+    private var originalState = AddHotelUiState()
 
     private val _uiState = MutableStateFlow(AddHotelUiState())
     val uiState = _uiState.asStateFlow()
@@ -62,8 +71,55 @@ class AddHotelViewModel @Inject constructor(
         MutableStateFlow<AddHotelState>(AddHotelState.Idle)
     val addHotelState = _addHotelState.asStateFlow()
 
-    /* ---------- update fields ---------- */
+    private val _customAmenities = MutableStateFlow<List<CustomAmenity>>(emptyList())
+    val customAmenities = _customAmenities.asStateFlow()
 
+    // 1. CHANGE CHECK FUNCTION
+    fun hasUnsavedChanges(): Boolean {
+        return _uiState.value != originalState
+    }
+
+    // 2. DATA LOAD FUNCTION
+    fun loadHotelForEdit(hotelId: String) {
+        viewModelScope.launch {
+            _addHotelState.value = AddHotelState.Loading
+            runCatching {
+                val adminHotel = getAdminHotelByIdUseCase(hotelId)
+                    ?: throw Exception("Data not found")
+
+                val loadedState = AddHotelUiState(
+                    nameVi = adminHotel.rawName["vi"] ?: "",
+                    nameEn = adminHotel.rawName["en"] ?: "",
+                    descriptionVi = adminHotel.rawDescription["vi"] ?: "",
+                    descriptionEn = adminHotel.rawDescription["en"] ?: "",
+                    addressVi = adminHotel.rawAddress["vi"] ?: "",
+                    addressEn = adminHotel.rawAddress["en"] ?: "",
+                    shortAddressVi = adminHotel.rawShortAddress["vi"] ?: "",
+                    shortAddressEn = adminHotel.rawShortAddress["en"] ?: "",
+                    cityVi = adminHotel.rawCity["vi"] ?: "",
+                    cityEn = adminHotel.rawCity["en"] ?: "",
+                    latitude = adminHotel.latitude,
+                    longitude = adminHotel.longitude,
+                    amenities = adminHotel.rawAmenities["en"] ?: emptyList(),
+                    checkInTime = adminHotel.checkInTime,
+                    checkOutTime = adminHotel.checkOutTime,
+                    pricePerNightMin = adminHotel.pricePerNightMin,
+                    thumbnailUrl = adminHotel.thumbnailUrl,
+                    isLocationConfirmed = adminHotel.latitude != 0.0 && adminHotel.longitude != 0.0,
+                    isLocationLoading = false
+                )
+
+                _uiState.value = loadedState
+                originalState = loadedState
+
+                _addHotelState.value = AddHotelState.Idle
+            }.onFailure { e ->
+                _addHotelState.value = AddHotelState.Error(e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    /* ---------- update fields ---------- */
     fun updateBasicInfo(
         nameVi: String,
         nameEn: String,
@@ -113,29 +169,45 @@ class AddHotelViewModel @Inject constructor(
     fun updateDetails(
         amenities: List<String>,
         checkIn: String,
-        checkOut: String,
-        price: Int
+        checkOut: String
     ) {
         _uiState.update {
             it.copy(
                 amenities = amenities,
                 checkInTime = checkIn,
-                checkOutTime = checkOut,
-                pricePerNightMin = price
+                checkOutTime = checkOut
             )
         }
     }
 
     /* ---------- submit ---------- */
 
-    fun submitHotel(adminId: String) {
+    fun submitHotel(adminId: String, hotelId: String? = null, isDraft: Boolean = false) {
         val state = uiState.value
 
+        // 1. Dịch list amenities của UI thành 2 list Anh - Việt
+        val enAmenities = mutableListOf<String>()
+        val viAmenities = mutableListOf<String>()
+
+        state.amenities.forEach { amenityKey ->
+            val amenityUi = AmenityProvider.find(amenityKey)
+            if (amenityUi != null) {
+                enAmenities.add(amenityUi.titles[0]) // Tiếng Anh (index 0)
+                viAmenities.add(amenityUi.titles.getOrElse(1) { amenityUi.titles[0] }) // Tiếng Việt (index 1)
+            } else {
+                // Fallback an toàn lỡ không tìm thấy
+                enAmenities.add(amenityKey)
+                viAmenities.add(amenityKey)
+            }
+        }
+
         val adminHotel = AdminHotel(
-            id = UUID.randomUUID().toString(),
+            id = hotelId ?: UUID.randomUUID().toString(),
             rawName = mapOf("vi" to state.nameVi, "en" to state.nameEn),
             rawDescription = mapOf("vi" to state.descriptionVi, "en" to state.descriptionEn),
-            rawAmenities = mapOf("vi" to state.amenities, "en" to state.amenities),
+
+            rawAmenities = mapOf("vi" to viAmenities, "en" to enAmenities),
+
             adminIds = listOf(adminId),
             rawAddress = mapOf("vi" to state.addressVi, "en" to state.addressEn),
             rawShortAddress = mapOf("vi" to state.shortAddressVi, "en" to state.shortAddressEn),
@@ -146,7 +218,8 @@ class AddHotelViewModel @Inject constructor(
             latitude = state.latitude ?: 0.0,
             longitude = state.longitude ?: 0.0,
             checkInTime = state.checkInTime,
-            checkOutTime = state.checkOutTime
+            checkOutTime = state.checkOutTime,
+            status = if (isDraft) HotelStatus.HIDE else HotelStatus.ACTIVE
         )
 
         viewModelScope.launch {
@@ -155,10 +228,35 @@ class AddHotelViewModel @Inject constructor(
             runCatching {
                 addHotelUseCase(adminHotel)
             }.onSuccess {
+                originalState = _uiState.value
+
                 _addHotelState.value = AddHotelState.Success
             }.onFailure { e ->
-                _addHotelState.value =
-                    AddHotelState.Error(e.message ?: "Add hotel failed")
+                _addHotelState.value = AddHotelState.Error(e.message ?: "Add hotel failed")
+            }
+        }
+    }
+
+    fun loadCustomAmenities(adminId: String) {
+        viewModelScope.launch {
+            runCatching {
+                authRepository.getCustomAmenities(adminId)
+            }.onSuccess { list ->
+                _customAmenities.value = list
+            }
+        }
+    }
+
+    fun saveCustomAmenity(adminId: String, amenity: CustomAmenity) {
+        viewModelScope.launch {
+            runCatching {
+                authRepository.addCustomAmenity(adminId, amenity)
+            }.onSuccess {
+                _customAmenities.update { currentList ->
+                    currentList + amenity
+                }
+            }.onFailure { e ->
+                throw Exception(e.message)
             }
         }
     }

@@ -51,4 +51,27 @@ object HotelMapper {
             status = adminHotel.status.name
         )
     }
+
+    fun dtoToAdminHotel(id: String, dto: HotelDto): AdminHotel {
+        return AdminHotel(
+            id = id,
+            rawName = dto.name,
+            rawDescription = dto.description,
+            rawAmenities = dto.amenities,
+            adminIds = dto.adminIds,
+            rawAddress = dto.address,
+            rawShortAddress = dto.shortAddress,
+            rawCity = dto.city,
+            rawCountry = dto.country,
+            thumbnailUrl = dto.thumbnailUrl,
+            pricePerNightMin = dto.pricePerNightMin,
+            latitude = dto.latitude,
+            longitude = dto.longitude,
+            checkInTime = dto.checkInTime,
+            checkOutTime = dto.checkOutTime,
+            status = runCatching {
+                HotelStatus.valueOf(dto.status)
+            }.getOrDefault(HotelStatus.HIDE)
+        )
+    }
 }

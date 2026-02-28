@@ -423,6 +423,13 @@
     <string name="address_preview">Xem trước địa chỉ</string>
     <string name="confirm_update">Xác nhận &amp; Cập nhật</string>
     <string name="add_image">Thêm ảnh</string>
+    <string name="save_draft_title">Lưu bản nháp?</string>
+    <string name="save_draft_message">Bạn có thay đổi chưa lưu. Bạn muốn lưu nháp để tiếp tục sau, hay xóa bỏ hoàn toàn?</string>
+    <string name="save_draft_confirm">Lưu nháp</string>
+    <string name="save_draft_dismiss">Xóa bỏ</string>
+    <string name="save_success">Lưu thành công!</string>
+    <string name="save_draft_question">Bạn muốn lưu bản nháp cho khách sạn này?</string>
+
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
