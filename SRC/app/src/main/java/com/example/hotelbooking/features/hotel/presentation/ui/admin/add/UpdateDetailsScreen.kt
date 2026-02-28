@@ -25,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -44,10 +43,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.CustomAmenity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.AmenityProvider
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelUiState
+import com.example.hotelbooking.ui.dimens.AppShape
+import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.ui.theme.RoyalBlue
 import java.time.LocalTime
@@ -77,26 +79,24 @@ fun UpdateDetailsScreen(
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.L)
     ) {
         item {
             Text(
-                text = "Tiện ích khách sạn",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                text = stringResource(id = R.string.hotel_amenities),
+                style = AfacadTypography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold
                 ),
                 color = NearBlack
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.M))
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.S),
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 AmenityProvider.catalog.forEach { amenityUi ->
-                    // Quy ước: Lưu title tiếng Anh (titles[0]) vào Database làm key chuẩn
                     val amenityKey = amenityUi.titles[0]
                     val isSelected = uiState.amenities.contains(amenityKey)
 
@@ -116,9 +116,8 @@ fun UpdateDetailsScreen(
                         },
                         label = {
                             Text(
-                                // Hiển thị tiếng Việt trên UI nếu có (titles[1])
                                 text = stringResource(id = amenityUi.titleRes),
-                                style = MaterialTheme.typography.bodyMedium
+                                style = AfacadTypography.bodyMedium
                             )
                         },
                         leadingIcon = {
@@ -148,28 +147,48 @@ fun UpdateDetailsScreen(
                     FilterChip(
                         selected = isSelected,
                         onClick = {
-                            val newList = if (isSelected) uiState.amenities - custom.nameEn else uiState.amenities + custom.nameEn
+                            val newList =
+                                if (isSelected) uiState.amenities - custom.nameEn else uiState.amenities + custom.nameEn
                             onValueChange(newList, uiState.checkInTime, uiState.checkOutTime)
                         },
-                        label = { Text(text = custom.nameVi.ifBlank { custom.nameEn }, style = MaterialTheme.typography.bodyMedium) },
-                        leadingIcon = { Icon(imageVector = iconVector, contentDescription = null, modifier = Modifier.size(18.dp)) },
-                        colors = FilterChipDefaults.filterChipColors(selectedContainerColor = RoyalBlue.copy(alpha = 0.15f), selectedLabelColor = RoyalBlue, selectedLeadingIconColor = RoyalBlue),
-                        border = FilterChipDefaults.filterChipBorder(enabled = true, selected = isSelected, borderColor = if (isSelected) RoyalBlue else Color.LightGray)
+                        label = {
+                            Text(
+                                text = custom.nameVi.ifBlank { custom.nameEn },
+                                style = AfacadTypography.bodyMedium
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = iconVector,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = RoyalBlue.copy(
+                                alpha = 0.15f
+                            ), selectedLabelColor = RoyalBlue, selectedLeadingIconColor = RoyalBlue
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = isSelected,
+                            borderColor = if (isSelected) RoyalBlue else Color.LightGray
+                        )
                     )
                 }
 
                 AssistChip(
                     onClick = { showAddAmenityDialog = true },
-                    label = { Text("Thêm tiện ích", color = NearBlack) },
+                    label = { Text(stringResource(id = R.string.add_amenity), color = NearBlack) },
                     leadingIcon = {
                         Icon(
                             Icons.Default.Add,
-                            contentDescription = "Add",
+                            contentDescription = null,
                             tint = NearBlack,
                             modifier = Modifier.size(18.dp)
                         )
                     },
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(AppShape.ShapeS),
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = Color.White
                     ),
@@ -178,29 +197,26 @@ fun UpdateDetailsScreen(
             }
         }
 
-        // --- SECTION 2: THỜI GIAN NHẬN/TRẢ PHÒNG ---
         item {
             Text(
-                text = "Thời gian Nhận / Trả phòng",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                text = stringResource(id = R.string.check_in_checkout_time),
+                style = AfacadTypography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold
                 ),
                 color = NearBlack
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(AppSpacing.M))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
             ) {
-                // Ô chọn Check-In
                 OutlinedTextField(
                     value = uiState.checkInTime,
                     onValueChange = { },
                     readOnly = true,
-                    enabled = false, // Vô hiệu hóa gõ tay
-                    label = { Text("Giờ nhận phòng") },
+                    enabled = false,
+                    label = { Text(stringResource(id = R.string.check_in_time)) },
                     leadingIcon = {
                         Icon(
                             Icons.Default.AccessTime,
@@ -221,13 +237,12 @@ fun UpdateDetailsScreen(
                         }
                 )
 
-                // Ô chọn Check-Out
                 OutlinedTextField(
                     value = uiState.checkOutTime,
                     onValueChange = { },
                     readOnly = true,
                     enabled = false,
-                    label = { Text("Giờ trả phòng") },
+                    label = { Text(stringResource(id = R.string.check_in_time)) },
                     leadingIcon = {
                         Icon(
                             Icons.Default.AccessTime,
@@ -251,13 +266,11 @@ fun UpdateDetailsScreen(
         }
     }
 
-    // --- HIỂN THỊ DIALOG CHỌN GIỜ ---
     if (showTimePicker) {
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    // Lấy giờ từ TimePicker chuyển sang dạng hh:mm a
                     val localTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
                     val formattedTime = localTime.format(timeFormatter)
 
@@ -276,16 +289,20 @@ fun UpdateDetailsScreen(
                     }
                     showTimePicker = false
                 }) {
-                    Text("Xác nhận", color = RoyalBlue)
+                    Text(stringResource(id = R.string.confirm), color = RoyalBlue)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showTimePicker = false }) {
-                    Text("Hủy", color = Color.Gray)
+                    Text(stringResource(id = R.string.cancel), color = Color.Gray)
                 }
             },
             title = {
-                Text(if (isPickingCheckIn) "Chọn giờ nhận phòng" else "Chọn giờ trả phòng")
+                Text(
+                    if (isPickingCheckIn) stringResource(id = R.string.select_checkin_time) else stringResource(
+                        id = R.string.select_checkout_time
+                    )
+                )
             },
             text = {
                 Column(

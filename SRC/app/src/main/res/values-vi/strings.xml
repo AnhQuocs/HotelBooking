@@ -429,12 +429,20 @@
     <string name="save_draft_dismiss">Xóa bỏ</string>
     <string name="save_success">Lưu thành công!</string>
     <string name="save_draft_question">Bạn muốn lưu bản nháp cho khách sạn này?</string>
-
+    <string name="hotel_amenities">Tiện ích khách sạn</string>
+    <string name="add_amenity">Thêm tiện ích</string>
+    <string name="check_in_checkout_time">Thời gian Nhận / Trả phòng</string>
+    <string name="check_in_time">Giờ nhận phòng</string>
+    <string name="checkout_time">Giờ trả phòng</string>
+    <string name="select_checkin_time">Chọn giờ nhận phòng</string>
+    <string name="select_checkout_time">Chọn giờ trả phòng</string>
+    <string name="select_icon">Chọn biểu tượng:</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
     <string name="confirm">Xác nhận</string>
     <string name="status">Trạng thái</string>
     <string name="submit">Gửi</string>
+    <string name="save">Lưu lại</string>
 
 </resources>

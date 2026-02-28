@@ -430,12 +430,20 @@
     <string name="save_draft_dismiss">Discard</string>
     <string name="save_success">Saved successfully!</string>
     <string name="save_draft_question">Do you want to save a draft for this hotel?</string>
-
+    <string name="hotel_amenities">Hotel Amenities</string>
+    <string name="add_amenity">Add Amenity</string>
+    <string name="check_in_checkout_time">Check-in / Check-out Time</string>
+    <string name="check_in_time">Check-in Time</string>
+    <string name="checkout_time">Check-out Time</string>
+    <string name="select_checkin_time">Select check-in time</string>
+    <string name="select_checkout_time">Select check-out time</string>
+    <string name="select_icon">Select icon:</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>
     <string name="confirm">Confirm</string>
     <string name="status">Status</string>
     <string name="submit">Submit</string>
+    <string name="save">Save</string>
 
 </resources>
