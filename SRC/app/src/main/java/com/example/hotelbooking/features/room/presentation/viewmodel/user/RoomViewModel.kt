@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.room.presentation.viewmodel
+package com.example.hotelbooking.features.room.presentation.viewmodel.user
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -8,6 +8,8 @@ import com.example.hotelbooking.features.room.domain.usecase.RoomUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,15 +32,17 @@ class RoomViewModel @Inject constructor(
 
     fun loadRooms(hotelId: String) {
         viewModelScope.launch {
-            _roomsState.value = RoomState.Loading
-
-            runCatching {
-                roomUseCases.getRoomsByHotelIdUseCase(hotelId = hotelId)
-            }.onSuccess { rooms ->
-                _roomsState.value = RoomState.Success(rooms)
-            }.onFailure { e ->
-                _roomsState.value = RoomState.Error(e.message ?: "Unknown error")
-            }
+            roomUseCases.getRoomsByHotelIdUseCase(hotelId)
+                .onStart {
+                    _roomsState.value = RoomState.Loading
+                }
+                .catch { e ->
+                    _roomsState.value =
+                        RoomState.Error(e.message ?: "Unknown error")
+                }
+                .collect { rooms ->
+                    _roomsState.value = RoomState.Success(rooms)
+                }
         }
     }
 

@@ -439,6 +439,9 @@
     <string name="select_checkout_time">Chọn giờ trả phòng</string>
     <string name="select_icon">Chọn biểu tượng:</string>
     <string name="location_updated">Đã cập nhật địa chỉ!</string>
+    <string name="hidden_status">Ngừng kinh doanh</string>
+    <string name="activate">Kinh doanh lại</string>
+    <string name="deactivate">Ngừng kinh doanh</string>
 
     <!-- ADMIN PROFILE -->
 
@@ -448,5 +451,6 @@
     <string name="status">Trạng thái</string>
     <string name="submit">Gửi</string>
     <string name="save">Lưu lại</string>
+    <string name="success">Thành công!</string>
 
 </resources>

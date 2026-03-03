@@ -34,7 +34,7 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.user.Boo
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.room.domain.model.RoomType
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue

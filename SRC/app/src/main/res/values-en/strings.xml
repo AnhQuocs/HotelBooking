@@ -439,6 +439,9 @@
     <string name="select_checkout_time">Select check-out time</string>
     <string name="select_icon">Select icon:</string>
     <string name="location_updated">Location Updated!</string>
+    <string name="hidden_status">Inactive</string>
+    <string name="activate">Resume Business</string>
+    <string name="deactivate">Deactivate</string>
 
     <!-- ADMIN HOTEL -->
 
@@ -448,5 +451,6 @@
     <string name="status">Status</string>
     <string name="submit">Submit</string>
     <string name="save">Save</string>
+    <string name="success">Success!</string>
 
 </resources>

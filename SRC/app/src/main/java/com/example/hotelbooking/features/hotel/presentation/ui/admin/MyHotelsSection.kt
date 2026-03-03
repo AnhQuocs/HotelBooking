@@ -22,13 +22,15 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,17 +52,19 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.RoyalBlue
 
 @Composable
 fun MyHotelsSection(
     state: AdminHotelState<List<Hotel>>,
     onEditClick: (String) -> Unit,
-    onDeleteClick: (String) -> Unit
+    onToggleStatusClick: (String) -> Unit
 ) {
     var openedHotelId by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
@@ -119,9 +123,9 @@ fun MyHotelsSection(
                                 openedHotelId = null
                                 onEditClick(hotelId)
                             },
-                            onDeleteClick = { hotelId ->
+                            onToggleStatusClick = { hotelId ->
                                 openedHotelId = null
-                                onDeleteClick(hotelId)
+                                onToggleStatusClick(hotelId)
                             },
                             context = context
                         )
@@ -150,9 +154,11 @@ fun MyHotelCard(
     onCloseMenu: () -> Unit,
     onClick: (String) -> Unit,
     onEditClick: (String) -> Unit,
-    onDeleteClick: (String) -> Unit,
+    onToggleStatusClick: (String) -> Unit,
     context: Context
 ) {
+    val isHidden = hotel.status == HotelStatus.HIDE
+
     Box(
         modifier = Modifier
             .width(Dimen.WidthL)
@@ -164,7 +170,6 @@ fun MyHotelCard(
             model = ImageRequest.Builder(context)
                 .data(hotel.thumbnailUrl)
                 .crossfade(true)
-                .crossfade(200)
                 .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
@@ -176,80 +181,6 @@ fun MyHotelCard(
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.3f))
         )
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(Dimen.PaddingS)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(Dimen.SizeML)
-                    .background(color = Color.Black.copy(alpha = 0.5f), CircleShape)
-                    .align(Alignment.TopEnd)
-                    .clickable { onMoreClick() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Default.MoreVert, contentDescription = null, tint = Color.White)
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = onCloseMenu,
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(Dimen.HeightML),
-                shape = RoundedCornerShape(AppShape.ShapeM),
-                containerColor = Color.White
-            ) {
-                DropdownMenuItem(
-                    onClick = {
-                        onEditClick(hotel.id)
-                        onCloseMenu()
-                    },
-                    text = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                Icons.Default.Edit,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                                tint = Color.Black
-                            )
-                            Spacer(modifier = Modifier.width(AppSpacing.S))
-                            Text(stringResource(id = R.string.edit), color = Color.Black)
-                        }
-                    },
-                    modifier = Modifier.height(AppSpacing.XL),
-                    contentPadding = PaddingValues(
-                        vertical = Dimen.PaddingXS,
-                        horizontal = Dimen.PaddingSM
-                    )
-                )
-                DropdownMenuItem(
-                    onClick = {
-                        onDeleteClick(hotel.id)
-                        onCloseMenu()
-                    },
-                    text = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                Icons.Default.DeleteOutline,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                                tint = Color.Red
-                            )
-                            Spacer(modifier = Modifier.width(AppSpacing.S))
-                            Text(stringResource(id = R.string.delete), color = Color.Red)
-                        }
-                    },
-                    modifier = Modifier.height(AppSpacing.XL),
-                    contentPadding = PaddingValues(
-                        vertical = Dimen.PaddingXS,
-                        horizontal = Dimen.PaddingSM
-                    )
-                )
-            }
-        }
 
         Column(
             modifier = Modifier
@@ -285,6 +216,91 @@ fun MyHotelCard(
                 Text(
                     text = "⭐%.1f".format(hotel.averageRating),
                     color = Color.White
+                )
+            }
+        }
+
+        if (isHidden) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Surface(
+                    color = Color.White.copy(alpha = 0.9f),
+                    shape = RoundedCornerShape(AppShape.ShapeS),
+                    modifier = Modifier.padding(bottom = 40.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.hidden_status).uppercase(),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                        style = AfacadTypography.labelMedium.copy(
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        )
+                    )
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(Dimen.PaddingS)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(Dimen.SizeML)
+                    .background(color = Color.Black.copy(alpha = 0.5f), CircleShape)
+                    .clickable { onMoreClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(Icons.Default.MoreVert, contentDescription = null, tint = Color.White)
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = onCloseMenu,
+                modifier = Modifier.width(160.dp),
+                shape = RoundedCornerShape(AppShape.ShapeM),
+                containerColor = Color.White
+            ) {
+                DropdownMenuItem(
+                    onClick = { onEditClick(hotel.id); onCloseMenu() },
+                    text = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.Edit,
+                                null,
+                                modifier = Modifier.size(18.dp),
+                                tint = Color.Black
+                            )
+                            Spacer(modifier = Modifier.width(AppSpacing.S))
+                            Text(stringResource(id = R.string.edit), color = Color.Black)
+                        }
+                    }
+                )
+
+                DropdownMenuItem(
+                    onClick = { onToggleStatusClick(hotel.id); onCloseMenu() },
+                    text = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = if (isHidden) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                                tint = if (isHidden) RoyalBlue else Color.Red
+                            )
+                            Spacer(modifier = Modifier.width(AppSpacing.S))
+                            Text(
+                                text = if (isHidden) stringResource(id = R.string.activate)
+                                else stringResource(id = R.string.deactivate),
+                                color = if (isHidden) RoyalBlue else Color.Red
+                            )
+                        }
+                    }
                 )
             }
         }

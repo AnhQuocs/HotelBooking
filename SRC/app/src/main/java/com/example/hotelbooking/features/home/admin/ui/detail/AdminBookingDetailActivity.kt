@@ -47,8 +47,8 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
 import com.example.hotelbooking.features.home.admin.ui.dashboard.adminFormatTimestamp
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography

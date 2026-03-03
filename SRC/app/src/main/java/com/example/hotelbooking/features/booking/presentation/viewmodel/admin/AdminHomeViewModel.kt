@@ -213,11 +213,21 @@ class AdminHomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val reviewsDeferred = async { reviewRepository.getReviewsByServiceId(hotelId) }
-                val roomsDeferred = async { roomUseCases.getRoomsByHotelIdUseCase(hotelId) }
+                val reviewsDeferred = async {
+                    reviewRepository.getReviewsByServiceId(hotelId)
+                }
+
+                val roomsDeferred = async {
+                    roomUseCases
+                        .getRoomsByHotelIdUseCase(hotelId)
+                        .first()
+                }
 
                 _reviews.value = reviewsDeferred.await()
-                _totalRooms.value = roomsDeferred.await().sumOf { it.totalRoom }
+
+                val rooms = roomsDeferred.await()
+                _totalRooms.value = rooms.sumOf { it.totalRoom }
+
             } catch (e: Exception) {
                 Log.e("AdminHome", "Error fetching extra details: ${e.message}")
             }

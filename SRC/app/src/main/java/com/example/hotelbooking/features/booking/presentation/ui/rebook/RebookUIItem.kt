@@ -40,7 +40,7 @@ import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilitySection
 import com.example.hotelbooking.features.room.presentation.ui.DateSelectionSection
 import com.example.hotelbooking.features.room.presentation.ui.toMillis
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen

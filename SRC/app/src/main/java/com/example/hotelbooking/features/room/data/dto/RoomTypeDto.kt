@@ -1,5 +1,7 @@
 package com.example.hotelbooking.features.room.data.dto
 
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
+
 data class RoomTypeDto(
     val hotelId: String? = null,
     val totalStock: Int? = null,
@@ -15,6 +17,7 @@ data class RoomTypeDto(
     val amenities: List<AmenityDto> = emptyList(),
     val smokingPolicy: Boolean? = false,
     val petPolicy: Boolean? = true,
+    val status: String = HotelStatus.HIDE.name
 )
 
 data class AmenityDto(

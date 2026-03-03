@@ -151,7 +151,7 @@ fun MyHotelsScreen(
                         .putExtra("hotelId", hotelId)
                     context.startActivity(intent)
                 },
-                onDeleteClick = { hotelId ->
+                onToggleStatusClick = { hotelId ->
 
                 }
             )

@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.admin.add
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -55,12 +56,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.motion.widget.TransitionBuilder.validate
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.presentation.util.AddHotelValidation
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelViewModel
+import com.example.hotelbooking.features.room.presentation.ui.admin.AddRoomTypeActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
@@ -117,11 +120,44 @@ fun AddHotelScreen(
         }
     }
 
+    val successText = stringResource(id = R.string.success)
+//    LaunchedEffect(addHotelState) {
+//        when (addHotelState) {
+//            is AddHotelState.Success -> {
+//                Toast.makeText(context, successText, Toast.LENGTH_SHORT).show()
+//
+//                if (hotelId == null) {
+//                    val newHotelId = (addHotelState as AddHotelState.Success).hotelId
+//
+//                    val intent = Intent(context, AddRoomTypeActivity::class.java).apply {
+//                        putExtra("hotelId", newHotelId)
+//                    }
+//                    context.startActivity(intent)
+//
+//                    onBackClick()
+//                } else {
+//                    onBackClick()
+//                }
+//            }
+//
+//            is AddHotelState.Error -> {
+//                Toast.makeText(
+//                    context,
+//                    (addHotelState as AddHotelState.Error).message,
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//            else -> {}
+//        }
+//    }
+
     LaunchedEffect(addHotelState) {
         when (addHotelState) {
             is AddHotelState.Success -> {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                onBackClick()
+                val intent = Intent(context, AddRoomTypeActivity::class.java)
+                    .putExtra("hotelId", hotelId)
+                context.startActivity(intent)
             }
 
             is AddHotelState.Error -> {
@@ -131,7 +167,6 @@ fun AddHotelScreen(
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
             else -> {}
         }
     }
@@ -260,7 +295,7 @@ fun AddHotelScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Button(
-                    modifier = Modifier.widthIn(max = 100.dp),
+                    modifier = Modifier.widthIn(max = 200.dp),
                     onClick = {
                         if (currentStep < 3) {
                             currentStep++
@@ -268,7 +303,8 @@ fun AddHotelScreen(
                             val adminId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                             addHotelViewModel.submitHotel(
                                 adminId = adminId,
-                                hotelId = hotelId
+                                hotelId = hotelId,
+                                isDraft = true
                             )
                         }
                     },

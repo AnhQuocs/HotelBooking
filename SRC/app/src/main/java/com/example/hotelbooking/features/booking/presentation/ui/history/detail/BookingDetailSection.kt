@@ -37,7 +37,7 @@ import com.example.hotelbooking.features.booking.presentation.ui.history.toLocal
 import com.example.hotelbooking.features.booking.presentation.ui.util.BookingQRCodeFull
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.room.domain.model.RoomType
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen

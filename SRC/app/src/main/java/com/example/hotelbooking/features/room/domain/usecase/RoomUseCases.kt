@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.room.domain.usecase
 
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.domain.repository.RoomRepository
+import kotlinx.coroutines.flow.Flow
 
 data class RoomUseCases(
     val getRoomsByHotelIdUseCase: GetRoomsByHotelIdUseCase,
@@ -11,8 +12,8 @@ data class RoomUseCases(
 class GetRoomsByHotelIdUseCase(
     private val repository: RoomRepository
 ) {
-    suspend operator fun invoke(hotelId: String): List<RoomType> {
-        return repository.getRoomsByHotelId(hotelId)
+    operator fun invoke(hotelId: String): Flow<List<RoomType>> {
+        return repository.getRoomTypesByHotel(hotelId)
     }
 }
 

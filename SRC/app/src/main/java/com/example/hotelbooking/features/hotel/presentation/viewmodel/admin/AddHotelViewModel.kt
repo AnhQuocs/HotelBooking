@@ -51,7 +51,7 @@ data class AddHotelUiState(
 sealed class AddHotelState {
     data object Idle : AddHotelState()
     data object Loading : AddHotelState()
-    data object Success : AddHotelState()
+    data class Success(val hotelId: String) : AddHotelState()
     data class Error(val message: String) : AddHotelState()
 }
 
@@ -63,6 +63,7 @@ class AddHotelViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var originalState = AddHotelUiState()
+    private var currentStatus: HotelStatus = HotelStatus.HIDE
 
     private val _uiState = MutableStateFlow(AddHotelUiState())
     val uiState = _uiState.asStateFlow()
@@ -111,6 +112,7 @@ class AddHotelViewModel @Inject constructor(
 
                 _uiState.value = loadedState
                 originalState = loadedState
+                currentStatus = adminHotel.status
 
                 _addHotelState.value = AddHotelState.Idle
             }.onFailure { e ->
@@ -194,11 +196,17 @@ class AddHotelViewModel @Inject constructor(
         val enAmenities = mutableListOf<String>()
         val viAmenities = mutableListOf<String>()
 
+        val finalStatus = if (hotelId == null) {
+            if (isDraft) HotelStatus.HIDE else HotelStatus.ACTIVE
+        } else {
+            currentStatus
+        }
+
         state.amenities.forEach { amenityKey ->
             val amenityUi = AmenityProvider.find(amenityKey)
             if (amenityUi != null) {
                 enAmenities.add(amenityUi.titles[0])
-                viAmenities.add(amenityUi.titles.getOrElse(1) { amenityUi.titles[0] }) // Tiếng Việt (index 1)
+                viAmenities.add(amenityUi.titles.getOrElse(1) { amenityUi.titles[0] })
             } else {
                 enAmenities.add(amenityKey)
                 viAmenities.add(amenityKey)
@@ -223,7 +231,7 @@ class AddHotelViewModel @Inject constructor(
             longitude = state.longitude ?: 0.0,
             checkInTime = state.checkInTime,
             checkOutTime = state.checkOutTime,
-            status = if (isDraft) HotelStatus.HIDE else HotelStatus.ACTIVE
+            status = finalStatus
         )
 
         viewModelScope.launch {
@@ -234,7 +242,7 @@ class AddHotelViewModel @Inject constructor(
             }.onSuccess {
                 originalState = _uiState.value
 
-                _addHotelState.value = AddHotelState.Success
+                _addHotelState.value = AddHotelState.Success(adminHotel.id)
             }.onFailure { e ->
                 _addHotelState.value = AddHotelState.Error(e.message ?: "Add hotel failed")
             }

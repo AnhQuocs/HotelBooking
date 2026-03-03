@@ -56,8 +56,8 @@ import com.example.hotelbooking.features.profile.feature.payment_card.presentati
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.toMillis
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth

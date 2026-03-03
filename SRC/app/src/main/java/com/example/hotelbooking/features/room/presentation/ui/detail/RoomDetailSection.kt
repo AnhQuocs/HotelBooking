@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.domain.model.RoomType
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
 
 @Composable
 fun RoomDetailSection(

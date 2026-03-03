@@ -22,7 +22,7 @@ import com.example.hotelbooking.features.review.presentation.ui.ReviewSection
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.RoomSection
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomState
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 

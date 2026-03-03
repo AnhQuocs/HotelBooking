@@ -3,25 +3,60 @@ package com.example.hotelbooking.features.room.data.source
 import com.example.hotelbooking.features.room.data.dto.RoomTypeDto
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseRoomDataSource {
     private val collection = Firebase.firestore.collection("rooms")
 
-    suspend fun fetchRoomsByHotelId(hotelId: String): List<Pair<String, RoomTypeDto>> {
-        return collection
+    fun observeRoomsByHotelId(
+        hotelId: String
+    ): Flow<List<Pair<String, RoomTypeDto>>> = callbackFlow {
+
+        val listenerRegistration = collection
             .whereEqualTo("hotelId", hotelId)
-            .get()
-            .await()
-            .documents
-            .mapNotNull { doc ->
-                val dto = doc.toObject(RoomTypeDto::class.java)
-                dto?.let { doc.id to it }
+            .addSnapshotListener { snapshot, error ->
+
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                val rooms = snapshot?.documents
+                    ?.mapNotNull { doc ->
+                        val dto = doc.toObject(RoomTypeDto::class.java)
+                        dto?.let { doc.id to it }
+                    }
+                    ?: emptyList()
+
+                trySend(rooms)
             }
+
+        awaitClose {
+            listenerRegistration.remove()
+        }
     }
 
     suspend fun fetchRoomById(id: String): RoomTypeDto? {
         val doc = collection.document(id).get().await()
         return if (doc.exists()) doc.toObject(RoomTypeDto::class.java) else null
+    }
+
+    suspend fun addRoomType(dto: RoomTypeDto): Result<Unit> = try {
+        collection.add(dto).await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    suspend fun updateRoomType(id: String, dto: RoomTypeDto): Result<Unit> = try {
+        collection.document(id)
+            .set(dto)
+            .await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 }

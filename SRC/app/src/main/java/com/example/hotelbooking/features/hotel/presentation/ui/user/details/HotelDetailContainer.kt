@@ -17,7 +17,7 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
-import com.example.hotelbooking.features.room.presentation.viewmodel.RoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
