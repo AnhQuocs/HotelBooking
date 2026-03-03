@@ -49,15 +49,19 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
-fun MyHotelsSection(state: AdminHotelState<List<Hotel>>) {
+fun MyHotelsSection(
+    state: AdminHotelState<List<Hotel>>,
+    onEditClick: (String) -> Unit,
+    onDeleteClick: (String) -> Unit
+) {
     var openedHotelId by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
 
@@ -111,11 +115,13 @@ fun MyHotelsSection(state: AdminHotelState<List<Hotel>>) {
                             onClick = { hotelId ->
 
                             },
-                            onEditClick = {
+                            onEditClick = { hotelId ->
                                 openedHotelId = null
+                                onEditClick(hotelId)
                             },
-                            onDeleteClick = {
+                            onDeleteClick = { hotelId ->
                                 openedHotelId = null
+                                onDeleteClick(hotelId)
                             },
                             context = context
                         )
@@ -143,8 +149,8 @@ fun MyHotelCard(
     onMoreClick: () -> Unit,
     onCloseMenu: () -> Unit,
     onClick: (String) -> Unit,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit,
+    onEditClick: (String) -> Unit,
+    onDeleteClick: (String) -> Unit,
     context: Context
 ) {
     Box(
@@ -198,7 +204,7 @@ fun MyHotelCard(
             ) {
                 DropdownMenuItem(
                     onClick = {
-                        onEditClick()
+                        onEditClick(hotel.id)
                         onCloseMenu()
                     },
                     text = {
@@ -214,11 +220,14 @@ fun MyHotelCard(
                         }
                     },
                     modifier = Modifier.height(AppSpacing.XL),
-                    contentPadding = PaddingValues(vertical = Dimen.PaddingXS, horizontal = Dimen.PaddingSM)
+                    contentPadding = PaddingValues(
+                        vertical = Dimen.PaddingXS,
+                        horizontal = Dimen.PaddingSM
+                    )
                 )
                 DropdownMenuItem(
                     onClick = {
-                        onDeleteClick()
+                        onDeleteClick(hotel.id)
                         onCloseMenu()
                     },
                     text = {
@@ -234,7 +243,10 @@ fun MyHotelCard(
                         }
                     },
                     modifier = Modifier.height(AppSpacing.XL),
-                    contentPadding = PaddingValues(vertical = Dimen.PaddingXS, horizontal = Dimen.PaddingSM)
+                    contentPadding = PaddingValues(
+                        vertical = Dimen.PaddingXS,
+                        horizontal = Dimen.PaddingSM
+                    )
                 )
             }
         }

@@ -164,11 +164,7 @@ fun NavGraphBuilder.adminGraph(navController: NavController) {
         route = "admin_root"
     ) {
         composable("admin_main") {
-            AdminMainScreen(
-                navController = navController,
-                onOpenGalleryClick = {},
-                onAddImageClick = {}
-            )
+            AdminMainScreen(navController = navController)
         }
 //
 //        composable("manage_hotel") {

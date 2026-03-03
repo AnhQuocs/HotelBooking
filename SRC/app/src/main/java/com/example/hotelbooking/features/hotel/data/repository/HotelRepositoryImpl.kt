@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.hotel.data.repository
 
+import com.example.hotelbooking.features.hotel.data.dto.HotelDto
 import com.example.hotelbooking.features.hotel.data.mapper.HotelMapper
 import com.example.hotelbooking.features.hotel.data.source.FirebaseHotelDataSource
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
@@ -7,6 +8,8 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
 import com.example.hotelbooking.utils.removeAccents
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.compareTo
 
@@ -60,10 +63,12 @@ class HotelRepositoryImpl(
         dataSource.addHotel(adminHotel.id, dto)
     }
 
-    override suspend fun getHotelsByAdminId(adminId: String): List<Hotel> {
+    override fun getHotelsByAdminId(adminId: String): Flow<List<Hotel>> {
         return dataSource.getHotelsByAdminId(adminId)
-            .map { (id, dto) ->
-                HotelMapper.dtoToUserHotel(id, dto)
+            .map { dtoList ->
+                dtoList.map { (id, dto) ->
+                    HotelMapper.dtoToUserHotel(id, dto)
+                }
             }
     }
 

@@ -16,4 +16,6 @@ interface ImageRepository {
         hotelId: String?,
         roomId: String?
     ): Result<Unit>
+
+    suspend fun deleteImageFromFirestore(imageId: String): Result<Unit>
 }

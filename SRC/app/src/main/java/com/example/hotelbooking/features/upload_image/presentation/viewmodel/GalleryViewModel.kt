@@ -65,4 +65,20 @@ class GalleryViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteImage(imageId: String) {
+        viewModelScope.launch {
+            isUpdating = true
+            updateError = null
+
+            val result = imageUseCase.deleteImageUseCase(imageId)
+
+            if (result.isSuccess) {
+                isUpdating = false
+            } else {
+                isUpdating = false
+                updateError = result.exceptionOrNull()?.message ?: "Unknown Error"
+            }
+        }
+    }
 }

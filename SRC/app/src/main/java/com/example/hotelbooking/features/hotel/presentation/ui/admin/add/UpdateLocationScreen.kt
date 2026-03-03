@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,23 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,6 +64,8 @@ fun UpdateLocationScreen(
     isLoading: Boolean,
     isConfirmed: Boolean,
     locationViewModel: LocationViewModel = hiltViewModel(),
+    initialAddressVi: String? = null,
+    initialAddressEn: String? = null,
     onLocationConfirmed: (
         lat: Double, lng: Double, addressVi: String, addressEn: String,
         shortAddressVi: String, shortAddressEn: String, cityVi: String, cityEn: String
@@ -96,8 +88,8 @@ fun UpdateLocationScreen(
     var shortAddressVi by remember { mutableStateOf("") }
     var shortAddressEn by remember { mutableStateOf("") }
 
-    var editedAddressVi by remember { mutableStateOf("") }
-    var editedAddressEn by remember { mutableStateOf("") }
+    var editedAddressVi by remember(initialAddressVi) { mutableStateOf(initialAddressVi ?: "") }
+    var editedAddressEn by remember(initialAddressEn) { mutableStateOf(initialAddressEn ?: "") }
 
     var showFullScreenMap by remember { mutableStateOf(false) }
     var showEditDialogVi by remember { mutableStateOf(false) }
@@ -107,14 +99,18 @@ fun UpdateLocationScreen(
         position = CameraPosition.fromLatLngZoom(exactLatLng, 5f)
     }
 
+    var isInitialComposition by remember { mutableStateOf(true) }
+    val locationUpdated = stringResource(id = R.string.location_updated)
+
     LaunchedEffect(isConfirmed) {
-        if (isConfirmed) {
+        if (isConfirmed && !isInitialComposition) {
             android.widget.Toast.makeText(
                 context,
-                "Location updated!",
+                locationUpdated,
                 android.widget.Toast.LENGTH_SHORT
             ).show()
         }
+        isInitialComposition = false
     }
 
     LaunchedEffect(selectedWard, shortAddressVi, shortAddressEn) {
@@ -246,7 +242,8 @@ fun UpdateLocationScreen(
             }
         }
 
-        if (selectedWard != null) {
+        val hasAddress = editedAddressVi.isNotBlank() || selectedWard != null
+        if (hasAddress) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -302,13 +299,15 @@ fun UpdateLocationScreen(
 
                 AddressPreviewCard(
                     label = stringResource(id = R.string.english),
-                    address = "$editedAddressEn, " + stringResource(id = R.string.vietnamese),
+                    address = if (editedAddressEn.contains("Vietnam", true)) editedAddressEn
+                    else "$editedAddressEn, Vietnam",
                     onEdit = { showEditDialogEn = true }
                 )
                 Spacer(modifier = Modifier.height(AppSpacing.S))
                 AddressPreviewCard(
                     label = stringResource(id = R.string.vietnamese),
-                    address = "$editedAddressVi, " + stringResource(id = R.string.vietnamese),
+                    address = if (editedAddressVi.contains("Việt Nam", true)) editedAddressVi
+                    else "$editedAddressVi, Việt Nam",
                     onEdit = { showEditDialogVi = true }
                 )
             }
@@ -322,11 +321,31 @@ fun UpdateLocationScreen(
                 .fillMaxWidth()
                 .padding(vertical = Dimen.PaddingM),
             onClick = {
+                val rawCityVi = selectedProvince!!.name
+
+                val cleanCityVi = rawCityVi
+                    .replace("Thành phố ", "", ignoreCase = true)
+                    .replace("Tỉnh ", "", ignoreCase = true)
+                    .trim()
+
+                var cleanCityEn = LocationTranslator.toEnglish(cleanCityVi)
+                cleanCityEn = cleanCityEn
+                    .replace(" City", "", ignoreCase = true)
+                    .replace(" Province", "", ignoreCase = true)
+                    .trim()
+
+                val newShortAddressVi = "$cleanCityVi, Việt Nam"
+                val newShortAddressEn = "$cleanCityEn, Vietnam"
+
                 onLocationConfirmed(
-                    exactLatLng.latitude, exactLatLng.longitude,
-                    editedAddressVi, editedAddressEn,
-                    shortAddressVi, shortAddressEn,
-                    selectedProvince!!.name, LocationTranslator.toEnglish(selectedProvince!!.name)
+                    exactLatLng.latitude,
+                    exactLatLng.longitude,
+                    editedAddressVi,
+                    editedAddressEn,
+                    newShortAddressVi,
+                    newShortAddressEn,
+                    cleanCityVi,
+                    cleanCityEn
                 )
             }
         ) {
@@ -338,97 +357,6 @@ fun UpdateLocationScreen(
                 )
             } else {
                 Text(stringResource(id = R.string.confirm_update))
-            }
-        }
-    }
-}
-
-@Composable
-fun AddressPreviewCard(label: String, address: String, onEdit: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF7F7F7))
-    ) {
-        Row(
-            modifier = Modifier.padding(Dimen.PaddingSM),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    label,
-                    style = AfacadTypography.labelMedium.copy(
-                        fontSize = 10.sp,
-                        color = Color.Gray
-                    )
-                )
-                Text(
-                    address,
-                    style = AfacadTypography.labelMedium.copy(
-                        fontWeight = FontWeight.Medium
-                    )
-                )
-            }
-            IconButton(onClick = onEdit) {
-                Icon(
-                    Icons.Default.Edit,
-                    null,
-                    modifier = Modifier.size(18.dp),
-                    tint = Color.Gray
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun EditAddressDialog(
-    title: String,
-    initialValue: String,
-    onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
-) {
-    var text by remember { mutableStateOf(initialValue) }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title, style = AfacadTypography.bodyMedium) },
-        text = {
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        confirmButton = { TextButton(onClick = { onConfirm(text) }) { Text("OK") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(id = R.string.cancel)) } }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LocationDropdown(
-    label: String, options: List<String>, selectedOption: String, onOptionSelected: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        OutlinedTextField(
-            value = selectedOption,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(label) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier
-                .menuAnchor()
-                .fillMaxWidth()
-        )
-        ExposedDropdownMenu(
-            expanded = expanded, onDismissRequest = { expanded = false }) {
-            options.forEach { option ->
-                DropdownMenuItem(text = { Text(option) }, onClick = {
-                    onOptionSelected(option)
-                    expanded = false
-                })
             }
         }
     }

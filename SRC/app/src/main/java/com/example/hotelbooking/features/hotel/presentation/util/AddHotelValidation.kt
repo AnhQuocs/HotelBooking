@@ -13,8 +13,8 @@ object AddHotelValidation {
             .filter { it.isNotBlank() }
 
         return wordsName.isNotEmpty() &&
-                wordsName.size <= 5 &&
+                wordsName.size <= 10 &&
                 wordsDes.isNotEmpty() &&
-                wordsDes.size <= 20
+                wordsDes.size <= 50
     }
 }

@@ -1,7 +1,9 @@
 package com.example.hotelbooking.features.hotel.domain.repository
 
+import com.example.hotelbooking.features.hotel.data.dto.HotelDto
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import kotlinx.coroutines.flow.Flow
 
 interface HotelRepository {
     suspend fun getAllHotels(): List<Hotel>
@@ -13,7 +15,7 @@ interface HotelRepository {
 
     // ADMIN
     suspend fun addHotel(adminHotel: AdminHotel)
-    suspend fun getHotelsByAdminId(adminId: String): List<Hotel>
+    fun getHotelsByAdminId(adminId: String): Flow<List<Hotel>>
     suspend fun getAdminHotelById(hotelId: String): AdminHotel?
 
     fun clearCache()

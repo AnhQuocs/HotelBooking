@@ -180,22 +180,26 @@ class AddHotelViewModel @Inject constructor(
         }
     }
 
+    fun updateThumbnail(url: String) {
+        _uiState.update {
+            it.copy(thumbnailUrl = url)
+        }
+    }
+
     /* ---------- submit ---------- */
 
     fun submitHotel(adminId: String, hotelId: String? = null, isDraft: Boolean = false) {
         val state = uiState.value
 
-        // 1. Dịch list amenities của UI thành 2 list Anh - Việt
         val enAmenities = mutableListOf<String>()
         val viAmenities = mutableListOf<String>()
 
         state.amenities.forEach { amenityKey ->
             val amenityUi = AmenityProvider.find(amenityKey)
             if (amenityUi != null) {
-                enAmenities.add(amenityUi.titles[0]) // Tiếng Anh (index 0)
+                enAmenities.add(amenityUi.titles[0])
                 viAmenities.add(amenityUi.titles.getOrElse(1) { amenityUi.titles[0] }) // Tiếng Việt (index 1)
             } else {
-                // Fallback an toàn lỡ không tìm thấy
                 enAmenities.add(amenityKey)
                 viAmenities.add(amenityKey)
             }

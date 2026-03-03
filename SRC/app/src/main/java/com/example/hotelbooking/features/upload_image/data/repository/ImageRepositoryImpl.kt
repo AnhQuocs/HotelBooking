@@ -142,4 +142,15 @@ class ImageRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override suspend fun deleteImageFromFirestore(imageId: String): Result<Unit> = try {
+        db.collection("images")
+            .document(imageId)
+            .delete()
+            .await()
+
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

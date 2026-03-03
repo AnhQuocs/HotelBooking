@@ -207,9 +207,9 @@ fun UpdateDetailsScreen(
             )
             Spacer(modifier = Modifier.height(AppSpacing.M))
 
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
             ) {
                 OutlinedTextField(
                     value = uiState.checkInTime,
@@ -230,7 +230,6 @@ fun UpdateDetailsScreen(
                         disabledLabelColor = NearBlack
                     ),
                     modifier = Modifier
-                        .weight(1f)
                         .clickable {
                             isPickingCheckIn = true
                             showTimePicker = true
@@ -256,7 +255,6 @@ fun UpdateDetailsScreen(
                         disabledLabelColor = NearBlack
                     ),
                     modifier = Modifier
-                        .weight(1f)
                         .clickable {
                             isPickingCheckIn = false
                             showTimePicker = true

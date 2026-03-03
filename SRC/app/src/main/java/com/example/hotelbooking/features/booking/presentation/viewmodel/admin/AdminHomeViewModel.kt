@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -158,6 +159,7 @@ class AdminHomeViewModel @Inject constructor(
     fun loadDashboardData() {
         viewModelScope.launch {
             _isLoading.value = true
+
             val user = authUseCases.getCurrentUserUseCase()
             val adminId = user?.uid
 
@@ -166,14 +168,16 @@ class AdminHomeViewModel @Inject constructor(
                 return@launch
             }
 
-            val hotels = adminHotelUseCases.getHotelsByAdminIdUseCase(adminId)
-            _allManagedHotels.value = hotels
+            adminHotelUseCases.getHotelsByAdminIdUseCase(adminId)
+                .collect { hotels ->
+                    _allManagedHotels.value = hotels
 
-            if (hotels.isNotEmpty()) {
-                switchHotel(hotels.first())
-            } else {
-                _isLoading.value = false
-            }
+                    if (hotels.isNotEmpty()) {
+                        switchHotel(hotels.first())
+                    } else {
+                        _isLoading.value = false
+                    }
+                }
         }
     }
 

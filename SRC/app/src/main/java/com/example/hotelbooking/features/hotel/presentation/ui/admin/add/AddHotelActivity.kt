@@ -26,10 +26,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -56,7 +58,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
-import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.hotel.presentation.util.AddHotelValidation
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelViewModel
@@ -171,8 +172,11 @@ fun AddHotelScreen(
         }
 
         1 -> uiState.isLocationConfirmed
-        2 -> true
-        3 -> true
+
+        2 -> uiState.checkInTime.isNotBlank() && uiState.checkOutTime.isNotBlank() && uiState.amenities.isNotEmpty()
+
+        3 -> uiState.thumbnailUrl.isNotBlank()
+
         else -> false
     }
 
@@ -255,14 +259,8 @@ fun AddHotelScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                AppButton(
-                    text = if (currentStep == 3) stringResource(id = R.string.submit) else stringResource(
-                        id = R.string.next
-                    ),
-                    enabled = isButtonEnabled,
-                    textColor = Color.White,
-                    shape = AppShape.ShapeM,
-                    color = RoyalBlue,
+                Button(
+                    modifier = Modifier.widthIn(max = 100.dp),
                     onClick = {
                         if (currentStep < 3) {
                             currentStep++
@@ -270,12 +268,23 @@ fun AddHotelScreen(
                             val adminId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                             addHotelViewModel.submitHotel(
                                 adminId = adminId,
-                                hotelId = hotelId,
-                                isDraft = false
+                                hotelId = hotelId
                             )
                         }
-                    }
-                )
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = RoyalBlue
+                    ),
+                    enabled = isButtonEnabled,
+                    shape = RoundedCornerShape(AppShape.ShapeM)
+                ) {
+                    Text(
+                        text = if (currentStep == 3) stringResource(id = R.string.submit) else stringResource(
+                            id = R.string.next
+                        ),
+                        color = Color.White
+                    )
+                }
             }
         },
         containerColor = Color.White
@@ -326,6 +335,8 @@ fun AddHotelScreen(
                     1 -> UpdateLocationScreen(
                         isLoading = uiState.isLocationLoading,
                         isConfirmed = uiState.isLocationConfirmed,
+                        initialAddressVi = uiState.addressVi,
+                        initialAddressEn = uiState.addressEn,
                         onLocationConfirmed = { lat, lng, addressVi, addressEn, shortAddressVi, shortAddressEn, cityVi, cityEn ->
                             addHotelViewModel.updateLocation(
                                 addressVi = addressVi, addressEn = addressEn,
@@ -347,7 +358,8 @@ fun AddHotelScreen(
                             addHotelViewModel.saveCustomAmenity(adminId, newAmenity)
                         }
                     )
-                    // 3 -> UpdateThumbnailScreen()
+
+                    3 -> UpdateThumbnailScreen(addHotelViewModel = addHotelViewModel)
                 }
             }
         }

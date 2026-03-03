@@ -9,7 +9,8 @@ import javax.inject.Inject
 class ImageUseCase @Inject constructor(
     val getGalleryUseCase: GetGalleryUseCase,
     val updateImageUsageUseCase: UpdateImageUsageUseCase,
-    val uploadToGalleryUseCase: UploadToGalleryUseCase
+    val uploadToGalleryUseCase: UploadToGalleryUseCase,
+    val deleteImageUseCase: DeleteImageUseCase
 )
 
 class GetGalleryUseCase @Inject constructor(private val repository: ImageRepository) {
@@ -51,5 +52,13 @@ class UploadToGalleryUseCase @Inject constructor(private val repo: ImageReposito
             },
             onFailure = { Result.failure(it) }
         )
+    }
+}
+
+class DeleteImageUseCase @Inject constructor(
+    private val repository: ImageRepository
+) {
+    suspend operator fun invoke(imageId: String): Result<Unit> {
+        return repository.deleteImageFromFirestore(imageId)
     }
 }

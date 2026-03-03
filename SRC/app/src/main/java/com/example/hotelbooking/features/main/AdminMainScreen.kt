@@ -26,18 +26,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.components.AdminBottomBar
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelViewModel
 import com.example.hotelbooking.features.chat.presentation.ui.admin.AdminMessageScreen
 import com.example.hotelbooking.features.home.admin.ui.dashboard.AdminHomeScreen
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.MyHotelsScreen
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelViewModel
 import com.example.hotelbooking.features.profile.ui.admin.AdminProfileScreen
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AdminMainScreen(
     navController: NavController,
-    onAddImageClick: () -> Unit,
-    onOpenGalleryClick: () -> Unit,
     adminHotelViewModel: AdminHotelViewModel = hiltViewModel()
 ) {
     val state by adminHotelViewModel.adminHotelState.collectAsState()
@@ -45,7 +43,7 @@ fun AdminMainScreen(
     LaunchedEffect(Unit) {
         FirebaseAuth.getInstance().currentUser?.uid?.let { adminId ->
             Log.d("LoadHotelsDebug", "Admin ID: $adminId")
-            adminHotelViewModel.loadAdminHotels(adminId)
+            adminHotelViewModel.observeHotels(adminId)
         }
     }
 
@@ -61,7 +59,7 @@ fun AdminMainScreen(
             )
         },
         bottomBar = {
-            AdminBottomBar (
+            AdminBottomBar(
                 currentIndex = selectedTabIndex,
                 onTabSelected = { newIndex ->
                     previousTabIndex = selectedTabIndex

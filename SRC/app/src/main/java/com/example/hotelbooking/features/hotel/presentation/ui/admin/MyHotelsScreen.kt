@@ -144,7 +144,17 @@ fun MyHotelsScreen(
 
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
-            MyHotelsSection(state)
+            MyHotelsSection(
+                state,
+                onEditClick = { hotelId ->
+                    val intent = Intent(context, AddHotelActivity::class.java)
+                        .putExtra("hotelId", hotelId)
+                    context.startActivity(intent)
+                },
+                onDeleteClick = { hotelId ->
+
+                }
+            )
         }
     }
 }

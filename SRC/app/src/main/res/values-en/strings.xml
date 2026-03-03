@@ -438,6 +438,7 @@
     <string name="select_checkin_time">Select check-in time</string>
     <string name="select_checkout_time">Select check-out time</string>
     <string name="select_icon">Select icon:</string>
+    <string name="location_updated">Location Updated!</string>
 
     <!-- ADMIN HOTEL -->
 

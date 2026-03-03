@@ -438,6 +438,7 @@
     <string name="select_checkin_time">Chọn giờ nhận phòng</string>
     <string name="select_checkout_time">Chọn giờ trả phòng</string>
     <string name="select_icon">Chọn biểu tượng:</string>
+    <string name="location_updated">Đã cập nhật địa chỉ!</string>
 
     <!-- ADMIN PROFILE -->
 
