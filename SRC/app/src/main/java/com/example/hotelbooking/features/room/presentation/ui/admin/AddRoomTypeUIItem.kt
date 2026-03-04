@@ -29,8 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -52,7 +54,11 @@ fun RoomAdminTopBar(
                     style = AfacadTypography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = "Bước ${currentStep + 1} trên 4",
+                    text = stringResource(
+                        R.string.step_progress,
+                        currentStep + 1,
+                        4
+                    ),
                     style = AfacadTypography.labelSmall,
                     color = Color.Gray
                 )
@@ -62,7 +68,7 @@ fun RoomAdminTopBar(
             IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = null,
                     tint = Color.Black
                 )
             }
@@ -97,31 +103,29 @@ fun RoomBottomNavigation(
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.S),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Nút QUAY LẠI: Chỉ hiện từ Step 1 trở đi
             if (currentStep > 0) {
                 OutlinedButton(
                     onClick = onBack,
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp),
+                        .height(Dimen.HeightLarge),
                     shape = RoundedCornerShape(AppShape.ShapeM),
                     border = BorderStroke(1.dp, Color.LightGray),
                     enabled = !isLoading
                 ) {
                     Text(
-                        text = "Quay lại",
+                        text = stringResource(id = R.string.back),
                         style = AfacadTypography.bodyMedium,
                         color = Color.Black
                     )
                 }
             }
 
-            // Nút TIẾP THEO / XÁC NHẬN
             Button(
                 onClick = onNext,
                 modifier = Modifier
-                    .weight(2f) // Nút chính to hơn nút phụ
-                    .height(56.dp),
+                    .weight(2f)
+                    .height(Dimen.HeightLarge),
                 shape = RoundedCornerShape(AppShape.ShapeM),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = RoyalBlue,
@@ -131,13 +135,13 @@ fun RoomBottomNavigation(
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(Dimen.SizeM),
                         color = Color.White,
                         strokeWidth = 2.dp
                     )
                 } else {
                     Text(
-                        text = if (isLastStep) "Hoàn tất & Lưu" else "Tiếp theo",
+                        text = stringResource(R.string.finish_and_save),
                         style = AfacadTypography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                         color = Color.White
                     )

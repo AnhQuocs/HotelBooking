@@ -18,9 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomUiState
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -37,65 +39,72 @@ fun OverviewStep(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
     ) {
-        // --- PHẦN 1: TÊN LOẠI PHÒNG ---
         Text(
-            text = "Tên loại phòng",
+            text = stringResource(R.string.room_type_name),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
-        // Tên tiếng Việt
         AdminTextField(
             value = state.nameVi,
-            onValueChange = { newName -> viewModel.updateUiState { it.copy(nameVi = newName) } },
-            label = "Tên (Tiếng Việt)",
-            placeholder = "Ví dụ: Phòng Deluxe Giường Đôi",
+            onValueChange = { newName ->
+                viewModel.updateUiState { it.copy(nameVi = newName) }
+            },
+            label = stringResource(R.string.room_name_vi_label),
+            placeholder = stringResource(R.string.room_name_vi_placeholder),
             leadingIcon = { Icon(Icons.Default.Title, null, tint = RoyalBlue) }
         )
 
-        // Tên tiếng Anh
         AdminTextField(
             value = state.nameEn,
-            onValueChange = { newName -> viewModel.updateUiState { it.copy(nameEn = newName) } },
-            label = "Name (English)",
-            placeholder = "Ex: Deluxe Double Room",
+            onValueChange = { newName ->
+                viewModel.updateUiState { it.copy(nameEn = newName) }
+            },
+            label = stringResource(R.string.room_name_en_label),
+            placeholder = stringResource(R.string.room_name_en_placeholder),
             leadingIcon = { Icon(Icons.Default.Translate, null, tint = Color.Gray) }
         )
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = AppSpacing.S), thickness = 0.5.dp)
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = AppSpacing.S),
+            thickness = 0.5.dp
+        )
 
-        // --- PHẦN 2: MÔ TẢ ---
         Text(
-            text = "Mô tả chi tiết",
+            text = stringResource(R.string.room_detail_description),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
-        // Mô tả tiếng Việt
         AdminTextField(
             value = state.descriptionVi,
-            onValueChange = { newDes -> viewModel.updateUiState { it.copy(descriptionVi = newDes) } },
-            label = "Mô tả (Tiếng Việt)",
-            placeholder = "Nhập mô tả về tiện nghi, view phòng...",
+            onValueChange = { newDes ->
+                viewModel.updateUiState { it.copy(descriptionVi = newDes) }
+            },
+            label = stringResource(R.string.room_description_vi_label),
+            placeholder = stringResource(R.string.room_description_vi_placeholder),
             singleLine = false,
             minLines = 3
         )
 
-        // Mô tả tiếng Anh
         AdminTextField(
             value = state.descriptionEn,
-            onValueChange = { newDes -> viewModel.updateUiState { it.copy(descriptionEn = newDes) } },
-            label = "Description (English)",
-            placeholder = "Enter room description, view...",
+            onValueChange = { newDes ->
+                viewModel.updateUiState { it.copy(descriptionEn = newDes) }
+            },
+            label = stringResource(R.string.room_description_en_label),
+            placeholder = stringResource(R.string.room_description_en_placeholder),
             singleLine = false,
             minLines = 3
         )
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = AppSpacing.S), thickness = 0.5.dp)
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = AppSpacing.S),
+            thickness = 0.5.dp
+        )
 
-        // --- PHẦN 3: GIÁ CẢ ---
         Text(
-            text = "Giá phòng mỗi đêm",
+            text = stringResource(R.string.room_price_per_night),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -103,21 +112,26 @@ fun OverviewStep(
         AdminTextField(
             value = state.price,
             onValueChange = {
-                // Chỉ cho phép nhập số
                 if (it.all { char -> char.isDigit() }) {
                     viewModel.updateUiState { old -> old.copy(price = it) }
                 }
             },
-            label = "Giá (USD)",
+            label = stringResource(R.string.room_price_label),
             placeholder = "0.00",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            leadingIcon = { Icon(Icons.Default.AttachMoney, null, tint = Color(0xFF4CAF50)) },
-            suffix = { Text("/ đêm", style = AfacadTypography.bodySmall) }
+            leadingIcon = {
+                Icon(Icons.Default.AttachMoney, null, tint = Color(0xFF4CAF50))
+            },
+            suffix = {
+                Text(
+                    stringResource(R.string.per_night_suffix),
+                    style = AfacadTypography.bodySmall
+                )
+            }
         )
     }
 }
 
-// Hàm bổ trợ để tạo TextField đồng bộ cho Admin
 @Composable
 fun AdminTextField(
     value: String,

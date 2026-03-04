@@ -443,6 +443,42 @@
     <string name="activate">Resume Business</string>
     <string name="deactivate">Deactivate</string>
 
+    <!-- ADMIN ROOM TYPE -->
+    <string name="add_room_type">Add Room Type</string>
+    <string name="edit_room_type">Edit Room Type</string>
+    <string name="step_progress">Step %1$d of %2$d</string>
+    <string name="finish_and_save">Finish &amp; Save</string>
+    <string name="room_amenities">Room Amenities</string>
+    <string name="room_amenities_desc">Select the amenities available in this room type</string>
+    <string name="room_number_list">Specific Room Numbers</string>
+    <string name="room_number_desc">Enter room numbers separated by commas (e.g., 101, 102, 103)</string>
+    <string name="room_number_label">Room Numbers</string>
+    <string name="room_number_placeholder">101, 102...</string>
+    <string name="total_rooms">Total: %1$d rooms</string>
+    <string name="room_thumbnail">Thumbnail Image</string>
+    <string name="select_from_gallery">Select from Gallery</string>
+    <string name="current_cover_image">Current Cover Image</string>
+    <string name="no_cover_selected">No cover image selected</string>
+    <string name="thumbnail_preview">Thumbnail Preview</string>
+    <string name="select_from_your_gallery">Select from Your Gallery</string>
+    <string name="gallery_empty">Gallery is empty. Please upload more images!</string>
+    <string name="badge_hotel">HOTEL</string>
+    <string name="badge_room">ROOM</string>
+    <string name="badge_used">USED</string>
+    <string name="room_type_name">Room Type Name</string>
+    <string name="room_name_vi_label">Name (Vietnamese)</string>
+    <string name="room_name_vi_placeholder">Ex: Deluxe Double Room (Vietnamese)</string>
+    <string name="room_name_en_label">Name (English)</string>
+    <string name="room_name_en_placeholder">Ex: Deluxe Double Room</string>
+    <string name="room_detail_description">Detailed Description</string>
+    <string name="room_description_vi_label">Description (Vietnamese)</string>
+    <string name="room_description_vi_placeholder">Enter amenities, room view…</string>
+    <string name="room_description_en_label">Description (English)</string>
+    <string name="room_description_en_placeholder">Enter room description, view…</string>
+    <string name="room_price_per_night">Price per Night</string>
+    <string name="room_price_label">Price (USD)</string>
+    <string name="per_night_suffix">/ night</string>
+
     <!-- ADMIN HOTEL -->
 
     <!-- OTHER -->

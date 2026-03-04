@@ -1,7 +1,6 @@
 package com.example.hotelbooking.features.room.presentation.ui.admin
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -25,14 +24,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
+import com.example.hotelbooking.features.upload_image.presentation.viewmodel.GalleryViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.RoyalBlue
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,11 +64,13 @@ fun AddRoomTypeScreen(
     roomId: String? = null,
     onBack: () -> Unit,
     onSuccess: () -> Unit,
+    galleryViewModel: GalleryViewModel = hiltViewModel(),
     viewModel: AdminRoomViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val roomState by viewModel.roomState.collectAsState()
     var currentStep by remember { mutableIntStateOf(0) }
+    var imageId by remember { mutableStateOf("") }
 
     LaunchedEffect(roomState) {
         if (roomState is AddRoomState.Success) {
@@ -78,7 +82,10 @@ fun AddRoomTypeScreen(
     Scaffold(
         topBar = {
             RoomAdminTopBar(
-                title = if (roomId == null) "Thêm loại phòng" else "Sửa loại phòng",
+                title = if (roomId == null)
+                    stringResource(R.string.add_room_type)
+                else
+                    stringResource(R.string.edit_room_type),
                 currentStep = currentStep,
                 onBack = { if (currentStep > 0) currentStep-- else onBack() }
             )
@@ -90,17 +97,34 @@ fun AddRoomTypeScreen(
                 isLoading = roomState is AddRoomState.Loading,
                 onNext = {
                     if (currentStep < 3) currentStep++
-                    else viewModel.submitRoom(hotelId, roomId)
+                    else {
+                        if (roomState is AddRoomState.Success) {
+                            val roomId = (roomState as AddRoomState.Success).roomId
+                            viewModel.submitRoom(hotelId, roomId)
+                            galleryViewModel.assignImage(
+                                imageId = imageId,
+                                hotelId = null,
+                                roomId = roomId,
+                                onComplete = {}
+                            )
+                        }
+                    }
                 },
                 onBack = { if (currentStep > 0) currentStep-- }
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
 
             LinearProgressIndicator(
                 progress = (currentStep + 1) / 4f,
-                modifier = Modifier.fillMaxWidth().height(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimen.PaddingXS),
                 color = RoyalBlue,
                 trackColor = RoyalBlue.copy(alpha = 0.1f)
             )
@@ -126,7 +150,7 @@ fun AddRoomTypeScreen(
                         0 -> OverviewStep(uiState, viewModel)
                         1 -> TechnicalDetailsStep(uiState, viewModel)
                         2 -> InventoryStep(uiState, viewModel)
-                        3 -> MediaStep(uiState, viewModel)
+                        3 -> MediaStep(uiState, viewModel, onImageChange = { id -> imageId = id })
                     }
                 }
             }

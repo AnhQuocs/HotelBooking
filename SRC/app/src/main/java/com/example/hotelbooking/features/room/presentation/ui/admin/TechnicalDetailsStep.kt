@@ -25,12 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomUiState
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.RoyalBlue
 
@@ -43,9 +46,8 @@ fun TechnicalDetailsStep(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
     ) {
-        // --- PHẦN 1: THÔNG SỐ CƠ BẢN (Dùng Row để tiết kiệm không gian) ---
         Text(
-            text = "Thông số cơ bản",
+            text = stringResource(R.string.room_basic_specs),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -54,7 +56,6 @@ fun TechnicalDetailsStep(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.S)
         ) {
-            // Sức chứa
             Box(modifier = Modifier.weight(1f)) {
                 AdminTextField(
                     value = state.capacity,
@@ -63,14 +64,13 @@ fun TechnicalDetailsStep(
                             viewModel.updateUiState { it.copy(capacity = text) }
                         }
                     },
-                    label = "Sức chứa",
-                    placeholder = "Người",
+                    label = stringResource(R.string.room_capacity_label),
+                    placeholder = stringResource(R.string.room_capacity_placeholder),
                     leadingIcon = { Icon(Icons.Default.Groups, null, tint = RoyalBlue) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
 
-            // Diện tích
             Box(modifier = Modifier.weight(1f)) {
                 AdminTextField(
                     value = state.roomSize,
@@ -79,66 +79,83 @@ fun TechnicalDetailsStep(
                             viewModel.updateUiState { it.copy(roomSize = text) }
                         }
                     },
-                    label = "Diện tích",
-                    placeholder = "m²",
+                    label = stringResource(R.string.room_size_label),
+                    placeholder = stringResource(R.string.room_size_placeholder),
                     leadingIcon = { Icon(Icons.Default.SquareFoot, null, tint = RoyalBlue) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    suffix = { Text("m²", style = AfacadTypography.bodySmall) }
+                    suffix = {
+                        Text(
+                            stringResource(R.string.room_size_suffix),
+                            style = AfacadTypography.bodySmall
+                        )
+                    }
                 )
             }
         }
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = AppSpacing.S), thickness = 0.5.dp)
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = AppSpacing.S),
+            thickness = 0.5.dp
+        )
 
-        // --- PHẦN 2: LOẠI GIƯỜNG & PHÒNG TẮM (Đa ngôn ngữ) ---
         Text(
-            text = "Tiện nghi ngủ & tắm",
+            text = stringResource(R.string.sleep_bath_amenities),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
-        // Bed Type (VI/EN)
         AdminTextField(
             value = state.bedTypeVi,
-            onValueChange = { text -> viewModel.updateUiState { it.copy(bedTypeVi = text) } },
-            label = "Loại giường (Tiếng Việt)",
-            placeholder = "Ví dụ: 1 Giường đôi lớn",
+            onValueChange = { text ->
+                viewModel.updateUiState { it.copy(bedTypeVi = text) }
+            },
+            label = stringResource(R.string.bed_type_vi_label),
+            placeholder = stringResource(R.string.bed_type_vi_placeholder),
             leadingIcon = { Icon(Icons.Default.Bed, null, tint = Color.Gray) }
         )
+
         AdminTextField(
             value = state.bedTypeEn,
-            onValueChange = { text -> viewModel.updateUiState { it.copy(bedTypeEn = text) } },
-            label = "Bed Type (English)",
-            placeholder = "Ex: 1 Large Double Bed"
+            onValueChange = { text ->
+                viewModel.updateUiState { it.copy(bedTypeEn = text) }
+            },
+            label = stringResource(R.string.bed_type_en_label),
+            placeholder = stringResource(R.string.bed_type_en_placeholder)
         )
 
-        // Bathroom Type (VI/EN)
         AdminTextField(
             value = state.bathroomTypeVi,
-            onValueChange = { text -> viewModel.updateUiState { it.copy(bathroomTypeVi = text) } },
-            label = "Phòng tắm (Tiếng Việt)",
-            placeholder = "Ví dụ: Bồn tắm & Vòi sen",
+            onValueChange = { text ->
+                viewModel.updateUiState { it.copy(bathroomTypeVi = text) }
+            },
+            label = stringResource(R.string.bathroom_type_vi_label),
+            placeholder = stringResource(R.string.bathroom_type_vi_placeholder),
             leadingIcon = { Icon(Icons.Default.Bathtub, null, tint = Color.Gray) }
         )
+
         AdminTextField(
             value = state.bathroomTypeEn,
-            onValueChange = { text -> viewModel.updateUiState { it.copy(bathroomTypeEn = text) } },
-            label = "Bathroom Type (English)",
-            placeholder = "Ex: Bathtub & Shower"
+            onValueChange = { text ->
+                viewModel.updateUiState { it.copy(bathroomTypeEn = text) }
+            },
+            label = stringResource(R.string.bathroom_type_en_label),
+            placeholder = stringResource(R.string.bathroom_type_en_placeholder)
         )
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = AppSpacing.S), thickness = 0.5.dp)
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = AppSpacing.S),
+            thickness = 0.5.dp
+        )
 
-        // --- PHẦN 3: CHÍNH SÁCH PHÒNG (Dùng Switch cho chuyên nghiệp) ---
         Text(
-            text = "Chính sách phòng",
+            text = stringResource(R.string.room_policies),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
         PolicySwitchRow(
-            label = "Cho phép hút thuốc",
-            description = "Cho phép khách sử dụng thuốc lá trong phòng",
+            label = stringResource(R.string.policy_smoking_label),
+            description = stringResource(R.string.policy_smoking_desc),
             checked = state.smokingPolicy,
             onCheckedChange = { checked ->
                 viewModel.updateUiState { it.copy(smokingPolicy = checked) }
@@ -147,8 +164,8 @@ fun TechnicalDetailsStep(
         )
 
         PolicySwitchRow(
-            label = "Cho phép thú cưng",
-            description = "Khách có thể mang theo vật nuôi",
+            label = stringResource(R.string.policy_pet_label),
+            description = stringResource(R.string.policy_pet_desc),
             checked = state.petPolicy,
             onCheckedChange = { checked ->
                 viewModel.updateUiState { it.copy(petPolicy = checked) }
@@ -158,7 +175,6 @@ fun TechnicalDetailsStep(
     }
 }
 
-// Composable phụ cho dòng Switch chính sách
 @Composable
 fun PolicySwitchRow(
     label: String,
@@ -177,7 +193,7 @@ fun PolicySwitchRow(
             imageVector = icon,
             contentDescription = null,
             tint = if (checked) RoyalBlue else Color.Gray,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(Dimen.SizeM)
         )
 
         Column(

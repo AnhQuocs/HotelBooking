@@ -443,6 +443,62 @@
     <string name="activate">Kinh doanh lại</string>
     <string name="deactivate">Ngừng kinh doanh</string>
 
+    <!-- ADMIN ROOM TYPE -->
+    <string name="add_room_type">Thêm loại phòng</string>
+    <string name="edit_room_type">Sửa loại phòng</string>
+    <string name="step_progress">Bước %1$d trên %2$d</string>
+    <string name="finish_and_save">Hoàn tất &amp; Lưu</string>
+    <string name="room_amenities">Tiện nghi phòng</string>
+    <string name="room_amenities_desc">Chọn các tiện nghi có sẵn trong loại phòng này</string>
+    <string name="room_number_list">Danh sách số phòng cụ thể</string>
+    <string name="room_number_desc">Nhập số phòng, ngăn cách bởi dấu phẩy (Ví dụ: 101, 102, 103)</string>
+    <string name="room_number_label">Số phòng</string>
+    <string name="room_number_placeholder">101, 102...</string>
+    <string name="total_rooms">Tổng cộng: %1$d phòng</string>
+    <string name="room_thumbnail">Hình ảnh đại diện</string>
+    <string name="select_from_gallery">Chọn ảnh từ kho</string>
+    <string name="current_cover_image">Ảnh bìa hiện tại</string>
+    <string name="no_cover_selected">Chưa chọn ảnh bìa</string>
+    <string name="thumbnail_preview">Xem trước ảnh bìa</string>
+    <string name="select_from_your_gallery">Chọn từ kho ảnh của bạn</string>
+    <string name="gallery_empty">Kho ảnh trống. Hãy upload thêm ảnh!</string>
+    <string name="badge_hotel">HOTEL</string>
+    <string name="badge_room">ROOM</string>
+    <string name="badge_used">USED</string>
+    <string name="room_type_name">Tên loại phòng</string>
+    <string name="room_name_vi_label">Tên (Tiếng Việt)</string>
+    <string name="room_name_vi_placeholder">Ví dụ: Phòng Deluxe Giường Đôi</string>
+    <string name="room_name_en_label">Tên (Tiếng Anh)</string>
+    <string name="room_name_en_placeholder">VD: Deluxe Double Room</string>
+    <string name="room_detail_description">Mô tả chi tiết</string>
+    <string name="room_description_vi_label">Mô tả (Tiếng Việt)</string>
+    <string name="room_description_vi_placeholder">Nhập mô tả về tiện nghi, view phòng…</string>
+    <string name="room_description_en_label">Mô tả (Tiếng Anh)</string>
+    <string name="room_description_en_placeholder">Nhập mô tả về tiện nghi, view…</string>
+    <string name="room_price_per_night">Giá phòng mỗi đêm</string>
+    <string name="room_price_label">Giá (USD)</string>
+    <string name="per_night_suffix">/ đêm</string>
+    <string name="room_basic_specs">Thông số cơ bản</string>
+    <string name="room_capacity_label">Sức chứa</string>
+    <string name="room_capacity_placeholder">Người</string>
+    <string name="room_size_label">Diện tích</string>
+    <string name="room_size_placeholder">m²</string>
+    <string name="room_size_suffix">m²</string>
+    <string name="sleep_bath_amenities">Tiện nghi ngủ &amp; tắm</string>
+    <string name="bed_type_vi_label">Loại giường (Tiếng Việt)</string>
+    <string name="bed_type_vi_placeholder">Ví dụ: 1 Giường đôi lớn</string>
+    <string name="bed_type_en_label">Loại giường (Tiếng Anh)</string>
+    <string name="bed_type_en_placeholder">Ví dụ: 1 Large Double Bed</string>
+    <string name="bathroom_type_vi_label">Phòng tắm (Tiếng Việt)</string>
+    <string name="bathroom_type_vi_placeholder">Ví dụ: Bồn tắm &amp; Vòi sen</string>
+    <string name="bathroom_type_en_label">Phòng tắm (Tiếng Anh)</string>
+    <string name="bathroom_type_en_placeholder">Ví dụ: Bathtub &amp; Shower</string>
+    <string name="room_policies">Chính sách phòng</string>
+    <string name="policy_smoking_label">Cho phép hút thuốc</string>
+    <string name="policy_smoking_desc">Cho phép khách sử dụng thuốc lá trong phòng</string>
+    <string name="policy_pet_label">Cho phép thú cưng</string>
+    <string name="policy_pet_desc">Khách có thể mang theo vật nuôi</string>
+
     <!-- ADMIN PROFILE -->
 
     <!-- OTHER -->

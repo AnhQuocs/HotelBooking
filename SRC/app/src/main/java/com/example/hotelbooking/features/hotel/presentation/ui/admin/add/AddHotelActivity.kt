@@ -56,7 +56,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.motion.widget.TransitionBuilder.validate
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
@@ -64,6 +63,7 @@ import com.example.hotelbooking.features.hotel.presentation.util.AddHotelValidat
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelViewModel
 import com.example.hotelbooking.features.room.presentation.ui.admin.AddRoomTypeActivity
+import com.example.hotelbooking.features.upload_image.presentation.viewmodel.GalleryViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
@@ -90,7 +90,8 @@ class AddHotelActivity : BaseComponentActivity() {
 fun AddHotelScreen(
     hotelId: String? = null,
     addHotelViewModel: AddHotelViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    galleryViewModel: GalleryViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val validate = AddHotelValidation
@@ -98,6 +99,7 @@ fun AddHotelScreen(
     var currentStep by rememberSaveable { mutableIntStateOf(0) }
     var showExitDialog by remember { mutableStateOf(false) }
     var showSaveDraftDialog by remember { mutableStateOf(false) }
+    var imageId by remember { mutableStateOf("") }
 
     LaunchedEffect(hotelId) {
         if (hotelId != null) {
@@ -110,7 +112,6 @@ fun AddHotelScreen(
     val customAmenities by addHotelViewModel.customAmenities.collectAsState()
 
     val hasUnsavedChanges = addHotelViewModel.hasUnsavedChanges()
-
     val message = stringResource(R.string.save_success)
 
     LaunchedEffect(Unit) {
@@ -167,6 +168,7 @@ fun AddHotelScreen(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
             else -> {}
         }
     }
@@ -306,6 +308,15 @@ fun AddHotelScreen(
                                 hotelId = hotelId,
                                 isDraft = true
                             )
+                            if (addHotelState is AddHotelState.Success) {
+                                val hotelId = (addHotelState as AddHotelState.Success).hotelId
+                                galleryViewModel.assignImage(
+                                    imageId = imageId,
+                                    hotelId = hotelId,
+                                    roomId = null,
+                                    onComplete = {}
+                                )
+                            }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -395,7 +406,10 @@ fun AddHotelScreen(
                         }
                     )
 
-                    3 -> UpdateThumbnailScreen(addHotelViewModel = addHotelViewModel)
+                    3 -> UpdateThumbnailScreen(
+                        addHotelViewModel = addHotelViewModel,
+                        onImageChange = { id -> imageId = id }
+                    )
                 }
             }
         }

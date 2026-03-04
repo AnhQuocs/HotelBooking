@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.room.presentation.ui.admin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,10 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.hotelbooking.R
+import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.ImageBadge
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomUiState
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
 import com.example.hotelbooking.features.upload_image.domain.model.ImageModel
@@ -49,18 +54,21 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.AvailableGreen
+import com.example.hotelbooking.ui.theme.OrangeVibrant
+import com.example.hotelbooking.ui.theme.RoyalBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaStep(
     state: AddRoomUiState,
     viewModel: AdminRoomViewModel,
+    onImageChange: (String) -> Unit,
     galleryViewModel: GalleryViewModel = hiltViewModel()
 ) {
     val images by galleryViewModel.images.collectAsState()
     val isGalleryLoading by galleryViewModel.isLoading.collectAsState()
 
-    // State để đóng/mở kho ảnh
     var showGallery by remember { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -70,19 +78,18 @@ fun MediaStep(
         verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
     ) {
         Text(
-            text = "Hình ảnh đại diện",
+            text = stringResource(R.string.room_thumbnail),
             style = AfacadTypography.titleMedium,
             fontWeight = FontWeight.Bold
         )
 
-        // --- KHUNG HIỂN THỊ ẢNH (Bấm vào để mở kho ảnh) ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp)
+                .height(Dimen.HeightXL4 - 10.dp)
                 .clip(RoundedCornerShape(AppShape.ShapeM))
                 .background(Color(0xFFF5F5F5))
-                .clickable { showGallery = true }, // Mở kho ảnh
+                .clickable { showGallery = true },
             contentAlignment = Alignment.Center
         ) {
             if (state.imageUrl.isNotEmpty()) {
@@ -92,7 +99,6 @@ fun MediaStep(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                // Overlay nút thay đổi
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -102,7 +108,7 @@ fun MediaStep(
                     Icons.Default.Collections,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(Dimen.SizeXLPlus)
                 )
             } else {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -113,7 +119,7 @@ fun MediaStep(
                         tint = Color.LightGray
                     )
                     Text(
-                        "Chọn ảnh từ kho",
+                        stringResource(R.string.select_from_gallery),
                         style = AfacadTypography.bodySmall,
                         color = Color.LightGray
                     )
@@ -121,7 +127,6 @@ fun MediaStep(
             }
         }
 
-        // --- BOTTOM SHEET KHO ẢNH ---
         if (showGallery) {
             ModalBottomSheet(
                 onDismissRequest = { showGallery = false },
@@ -131,16 +136,11 @@ fun MediaStep(
                 GalleryPickerContent(
                     images = images,
                     isLoading = isGalleryLoading,
+                    selectedImageUrl = state.imageUrl,
                     onImageSelected = { selectedImage ->
-                        // 1. Cập nhật URL vào UI State của Room
                         viewModel.updateUiState { it.copy(imageUrl = selectedImage.imageUrl) }
-
-                        // 2. Đóng Sheet
                         showGallery = false
-
-                        // 3. Nếu là Edit (đã có roomId), gọi assignImage để liên kết DB luôn
-                        // roomId lấy từ đâu? Ví dụ từ ViewModel hoặc Intent
-                        // galleryViewModel.assignImage(imageId = selectedImage.id, roomId = currentRoomId) {}
+                        onImageChange(selectedImage.id)
                     }
                 )
             }
@@ -152,15 +152,20 @@ fun MediaStep(
 fun GalleryPickerContent(
     images: List<ImageModel>,
     isLoading: Boolean,
+    selectedImageUrl: String,
     onImageSelected: (ImageModel) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.7f) // Chiếm 70% màn hình
+            .fillMaxHeight(0.7f)
             .padding(Dimen.PaddingM)
     ) {
-        Text("Kho ảnh của bạn", style = AfacadTypography.titleMedium, fontWeight = FontWeight.Bold)
+        Text(
+            stringResource(id = R.string.select_from_gallery),
+            style = AfacadTypography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(AppSpacing.M))
 
         if (isLoading) {
@@ -172,15 +177,61 @@ fun GalleryPickerContent(
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
             ) {
                 items(images) { image ->
-                    AsyncImage(
-                        model = image.imageUrl,
-                        contentDescription = null,
+                    val isSelected = image.imageUrl == selectedImageUrl
+
+                    Box(
                         modifier = Modifier
                             .aspectRatio(1f)
                             .clip(RoundedCornerShape(AppShape.ShapeS))
-                            .clickable { onImageSelected(image) },
-                        contentScale = ContentScale.Crop
-                    )
+                            .border(
+                                width = if (isSelected) 2.dp else 0.dp,
+                                color = if (isSelected) RoyalBlue else Color.Transparent,
+                                shape = RoundedCornerShape(AppShape.ShapeS)
+                            )
+                            .clickable { onImageSelected(image) }
+                    ) {
+                        AsyncImage(
+                            model = image.imageUrl,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Box(modifier = Modifier.padding(4.dp)) {
+                            when {
+                                image.hotelId != null -> ImageBadge(
+                                    text = stringResource(id = R.string.badge_hotel),
+                                    color = OrangeVibrant
+                                )
+
+                                image.roomId != null -> ImageBadge(
+                                    text = stringResource(id = R.string.badge_room),
+                                    color = AvailableGreen
+                                )
+
+                                image.isUsed -> ImageBadge(
+                                    text = stringResource(id = R.string.badge_used),
+                                    color = Color.Gray
+                                )
+                            }
+                        }
+
+                        if (isSelected) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(RoyalBlue.copy(alpha = 0.2f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.Default.CheckCircle,
+                                    null,
+                                    tint = RoyalBlue,
+                                    modifier = Modifier.size(Dimen.SizeM)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

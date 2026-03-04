@@ -125,18 +125,33 @@ class ImageRepositoryImpl @Inject constructor(
         hotelId: String?,
         roomId: String?
     ): Result<Unit> = try {
-        val isUsed = hotelId != null || roomId != null
+        val batch = db.batch()
+        val imagesRef = db.collection("images")
 
-        val updateData = mapOf(
+        val oldImagesQuery = when {
+            hotelId != null -> imagesRef.whereEqualTo("hotelId", hotelId)
+            roomId != null -> imagesRef.whereEqualTo("roomId", roomId)
+            else -> null
+        }
+
+        oldImagesQuery?.get()?.await()?.documents?.forEach { doc ->
+            if (doc.id != imageId) {
+                batch.update(doc.reference, mapOf(
+                    "hotelId" to null,
+                    "roomId" to null,
+                    "isUsed" to false
+                ))
+            }
+        }
+
+        val newImageRef = imagesRef.document(imageId)
+        batch.update(newImageRef, mapOf(
             "hotelId" to hotelId,
             "roomId" to roomId,
-            "isUsed" to isUsed
-        )
+            "isUsed" to (hotelId != null || roomId != null)
+        ))
 
-        db.collection("images")
-            .document(imageId)
-            .update(updateData)
-            .await()
+        batch.commit().await()
 
         Result.success(Unit)
     } catch (e: Exception) {

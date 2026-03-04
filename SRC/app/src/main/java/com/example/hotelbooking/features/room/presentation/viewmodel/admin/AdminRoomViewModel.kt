@@ -28,7 +28,7 @@ import javax.inject.Inject
 sealed class AddRoomState {
     data object Idle : AddRoomState()
     data object Loading : AddRoomState()
-    data object Success : AddRoomState()
+    data class Success(val roomId: String) : AddRoomState()
     data class Error(val message: String) : AddRoomState()
 }
 
@@ -150,7 +150,7 @@ class AdminRoomViewModel @Inject constructor(
             }
 
             result.onSuccess {
-                _roomState.value = AddRoomState.Success
+                _roomState.value = AddRoomState.Success(adminRoom.id)
             }.onFailure { e ->
                 e.printStackTrace()
                 _roomState.value = AddRoomState.Error(e.message ?: "Submit failed")
