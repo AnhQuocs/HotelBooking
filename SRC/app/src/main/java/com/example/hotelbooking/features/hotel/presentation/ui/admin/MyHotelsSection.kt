@@ -23,20 +23,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -58,15 +50,14 @@ import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
-import com.example.hotelbooking.ui.theme.RoyalBlue
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun MyHotelsSection(
     state: AdminHotelState<List<Hotel>>,
     onEditClick: (String) -> Unit,
-    onToggleStatusClick: (String) -> Unit
+    onHotelClick: (String) -> Unit
 ) {
-    var openedHotelId by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
 
     when (state) {
@@ -75,7 +66,7 @@ fun MyHotelsSection(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFF2853AF))
+                CircularProgressIndicator(color = PrimaryBlue)
             }
         }
 
@@ -108,24 +99,11 @@ fun MyHotelsSection(
                     ) { hotel ->
                         MyHotelCard(
                             hotel = hotel,
-                            expanded = openedHotelId == hotel.id,
-                            onMoreClick = {
-                                openedHotelId =
-                                    if (openedHotelId == hotel.id) null else hotel.id
-                            },
-                            onCloseMenu = {
-                                openedHotelId = null
-                            },
                             onClick = { hotelId ->
-
+                                onHotelClick(hotelId)
                             },
                             onEditClick = { hotelId ->
-                                openedHotelId = null
                                 onEditClick(hotelId)
-                            },
-                            onToggleStatusClick = { hotelId ->
-                                openedHotelId = null
-                                onToggleStatusClick(hotelId)
                             },
                             context = context
                         )
@@ -149,12 +127,8 @@ fun MyHotelsSection(
 @Composable
 fun MyHotelCard(
     hotel: Hotel,
-    expanded: Boolean,
-    onMoreClick: () -> Unit,
-    onCloseMenu: () -> Unit,
     onClick: (String) -> Unit,
     onEditClick: (String) -> Unit,
-    onToggleStatusClick: (String) -> Unit,
     context: Context
 ) {
     val isHidden = hotel.status == HotelStatus.HIDE
@@ -164,7 +138,7 @@ fun MyHotelCard(
             .width(Dimen.WidthL)
             .height(260.dp)
             .clip(RoundedCornerShape(AppShape.ShapeM))
-            .clickable(enabled = !expanded) { onClick(hotel.id) }
+            .clickable { onClick(hotel.id) }
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context)
@@ -194,7 +168,9 @@ fun MyHotelCard(
                     fontSize = 17.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
-                )
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(AppSpacing.XSPlus))
             Text(
@@ -202,7 +178,8 @@ fun MyHotelCard(
                 style = AfacadTypography.bodyMedium.copy(
                     fontSize = 15.sp,
                     color = Color.White
-                )
+                ),
+                maxLines = 1
             )
             Spacer(modifier = Modifier.height(AppSpacing.XSPlus))
             Row(
@@ -211,11 +188,13 @@ fun MyHotelCard(
             ) {
                 Text(
                     text = "$${hotel.pricePerNightMin}/" + stringResource(id = R.string.night),
-                    color = Color.White
+                    color = Color.White,
+                    style = AfacadTypography.bodySmall
                 )
                 Text(
-                    text = "⭐%.1f".format(hotel.averageRating),
-                    color = Color.White
+                    text = "⭐ %.1f".format(hotel.averageRating),
+                    color = Color.White,
+                    style = AfacadTypography.bodySmall
                 )
             }
         }
@@ -229,12 +208,11 @@ fun MyHotelCard(
             ) {
                 Surface(
                     color = Color.White.copy(alpha = 0.9f),
-                    shape = RoundedCornerShape(AppShape.ShapeS),
-                    modifier = Modifier.padding(bottom = 40.dp)
+                    shape = RoundedCornerShape(AppShape.ShapeS)
                 ) {
                     Text(
                         text = stringResource(id = R.string.hidden_status).uppercase(),
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                        modifier = Modifier.padding(horizontal = Dimen.PaddingSM, vertical = Dimen.PaddingXS),
                         style = AfacadTypography.labelMedium.copy(
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
@@ -254,53 +232,14 @@ fun MyHotelCard(
                 modifier = Modifier
                     .size(Dimen.SizeML)
                     .background(color = Color.Black.copy(alpha = 0.5f), CircleShape)
-                    .clickable { onMoreClick() },
+                    .clickable { onEditClick(hotel.id) },
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.MoreVert, contentDescription = null, tint = Color.White)
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = onCloseMenu,
-                modifier = Modifier.width(160.dp),
-                shape = RoundedCornerShape(AppShape.ShapeM),
-                containerColor = Color.White
-            ) {
-                DropdownMenuItem(
-                    onClick = { onEditClick(hotel.id); onCloseMenu() },
-                    text = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                Icons.Default.Edit,
-                                null,
-                                modifier = Modifier.size(18.dp),
-                                tint = Color.Black
-                            )
-                            Spacer(modifier = Modifier.width(AppSpacing.S))
-                            Text(stringResource(id = R.string.edit), color = Color.Black)
-                        }
-                    }
-                )
-
-                DropdownMenuItem(
-                    onClick = { onToggleStatusClick(hotel.id); onCloseMenu() },
-                    text = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = if (isHidden) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                                tint = if (isHidden) RoyalBlue else Color.Red
-                            )
-                            Spacer(modifier = Modifier.width(AppSpacing.S))
-                            Text(
-                                text = if (isHidden) stringResource(id = R.string.activate)
-                                else stringResource(id = R.string.deactivate),
-                                color = if (isHidden) RoyalBlue else Color.Red
-                            )
-                        }
-                    }
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }

@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -93,7 +92,7 @@ fun UpdateThumbnailScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         Icons.Default.Image,
-                        contentDescription = null,
+                        null,
                         tint = Color.Gray,
                         modifier = Modifier.size(48.dp)
                     )
@@ -116,7 +115,7 @@ fun UpdateThumbnailScreen(
                 ) {
                     Icon(
                         Icons.Default.Close,
-                        contentDescription = null,
+                        null,
                         tint = Color.White,
                         modifier = Modifier.size(18.dp)
                     )
@@ -139,11 +138,7 @@ fun UpdateThumbnailScreen(
                 color = NearBlack
             )
             if (isGalleryLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(Dimen.SizeM),
-                    strokeWidth = 2.dp,
-                    color = RoyalBlue
-                )
+                CircularProgressIndicator(strokeWidth = 2.dp, color = RoyalBlue)
             }
         }
 
@@ -156,8 +151,8 @@ fun UpdateThumbnailScreen(
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.S),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.S),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(images) { image ->
@@ -166,11 +161,11 @@ fun UpdateThumbnailScreen(
                     Box(
                         modifier = Modifier
                             .aspectRatio(1f)
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(AppShape.ShapeM))
                             .border(
                                 width = if (isSelected) 3.dp else 0.dp,
                                 color = if (isSelected) RoyalBlue else Color.Transparent,
-                                shape = RoundedCornerShape(12.dp)
+                                shape = RoundedCornerShape(AppShape.ShapeM)
                             )
                             .clickable {
                                 addHotelViewModel.updateThumbnail(image.imageUrl)
@@ -184,28 +179,22 @@ fun UpdateThumbnailScreen(
                             contentScale = ContentScale.Crop
                         )
 
-                        Box(modifier = Modifier.padding(4.dp)) {
+                        Box(modifier = Modifier.padding(Dimen.PaddingXS)) {
                             when {
-                                image.hotelId != null -> {
-                                    ImageBadge(
-                                        text = stringResource(id = R.string.badge_hotel),
-                                        color = OrangeVibrant
-                                    )
-                                }
+                                image.hotelId != null -> ImageBadge(
+                                    stringResource(R.string.badge_hotel),
+                                    OrangeVibrant
+                                )
 
-                                image.roomId != null -> {
-                                    ImageBadge(
-                                        text = stringResource(id = R.string.badge_room),
-                                        color = AvailableGreen
-                                    )
-                                }
+                                image.roomId != null -> ImageBadge(
+                                    stringResource(R.string.badge_room),
+                                    AvailableGreen
+                                )
 
-                                image.isUsed -> {
-                                    ImageBadge(
-                                        text = stringResource(id = R.string.badge_used),
-                                        color = Color.Gray
-                                    )
-                                }
+                                image.isUsed -> ImageBadge(
+                                    stringResource(R.string.badge_used),
+                                    Color.Gray
+                                )
                             }
                         }
 
@@ -218,27 +207,9 @@ fun UpdateThumbnailScreen(
                             ) {
                                 Icon(
                                     Icons.Default.CheckCircle,
-                                    contentDescription = null,
+                                    null,
                                     tint = RoyalBlue,
                                     modifier = Modifier.size(Dimen.SizeML)
-                                )
-                            }
-                        }
-
-                        if (!image.isUsed) {
-                            IconButton(
-                                onClick = { galleryViewModel.deleteImage(image.id) },
-                                modifier = Modifier
-                                    .align(Alignment.BottomEnd)
-                                    .padding(Dimen.PaddingXXS)
-                                    .size(Dimen.SizeM)
-                                    .background(Color.White.copy(alpha = 0.7f), CircleShape)
-                            ) {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = null,
-                                    tint = Color.Red,
-                                    modifier = Modifier.size(14.dp)
                                 )
                             }
                         }

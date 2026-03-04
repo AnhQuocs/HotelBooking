@@ -1,20 +1,11 @@
 package com.example.hotelbooking.features.room.presentation.viewmodel.admin
 
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
-import com.example.hotelbooking.features.room.data.dto.AmenityDto
-import com.example.hotelbooking.features.room.data.dto.RoomDto
-import com.example.hotelbooking.features.room.data.dto.RoomTypeDto
 import com.example.hotelbooking.features.room.domain.model.AdminAmenity
 import com.example.hotelbooking.features.room.domain.model.AdminRoomType
-import com.example.hotelbooking.features.room.domain.model.Amenity
 import com.example.hotelbooking.features.room.domain.model.Room
-import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.domain.usecase.AdminRoomUseCases
 import com.example.hotelbooking.features.room.domain.usecase.RoomUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,8 +47,7 @@ data class AddRoomUiState(
 
 @HiltViewModel
 class AdminRoomViewModel @Inject constructor(
-    private val adminRoomUseCase: AdminRoomUseCases,
-    private val roomUseCases: RoomUseCases
+    private val adminRoomUseCase: AdminRoomUseCases
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddRoomUiState())
@@ -70,7 +60,10 @@ class AdminRoomViewModel @Inject constructor(
 
     private var currentStatus: HotelStatus = HotelStatus.HIDE
 
+    private var loadedRoomId: String? = null
     fun loadRoomForEdit(roomId: String) {
+        if (loadedRoomId == roomId) return
+
         viewModelScope.launch {
             _roomState.value = AddRoomState.Loading
             runCatching {
@@ -137,7 +130,7 @@ class AdminRoomViewModel @Inject constructor(
             amenities = state.selectedAmenities,
             smokingPolicy = state.smokingPolicy,
             petPolicy = state.petPolicy,
-            status = if (roomId == null) HotelStatus.HIDE else currentStatus
+            status = if (roomId == null) HotelStatus.ACTIVE else currentStatus
         )
 
         viewModelScope.launch {
@@ -164,5 +157,7 @@ class AdminRoomViewModel @Inject constructor(
         _uiState.value = AddRoomUiState()
         originalState = AddRoomUiState()
         _roomState.value = AddRoomState.Idle
+        loadedRoomId = null
+        currentStatus = HotelStatus.ACTIVE
     }
 }

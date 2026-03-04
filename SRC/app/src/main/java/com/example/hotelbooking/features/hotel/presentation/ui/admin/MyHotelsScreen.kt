@@ -40,9 +40,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
+import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -106,7 +106,12 @@ fun MyHotelsScreen(
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                label = { Text(stringResource(id = R.string.search), style = AfacadTypography.labelLarge) },
+                label = {
+                    Text(
+                        stringResource(id = R.string.search),
+                        style = AfacadTypography.labelLarge
+                    )
+                },
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.ic_search),
@@ -151,7 +156,7 @@ fun MyHotelsScreen(
                         .putExtra("hotelId", hotelId)
                     context.startActivity(intent)
                 },
-                onToggleStatusClick = { hotelId ->
+                onHotelClick = { hotelId ->
 
                 }
             )

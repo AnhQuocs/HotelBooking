@@ -400,6 +400,7 @@
     <string name="no_hotels_yet">You don\'t have any hotels yet</string>
     <string name="edit">Edit</string>
     <string name="add_new_hotel">Add New Hotel</string>
+    <string name="edit_hotel">Edit Hotel</string>
     <string name="previous">Previous</string>
     <string name="basic_information">Basic Information</string>
     <string name="hotel_name">Hotel Name</string>
@@ -454,7 +455,7 @@
     <string name="room_number_desc">Enter room numbers separated by commas (e.g., 101, 102, 103)</string>
     <string name="room_number_label">Room Numbers</string>
     <string name="room_number_placeholder">101, 102...</string>
-    <string name="total_rooms">Total: %1$d rooms</string>
+    <string name="admin_total_rooms">Total: %1$d rooms</string>
     <string name="room_thumbnail">Thumbnail Image</string>
     <string name="select_from_gallery">Select from Gallery</string>
     <string name="current_cover_image">Current Cover Image</string>
@@ -478,8 +479,31 @@
     <string name="room_price_per_night">Price per Night</string>
     <string name="room_price_label">Price (USD)</string>
     <string name="per_night_suffix">/ night</string>
+    <string name="room_basic_specs">Basic Specifications</string>
+    <string name="room_capacity_label">Capacity</string>
+    <string name="room_capacity_placeholder">Guests</string>
+    <string name="room_size_label">Room Size</string>
+    <string name="room_size_placeholder">m²</string>
+    <string name="room_size_suffix">m²</string>
+    <string name="sleep_bath_amenities">Sleep &amp; Bath Amenities</string>
+    <string name="bed_type_vi_label">Bed Type (Vietnamese)</string>
+    <string name="bed_type_vi_placeholder">Ex: 1 Large Double Bed (Vietnamese)</string>
+    <string name="bed_type_en_label">Bed Type (English)</string>
+    <string name="bed_type_en_placeholder">Ex: 1 Large Double Bed</string>
+    <string name="bathroom_type_vi_label">Bathroom Type (Vietnamese)</string>
+    <string name="bathroom_type_vi_placeholder">Ex: Bathtub &amp; Shower (Vietnamese)</string>
+    <string name="bathroom_type_en_label">Bathroom Type (English)</string>
+    <string name="bathroom_type_en_placeholder">Ex: Bathtub &amp; Shower</string>
+    <string name="room_policies">Room Policies</string>
+    <string name="policy_smoking_label">Smoking Allowed</string>
+    <string name="policy_smoking_desc">Guests are allowed to smoke inside the room</string>
+    <string name="policy_pet_label">Pets Allowed</string>
+    <string name="policy_pet_desc">Guests can bring pets</string>
+    <string name="room_add_success_title">Room added successfully</string>
+    <string name="room_add_success_message">You have successfully added the room type. Would you like to add another one?</string>
+    <string name="room_add_continue">Add more</string>
 
-    <!-- ADMIN HOTEL -->
+    <!-- ADMIN PROFILE -->
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

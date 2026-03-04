@@ -400,6 +400,7 @@
     <string name="no_hotels_yet">Bạn chưa tạo khách sạn nào</string>
     <string name="edit">Chỉnh sửa</string>
     <string name="add_new_hotel">Thêm khách sạn</string>
+    <string name="edit_hotel">Sửa khách sạn</string>
     <string name="previous">Trang trước</string>
     <string name="basic_information">Thông tin cơ bản</string>
     <string name="hotel_name">Tên khách sạn</string>
@@ -454,7 +455,7 @@
     <string name="room_number_desc">Nhập số phòng, ngăn cách bởi dấu phẩy (Ví dụ: 101, 102, 103)</string>
     <string name="room_number_label">Số phòng</string>
     <string name="room_number_placeholder">101, 102...</string>
-    <string name="total_rooms">Tổng cộng: %1$d phòng</string>
+    <string name="admin_total_rooms">Tổng cộng: %1$d phòng</string>
     <string name="room_thumbnail">Hình ảnh đại diện</string>
     <string name="select_from_gallery">Chọn ảnh từ kho</string>
     <string name="current_cover_image">Ảnh bìa hiện tại</string>
@@ -498,6 +499,9 @@
     <string name="policy_smoking_desc">Cho phép khách sử dụng thuốc lá trong phòng</string>
     <string name="policy_pet_label">Cho phép thú cưng</string>
     <string name="policy_pet_desc">Khách có thể mang theo vật nuôi</string>
+    <string name="room_add_success_title">Thêm phòng thành công</string>
+    <string name="room_add_success_message">Bạn đã thêm loại phòng thành công. Bạn muốn tiếp tục thêm loại phòng khác không?</string>
+    <string name="room_add_continue">Thêm tiếp</string>
 
     <!-- ADMIN PROFILE -->
 

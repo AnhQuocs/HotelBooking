@@ -161,7 +161,7 @@ fun InventoryStep(
             }
 
             Text(
-                text = stringResource(id = R.string.total_rooms, roomList.size),
+                text = stringResource(id = R.string.admin_total_rooms, roomList.size),
                 style = AfacadTypography.labelMedium,
                 color = RoyalBlue,
                 modifier = Modifier.padding(top = AppSpacing.XS)
