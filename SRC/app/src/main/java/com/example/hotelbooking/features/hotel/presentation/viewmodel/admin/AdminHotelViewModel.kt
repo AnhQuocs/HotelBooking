@@ -3,6 +3,7 @@ package com.example.hotelbooking.features.hotel.presentation.viewmodel.admin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.hotel.domain.usecase.AdminHotelUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,9 @@ class AdminHotelViewModel @Inject constructor(
     private val _adminHotelState = MutableStateFlow<AdminHotelState<List<Hotel>>>(AdminHotelState.Loading)
     val adminHotelState = _adminHotelState.asStateFlow()
 
+    private val _updateStatusResult = MutableStateFlow<AdminHotelState<Unit>?>(null)
+    val updateStatusResult = _updateStatusResult.asStateFlow()
+
     fun observeHotels(adminId: String) {
         viewModelScope.launch {
             adminHotelUseCases.getHotelsByAdminIdUseCase(adminId)
@@ -40,6 +44,20 @@ class AdminHotelViewModel @Inject constructor(
                     _adminHotelState.value =
                         AdminHotelState.Success(hotelList)
                 }
+        }
+    }
+
+    fun updateHotelStatus(hotelId: String, status: HotelStatus) {
+        viewModelScope.launch {
+            _updateStatusResult.value = AdminHotelState.Loading
+            try {
+                adminHotelUseCases.updateHotelStatusUseCase(hotelId, status)
+                _updateStatusResult.value = AdminHotelState.Success(Unit)
+
+                _updateStatusResult.value = null
+            } catch (e: Exception) {
+                _updateStatusResult.value = AdminHotelState.Error(e.message ?: "Update fail")
+            }
         }
     }
 }

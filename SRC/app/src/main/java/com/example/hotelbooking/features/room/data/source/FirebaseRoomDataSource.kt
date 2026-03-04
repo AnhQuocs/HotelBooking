@@ -20,7 +20,9 @@ class FirebaseRoomDataSource {
             .addSnapshotListener { snapshot, error ->
 
                 if (error != null) {
-                    close(error)
+                    android.util.Log.w("FirestoreDataSource", "Listener closed (likely due to logout): ${error.message}")
+
+                    close()
                     return@addSnapshotListener
                 }
 

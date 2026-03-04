@@ -1,14 +1,14 @@
 package com.example.hotelbooking.features.hotel.domain.repository
 
-import com.example.hotelbooking.features.hotel.data.dto.HotelDto
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import kotlinx.coroutines.flow.Flow
 
 interface HotelRepository {
     suspend fun getAllHotels(): List<Hotel>
     suspend fun getRecommendHotels(minAverageRating: Double): List<Hotel>
-    suspend fun getHotelById(hotelId: String): Hotel?
+    fun getHotelById(hotelId: String): Flow<Hotel?>
 
     suspend fun updateHotelRating(hotelId: String, rating: Double)
     suspend fun searchHotels(query: String): List<Hotel>
@@ -16,7 +16,8 @@ interface HotelRepository {
     // ADMIN
     suspend fun addHotel(adminHotel: AdminHotel)
     fun getHotelsByAdminId(adminId: String): Flow<List<Hotel>>
-    suspend fun getAdminHotelById(hotelId: String): AdminHotel?
+    fun getAdminHotelById(hotelId: String): Flow<AdminHotel?>
+    suspend fun updateHotelStatus(hotelId: String, status: HotelStatus)
 
     fun clearCache()
 }

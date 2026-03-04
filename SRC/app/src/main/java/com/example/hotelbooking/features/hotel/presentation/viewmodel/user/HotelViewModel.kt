@@ -7,6 +7,8 @@ import com.example.hotelbooking.features.hotel.domain.usecase.HotelUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,26 +63,20 @@ class HotelViewModel @Inject constructor(
 
     fun loadHotelById(hotelId: String) {
         viewModelScope.launch {
-
-            hotelCache[hotelId]?.let { cachedHotel ->
-                _hotelDetailState.value = HotelState.Success(cachedHotel)
-                return@launch
-            }
-
-            _hotelDetailState.value = HotelState.Loading
-
-            runCatching {
-                hotelUseCases.getHotelByIdUseCase(hotelId)
-            }.onSuccess { hotel ->
-                if (hotel != null) {
-                    hotelCache[hotelId] = hotel
-                    _hotelDetailState.value = HotelState.Success(hotel)
-                } else {
-                    _hotelDetailState.value = HotelState.Error("Hotel not found")
+            hotelUseCases.getHotelByIdUseCase(hotelId)
+                .onStart {
+                    _hotelDetailState.value = HotelState.Loading
                 }
-            }.onFailure { e ->
-                _hotelDetailState.value = HotelState.Error(e.message ?: "Unknown error")
-            }
+                .catch { e ->
+                    _hotelDetailState.value = HotelState.Error(e.message ?: "Unknown error")
+                }
+                .collect { hotel ->
+                    if (hotel != null) {
+                        _hotelDetailState.value = HotelState.Success(hotel)
+                    } else {
+                        _hotelDetailState.value = HotelState.Error("Hotel not found")
+                    }
+                }
         }
     }
 }

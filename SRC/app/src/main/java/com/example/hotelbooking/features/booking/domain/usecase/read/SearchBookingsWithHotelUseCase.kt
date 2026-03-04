@@ -4,27 +4,28 @@ import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
 import com.example.hotelbooking.utils.removeAccents
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class SearchBookingsWithHotelUseCase @Inject constructor(
     private val bookingRepository: BookingRepository,
     private val hotelRepository: HotelRepository
 ) {
-
     suspend operator fun invoke(userId: String, query: String): List<BookingWithHotel> {
-        // Lấy toàn bộ booking của user
+        // 1. Lấy toàn bộ booking của user
         val allBookings = bookingRepository.getBookingsByUser(userId)
         if (allBookings.isEmpty()) return emptyList()
 
-        // Lấy danh sách hotelId duy nhất
+        // 2. Lấy danh sách hotelId duy nhất
         val hotelIds = allBookings.map { it.hotelId }.distinct()
 
-        // Lấy thông tin hotel từ hotelRepository
+        // 3. Lấy thông tin hotel
         val hotelsMap = hotelIds.associateWith { id ->
-            hotelRepository.getHotelById(id)
+            // Dùng .firstOrNull() để lấy giá trị hiện tại từ Flow
+            hotelRepository.getHotelById(id).firstOrNull()
         }
 
-        // Map
+        // 4. Map dữ liệu
         val bookingsWithHotel = allBookings.map { booking ->
             BookingWithHotel(
                 booking = booking,
@@ -32,10 +33,10 @@ class SearchBookingsWithHotelUseCase @Inject constructor(
             )
         }
 
-        // Chuẩn hóa query
+        // 5. Chuẩn hóa query
         val normalizedQuery = query.lowercase().removeAccents()
 
-        // Filter theo bookingId, hotelName, shortAddress
+        // 6. Filter theo bookingId, hotelName, shortAddress
         return if (normalizedQuery.isBlank()) {
             bookingsWithHotel
         } else {

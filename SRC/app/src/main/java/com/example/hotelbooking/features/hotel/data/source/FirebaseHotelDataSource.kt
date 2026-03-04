@@ -22,13 +22,19 @@ class FirebaseHotelDataSource {
             }
     }
 
-    suspend fun fetchHotelById(hotelId: String): HotelDto? {
-        val doc = collection
-            .document(hotelId)
-            .get()
-            .await()
+    fun fetchHotelById(hotelId: String): Flow<HotelDto?> = callbackFlow {
+        val subscription = collection.document(hotelId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close()
+                    return@addSnapshotListener
+                }
 
-        return doc.toObject(HotelDto::class.java)
+                val dto = snapshot?.toObject(HotelDto::class.java)
+                trySend(dto)
+            }
+
+        awaitClose { subscription.remove() }
     }
 
     suspend fun updateHotelRating(
@@ -66,7 +72,9 @@ class FirebaseHotelDataSource {
             .whereArrayContains("adminIds", adminId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    android.util.Log.w("HotelDataSource", "Hotels listener closed: ${error.message}")
+
+                    close()
                     return@addSnapshotListener
                 }
 
@@ -80,5 +88,11 @@ class FirebaseHotelDataSource {
             }
 
         awaitClose { subscription.remove() }
+    }
+
+    suspend fun updateHotelStatus(hotelId: String, status: HotelStatus) {
+        collection.document(hotelId)
+            .update("status", status.name)
+            .await()
     }
 }

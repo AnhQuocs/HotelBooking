@@ -5,6 +5,7 @@ import com.example.hotelbooking.features.hotel.data.mapper.HotelMapper
 import com.example.hotelbooking.features.hotel.data.source.FirebaseHotelDataSource
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
 import com.example.hotelbooking.utils.removeAccents
 import kotlinx.coroutines.Dispatchers
@@ -34,9 +35,10 @@ class HotelRepositoryImpl(
         return getOrFetchHotels().filter { it.averageRating >= minAverageRating }
     }
 
-    override suspend fun getHotelById(hotelId: String): Hotel? {
-        val dto = dataSource.fetchHotelById(hotelId) ?: return null
-        return HotelMapper.dtoToUserHotel(hotelId, dto)
+    override fun getHotelById(hotelId: String): Flow<Hotel?> {
+        return dataSource.fetchHotelById(hotelId).map { dto ->
+            dto?.let { HotelMapper.dtoToUserHotel(hotelId, it) }
+        }
     }
 
     override suspend fun updateHotelRating(hotelId: String, rating: Double) {
@@ -72,10 +74,14 @@ class HotelRepositoryImpl(
             }
     }
 
-    override suspend fun getAdminHotelById(hotelId: String): AdminHotel? {
-        val dto = dataSource.fetchHotelById(hotelId) ?: return null
+    override fun getAdminHotelById(hotelId: String): Flow<AdminHotel?> {
+        return dataSource.fetchHotelById(hotelId).map { dto ->
+            dto?.let { HotelMapper.dtoToAdminHotel(hotelId, it) }
+        }
+    }
 
-        return HotelMapper.dtoToAdminHotel(hotelId, dto)
+    override suspend fun updateHotelStatus(hotelId: String, status: HotelStatus) {
+        dataSource.updateHotelStatus(hotelId, status)
     }
 
     override fun clearCache() {

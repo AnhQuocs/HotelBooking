@@ -5,27 +5,23 @@ import com.example.hotelbooking.features.chat.domain.repository.ChatRepository
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
 import com.example.hotelbooking.utils.removeAccents
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class SearchChatsWithHotelUseCase @Inject constructor(
     private val hotelRepository: HotelRepository,
     private val chatRepository: ChatRepository
 ) {
-
     suspend operator fun invoke(userId: String, query: String): List<ChatWithHotel> {
-        // Lấy toàn bộ chat từ repository (listener cache / realtime)
         val allChats = chatRepository.listenUserChats(userId).first()
         if (allChats.isEmpty()) return emptyList()
 
-        // Lấy danh sách hotelId duy nhất
         val hotelIds = allChats.map { it.hotelId }.distinct()
 
-        // Lấy thông tin hotel từ hotelRepository
         val hotelsMap = hotelIds.associateWith { id ->
-            hotelRepository.getHotelById(id)
+            hotelRepository.getHotelById(id).firstOrNull()
         }
 
-        // Map Chat -> ChatWithHotel
         val chatsWithHotel = allChats.map { chat ->
             ChatWithHotel(
                 chat = chat,
@@ -33,10 +29,8 @@ class SearchChatsWithHotelUseCase @Inject constructor(
             )
         }
 
-        // Chuẩn hóa query
         val normalizedQuery = query.lowercase().removeAccents()
 
-        // Filter theo chatId, hotel name, shortAddress
         return if (normalizedQuery.isBlank()) {
             chatsWithHotel
         } else {

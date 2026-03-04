@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
+import com.example.hotelbooking.features.hotel.presentation.ui.admin.detail.AdminHotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -157,7 +158,9 @@ fun MyHotelsScreen(
                     context.startActivity(intent)
                 },
                 onHotelClick = { hotelId ->
-
+                    val intent = Intent(context, AdminHotelDetailActivity::class.java)
+                        .putExtra("hotelId", hotelId)
+                    context.startActivity(intent)
                 }
             )
         }

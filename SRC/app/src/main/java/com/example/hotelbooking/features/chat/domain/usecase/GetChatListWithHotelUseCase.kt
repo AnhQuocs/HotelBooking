@@ -4,7 +4,11 @@ import com.example.hotelbooking.features.chat.domain.model.ChatWithHotel
 import com.example.hotelbooking.features.chat.domain.repository.ChatRepository
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -12,23 +16,26 @@ class GetChatListWithHotelUseCase @Inject constructor(
     private val hotelRepository: HotelRepository,
     private val chatRepository: ChatRepository
 ) {
-    private val hotelCache = mutableMapOf<String, Hotel?>()
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(userId: String): Flow<List<ChatWithHotel>> {
-        return chatRepository.listenUserChats(userId).map { chats ->
+        return chatRepository.listenUserChats(userId).flatMapLatest { chats ->
+            if (chats.isEmpty()) return@flatMapLatest flowOf(emptyList())
+
             val hotelIds = chats.map { it.hotelId }.distinct()
 
-            val missingIds = hotelIds.filter { !hotelCache.containsKey(it) }
-
-            missingIds.forEach { id ->
-                hotelCache[id] = hotelRepository.getHotelById(id)
+            val hotelFlows = hotelIds.map { id ->
+                hotelRepository.getHotelById(id).map { hotel -> id to hotel }
             }
 
-            chats.map { chat ->
-                ChatWithHotel(
-                    chat = chat,
-                    hotel = hotelCache[chat.hotelId]
-                )
+            combine(hotelFlows) { hotelPairs ->
+                val hotelsMap = hotelPairs.toMap()
+
+                chats.map { chat ->
+                    ChatWithHotel(
+                        chat = chat,
+                        hotel = hotelsMap[chat.hotelId]
+                    )
+                }
             }
         }
     }

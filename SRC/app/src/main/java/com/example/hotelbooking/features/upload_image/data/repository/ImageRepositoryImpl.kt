@@ -96,7 +96,9 @@ class ImageRepositoryImpl @Inject constructor(
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    android.util.Log.e("GalleryRepo", "Listener closed (likely logout): ${error.message}")
+
+                    close()
                     return@addSnapshotListener
                 }
 

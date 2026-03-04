@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -84,40 +85,48 @@ class AddHotelViewModel @Inject constructor(
     fun loadHotelForEdit(hotelId: String) {
         viewModelScope.launch {
             _addHotelState.value = AddHotelState.Loading
-            runCatching {
-                val adminHotel = getAdminHotelByIdUseCase(hotelId)
-                    ?: throw Exception("Data not found")
 
-                val loadedState = AddHotelUiState(
-                    nameVi = adminHotel.rawName["vi"] ?: "",
-                    nameEn = adminHotel.rawName["en"] ?: "",
-                    descriptionVi = adminHotel.rawDescription["vi"] ?: "",
-                    descriptionEn = adminHotel.rawDescription["en"] ?: "",
-                    addressVi = adminHotel.rawAddress["vi"] ?: "",
-                    addressEn = adminHotel.rawAddress["en"] ?: "",
-                    shortAddressVi = adminHotel.rawShortAddress["vi"] ?: "",
-                    shortAddressEn = adminHotel.rawShortAddress["en"] ?: "",
-                    cityVi = adminHotel.rawCity["vi"] ?: "",
-                    cityEn = adminHotel.rawCity["en"] ?: "",
-                    latitude = adminHotel.latitude,
-                    longitude = adminHotel.longitude,
-                    amenities = adminHotel.rawAmenities["en"] ?: emptyList(),
-                    checkInTime = adminHotel.checkInTime,
-                    checkOutTime = adminHotel.checkOutTime,
-                    pricePerNightMin = adminHotel.pricePerNightMin,
-                    thumbnailUrl = adminHotel.thumbnailUrl,
-                    isLocationConfirmed = adminHotel.latitude != 0.0 && adminHotel.longitude != 0.0,
-                    isLocationLoading = false
-                )
+            getAdminHotelByIdUseCase(hotelId)
+                .catch { e ->
+                    _addHotelState.value = AddHotelState.Error(e.message ?: "Unknown Error")
+                }
+                .collect { adminHotel ->
+                    if (adminHotel == null) {
+                        _addHotelState.value = AddHotelState.Error("Data not found")
+                        return@collect
+                    }
 
-                _uiState.value = loadedState
-                originalState = loadedState
-                currentStatus = adminHotel.status
+                    val loadedState = AddHotelUiState(
+                        nameVi = adminHotel.rawName["vi"] ?: "",
+                        nameEn = adminHotel.rawName["en"] ?: "",
+                        descriptionVi = adminHotel.rawDescription["vi"] ?: "",
+                        descriptionEn = adminHotel.rawDescription["en"] ?: "",
+                        addressVi = adminHotel.rawAddress["vi"] ?: "",
+                        addressEn = adminHotel.rawAddress["en"] ?: "",
+                        shortAddressVi = adminHotel.rawShortAddress["vi"] ?: "",
+                        shortAddressEn = adminHotel.rawShortAddress["en"] ?: "",
+                        cityVi = adminHotel.rawCity["vi"] ?: "",
+                        cityEn = adminHotel.rawCity["en"] ?: "",
+                        latitude = adminHotel.latitude,
+                        longitude = adminHotel.longitude,
+                        amenities = adminHotel.rawAmenities["en"] ?: emptyList(),
+                        checkInTime = adminHotel.checkInTime,
+                        checkOutTime = adminHotel.checkOutTime,
+                        pricePerNightMin = adminHotel.pricePerNightMin,
+                        thumbnailUrl = adminHotel.thumbnailUrl,
+                        isLocationConfirmed = adminHotel.latitude != 0.0 && adminHotel.longitude != 0.0,
+                        isLocationLoading = false
+                    )
 
-                _addHotelState.value = AddHotelState.Idle
-            }.onFailure { e ->
-                _addHotelState.value = AddHotelState.Error(e.message ?: "Unknown Error")
-            }
+                    if (_uiState.value == AddHotelUiState()) {
+                        _uiState.value = loadedState
+                    }
+
+                    originalState = loadedState
+                    currentStatus = adminHotel.status
+
+                    _addHotelState.value = AddHotelState.Idle
+                }
         }
     }
 
