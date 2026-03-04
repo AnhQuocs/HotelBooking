@@ -444,6 +444,21 @@
     <string name="hidden_status">Inactive</string>
     <string name="activate">Resume Business</string>
     <string name="deactivate">Deactivate</string>
+    <string name="hotel_overview_location">Overview &amp; Location</string>
+    <string name="hotel_name_label">Name</string>
+    <string name="hotel_address_label">Address</string>
+    <string name="hotel_amenities_policy">Amenities &amp; Policies</string>
+    <string name="room_list_title">Room Types</string>
+    <string name="manage_rooms">Manage Rooms</string>
+    <string name="no_room_types">No room types available.</string>
+    <string name="room_price_format">$%1$s/night - %2$s rooms</string>
+    <string name="hotel_suspend_title">Suspend business?</string>
+    <string name="hotel_activate_title">Activate hotel?</string>
+    <string name="hotel_suspend_message">The hotel will be hidden from the customer app. Are you sure?</string>
+    <string name="hotel_activate_message">The hotel will be visible again. Please ensure all information and rooms are ready.</string>
+    <string name="cannot_activate_title">Cannot activate!</string>
+    <string name="cannot_activate_message">This hotel currently has no room types. Please add at least one room type before activating business status.</string>
+    <string name="understood">Got it</string>
 
     <!-- ADMIN ROOM TYPE -->
     <string name="add_room_type">Add Room Type</string>

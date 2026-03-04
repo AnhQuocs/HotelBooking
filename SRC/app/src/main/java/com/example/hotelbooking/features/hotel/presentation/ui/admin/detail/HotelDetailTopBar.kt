@@ -35,7 +35,7 @@ fun HotelDetailTopBar(
     onToggleClick: (Boolean) -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth().height(80.dp),
+        modifier = Modifier.fillMaxWidth().height(Dimen.HeightML),
         contentAlignment = Alignment.BottomCenter
     ) {
         Box(
@@ -47,7 +47,7 @@ fun HotelDetailTopBar(
         ) {
             Icon(
                 Icons.Default.ArrowBackIosNew,
-                contentDescription = "Back",
+                contentDescription = null,
                 tint = NearBlack,
                 modifier = Modifier.align(Alignment.CenterStart).clickable { onBackClick() }
             )

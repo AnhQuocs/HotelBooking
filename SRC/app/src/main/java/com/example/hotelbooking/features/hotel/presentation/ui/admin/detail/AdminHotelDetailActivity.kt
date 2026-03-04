@@ -42,11 +42,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.hotelbooking.BaseComponentActivity
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
@@ -57,6 +59,7 @@ import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewVie
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
+import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.OrangeVibrant
@@ -110,19 +113,18 @@ class AdminHotelDetailActivity : BaseComponentActivity() {
 
 @Composable
 fun AdminHotelDetailScreen(
-    hotel: Hotel, // Data khách sạn lấy từ ViewModel
-    roomState: RoomState<List<RoomType>>, // Danh sách phòng lấy từ ViewModel
+    hotel: Hotel,
+    roomState: RoomState<List<RoomType>>,
     onBackClick: () -> Unit,
-    onEditHotelClick: (String) -> Unit, // Truyền hotelId sang AddHotelActivity
-    onManageRoomsClick: (String) -> Unit, // Chuyển sang màn Quản lý phòng
-    onStatusChange: (String, HotelStatus) -> Unit, // Gọi API update status
+    onEditHotelClick: (String) -> Unit,
+    onManageRoomsClick: (String) -> Unit,
+    onStatusChange: (String, HotelStatus) -> Unit,
     adminHotelViewModel: AdminHotelViewModel,
     reviewViewModel: ReviewViewModel = hiltViewModel()
 ) {
     val reviewState by reviewViewModel.reviewState.collectAsState()
     val updateStatusState by adminHotelViewModel.updateStatusResult.collectAsState()
 
-    // State cho Dialog
     var showToggleDialog by remember { mutableStateOf(false) }
     var showNoRoomWarning by remember { mutableStateOf(false) }
     var targetStatus by remember { mutableStateOf(HotelStatus.HIDE) }
@@ -130,12 +132,10 @@ fun AdminHotelDetailScreen(
     val isActive = hotel.status == HotelStatus.ACTIVE
     val roomList = if (roomState is RoomState.Success) roomState.data else emptyList()
 
-    // Load review khi vào màn hình
     LaunchedEffect(hotel.id) {
         reviewViewModel.loadReviews(hotel.id)
     }
 
-    // Xử lý Dialog
     if (showNoRoomWarning) {
         NoRoomsWarningDialog(onDismiss = { showNoRoomWarning = false })
     }
@@ -174,7 +174,7 @@ fun AdminHotelDetailScreen(
                     containerColor = RoyalBlue,
                     contentColor = Color.White,
                     icon = { Icon(Icons.Default.Edit, contentDescription = null) },
-                    text = { Text("Chỉnh sửa thông tin") }
+                    text = { Text(stringResource(id = R.string.edit_hotel)) }
                 )
             }
         ) { padding ->
@@ -182,40 +182,52 @@ fun AdminHotelDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding),
-                contentPadding = PaddingValues(bottom = 100.dp) // Tránh lấp mất FAB
+                contentPadding = PaddingValues(bottom = 100.dp)
             ) {
-                // 1. Ảnh bìa
                 item {
                     AsyncImage(
                         model = hotel.thumbnailUrl,
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(250.dp),
+                            .height(Dimen.HeightXL4),
                         contentScale = ContentScale.Crop
                     )
                 }
 
-                // 2. Section: Tổng quan (Tương ứng Step 0 & 1)
                 item {
-                    DetailSectionCard(title = "Tổng quan & Vị trí") {
-                        Text("Tên: ${hotel.name}", fontWeight = FontWeight.Bold)
-                        Text("Mô tả: ${hotel.description}")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Địa chỉ: ${hotel.address}", color = Color.Gray)
+                    DetailSectionCard(title = stringResource(id = R.string.hotel_overview_location)) {
+                        Text(
+                            stringResource(id = R.string.hotel_name_label) + ": ${hotel.name}",
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(stringResource(id = R.string.description) + ": ${hotel.description}")
+                        Spacer(modifier = Modifier.height(AppSpacing.S))
+                        Text(
+                            stringResource(id = R.string.hotel_address_label) + ": ${hotel.address}",
+                            color = Color.Gray
+                        )
                     }
                 }
 
-                // 3. Section: Tiện ích & Quy định (Tương ứng Step 2)
                 item {
-                    DetailSectionCard(title = "Tiện ích & Quy định") {
-                        Text("Check-in: ${hotel.checkInTime} | Check-out: ${hotel.checkOutTime}")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Tiện ích: ${hotel.amenities.joinToString(", ")}")
+                    DetailSectionCard(title = stringResource(id = R.string.hotel_amenities_policy)) {
+                        Text(
+                            stringResource(id = R.string.check_in) + ": ${hotel.checkInTime} | " + stringResource(
+                                id = R.string.check_out
+                            ) + ": ${hotel.checkOutTime}"
+                        )
+                        Spacer(modifier = Modifier.height(AppSpacing.S))
+                        Text(
+                            stringResource(id = R.string.amenities) + ": ${
+                                hotel.amenities.joinToString(
+                                    ", "
+                                )
+                            }"
+                        )
                     }
                 }
 
-                // 4. Section: Các loại phòng (Preview)
                 item {
                     AdminRoomsSection(
                         roomState = roomState,
@@ -271,7 +283,6 @@ fun AdminHotelDetailScreen(
     }
 }
 
-// Component UI tái sử dụng cho các Section
 @Composable
 fun DetailSectionCard(
     title: String,
@@ -305,7 +316,7 @@ fun DetailSectionCard(
                     }
                 }
             }
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = Dimen.PaddingS))
             content()
         }
     }

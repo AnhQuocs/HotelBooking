@@ -7,6 +7,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.example.hotelbooking.R
 import com.example.hotelbooking.ui.theme.AvailableGreen
 import com.example.hotelbooking.ui.theme.RoyalBlue
 
@@ -18,21 +20,39 @@ fun ToggleStatusDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (isCurrentlyActive) "Tạm ngưng kinh doanh?" else "Mở bán khách sạn?") },
+        title = {
+            Text(
+                text = if (isCurrentlyActive)
+                    stringResource(R.string.hotel_suspend_title)
+                else
+                    stringResource(R.string.hotel_activate_title)
+            )
+        },
         text = {
             Text(
-                if (isCurrentlyActive) "Khách sạn sẽ bị ẩn khỏi ứng dụng của khách hàng. Bạn có chắc chắn không?"
-                else "Khách sạn sẽ hiển thị trở lại. Hãy đảm bảo thông tin và phòng ốc đã sẵn sàng."
+                text = if (isCurrentlyActive)
+                    stringResource(R.string.hotel_suspend_message)
+                else
+                    stringResource(R.string.hotel_activate_message)
             )
         },
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(containerColor = if (isCurrentlyActive) Color.Red else AvailableGreen)
-            ) { Text("Xác nhận") }
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isCurrentlyActive) Color.Red else AvailableGreen
+                )
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Hủy", color = Color.Gray) }
+            TextButton(onClick = onDismiss) {
+                Text(
+                    stringResource(R.string.cancel),
+                    color = Color.Gray
+                )
+            }
         }
     )
 }
@@ -41,11 +61,18 @@ fun ToggleStatusDialog(
 fun NoRoomsWarningDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Không thể mở bán!") },
-        text = { Text("Khách sạn này hiện chưa có loại phòng nào. Vui lòng thêm ít nhất một loại phòng trước khi kích hoạt trạng thái kinh doanh.") },
+        title = {
+            Text(stringResource(R.string.cannot_activate_title))
+        },
+        text = {
+            Text(stringResource(R.string.cannot_activate_message))
+        },
         confirmButton = {
-            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)) {
-                Text("Đã hiểu")
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = RoyalBlue)
+            ) {
+                Text(stringResource(R.string.understood))
             }
         }
     )

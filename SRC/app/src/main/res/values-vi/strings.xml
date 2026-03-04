@@ -443,6 +443,21 @@
     <string name="hidden_status">Ngừng kinh doanh</string>
     <string name="activate">Kinh doanh lại</string>
     <string name="deactivate">Ngừng kinh doanh</string>
+    <string name="hotel_overview_location">Tổng quan &amp; Vị trí</string>
+    <string name="hotel_name_label">Tên</string>
+    <string name="hotel_address_label">Địa chỉ</string>
+    <string name="hotel_amenities_policy">Tiện ích &amp; Quy định</string>
+    <string name="room_list_title">Danh sách loại phòng</string>
+    <string name="manage_rooms">Quản lý phòng</string>
+    <string name="no_room_types">Chưa có loại phòng nào.</string>
+    <string name="room_price_format">$%1$s/đêm - %2$s phòng</string>
+    <string name="hotel_suspend_title">Tạm ngưng kinh doanh?</string>
+    <string name="hotel_activate_title">Mở bán khách sạn?</string>
+    <string name="hotel_suspend_message">Khách sạn sẽ bị ẩn khỏi ứng dụng của khách hàng. Bạn có chắc chắn không?</string>
+    <string name="hotel_activate_message">Khách sạn sẽ hiển thị trở lại. Hãy đảm bảo thông tin và phòng ốc đã sẵn sàng.</string>
+    <string name="cannot_activate_title">Không thể mở bán!</string>
+    <string name="cannot_activate_message">Khách sạn này hiện chưa có loại phòng nào. Vui lòng thêm ít nhất một loại phòng trước khi kích hoạt trạng thái kinh doanh.</string>
+    <string name="understood">Đã hiểu</string>
 
     <!-- ADMIN ROOM TYPE -->
     <string name="add_room_type">Thêm loại phòng</string>
