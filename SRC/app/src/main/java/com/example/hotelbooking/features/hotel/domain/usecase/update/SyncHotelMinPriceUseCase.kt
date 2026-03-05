@@ -11,12 +11,19 @@ class SyncHotelMinPriceUseCase @Inject constructor(
     private val roomRepository: RoomRepository
 ) {
     suspend operator fun invoke(hotelId: String) {
-        val rooms = roomRepository.getRoomTypesByHotel(hotelId).firstOrNull() ?: emptyList()
+        val allRoomTypes = roomRepository.getRoomTypesByHotel(hotelId).firstOrNull() ?: emptyList()
 
-        val minPrice = rooms
-            .filter { it.status == HotelStatus.ACTIVE }
+        val activeRooms = allRoomTypes.filter { it.status == HotelStatus.ACTIVE }
+
+        val minPrice = activeRooms
             .minOfOrNull { it.pricePerNight.toDouble() } ?: 0.0
 
         hotelRepository.updateHotelMinPrice(hotelId, minPrice)
+
+        val newHotelStatus = if (activeRooms.isEmpty()) HotelStatus.HIDE else HotelStatus.ACTIVE
+
+        hotelRepository.updateHotelStatus(hotelId, newHotelStatus)
+
+        android.util.Log.d("SyncUseCase", "Hotel $hotelId: Price updated to $minPrice, Status to $newHotelStatus")
     }
 }

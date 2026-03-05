@@ -179,10 +179,17 @@ fun AdminHotelDetailScreen(
                     isActive = isActive,
                     onBackClick = onBackClick,
                     onToggleClick = { isTurningOn ->
-                        if (isTurningOn && roomList.isEmpty()) {
-                            showNoRoomWarning = true
+                        if (isTurningOn) {
+                            val hasActiveRoom = roomList.isNotEmpty() && roomList.any { it.status == HotelStatus.ACTIVE }
+
+                            if (!hasActiveRoom) {
+                                showNoRoomWarning = true
+                            } else {
+                                targetStatus = HotelStatus.ACTIVE
+                                showToggleDialog = true
+                            }
                         } else {
-                            targetStatus = if (isTurningOn) HotelStatus.ACTIVE else HotelStatus.HIDE
+                            targetStatus = HotelStatus.HIDE
                             showToggleDialog = true
                         }
                     }
@@ -298,7 +305,7 @@ fun AdminHotelDetailScreen(
                 }
 
                 item {
-                    DetailSectionCard(title = stringResource(id = R.string.hotel_amenities_policy)) {
+                    DetailSectionCard(title = stringResource(id = R.string.amenities_policy)) {
                         Column(verticalArrangement = Arrangement.spacedBy(AppSpacing.L)) {
 
                             Row(

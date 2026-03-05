@@ -38,7 +38,7 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.presentation.util.RoomValidation
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomState
-import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomTypeViewModel
 import com.example.hotelbooking.features.upload_image.presentation.viewmodel.GalleryViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.RoyalBlue
@@ -55,8 +55,9 @@ class AddRoomTypeActivity : BaseComponentActivity() {
             AddRoomTypeScreen(
                 hotelId = hotelId,
                 roomId = roomId,
-                onBack = { finish() },
-                onSuccess = {})
+                onBackClick = { finish() },
+                onSuccess = { finish() }
+            )
         }
     }
 }
@@ -66,10 +67,10 @@ class AddRoomTypeActivity : BaseComponentActivity() {
 fun AddRoomTypeScreen(
     hotelId: String,
     roomId: String? = null,
-    onBack: () -> Unit,
+    onBackClick: () -> Unit,
     onSuccess: () -> Unit,
     galleryViewModel: GalleryViewModel = hiltViewModel(),
-    viewModel: AdminRoomViewModel = hiltViewModel()
+    viewModel: AddRoomTypeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val roomState by viewModel.roomState.collectAsState()
@@ -136,7 +137,7 @@ fun AddRoomTypeScreen(
             title = if (roomId == null) stringResource(R.string.add_room_type)
             else stringResource(R.string.edit_room_type),
             currentStep = currentStep,
-            onBack = { if (currentStep > 0) currentStep-- else onBack() })
+            onBack = { onBackClick() })
     }, bottomBar = {
         RoomBottomNavigation(
             currentStep = currentStep,

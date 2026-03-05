@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.room.presentation.ui.admin.detail.AdminRoomDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.room.presentation.ui.admin.list.AdminRoomListActivity"
             android:exported="false" />
         <activity

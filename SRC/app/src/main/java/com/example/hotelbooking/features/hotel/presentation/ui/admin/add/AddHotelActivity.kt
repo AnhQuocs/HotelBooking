@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.hotel.presentation.ui.admin.add
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -98,54 +99,34 @@ fun AddHotelScreen(
         }
     }
 
-    val hotelIdState = hotelId
     val successText = stringResource(id = R.string.success)
-//    LaunchedEffect(addHotelState) {
-//        when (val state = addHotelState) {
-//            is AddHotelState.Success -> {
-//                if (imageId.isNotEmpty()) {
-//                    galleryViewModel.assignImage(
-//                        imageId = imageId,
-//                        hotelId = state.hotelId,
-//                        roomId = null,
-//                        onComplete = {}
-//                    )
-//                }
-//
-//                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-//
-//                if (hotelIdState == null) {
-//                    val intent = Intent(context, AddRoomTypeActivity::class.java).apply {
-//                        putExtra("hotelId", state.hotelId)
-//                    }
-//                    context.startActivity(intent)
-//                    (context as? Activity)?.finish()
-//                } else {
-//                    onBackClick()
-//                }
-//            }
-//            is AddHotelState.Error -> {
-//                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
-//            }
-//            else -> {}
-//        }
-//    }
-
     LaunchedEffect(addHotelState) {
-        when (addHotelState) {
+        when (val state = addHotelState) {
             is AddHotelState.Success -> {
+                if (imageId.isNotEmpty()) {
+                    galleryViewModel.assignImage(
+                        imageId = imageId,
+                        hotelId = state.hotelId,
+                        roomId = null,
+                        onComplete = {}
+                    )
+                }
+
                 Toast.makeText(context, successText, Toast.LENGTH_SHORT).show()
-                val intent = Intent(context, AddRoomTypeActivity::class.java)
-                    .putExtra("hotelId", hotelId)
-                context.startActivity(intent)
+
+                if (hotelId == null) {
+                    val intent = Intent(context, AddRoomTypeActivity::class.java).apply {
+                        putExtra("hotelId", state.hotelId)
+                    }
+                    context.startActivity(intent)
+                    (context as? Activity)?.finish()
+                } else {
+                    onBackClick()
+                }
             }
 
             is AddHotelState.Error -> {
-                Toast.makeText(
-                    context,
-                    (addHotelState as AddHotelState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
             }
 
             else -> {}

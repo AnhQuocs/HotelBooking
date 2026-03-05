@@ -7,7 +7,6 @@ import com.example.hotelbooking.features.room.domain.model.AdminAmenity
 import com.example.hotelbooking.features.room.domain.model.AdminRoomType
 import com.example.hotelbooking.features.room.domain.model.Room
 import com.example.hotelbooking.features.room.domain.usecase.AdminRoomUseCases
-import com.example.hotelbooking.features.room.domain.usecase.RoomUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,7 +45,7 @@ data class AddRoomUiState(
 )
 
 @HiltViewModel
-class AdminRoomViewModel @Inject constructor(
+class AddRoomTypeViewModel @Inject constructor(
     private val adminRoomUseCase: AdminRoomUseCases
 ) : ViewModel() {
 

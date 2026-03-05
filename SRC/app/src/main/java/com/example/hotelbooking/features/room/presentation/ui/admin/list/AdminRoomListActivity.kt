@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.room.presentation.ui.admin.list
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,9 +53,10 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
-import com.example.hotelbooking.features.room.domain.model.AdminRoomType
 import com.example.hotelbooking.features.room.domain.model.RoomType
-import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomListViewModel
+import com.example.hotelbooking.features.room.presentation.ui.admin.add.AddRoomTypeActivity
+import com.example.hotelbooking.features.room.presentation.ui.admin.detail.AdminRoomDetailActivity
+import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomTypeViewModel
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.RoomListState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -71,13 +74,20 @@ class AdminRoomListActivity : BaseComponentActivity() {
         val hotelId = intent.getStringExtra("hotelId") ?: ""
 
         setContent {
+            val context = LocalContext.current
+
             AdminRoomListScreen(
                 hotelId = hotelId,
-                onAddRoomClick = {
-
+                onAddRoomClick = { hotelId ->
+                    val intent = Intent(context, AddRoomTypeActivity::class.java)
+                        .putExtra("hotelId", hotelId)
+                    context.startActivity(intent)
                 },
-                onRoomClick = {
-
+                onRoomClick = { roomId, hotelId ->
+                    val intent = Intent(context, AdminRoomDetailActivity::class.java)
+                        .putExtra("roomId", roomId)
+                        .putExtra("hotelId", hotelId)
+                    context.startActivity(intent)
                 },
                 onBackClick = { finish() }
             )
@@ -88,12 +98,12 @@ class AdminRoomListActivity : BaseComponentActivity() {
 @Composable
 fun AdminRoomListScreen(
     hotelId: String,
-    onAddRoomClick: () -> Unit,
-    onRoomClick: (String) -> Unit,
+    onAddRoomClick: (String) -> Unit,
+    onRoomClick: (String, String) -> Unit,
     onBackClick: () -> Unit,
-    viewModel: AdminRoomListViewModel = hiltViewModel()
+    viewModel: AdminRoomTypeViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.roomTypesState.collectAsStateWithLifecycle()
 
     LaunchedEffect(hotelId) {
         viewModel.loadRooms(hotelId)
@@ -108,7 +118,7 @@ fun AdminRoomListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onAddRoomClick,
+                onClick = { onAddRoomClick(hotelId) },
                 containerColor = PrimaryBlue,
                 contentColor = Color.White
             ) {
@@ -135,7 +145,7 @@ fun AdminRoomListScreen(
                         items(state.rooms) { room ->
                             RoomTypeCard(
                                 room = room,
-                                onClick = { onRoomClick(room.id) }
+                                onClick = { onRoomClick(room.id, hotelId) }
                             )
                         }
                     }

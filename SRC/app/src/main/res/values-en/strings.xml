@@ -446,7 +446,7 @@
     <string name="hotel_overview_location">Overview &amp; Location</string>
     <string name="hotel_name_label">Name</string>
     <string name="hotel_address_label">Address</string>
-    <string name="hotel_amenities_policy">Amenities &amp; Policies</string>
+    <string name="amenities_policy">Amenities &amp; Policies</string>
     <string name="room_list_title">Room Types</string>
     <string name="manage_rooms">Manage Rooms</string>
     <string name="no_room_types">No room types available.</string>
@@ -519,6 +519,18 @@
     <string name="manage_room_types">Manage Room Types</string>
     <string name="status_active">Active</string>
     <string name="status_hidden">Hidden</string>
+    <string name="room_type_overview">Room Type Overview</string>
+    <string name="physical_room_identifiers">Physical Room Identifiers</string>
+    <string name="total_rooms_of_type">There are %1$d rooms of this type:</string>
+    <string name="rule_pet">Pets</string>
+    <string name="rule_smoking">Smoking</string>
+    <string name="allowed">Allowed</string>
+    <string name="not_allowed">Not allowed</string>
+    <string name="room_detail_number">Room %1$s</string>
+    <string name="stop_selling_room_type">Stop selling this room type?</string>
+    <string name="open_selling_room_type">Open this room type for booking?</string>
+    <string name="hide_room_type_confirm">This room type will no longer be visible for customers to book. Are you sure you want to hide it?</string>
+    <string name="show_room_type_confirm">This room type will be publicly visible again and the hotel\'s minimum price will be recalculated.</string>
 
     <!-- ADMIN PROFILE -->
 

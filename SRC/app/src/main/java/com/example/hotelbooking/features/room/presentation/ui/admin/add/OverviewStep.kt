@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomUiState
-import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomTypeViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.theme.AfacadTypography
@@ -33,7 +33,7 @@ import com.example.hotelbooking.ui.theme.RoyalBlue
 @Composable
 fun OverviewStep(
     state: AddRoomUiState,
-    viewModel: AdminRoomViewModel
+    viewModel: AddRoomTypeViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),

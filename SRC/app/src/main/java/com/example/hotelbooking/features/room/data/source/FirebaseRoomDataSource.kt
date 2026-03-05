@@ -61,4 +61,29 @@ class FirebaseRoomDataSource {
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    fun observeRoomById(id: String): Flow<RoomTypeDto?> = callbackFlow {
+        val subscription = collection.document(id)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    android.util.Log.w("FirestoreDataSource", "Room listener error: ${error.message}")
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                val dto = snapshot?.toObject(RoomTypeDto::class.java)
+                trySend(dto)
+            }
+
+        awaitClose { subscription.remove() }
+    }
+
+    suspend fun updateRoomStatus(id: String, status: String): Result<Unit> = try {
+        collection.document(id)
+            .update("status", status)
+            .await()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

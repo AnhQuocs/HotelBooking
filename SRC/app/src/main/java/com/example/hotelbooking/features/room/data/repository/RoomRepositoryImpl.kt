@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.room.data.repository
 
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.room.data.mapper.toAdminRoomType
 import com.example.hotelbooking.features.room.data.mapper.toDto
 import com.example.hotelbooking.features.room.data.mapper.toRoomType
@@ -40,5 +41,15 @@ class RoomRepositoryImpl(
 
     override suspend fun getAdminRoomById(roomId: String): AdminRoomType? {
         return dataSource.fetchRoomById(roomId)?.toAdminRoomType(roomId)
+    }
+
+    override fun getAdminRoomTypeById(roomId: String): Flow<RoomType?> {
+        return dataSource.observeRoomById(roomId).map { dto ->
+            dto?.toRoomType(roomId)
+        }
+    }
+
+    override suspend fun updateStatus(roomId: String, status: HotelStatus): Result<Unit> {
+        return dataSource.updateRoomStatus(roomId, status.name)
     }
 }

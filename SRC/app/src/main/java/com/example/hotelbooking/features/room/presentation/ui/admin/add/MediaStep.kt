@@ -47,7 +47,7 @@ import coil.compose.AsyncImage
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.ImageBadge
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomUiState
-import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomTypeViewModel
 import com.example.hotelbooking.features.upload_image.domain.model.ImageModel
 import com.example.hotelbooking.features.upload_image.presentation.viewmodel.GalleryViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -62,7 +62,7 @@ import com.example.hotelbooking.ui.theme.RoyalBlue
 @Composable
 fun MediaStep(
     state: AddRoomUiState,
-    viewModel: AdminRoomViewModel,
+    viewModel: AddRoomTypeViewModel,
     onImageChange: (String) -> Unit,
     galleryViewModel: GalleryViewModel = hiltViewModel()
 ) {

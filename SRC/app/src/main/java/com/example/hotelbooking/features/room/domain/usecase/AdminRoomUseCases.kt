@@ -1,16 +1,20 @@
 package com.example.hotelbooking.features.room.domain.usecase
 
+import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.hotel.domain.usecase.update.SyncHotelMinPriceUseCase
 import com.example.hotelbooking.features.room.domain.model.AdminRoomType
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.domain.repository.RoomRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AdminRoomUseCases @Inject constructor(
     val addRoomTypeUseCase: AddRoomTypeUseCase,
     val updateRoomTypeUseCase: UpdateRoomTypeUseCase,
     val getAdminRoomByIdUseCase: GetAdminRoomByIdUseCase,
-    val syncHotelMinPriceUseCase: SyncHotelMinPriceUseCase
+    val syncHotelMinPriceUseCase: SyncHotelMinPriceUseCase,
+    val getAdminRoomTypeByIdUseCase: GetAdminRoomTypeByIdUseCase,
+    val updateStatusUseCase: UpdateStatusUseCase
 )
 
 class AddRoomTypeUseCase @Inject constructor(
@@ -48,5 +52,21 @@ class GetAdminRoomByIdUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(roomId: String): AdminRoomType? {
         return repository.getAdminRoomById(roomId)
+    }
+}
+
+class GetAdminRoomTypeByIdUseCase @Inject constructor(
+    private val repository: RoomRepository
+) {
+    operator fun invoke(roomId: String): Flow<RoomType?> {
+        return repository.getAdminRoomTypeById(roomId)
+    }
+}
+
+class UpdateStatusUseCase @Inject constructor(
+    private val repository: RoomRepository
+) {
+    suspend operator fun invoke(roomId: String, status: HotelStatus): Result<Unit> {
+        return repository.updateStatus(roomId, status)
     }
 }

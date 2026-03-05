@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.room.domain.model.AdminAmenity
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomUiState
-import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomViewModel
+import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AddRoomTypeViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -43,7 +43,7 @@ import com.example.hotelbooking.utils.LangUtils
 @Composable
 fun InventoryStep(
     state: AddRoomUiState,
-    viewModel: AdminRoomViewModel
+    viewModel: AddRoomTypeViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
