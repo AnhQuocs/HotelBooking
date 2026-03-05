@@ -516,6 +516,9 @@
     <string name="room_add_success_title">Thêm phòng thành công</string>
     <string name="room_add_success_message">Bạn đã thêm loại phòng thành công. Bạn muốn tiếp tục thêm loại phòng khác không?</string>
     <string name="room_add_continue">Thêm tiếp</string>
+    <string name="manage_room_types">Quản lý loại phòng</string>
+    <string name="status_active">Đang bán</string>
+    <string name="status_hidden">Đã ẩn</string>
 
     <!-- ADMIN PROFILE -->
 

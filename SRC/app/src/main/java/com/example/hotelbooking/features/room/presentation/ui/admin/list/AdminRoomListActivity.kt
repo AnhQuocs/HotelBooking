@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.hotelbooking.BaseComponentActivity
+import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.features.hotel.domain.model.HotelStatus
 import com.example.hotelbooking.features.room.domain.model.AdminRoomType
@@ -54,6 +56,7 @@ import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.AdminRoomListViewModel
 import com.example.hotelbooking.features.room.presentation.viewmodel.admin.RoomListState
 import com.example.hotelbooking.ui.dimens.AppSpacing
+import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.AvailableGreen
 import com.example.hotelbooking.ui.theme.PrimaryBlue
@@ -99,7 +102,7 @@ fun AdminRoomListScreen(
     Scaffold(
         topBar = {
             AppTopBar(
-                text = "Quản lý loại phòng",
+                text = stringResource(id = R.string.manage_room_types),
                 onBackClick = onBackClick
             )
         },
@@ -109,7 +112,7 @@ fun AdminRoomListScreen(
                 containerColor = PrimaryBlue,
                 contentColor = Color.White
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Thêm loại phòng")
+                Icon(Icons.Default.Add, contentDescription = null)
             }
         }
     ) { padding ->
@@ -162,9 +165,8 @@ fun RoomTypeCard(
         Row(
             modifier = Modifier
                 .padding(AppSpacing.M)
-                .height(IntrinsicSize.Min) // Để divider cao bằng row
+                .height(IntrinsicSize.Min)
         ) {
-            // 1. Ảnh đại diện phòng
             AsyncImage(
                 model = room.imageUrl,
                 contentDescription = null,
@@ -176,29 +178,23 @@ fun RoomTypeCard(
 
             Spacer(modifier = Modifier.width(AppSpacing.M))
 
-            // 2. Thông tin phòng
             Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = room.name,
-                        style = AfacadTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    // Status Badge
-                    StatusBadge(isActive = room.status == HotelStatus.ACTIVE)
-                }
+                StatusBadge(isActive = room.status == HotelStatus.ACTIVE)
 
                 Spacer(modifier = Modifier.height(AppSpacing.XS))
 
-                // Capacity & Size
+                Text(
+                    text = room.name,
+                    style = AfacadTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(AppSpacing.XS))
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.People, null, modifier = Modifier.size(14.dp), tint = Color.Gray)
-                    Text(" ${room.capacity} khách", style = AfacadTypography.bodySmall, color = Color.Gray)
+                    Text(" ${room.capacity} " + stringResource(id = R.string.guests), style = AfacadTypography.bodySmall, color = Color.Gray)
                     Spacer(modifier = Modifier.width(AppSpacing.S))
                     Icon(Icons.Default.SquareFoot, null, modifier = Modifier.size(14.dp), tint = Color.Gray)
                     Text(" ${room.roomSize}m²", style = AfacadTypography.bodySmall, color = Color.Gray)
@@ -206,9 +202,8 @@ fun RoomTypeCard(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                // Giá tiền
                 Text(
-                    text = "${(room.pricePerNight)} đ / đêm",
+                    text = "${(room.pricePerNight)} $ / " + stringResource(id = R.string.night),
                     style = AfacadTypography.titleMedium.copy(
                         color = PrimaryBlue,
                         fontWeight = FontWeight.ExtraBold
@@ -222,7 +217,10 @@ fun RoomTypeCard(
 @Composable
 fun StatusBadge(isActive: Boolean) {
     val color = if (isActive) AvailableGreen else Color.Gray
-    val text = if (isActive) "Đang bán" else "Đã ẩn"
+    val text = stringResource(
+        if (isActive) R.string.status_active
+        else R.string.status_hidden
+    )
 
     Surface(
         color = color.copy(alpha = 0.1f),
@@ -231,7 +229,7 @@ fun StatusBadge(isActive: Boolean) {
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+            modifier = Modifier.padding(horizontal = Dimen.PaddingS, vertical = Dimen.PaddingXS),
             style = AfacadTypography.labelSmall.copy(fontWeight = FontWeight.Bold),
             color = color
         )
