@@ -95,4 +95,10 @@ class FirebaseHotelDataSource {
             .update("status", status.name)
             .await()
     }
+
+    suspend fun updateHotelMinPrice(hotelId: String, minPrice: Double) {
+        collection.document(hotelId)
+            .update("pricePerNightMin", minPrice)
+            .await()
+    }
 }

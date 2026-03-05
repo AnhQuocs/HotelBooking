@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.room.presentation.ui.admin
+package com.example.hotelbooking.features.room.presentation.ui.admin.add
 
 import android.os.Bundle
 import android.util.Log

@@ -457,7 +457,6 @@
     <string name="hotel_activate_message">Khách sạn sẽ hiển thị trở lại. Hãy đảm bảo thông tin và phòng ốc đã sẵn sàng.</string>
     <string name="cannot_activate_title">Không thể mở bán!</string>
     <string name="cannot_activate_message">Khách sạn này hiện chưa có loại phòng nào. Vui lòng thêm ít nhất một loại phòng trước khi kích hoạt trạng thái kinh doanh.</string>
-    <string name="understood">Đã hiểu</string>
 
     <!-- ADMIN ROOM TYPE -->
     <string name="add_room_type">Thêm loại phòng</string>
@@ -469,7 +468,7 @@
     <string name="room_number_list">Danh sách số phòng cụ thể</string>
     <string name="room_number_desc">Nhập số phòng, ngăn cách bởi dấu phẩy (Ví dụ: 101, 102, 103)</string>
     <string name="room_number_label">Số phòng</string>
-    <string name="room_number_placeholder">101, 102...</string>
+    <string name="room_number_placeholder">101, 102…</string>
     <string name="admin_total_rooms">Tổng cộng: %1$d phòng</string>
     <string name="room_thumbnail">Hình ảnh đại diện</string>
     <string name="select_from_gallery">Chọn ảnh từ kho</string>

@@ -10,6 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -20,7 +23,7 @@ fun ReviewSection(
     state: ReviewState<HotelReviewSummary>,
     onSeeAllClick: () -> Unit
 ) {
-    when(state) {
+    when (state) {
         is ReviewState.Loading -> {
             Box(
                 modifier = Modifier

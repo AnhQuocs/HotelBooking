@@ -457,7 +457,6 @@
     <string name="hotel_activate_message">The hotel will be visible again. Please ensure all information and rooms are ready.</string>
     <string name="cannot_activate_title">Cannot activate!</string>
     <string name="cannot_activate_message">This hotel currently has no room types. Please add at least one room type before activating business status.</string>
-    <string name="understood">Got it</string>
 
     <!-- ADMIN ROOM TYPE -->
     <string name="add_room_type">Add Room Type</string>
@@ -469,7 +468,7 @@
     <string name="room_number_list">Specific Room Numbers</string>
     <string name="room_number_desc">Enter room numbers separated by commas (e.g., 101, 102, 103)</string>
     <string name="room_number_label">Room Numbers</string>
-    <string name="room_number_placeholder">101, 102...</string>
+    <string name="room_number_placeholder">101, 102…</string>
     <string name="admin_total_rooms">Total: %1$d rooms</string>
     <string name="room_thumbnail">Thumbnail Image</string>
     <string name="select_from_gallery">Select from Gallery</string>

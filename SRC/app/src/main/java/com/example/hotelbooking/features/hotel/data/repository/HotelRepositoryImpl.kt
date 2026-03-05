@@ -84,6 +84,10 @@ class HotelRepositoryImpl(
         dataSource.updateHotelStatus(hotelId, status)
     }
 
+    override suspend fun updateHotelMinPrice(hotelId: String, minPrice: Double) {
+        dataSource.updateHotelMinPrice(hotelId, minPrice)
+    }
+
     override fun clearCache() {
         cachedHotels = null
     }

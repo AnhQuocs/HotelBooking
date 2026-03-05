@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -44,13 +45,14 @@ fun AdminHotelDetailSection(
     onEditHotelClick: (String) -> Unit,
     onManageRoomsClick: (String) -> Unit,
     onStatusChange: (String, HotelStatus) -> Unit,
+    onSeeAllClick: (String) -> Unit,
     adminHotelViewModel: AdminHotelViewModel
 ) {
     when (hotelState) {
         is HotelState.Loading -> {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .background(color = Color.White)
                     .padding(Dimen.PaddingM),
                 contentAlignment = Alignment.Center
@@ -71,6 +73,7 @@ fun AdminHotelDetailSection(
                 onEditHotelClick = onEditHotelClick,
                 onManageRoomsClick = onManageRoomsClick,
                 onStatusChange = onStatusChange,
+                onSeeAllClick = onSeeAllClick,
                 adminHotelViewModel = adminHotelViewModel
             )
         }

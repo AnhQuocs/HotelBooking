@@ -18,6 +18,7 @@ interface HotelRepository {
     fun getHotelsByAdminId(adminId: String): Flow<List<Hotel>>
     fun getAdminHotelById(hotelId: String): Flow<AdminHotel?>
     suspend fun updateHotelStatus(hotelId: String, status: HotelStatus)
+    suspend fun updateHotelMinPrice(hotelId: String, minPrice: Double)
 
     fun clearCache()
 }

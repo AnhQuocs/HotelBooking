@@ -21,10 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.room.presentation.ui.admin.list.AdminRoomListActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.hotel.presentation.ui.admin.detail.AdminHotelDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".features.room.presentation.ui.admin.AddRoomTypeActivity"
+            android:name=".features.room.presentation.ui.admin.add.AddRoomTypeActivity"
             android:exported="false" />
         <activity
             android:name=".features.upload_image.presentation.ui.upload.UploadImageActivity"

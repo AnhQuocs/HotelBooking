@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.room.presentation.ui.admin
+package com.example.hotelbooking.features.room.presentation.ui.admin.add
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

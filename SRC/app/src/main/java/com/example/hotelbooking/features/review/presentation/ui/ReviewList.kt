@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTitle
@@ -40,14 +42,24 @@ fun ReviewList(list: HotelReviewSummary, onSeeAllClick: () -> Unit) {
             onClick = { onSeeAllClick() }
         )
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Dimen.PaddingS),
-            verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
-        ) {
-            reviewList.take(3).forEach { review ->
-                ReviewItem(review)
+        if (list.reviews.isEmpty()) {
+            Text(
+                text = stringResource(R.string.dashboard_no_reviews),
+                color = Color.Red,
+                fontStyle = FontStyle.Italic,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(vertical = Dimen.PaddingSM)
+            )
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = Dimen.PaddingS),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.M)
+            ) {
+                reviewList.take(3).forEach { review ->
+                    ReviewItem(review)
+                }
             }
         }
     }

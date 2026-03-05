@@ -42,7 +42,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.hotel.presentation.util.AddHotelValidation
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AddHotelViewModel
-import com.example.hotelbooking.features.room.presentation.ui.admin.AddRoomTypeActivity
+import com.example.hotelbooking.features.room.presentation.ui.admin.add.AddRoomTypeActivity
 import com.example.hotelbooking.features.upload_image.presentation.viewmodel.GalleryViewModel
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.RoyalBlue
