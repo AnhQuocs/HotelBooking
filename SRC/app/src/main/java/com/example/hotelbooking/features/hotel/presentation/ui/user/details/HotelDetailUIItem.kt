@@ -50,7 +50,7 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 fun HotelDetailTopBar(
     hotel: Hotel,
     onBackClick: () -> Unit,
-    onChatClick: (String, String, String) -> Unit
+    onChatClick: (String, String, String, String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -103,7 +103,7 @@ fun HotelDetailTopBar(
                     modifier = Modifier
                         .size(Dimen.SizeSM)
                         .clickable {
-                            onChatClick(hotel.id, hotel.name, hotel.shortAddress)
+                            onChatClick(hotel.id, hotel.adminIds.first(), hotel.name, hotel.shortAddress)
                         },
                 )
             }

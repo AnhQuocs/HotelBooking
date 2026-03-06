@@ -67,6 +67,7 @@ class ChatViewModel @Inject constructor(
     fun sendMessage(
         userId: String,
         hotelId: String,
+        adminId: String,
         senderId: String,
         content: String
     ) {
@@ -75,6 +76,7 @@ class ChatViewModel @Inject constructor(
                 val id = chatUseCases.sendMessageUseCase(
                     userId = userId,
                     hotelId = hotelId,
+                    adminId = adminId,
                     senderId = senderId,
                     content = content
                 )

@@ -34,7 +34,7 @@ fun HotelDetailScreen(
     onOpenMap: (Double, Double) -> Unit,
     onBackClick: () -> Unit,
     onRoomClick: (String) -> Unit,
-    onChatClick: (String, String, String) -> Unit
+    onChatClick: (String, String, String, String) -> Unit
 ) {
     val context = LocalContext.current
 

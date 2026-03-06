@@ -13,6 +13,7 @@ class ChatActivity : BaseComponentActivity() {
         enableEdgeToEdge()
 
         val hotelId = intent.getStringExtra("hotelId") ?: ""
+        val adminId = intent.getStringExtra("adminId") ?: ""
         val hotelName = intent.getStringExtra("hotelName") ?: ""
         val shortAddress = intent.getStringExtra("shortAddress") ?: ""
         val userId = intent.getStringExtra("userId") ?: ""
@@ -20,6 +21,7 @@ class ChatActivity : BaseComponentActivity() {
         setContent {
             ChatScreen(
                 hotelId = hotelId,
+                adminId = adminId,
                 hotelName = hotelName,
                 shortAddress = shortAddress,
                 userId = userId,

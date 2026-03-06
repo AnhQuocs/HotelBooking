@@ -4,6 +4,7 @@ data class Chat(
     val chatId: String,
     val userId: String,
     val hotelId: String,
+    val adminId: String,
     val lastMessage: String,
     val lastTimestamp: Long,
     val lastSenderId: String,

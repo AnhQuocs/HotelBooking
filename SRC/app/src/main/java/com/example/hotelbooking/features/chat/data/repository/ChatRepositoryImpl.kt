@@ -9,10 +9,12 @@ import com.example.hotelbooking.features.chat.domain.model.ChatMessage
 import com.example.hotelbooking.features.chat.domain.repository.ChatRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 
 class ChatRepositoryImpl(
@@ -20,38 +22,57 @@ class ChatRepositoryImpl(
 ) : ChatRepository {
 
     private val cachedChats = mutableMapOf<String, List<Chat>>()
+    private val chatsCollection = db.collection("chats")
 
     override suspend fun getExistingChat(userId: String, hotelId: String): Chat? {
-        val result = db.collection("chats")
+        val snapshot = chatsCollection
             .whereEqualTo("userId", userId)
             .whereEqualTo("hotelId", hotelId)
+            .limit(1)
             .get()
             .await()
 
-        return result.documents.firstOrNull()?.toObject(ChatDto::class.java)?.toDomain()
+        if (snapshot.isEmpty) return null
+
+        return snapshot.documents.first()
+            .toObject(ChatDto::class.java)
+            ?.toDomain()
     }
 
     override suspend fun createChat(
         userId: String,
         hotelId: String,
+        adminId: String,
         firstMessage: String
     ): Chat {
-        val chatId = "${userId}_${hotelId}"
-        val timestamp = System.currentTimeMillis()
+        val batch = db.batch()
+
+        val chatRef = chatsCollection.document()
+        val chatId = chatRef.id
+        val currentTime = System.currentTimeMillis()
 
         val chatDto = ChatDto(
             chatId = chatId,
             userId = userId,
             hotelId = hotelId,
+            adminId = adminId,
             lastMessage = firstMessage,
-            lastTimestamp = timestamp,
-            createdAt = timestamp
+            lastTimestamp = currentTime,
+            lastSenderId = userId,
+            createdAt = currentTime
         )
+        batch.set(chatRef, chatDto)
 
-        db.collection("chats")
-            .document(chatId)
-            .set(chatDto)
-            .await()
+        val messageRef = chatRef.collection("messages").document()
+        val messageDto = ChatMessageDto(
+            messageId = messageRef.id,
+            senderId = userId,
+            content = firstMessage,
+            timestamp = currentTime
+        )
+        batch.set(messageRef, messageDto)
+
+        batch.commit().await()
 
         return chatDto.toDomain()
     }
@@ -102,7 +123,6 @@ class ChatRepositoryImpl(
     }
 
     override fun listenUserChats(userId: String): Flow<List<Chat>> = callbackFlow {
-        // Nếu có cache trước đó, emit ngay
         cachedChats[userId]?.let { trySendBlocking(it) }
 
         val listener = db.collection("chats")
@@ -125,10 +145,8 @@ class ChatRepositoryImpl(
                         doc.toObject(ChatDto::class.java)?.toDomain()
                     }
 
-                    // 🔹 Lưu vào cache
                     cachedChats[userId] = list
 
-                    // 🔹 Emit cho Flow
                     trySendBlocking(list)
 
                 } catch (t: Throwable) {
@@ -161,5 +179,15 @@ class ChatRepositoryImpl(
         awaitClose {
             listener.remove()
         }
+    }
+
+    override fun listenAdminChats(adminId: String): Flow<List<Chat>> {
+        return chatsCollection
+            .whereEqualTo("adminId", adminId)
+            .orderBy("lastTimestamp", Query.Direction.DESCENDING)
+            .snapshots()
+            .map { snapshot ->
+                snapshot.toObjects(ChatDto::class.java).map { it.toDomain() }
+            }
     }
 }

@@ -53,7 +53,7 @@ fun HotelInfoCard(
     hotel: Hotel,
     onCloseClick: () -> Unit,
     onBookingClick: (String) -> Unit,
-    onContactClick: (String, String, String) -> Unit,
+    onContactClick: (String, String, String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -106,7 +106,7 @@ fun HotelInfoCard(
 
             HotelInfoCardButton(
                 onBookingClick = { onBookingClick(hotel.id) },
-                onContactClick = { onContactClick(hotel.id, hotel.name, hotel.shortAddress) }
+                onContactClick = { onContactClick(hotel.id, hotel.adminIds.first(), hotel.name, hotel.shortAddress) }
             )
         }
     }

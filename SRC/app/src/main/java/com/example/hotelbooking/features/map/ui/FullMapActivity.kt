@@ -83,9 +83,10 @@ fun FullMapScreen(
                     .putExtra("hotelId",  it)
                 context.startActivity(intent)
             },
-            onContactClick = { hotelId, hotelName, shortAddress ->
+            onContactClick = { hotelId, adminId, hotelName, shortAddress ->
                 val intent = Intent(context, ChatActivity::class.java)
                     .putExtra("hotelId", hotelId)
+                    .putExtra("adminId", adminId)
                     .putExtra("hotelName", hotelName)
                     .putExtra("shortAddress", shortAddress)
                     .putExtra("userId", userId)

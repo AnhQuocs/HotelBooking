@@ -39,9 +39,10 @@ class HotelDetailActivity : BaseComponentActivity() {
                         .putExtra("roomId", roomId)
                     context.startActivity(intent)
                 },
-                onChatClick = { hotelId, hotelName, shortAddress ->
+                onChatClick = { hotelId, adminId, hotelName, shortAddress ->
                     val intent = Intent(context, ChatActivity::class.java)
                         .putExtra("hotelId", hotelId)
+                        .putExtra("adminId", adminId)
                         .putExtra("hotelName", hotelName)
                         .putExtra("shortAddress", shortAddress)
                         .putExtra("userId", userId)

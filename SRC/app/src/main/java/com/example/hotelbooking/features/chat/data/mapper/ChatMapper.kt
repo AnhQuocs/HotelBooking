@@ -10,6 +10,7 @@ fun ChatDto.toDomain(): Chat {
         chatId = chatId,
         userId = userId,
         hotelId = hotelId,
+        adminId = adminId,
         lastMessage = lastMessage,
         lastTimestamp = lastTimestamp,
         lastSenderId = lastSenderId,

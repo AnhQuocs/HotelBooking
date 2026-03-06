@@ -11,6 +11,7 @@ interface ChatRepository {
     suspend fun createChat(
         userId: String,
         hotelId: String,
+        adminId: String,
         firstMessage: String
     ): Chat
 
@@ -25,4 +26,5 @@ interface ChatRepository {
     fun listenUserChats(userId: String): Flow<List<Chat>>
 
     fun listenHotelChats(hotelId: String): Flow<List<Chat>>
+    fun listenAdminChats(adminId: String): Flow<List<Chat>>
 }

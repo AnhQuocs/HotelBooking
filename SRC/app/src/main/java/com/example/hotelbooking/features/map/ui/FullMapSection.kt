@@ -40,7 +40,7 @@ private const val HOTEL_OVERVIEW_ZOOM = 6f
 fun FullMapSection(
     uiState: HotelState<List<Hotel>>,
     onBookingClick: (String) -> Unit,
-    onContactClick: (String, String, String) -> Unit,
+    onContactClick: (String, String, String, String) -> Unit,
     latLng: LatLng,
     hotelBitmap: Bitmap,
     cameraPositionState: CameraPositionState
@@ -137,8 +137,8 @@ fun FullMapSection(
                         onBookingClick = { hotelId ->
                             onBookingClick(hotelId)
                         },
-                        onContactClick = { hotelId, hotelName, shortAddress ->
-                            onContactClick(hotelId, hotelName, shortAddress)
+                        onContactClick = { hotelId, adminId, hotelName, shortAddress ->
+                            onContactClick(hotelId, adminId, hotelName, shortAddress)
                         }
                     )
                 }

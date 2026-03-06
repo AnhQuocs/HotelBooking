@@ -86,9 +86,10 @@ class HotelLocationActivity : BaseComponentActivity() {
                 latLng = LatLng(lat, lng),
                 hotelId = hotelId,
                 context = context,
-                onContactClick = { hotelId, hotelName, shortAddress ->
+                onContactClick = { hotelId, adminId, hotelName, shortAddress ->
                     val intent = Intent(context, ChatActivity::class.java)
                         .putExtra("hotelId", hotelId)
+                        .putExtra("adminId", adminId)
                         .putExtra("hotelName", hotelName)
                         .putExtra("shortAddress", shortAddress)
                         .putExtra("userId", userId)
@@ -105,7 +106,7 @@ fun MapScreen(
     latLng: LatLng,
     hotelId: String,
     context: Context,
-    onContactClick: (String, String, String) -> Unit,
+    onContactClick: (String, String, String, String) -> Unit,
     onBackClick: () -> Unit,
     hotelViewModel: HotelViewModel = hiltViewModel(),
 ) {
@@ -130,7 +131,7 @@ fun MapScreen(
 @Composable
 fun MapSection(
     uiState: HotelState<Hotel>,
-    onContactClick: (String, String, String) -> Unit,
+    onContactClick: (String, String, String, String) -> Unit,
     latLng: LatLng,
     hotelBitmap: Bitmap,
     onBackClick: () -> Unit
@@ -211,7 +212,7 @@ fun MapSection(
 @Composable
 fun HotelLocationCard(
     hotel: Hotel,
-    onContactClick: (String, String, String) -> Unit,
+    onContactClick: (String, String, String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -251,7 +252,7 @@ fun HotelLocationCard(
                 }
 
                 IconButton(
-                    onClick = { onContactClick(hotel.id, hotel.name, hotel.shortAddress) },
+                    onClick = { onContactClick(hotel.id, hotel.adminIds.first(), hotel.name, hotel.shortAddress) },
                     modifier = Modifier
                         .border(1.dp, Color.LightGray, CircleShape)
                 ) {

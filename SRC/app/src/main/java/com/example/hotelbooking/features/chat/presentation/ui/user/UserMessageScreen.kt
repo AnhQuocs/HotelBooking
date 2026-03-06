@@ -97,7 +97,7 @@ fun UserMessageScreen(
                 )
             }
         },
-        containerColor = Color.White,
+        containerColor = Color.White
     ) { paddingValues ->
         Column (
             modifier = Modifier

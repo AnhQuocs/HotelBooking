@@ -7,4 +7,5 @@ data class AuthUserDto(
     val email: String? = "",
     val username: String? = "",
     val role: UserRole = UserRole.USER,
+    val hotelId: String? = null
 )

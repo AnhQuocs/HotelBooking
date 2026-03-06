@@ -134,7 +134,7 @@ fun ChatSection(
                                 enabled = inputText.isNotBlank(),
                                 onClick = { onSendMessage() },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF0A3A7A),
+                                    containerColor = BlueNavy,
                                     contentColor = Color.White,
                                     disabledContainerColor = Color.LightGray,
                                     disabledContentColor = Color.LightGray

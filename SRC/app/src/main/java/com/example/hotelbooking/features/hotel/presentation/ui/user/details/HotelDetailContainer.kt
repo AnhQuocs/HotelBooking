@@ -26,7 +26,7 @@ fun HotelDetailContainer(
     onOpenMap: (Double, Double) -> Unit,
     onBackClick: () -> Unit,
     onRoomClick: (String) -> Unit,
-    onChatClick: (String, String, String) -> Unit,
+    onChatClick: (String, String, String, String) -> Unit,
     hotelViewModel: HotelViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),
     reviewViewModel: ReviewViewModel = hiltViewModel()
@@ -65,8 +65,8 @@ fun HotelDetailContainer(
                 },
                 onBackClick = onBackClick,
                 onRoomClick = onRoomClick,
-                onChatClick = { hotelId, hotelName, shortAddress ->
-                    onChatClick(hotelId, hotelName, shortAddress)
+                onChatClick = { hotelId, adminId, hotelName, shortAddress ->
+                    onChatClick(hotelId, adminId, hotelName, shortAddress)
                 }
             )
         }
