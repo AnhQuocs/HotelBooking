@@ -577,6 +577,7 @@
     <string name="help_center">Trung tâm trợ giúp</string>
     <string name="privacy_policy">Chính sách bảo mật</string>
     <string name="terms_of_service">Điều khoản sử dụng</string>
+    <string name="growing_snack_bar_message">Tính năng đang được phát triển</string>
 
     <!-- USER PRIVACY POLICY -->
     <string name="privacy_policy_title">"Chính sách bảo mật"</string>

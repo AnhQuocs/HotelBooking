@@ -3,9 +3,11 @@ package com.example.hotelbooking.features.upload_image.data.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import com.cloudinary.Cloudinary
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
+import com.cloudinary.utils.ObjectUtils
 import com.example.hotelbooking.features.upload_image.data.dto.ImageDto
 import com.example.hotelbooking.features.upload_image.data.dto.toDto
 import com.example.hotelbooking.features.upload_image.domain.model.ImageModel
@@ -170,4 +172,22 @@ class ImageRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    override suspend fun deleteImageFromCloudinary(publicId: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                val cloudinary = MediaManager.get().cloudinary
+                val result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap())
+                val status = result["result"] as? String
+
+                if (status == "ok" || status == "not_found") {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception("Cloudinary error: $status"))
+                }
+
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
 }

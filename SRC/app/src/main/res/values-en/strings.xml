@@ -577,6 +577,7 @@
     <string name="help_center">Help Center</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_service">Terms of Service</string>
+    <string name="growing_snack_bar_message">Growing features</string>
 
     <!-- USER PRIVACY POLICY -->
     <string name="privacy_policy_title">"Privacy Policy"</string>

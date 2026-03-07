@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,13 +34,13 @@ class UpdateRatingViewModel @Inject constructor(
         viewModelScope.launch {
             _updateRatingState.value = UpdateRatingState.Loading
 
-            val currentUser = authUseCases.getCurrentUserUseCase()
+            val currentUser = authUseCases.getCurrentUserUseCase().firstOrNull()
 
-            currentUser?.let {
+            if (currentUser != null) {
                 val newReview = Review(
                     userId = currentUser.uid,
-                    userName = currentUser.username ?: "",
-                    userProfilePicture = "",
+                    userName = currentUser.username ?: "Username",
+                    userProfilePicture = currentUser.avatar ?: "",
                     serviceId = hotelId,
                     serviceType = "HOTEL",
                     rating = rating.toInt(),
@@ -52,8 +53,10 @@ class UpdateRatingViewModel @Inject constructor(
                         _updateRatingState.value = UpdateRatingState.Success
                     }
                     .onFailure {
-                        _updateRatingState.value = UpdateRatingState.Error(it.message ?: "Error")
+                        _updateRatingState.value = UpdateRatingState.Error(it.message ?: "Unknown Error")
                     }
+            } else {
+                _updateRatingState.value = UpdateRatingState.Error("You need to log in to perform this function!")
             }
         }
     }

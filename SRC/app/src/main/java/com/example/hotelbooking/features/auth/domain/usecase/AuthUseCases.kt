@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.auth.domain.usecase
 
 import com.example.hotelbooking.features.auth.domain.model.AuthUser
 import com.example.hotelbooking.features.auth.domain.repository.AuthRepository
+import kotlinx.coroutines.flow.Flow
 
 data class AuthUseCases(
     val signUpUseCase: SignUpUseCase,
@@ -39,7 +40,7 @@ class SignInUseCase(
 class GetCurrentUserUseCase(
     private val repository: AuthRepository
 ) {
-    suspend operator fun invoke(): AuthUser? {
+    operator fun invoke(): Flow<AuthUser?> {
         return repository.getCurrentUser()
     }
 }
@@ -47,7 +48,7 @@ class GetCurrentUserUseCase(
 class GetUserByIdUseCase(
     private val repository: AuthRepository
 ) {
-    suspend operator fun invoke(userId: String): AuthUser? {
+    operator fun invoke(userId: String): Flow<AuthUser?> {
         return repository.getUserById(userId)
     }
 }

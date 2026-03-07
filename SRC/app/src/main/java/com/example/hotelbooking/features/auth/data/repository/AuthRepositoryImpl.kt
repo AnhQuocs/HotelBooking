@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl(
@@ -19,13 +22,54 @@ class AuthRepositoryImpl(
     private val firestore: FirebaseFirestore
 ) : AuthRepository {
 
+    override suspend fun updateSingleField(uid: String, fieldName: String, value: Any) {
+        try {
+            firestore.collection("users")
+                .document(uid)
+                .update(fieldName, value)
+                .await()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override suspend fun updateUserFields(uid: String, updates: Map<String, Any>) {
+        firestore.collection("users").document(uid).update(updates).await()
+    }
+
+    override suspend fun deleteAccount(userId: String) {
+        try {
+            firestore.collection("users")
+                .document(userId)
+                .delete()
+                .await()
+
+            val currentUser = auth.currentUser
+            if (currentUser?.uid == userId) {
+                currentUser.delete().await()
+            }
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     // =============== USER ===============
     override suspend fun signUp(username: String, email: String, password: String): AuthUser {
         try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val uid = result.user?.uid ?: throw Exception("User creation failed")
 
-            val user = AuthUser(uid, email, username, UserRole.USER)
+            val user = AuthUser(
+                uid = uid,
+                email = email,
+                username = username,
+                fullName = null,
+                phoneNumber = null,
+                avatar = null,
+                avatarPublicId = null,
+                dob = null,
+                role = UserRole.USER
+            )
 
             firestore.collection("users")
                 .document(uid)
@@ -113,24 +157,41 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getCurrentUser(): AuthUser? {
-        val uid = auth.currentUser?.uid ?: return null
-        val snapshot = firestore.collection("users").document(uid).get().await()
-        val userDto = snapshot.toObject(AuthUserDto::class.java) ?: return null
-        return userDto.toDomain()
+    override fun getCurrentUser(): Flow<AuthUser?> = callbackFlow {
+        val uid = auth.currentUser?.uid
+        if (uid == null) {
+            trySend(null)
+            close()
+            return@callbackFlow
+        }
+
+        val subscription = firestore.collection("users")
+            .document(uid)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val user = snapshot?.toObject(AuthUserDto::class.java)?.toDomain()
+                trySend(user)
+            }
+
+        awaitClose { subscription.remove() }
     }
 
-    override suspend fun getUserById(userId: String): AuthUser? {
-        return try {
-            val snapshot = firestore.collection("users")
-                .document(userId)
-                .get()
-                .await()
-            val userDto = snapshot.toObject(AuthUserDto::class.java)
-            userDto?.toDomain()
-        } catch (e: Exception) {
-            null
-        }
+    override fun getUserById(userId: String): Flow<AuthUser?> = callbackFlow {
+        val subscription = firestore.collection("users")
+            .document(userId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val user = snapshot?.toObject(AuthUserDto::class.java)?.toDomain()
+                trySend(user)
+            }
+
+        awaitClose { subscription.remove() }
     }
 
     override suspend fun signOut() {

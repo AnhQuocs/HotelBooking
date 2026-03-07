@@ -16,6 +16,7 @@ import com.example.hotelbooking.features.review.domain.repository.ReviewReposito
 import com.example.hotelbooking.features.room.domain.usecase.RoomUseCases
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -156,27 +159,29 @@ class AdminHomeViewModel @Inject constructor(
         _selectedDate.value = date
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun loadDashboardData() {
         viewModelScope.launch {
             _isLoading.value = true
 
-            val user = authUseCases.getCurrentUserUseCase()
-            val adminId = user?.uid
-
-            if (adminId.isNullOrBlank()) {
-                _isLoading.value = false
-                return@launch
-            }
-
-            adminHotelUseCases.getHotelsByAdminIdUseCase(adminId)
+            authUseCases.getCurrentUserUseCase()
+                .flatMapLatest { user ->
+                    val adminId = user?.uid
+                    if (adminId.isNullOrBlank()) {
+                        _isLoading.value = false
+                        flowOf(emptyList())
+                    } else {
+                        adminHotelUseCases.getHotelsByAdminIdUseCase(adminId)
+                    }
+                }
                 .collect { hotels ->
                     _allManagedHotels.value = hotels
 
                     if (hotels.isNotEmpty()) {
                         switchHotel(hotels.first())
-                    } else {
-                        _isLoading.value = false
                     }
+
+                    _isLoading.value = false
                 }
         }
     }

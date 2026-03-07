@@ -22,6 +22,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +63,9 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.RoyalBlue
+import com.example.hotelbooking.ui.theme.TealPrimary
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserProfileScreen(
@@ -71,6 +79,10 @@ fun UserProfileScreen(
     var isShowDialog by remember { mutableStateOf(false) }
 
     val username = currentUser?.username ?: stringResource(id = R.string.customer)
+
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val message = stringResource(id = R.string.growing_snack_bar_message)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -118,7 +130,36 @@ fun UserProfileScreen(
                         )
                     }
                 }
-            }, containerColor = Color.White
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackBarHostState,
+                    modifier = Modifier.padding(Dimen.PaddingS)
+                ) { data ->
+                    Snackbar(
+                        modifier = Modifier.padding(horizontal = Dimen.PaddingM),
+                        shape = RoundedCornerShape(AppShape.ShapeS),
+                        containerColor = TealPrimary,
+                        contentColor = Color.White,
+                        action = {
+                            TextButton(
+                                onClick = { data.dismiss() }
+                            ) {
+                                Text(
+                                    text = data.visuals.actionLabel ?: "OK",
+                                    color = Color.Yellow
+                                )
+                            }
+                        }
+                    ) {
+                        Text(
+                            text = data.visuals.message,
+                            modifier = Modifier.padding(vertical = Dimen.PaddingS)
+                        )
+                    }
+                }
+            },
+            containerColor = Color.White
         ) { paddingValues ->
             LazyColumn(
                 modifier = Modifier
@@ -140,19 +181,21 @@ fun UserProfileScreen(
                 }
 
                 item {
-                    Setting(onPersonalInfoClick = {
+                    Setting(
+                        onPersonalInfoClick = {
 
-                    }, onLanguageClick = {
-                        context.startActivity(
-                            Intent(
-                                context, ChangeLanguageActivity::class.java
+                        }, onLanguageClick = {
+                            context.startActivity(
+                                Intent(
+                                    context, ChangeLanguageActivity::class.java
+                                )
                             )
-                        )
-                    }, onAppearanceClick = {
-
-                    }, onCurrencyClick = {
-
-                    })
+                        }, onAppearanceClick = {
+                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                        }, onCurrencyClick = {
+                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                        }
+                    )
                 }
 
                 item {
@@ -260,4 +303,21 @@ fun LogoutDialog(
             }
         }, shape = RoundedCornerShape(AppShape.ShapeXL)
     )
+}
+
+fun growingFeaturesSnackBar(
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+    message: String,
+    actionLabel: String = "OK"
+) {
+    if (snackBarHostState.currentSnackbarData != null) return
+
+    scope.launch {
+        snackBarHostState.showSnackbar(
+            message = message,
+            actionLabel = actionLabel,
+            duration = SnackbarDuration.Short
+        )
+    }
 }

@@ -18,4 +18,6 @@ interface ImageRepository {
     ): Result<Unit>
 
     suspend fun deleteImageFromFirestore(imageId: String): Result<Unit>
+
+    suspend fun deleteImageFromCloudinary(publicId: String): Result<Unit>
 }

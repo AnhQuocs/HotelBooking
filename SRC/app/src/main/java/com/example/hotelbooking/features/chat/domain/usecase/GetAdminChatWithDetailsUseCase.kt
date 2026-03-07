@@ -8,9 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetAdminChatWithDetailsUseCase @Inject constructor(
@@ -26,15 +24,14 @@ class GetAdminChatWithDetailsUseCase @Inject constructor(
             val hotelIds = chats.map { it.hotelId }.distinct()
             val userIds = chats.map { it.userId }.distinct()
 
-            val hotelFlows = hotelIds.map { id ->
-                hotelRepository.getHotelById(id).map { it }
-            }
+            val hotelFlows = hotelIds.map { id -> hotelRepository.getHotelById(id) }
 
-            val userFlows = userIds.map { id ->
-                flow { emit(authRepository.getUserById(id)) }
-            }
+            val userFlows = userIds.map { id -> authRepository.getUserById(id) }
 
-            combine(combine(hotelFlows) { it }, combine(userFlows) { it }) { hotels, users ->
+            combine(
+                combine(hotelFlows) { it.toList() },
+                combine(userFlows) { it.toList() }
+            ) { hotels, users ->
                 val hotelsMap = hotels.filterNotNull().associateBy { it.id }
                 val usersMap = users.filterNotNull().associateBy { it.uid }
 
