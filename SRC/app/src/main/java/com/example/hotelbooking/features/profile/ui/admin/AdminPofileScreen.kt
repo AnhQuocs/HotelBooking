@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ConfirmationNumber
+import androidx.compose.material.icons.filled.Discount
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,6 +51,7 @@ import com.example.hotelbooking.features.profile.feature.language.presentation.u
 import com.example.hotelbooking.features.profile.ui.user.LogoutDialog
 import com.example.hotelbooking.features.profile.ui.user.ProfileItem
 import com.example.hotelbooking.features.upload_image.presentation.ui.upload.UploadImageActivity
+import com.example.hotelbooking.features.vouchers.presentation.ui.admin.list.AdminVoucherListActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -142,6 +145,18 @@ fun AdminProfileScreen(
                                 Intent(
                                     context, UploadImageActivity::class.java
                                 )
+                            )
+                        }
+                    )
+                }
+
+                item {
+                    ProfileItem(
+                        Icons.Default.ConfirmationNumber,
+                        stringResource(id = R.string.voucher),
+                        onClick = {
+                            context.startActivity(
+                                Intent(context, AdminVoucherListActivity::class.java)
                             )
                         }
                     )

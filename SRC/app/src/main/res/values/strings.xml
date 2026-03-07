@@ -534,6 +534,32 @@
     <string name="show_room_type_confirm">This room type will be publicly visible again and the hotel\'s minimum price will be recalculated.</string>
 
     <!-- ADMIN PROFILE -->
+    <string name="voucher">Voucher</string>
+
+    <!-- ADMIN VOUCHER -->
+    <string name="create_voucher">Create Voucher</string>
+    <string name="publish_now">Publish now</string>
+    <string name="voucher_code_label">Voucher Code (e.g., SUMMER2026)</string>
+    <string name="title_vietnamese">Title (Vietnamese)</string>
+    <string name="title_english">Title (English)</string>
+    <string name="voucher_discount_config">Discount Configuration</string>
+    <string name="discount_type">Discount Type</string>
+    <string name="discount_percentage">Percentage (%)</string>
+    <string name="discount_fixed_amount">Fixed Amount ($)</string>
+    <string name="discount_percent_label">% Discount</string>
+    <string name="discount_amount_label">Discount Amount</string>
+    <string name="voucher_quantity">Voucher Quantity</string>
+    <string name="min_order_value">Minimum Order Value</string>
+    <string name="voucher_validity_period">Validity Period</string>
+    <string name="voucher_expiry_date">Expiry Date</string>
+    <string name="voucher_apply_hotels">Apply to Hotels</string>
+    <string name="select_all_hotels">Select all hotels</string>
+    <string name="voucher_management">Voucher Management</string>
+    <string name="no_promotions_yet">No promotions yet</string>
+    <string name="create_first_promotion">Create your first promotion</string>
+    <string name="voucher_used">Used</string>
+    <string name="voucher_discount_value">Discount Value</string>
+    <string name="voucher_sold_out">Fully Redeemed</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

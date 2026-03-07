@@ -21,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.vouchers.presentation.ui.admin.add.CreateVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".features.vouchers.presentation.ui.admin.list.AdminVoucherListActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.chat.presentation.ui.admin.AdminChatActivity"
             android:exported="false" />
         <activity

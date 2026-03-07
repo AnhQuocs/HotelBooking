@@ -533,6 +533,32 @@
     <string name="show_room_type_confirm">Loại phòng này sẽ được hiển thị công khai và cập nhật lại giá sàn cho khách sạn.</string>
 
     <!-- ADMIN PROFILE -->
+    <string name="voucher">Mã giảm giá</string>
+
+    <!-- ADMIN VOUCHER -->
+    <string name="create_voucher">Tạo Voucher</string>
+    <string name="publish_now">Phát hành ngay</string>
+    <string name="voucher_code_label">Mã Voucher (VÍ DỤ: SUMMER2026)</string>
+    <string name="title_vietnamese">Tiêu đề (Tiếng Việt)</string>
+    <string name="title_english">Tiêu đề (Tiếng Anh)</string>
+    <string name="voucher_discount_config">Cấu hình giảm giá</string>
+    <string name="discount_type">Loại hình giảm giá</string>
+    <string name="discount_percentage">Phần trăm (%)</string>
+    <string name="discount_fixed_amount">Tiền mặt ($)</string>
+    <string name="discount_percent_label">% giảm</string>
+    <string name="discount_amount_label">Số tiền giảm</string>
+    <string name="voucher_quantity">Số lượng mã</string>
+    <string name="min_order_value">Giá trị đơn tối thiểu</string>
+    <string name="voucher_validity_period">Thời gian hiệu lực</string>
+    <string name="voucher_expiry_date">Ngày hết hạn</string>
+    <string name="voucher_apply_hotels">Áp dụng cho khách sạn</string>
+    <string name="select_all_hotels">Chọn tất cả khách sạn</string>
+    <string name="voucher_management">Quản lý mã giảm giá</string>
+    <string name="no_promotions_yet">Chưa có chương trình khuyến mãi nào</string>
+    <string name="create_first_promotion">Tạo khuyến mãi đầu tiên</string>
+    <string name="voucher_used">Đã sử dụng</string>
+    <string name="voucher_discount_value">Giá trị giảm</string>
+    <string name="voucher_sold_out">Đã hết lượt sử dụng</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
