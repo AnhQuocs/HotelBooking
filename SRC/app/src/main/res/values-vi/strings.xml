@@ -613,6 +613,23 @@
     <string name="terms_title_6">"6. Giới hạn trách nhiệm"</string>
     <string name="terms_content_6">"Chúng tôi đóng vai trò trung gian giữa người dùng và khách sạn. Chúng tôi không chịu trách nhiệm cho bất kỳ thiệt hại trực tiếp hoặc gián tiếp nào phát sinh từ chất lượng dịch vụ của khách sạn hoặc các sự cố kỹ thuật từ bên thứ ba."</string>
 
+    <!-- ACCOUNT -->
+    <string name="not_provided">"Chưa cung cấp"</string>
+    <string name="save_avatar_btn">"Lưu ảnh đại diện"</string>
+    <string name="save_info_hint">Chúng tôi sẽ lưu thông tin này để giúp bạn đặt phòng nhanh hơn.</string>
+    <string name="hotel_contact_phone_hint">Khách sạn sẽ liên lạc với bạn qua số điện thoại này nếu cần.</string>
+    <string name="edit_full_name">"Cập nhật họ và tên"</string>
+    <string name="last_name_label">"Họ"</string>
+    <string name="first_name_label">"Tên"</string>
+    <string name="edit_username">"Cập nhật tên người dùng"</string>
+    <string name="username_empty_error">Tên người dùng không được để trống</string>
+    <string name="edit_phone">"Cập nhật số điện thoại"</string>
+    <string name="name_empty_error">%1$s không được để trống</string>
+    <string name="name_too_short">%1$s quá ngắn</string>
+    <string name="name_invalid">%1$s không được chứa số hoặc ký tự đặc biệt</string>
+    <string name="phone_empty_error">Số điện thoại không được để trống</string>
+    <string name="phone_invalid">Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0</string>
+
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
     <string name="confirm">Xác nhận</string>

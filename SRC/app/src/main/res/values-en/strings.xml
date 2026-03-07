@@ -613,6 +613,23 @@
     <string name="terms_title_6">"6. Limitation of Liability"</string>
     <string name="terms_content_6">"We act as an intermediary between users and hotels. We are not liable for any direct or indirect damages arising from the hotel\'s service quality, or any technical issues caused by third-party services like internet providers or payment gateways."</string>
 
+    <!-- ACCOUNT -->
+    <string name="not_provided">Not provided</string>
+    <string name="save_avatar_btn">Save profile picture</string>
+    <string name="save_info_hint">We will save this information to help you book faster.</string>
+    <string name="hotel_contact_phone_hint">The hotel may contact you using this phone number if necessary.</string>
+    <string name="edit_full_name">Update full name</string>
+    <string name="last_name_label">Last name</string>
+    <string name="first_name_label">First name</string>
+    <string name="username_empty_error">Username cannot be empty</string>
+    <string name="edit_username">Update username</string>
+    <string name="edit_phone">Update phone number</string>
+    <string name="name_empty_error">%1$s cannot be empty</string>
+    <string name="name_too_short">%1$s is too short</string>
+    <string name="name_invalid">%1$s cannot contain numbers or special characters</string>
+    <string name="phone_empty_error">Phone number cannot be empty</string>
+    <string name="phone_invalid">Phone number must contain 10 digits and start with 0</string>
+
     <!-- OTHER -->
     <string name="loading">Loading…</string>
     <string name="confirm">Confirm</string>

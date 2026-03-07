@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.profile.ui.user.account.PersonalInformationActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.profile.ui.user.TermsOfServiceActivity"
             android:exported="false" />
         <activity

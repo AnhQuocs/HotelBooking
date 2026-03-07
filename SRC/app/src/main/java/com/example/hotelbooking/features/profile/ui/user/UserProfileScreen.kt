@@ -55,6 +55,7 @@ import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthState
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.profile.feature.language.presentation.ui.ChangeLanguageActivity
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.ui.PaymentMethodActivity
+import com.example.hotelbooking.features.profile.ui.user.account.PersonalInformationActivity
 import com.example.hotelbooking.features.transaction.presentation.ui.history.TransactionHistoryActivity
 import com.example.hotelbooking.features.vouchers.presentation.ui.user.UserPromotionListActivity
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -183,7 +184,8 @@ fun UserProfileScreen(
                 item {
                     Setting(
                         onPersonalInfoClick = {
-
+                            val intent = Intent(context, PersonalInformationActivity::class.java)
+                            context.startActivity(intent)
                         }, onLanguageClick = {
                             context.startActivity(
                                 Intent(

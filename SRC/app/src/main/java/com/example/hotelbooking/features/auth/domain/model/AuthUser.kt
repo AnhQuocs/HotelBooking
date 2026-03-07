@@ -1,6 +1,6 @@
 package com.example.hotelbooking.features.auth.domain.model
 
-import java.sql.Timestamp
+import com.google.firebase.Timestamp
 
 enum class UserRole {
     USER,
