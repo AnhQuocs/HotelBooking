@@ -276,27 +276,6 @@
     <string name="vietnamese">Tiếng Việt</string>
     <string name="apply">Áp dụng</string>
 
-    <!-- PROFILE -->
-    <string name="hi">Chào %1$s</string>
-    <string name="customer">Quý khách</string>
-    <string name="admin">Quản trị viên</string>
-    <string name="payment_info">Thông tin thanh toán</string>
-    <string name="promotions">Khuyến mãi</string>
-    <string name="transactions">Giao dịch</string>
-    <string name="setting_title">Cài đặt</string>
-    <string name="personal_information">Thông tin cá nhân</string>
-    <string name="appearance">Giao diện</string>
-    <string name="currency">Tiền tệ</string>
-    <string name="help_center_title">Trung tâm trợ giúp</string>
-    <string name="customer_support">Hỗ trợ khách hàng</string>
-    <string name="security_center">Trung tâm bảo mật</string>
-    <string name="complaint_resolution">Giải quyết khiếu nại</string>
-    <string name="logout_title">Đăng xuất</string>
-    <string name="logout_message">Bạn có chắc chắn muốn đăng xuất không?</string>
-    <string name="logout_success">Đăng xuất thành công</string>
-    <string name="logout_confirm">Đăng xuất</string>
-    <string name="cancel">Hủy</string>
-
     <!-- PAYMENT -->
     <string name="my_cards">Thẻ của tôi</string>
     <string name="card_holder">CHỦ THẺ</string>
@@ -569,14 +548,69 @@
     <string name="voucher_min_order">Đơn tối thiểu: %1$d USD</string>
     <string name="voucher_used_count">Đã dùng: %1$d/%2$d</string>
     <string name="my_promotions">Kho khuyến mãi của tôi</string>
-    <string name="search_hotel">Tìm tên khách sạn...</string>
     <string name="no_promotion_found">Chưa có khuyến mãi nào phù hợp.</string>
-    <string name="use_promotion">Sử dụng</string>
+    <string name="apply_promotion">Sử dụng</string>
     <string name="min_order">Đơn tối thiểu: %1$d USD</string>
     <string name="expiry_date">HSD: %1$s</string>
     <string name="used_status">Đã dùng</string>
     <string name="expired_status">Hết hạn</string>
     <string name="use_now">Dùng ngay</string>
+
+    <!-- PROFILE -->
+    <string name="hi">Chào %1$s</string>
+    <string name="customer">Quý khách</string>
+    <string name="admin">Quản trị viên</string>
+    <string name="payment_info">Thông tin thanh toán</string>
+    <string name="promotions">Khuyến mãi</string>
+    <string name="transactions">Giao dịch</string>
+    <string name="setting_title">Cài đặt</string>
+    <string name="personal_information">Thông tin cá nhân</string>
+    <string name="appearance">Giao diện</string>
+    <string name="currency">Tiền tệ</string>
+    <string name="logout_title">Đăng xuất</string>
+    <string name="logout_message">Bạn có chắc chắn muốn đăng xuất không?</string>
+    <string name="logout_success">Đăng xuất thành công</string>
+    <string name="logout_confirm">Đăng xuất</string>
+    <string name="cancel">Hủy</string>
+
+    <string name="legal_support">Hỗ trợ &amp; Pháp lý</string>
+    <string name="help_center">Trung tâm trợ giúp</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="terms_of_service">Điều khoản sử dụng</string>
+
+    <!-- USER PRIVACY POLICY -->
+    <string name="privacy_policy_title">"Chính sách bảo mật"</string>
+    <string name="privacy_policy_intro">"Chào mừng bạn đến với ứng dụng đặt phòng của chúng tôi. Quyền riêng tư của bạn là ưu tiên hàng đầu của chúng tôi."</string>
+    <string name="privacy_policy_last_update">"Cập nhật lần cuối: 07/03/2026\nPhiên bản: 1.0.0-stable"</string>
+
+    <string name="privacy_title_1">"1. Thu thập thông tin"</string>
+    <string name="privacy_content_1">"Chúng tôi thu thập các thông tin cơ bản để định danh người dùng bao gồm: Họ tên, Số điện thoại và Địa chỉ Email thông qua dịch vụ Firebase Authentication. Ngoài ra, ứng dụng có thể ghi nhận thông tin thiết bị và địa chỉ IP để đảm bảo tính an toàn cho tài khoản của bạn."</string>
+    <string name="privacy_title_2">"2. Sử dụng dữ liệu"</string>
+    <string name="privacy_content_2">"Dữ liệu của bạn được sử dụng nhằm mục đích: Xác nhận đơn đặt phòng, liên hệ hỗ trợ khi có sự cố, và áp dụng các mã khuyến mãi (Voucher) một cách chính xác. Chúng tôi cam kết không bán hoặc chia sẻ thông tin cá nhân của bạn cho bên thứ ba vì mục đích quảng cáo."</string>
+    <string name="privacy_title_3">"3. Lưu trữ và Bảo mật"</string>
+    <string name="privacy_content_3">"Mọi thông tin giao dịch, lịch sử đặt phòng và dữ liệu khuyến mãi được lưu trữ trên nền tảng đám mây Google Firestore. Chúng tôi áp dụng các tiêu chuẩn bảo mật nghiêm ngặt và quy tắc xác thực (Security Rules) để ngăn chặn các truy cập trái phép từ bên ngoài."</string>
+    <string name="privacy_title_4">"4. Quyền của người dùng"</string>
+    <string name="privacy_content_4">"Bạn có toàn quyền truy cập, chỉnh sửa thông tin cá nhân trong phần Profile. Đặc biệt, chúng tôi cung cấp chức năng \"Xóa tài khoản\" - khi thực hiện, toàn bộ dữ liệu định danh của bạn trên hệ thống Firebase sẽ được gỡ bỏ hoàn toàn để đảm bảo quyền được quên của người dùng."</string>
+    <string name="privacy_title_5">"5. Dịch vụ bên thứ ba"</string>
+    <string name="privacy_content_5">"Ứng dụng sử dụng dịch vụ từ Google Firebase (Auth, Firestore, Storage). Các dịch vụ này cũng tuân thủ các chính sách bảo mật toàn cầu của Google. Bạn có thể tham khảo thêm tại trang chủ chính sách bảo mật của Google Cloud."</string>
+    <string name="privacy_title_6">"6. Liên hệ và Khiếu nại"</string>
+    <string name="privacy_content_6">"Nếu có bất kỳ thắc mắc nào về cách chúng tôi xử lý dữ liệu, bạn có thể liên hệ trực tiếp với đội ngũ phát triển thông qua phần \"Hỗ trợ\" trong ứng dụng hoặc gửi email về địa chỉ hỗ trợ chính thức của hệ thống."</string>
+
+    <!-- USER TERMS OF SERVICE -->
+    <string name="terms_of_service_title">"Điều khoản sử dụng"</string>
+    <string name="terms_of_service_intro">"Bằng việc sử dụng ứng dụng của chúng tôi, bạn đồng ý với các điều khoản và điều kiện sau đây. Vui lòng đọc kỹ nội dung bên dưới."</string>
+    <string name="terms_title_1">"1. Chấp nhận điều khoản"</string>
+    <string name="terms_content_1">"Khi truy cập và sử dụng ứng dụng đặt phòng này, bạn xác nhận rằng mình đã đọc, hiểu và đồng ý bị ràng buộc bởi các Điều khoản sử dụng này cùng Chính sách bảo mật của chúng tôi."</string>
+    <string name="terms_title_2">"2. Đặt phòng và Thanh toán"</string>
+    <string name="terms_content_2">"Mọi đơn đặt phòng đều tùy thuộc vào tình trạng phòng trống. Khi bắt đầu đặt phòng, bạn phải hoàn tất thanh toán trong thời gian đếm ngược (Timer) quy định. Nếu quá thời gian này, đơn hàng sẽ tự động bị hủy để nhường phòng cho người dùng khác."</string>
+    <string name="terms_title_3">"3. Chính sách Voucher"</string>
+    <string name="terms_content_3">"Các mã giảm giá có điều kiện cụ thể bao gồm: giá trị đơn hàng tối thiểu, thời hạn sử dụng và số lượng giới hạn. Chúng tôi có quyền từ chối áp dụng voucher nếu phát hiện gian lận hoặc khi voucher đã hết lượt sử dụng trên hệ thống."</string>
+    <string name="terms_title_4">"4. Hủy phòng và Hoàn tiền"</string>
+    <string name="terms_content_4">"• Thời gian hủy phòng: Bạn chỉ được phép hủy phòng và nhận hoàn tiền 100% khi thực hiện trước thời gian nhận phòng (Check-in) ít nhất 24 giờ.\n• Quá hạn hủy: Nếu yêu cầu hủy được gửi sau mốc 24 giờ nêu trên, hệ thống sẽ không chấp nhận hủy và không hoàn lại tiền.\n• Chính sách vắng mặt (No-show):\n  - Sau 06 tiếng kể từ thời điểm nhận phòng theo lịch, nếu khách chưa xác nhận check-in trên ứng dụng, Quản trị viên có quyền đánh dấu đặt phòng là vắng mặt (No-show) và không hoàn tiền, trừ khi đã có thỏa thuận giữ phòng trước đó.\n  - Sau 12 tiếng kể từ giờ nhận phòng, hệ thống sẽ tự động đánh dấu vắng mặt và hủy đơn mà không hoàn tiền, bất kể có yêu cầu giữ phòng hay không."</string>
+    <string name="terms_title_5">"5. Trách nhiệm người dùng"</string>
+    <string name="terms_content_5">"Người dùng phải cung cấp thông tin cá nhân và thông tin khách hàng chính xác. Bạn chịu trách nhiệm bảo mật tài khoản của mình và cho mọi hoạt động xảy ra dưới tài khoản đã được xác thực qua Firebase."</string>
+    <string name="terms_title_6">"6. Giới hạn trách nhiệm"</string>
+    <string name="terms_content_6">"Chúng tôi đóng vai trò trung gian giữa người dùng và khách sạn. Chúng tôi không chịu trách nhiệm cho bất kỳ thiệt hại trực tiếp hoặc gián tiếp nào phát sinh từ chất lượng dịch vụ của khách sạn hoặc các sự cố kỹ thuật từ bên thứ ba."</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>

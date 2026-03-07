@@ -276,27 +276,6 @@
     <string name="vietnamese">Vietnamese</string>
     <string name="apply">Apply</string>
 
-    <!-- PROFILE -->
-    <string name="hi">Hi %1$s</string>
-    <string name="customer">Customer</string>
-    <string name="admin">Admin</string>
-    <string name="payment_info">Payment Information</string>
-    <string name="promotions">Promotions</string>
-    <string name="transactions">Transactions</string>
-    <string name="setting_title">Settings</string>
-    <string name="personal_information">Personal Information</string>
-    <string name="appearance">Appearance</string>
-    <string name="currency">Currency</string>
-    <string name="help_center_title">Help Center</string>
-    <string name="customer_support">Customer Support</string>
-    <string name="security_center">Security Center</string>
-    <string name="complaint_resolution">Complaint Resolution</string>
-    <string name="logout_title">Logout</string>
-    <string name="logout_message">Are you sure you want to log out?</string>
-    <string name="logout_success">Logged out successfully</string>
-    <string name="logout_confirm">Logout</string>
-    <string name="cancel">Cancel</string>
-
     <!-- PAYMENT -->
     <string name="my_cards">My Cards</string>
     <string name="card_holder">CARD HOLDER</string>
@@ -569,7 +548,6 @@
     <string name="voucher_min_order">Minimum order: %1$d USD</string>
     <string name="voucher_used_count">Used: %1$d/%2$d</string>
     <string name="my_promotions">My Promotions</string>
-    <string name="search_hotel">Search hotel name...</string>
     <string name="no_promotion_found">No promotions found.</string>
     <string name="apply_promotion">Apply</string>
     <string name="min_order">Min order: %1$d USD</string>
@@ -577,6 +555,62 @@
     <string name="used_status">Used</string>
     <string name="expired_status">Expired</string>
     <string name="use_now">Use now</string>
+
+    <!-- PROFILE -->
+    <string name="hi">Hi %1$s</string>
+    <string name="customer">Customer</string>
+    <string name="admin">Admin</string>
+    <string name="payment_info">Payment Information</string>
+    <string name="promotions">Promotions</string>
+    <string name="transactions">Transactions</string>
+    <string name="setting_title">Settings</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="appearance">Appearance</string>
+    <string name="currency">Currency</string>
+    <string name="logout_title">Logout</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_success">Logged out successfully</string>
+    <string name="logout_confirm">Logout</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="legal_support">Legal &amp; Support</string>
+    <string name="help_center">Help Center</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+
+    <!-- USER PRIVACY POLICY -->
+    <string name="privacy_policy_title">"Privacy Policy"</string>
+    <string name="privacy_policy_intro">"Welcome to our hotel booking application. Your privacy is our top priority."</string>
+    <string name="privacy_policy_last_update">"Last updated: 07/03/2026\nVersion: 1.0.0-stable"</string>
+
+    <string name="privacy_title_1">"1. Information Collection"</string>
+    <string name="privacy_content_1">"We collect basic information to identify users including Full Name, Phone Number, and Email Address through Firebase Authentication. In addition, the application may record device information and IP addresses to ensure the security of your account."</string>
+    <string name="privacy_title_2">"2. Data Usage"</string>
+    <string name="privacy_content_2">"Your data is used for purposes such as confirming hotel bookings, providing support when issues occur, and applying promotional codes (Vouchers) accurately. We are committed to not selling or sharing your personal information with third parties for advertising purposes."</string>
+    <string name="privacy_title_3">"3. Storage and Security"</string>
+    <string name="privacy_content_3">"All transaction information, booking history, and promotional data are stored on the Google Firestore cloud platform. We apply strict security standards and authentication rules (Security Rules) to prevent unauthorized access from external sources."</string>
+    <string name="privacy_title_4">"4. User Rights"</string>
+    <string name="privacy_content_4">"You have full rights to access and edit your personal information in the Profile section. In particular, we provide a \"Delete Account\" feature. When used, all your identifiable data on the Firebase system will be completely removed to ensure the user\'s right to be forgotten."</string>
+    <string name="privacy_title_5">"5. Third-Party Services"</string>
+    <string name="privacy_content_5">"The application uses services from Google Firebase (Auth, Firestore, Storage). These services also comply with Google\'s global privacy policies. You can learn more by visiting the Google Cloud Privacy Policy page."</string>
+    <string name="privacy_title_6">"6. Contact and Complaints"</string>
+    <string name="privacy_content_6">"If you have any questions about how we handle your data, you can contact the development team directly through the \"Support\" section in the application or send an email to the system\'s official support address."</string>
+
+    <!-- USER TERMS OF SERVICE -->
+    <string name="terms_of_service_title">"Terms of Service"</string>
+    <string name="terms_of_service_intro">"By using our application, you agree to the following terms and conditions. Please read them carefully."</string>
+    <string name="terms_title_1">"1. Acceptance of Terms"</string>
+    <string name="terms_content_1">"By accessing and using this hotel booking application, you acknowledge that you have read, understood, and agreed to be bound by these Terms of Service and our Privacy Policy."</string>
+    <string name="terms_title_2">"2. Booking and Payments"</string>
+    <string name="terms_content_2">"All bookings are subject to availability. Once a booking is initiated, you must complete the payment within the specified countdown time (Timer). Failure to do so will result in an automatic cancellation of the booking to release the room for other users."</string>
+    <string name="terms_title_3">"3. Voucher and Promotions"</string>
+    <string name="terms_content_3">"Vouchers have specific conditions, including minimum order value, expiration date, and usage limits. We reserve the right to void a voucher if we detect any fraudulent activity or if the voucher has reached its maximum global usage limit."</string>
+    <string name="terms_title_4">"4. Cancellation and Refunds"</string>
+    <string name="terms_content_4">"• Cancellation Window: You may cancel and receive a 100% refund only if the request is made at least 24 hours before the scheduled check-in time.\n• Late Cancellation: No cancellations or refunds will be granted if requested within 24 hours of the check-in time.\n• No-show Policy:\n  - 6 hours after the scheduled check-in time: If the guest has not confirmed check-in on the app, the Administrator reserves the right to mark the booking as a No-show without refund (unless a late arrival request was previously approved).\n  - 12 hours after check-in: The system will automatically mark the booking as No-show and forfeit the refund, regardless of any prior requests."</string>
+    <string name="terms_title_5">"5. User Responsibilities"</string>
+    <string name="terms_content_5">"Users must provide accurate personal and guest information. You are responsible for maintaining the confidentiality of your account and for all activities that occur under your account authenticated via Firebase."</string>
+    <string name="terms_title_6">"6. Limitation of Liability"</string>
+    <string name="terms_content_6">"We act as an intermediary between users and hotels. We are not liable for any direct or indirect damages arising from the hotel\'s service quality, or any technical issues caused by third-party services like internet providers or payment gateways."</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

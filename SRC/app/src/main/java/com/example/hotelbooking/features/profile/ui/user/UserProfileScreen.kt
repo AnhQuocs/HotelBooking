@@ -156,13 +156,19 @@ fun UserProfileScreen(
                 }
 
                 item {
-                    HelpCenter(onCustomerSupportClick = {
+                    LegalSupportSection(
+                        onHelpCenterClick = {
 
-                    }, onSecurityClick = {
-
-                    }, onResolutionClick = {
-
-                    })
+                        },
+                        onPrivacyPolicyClick = {
+                            val intent = Intent(context, PrivacyPolicyActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                        onTermsClick = {
+                            val intent = Intent(context, TermsOfServiceActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    )
                 }
 
                 item {

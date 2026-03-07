@@ -19,13 +19,13 @@ import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Contrast
 import androidx.compose.material.icons.filled.Discount
+import androidx.compose.material.icons.filled.Gavel
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Receipt
-import androidx.compose.material.icons.filled.ReportProblem
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,45 +46,53 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 
 @Composable
-fun HelpCenter(
-    onCustomerSupportClick: () -> Unit,
-    onSecurityClick: () -> Unit,
-    onResolutionClick: () -> Unit
+fun LegalSupportSection(
+    onHelpCenterClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onTermsClick: () -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = Dimen.PaddingM)
     ) {
-        InfoTitle(text = stringResource(id = R.string.help_center_title))
+
+        InfoTitle(text = stringResource(id = R.string.legal_support))
 
         Spacer(modifier = Modifier.height(AppSpacing.S))
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(0.5.dp, Color.LightGray, RoundedCornerShape(8.dp))
+                .border(0.5.dp, Color.LightGray, RoundedCornerShape(AppShape.ShapeS))
                 .background(Color.White, RoundedCornerShape(AppShape.ShapeS))
                 .wrapContentHeight(),
             contentAlignment = Alignment.Center
         ) {
+
             Column {
+
                 ProfileItem(
-                    Icons.Default.SupportAgent,
-                    stringResource(id = R.string.customer_support),
-                    onClick = { onCustomerSupportClick() }
+                    Icons.Default.HelpOutline,
+                    stringResource(id = R.string.help_center),
+                    onClick = onHelpCenterClick
                 )
+
                 LineGray()
+
                 ProfileItem(
-                    Icons.Default.Security,
-                    stringResource(id = R.string.security_center),
-                    onClick = { onSecurityClick() }
+                    Icons.Default.PrivacyTip,
+                    stringResource(id = R.string.privacy_policy),
+                    onClick = onPrivacyPolicyClick
                 )
+
                 LineGray()
+
                 ProfileItem(
-                    Icons.Default.ReportProblem,
-                    stringResource(id = R.string.complaint_resolution),
-                    onClick = { onResolutionClick() }
+                    Icons.Default.Gavel,
+                    stringResource(id = R.string.terms_of_service),
+                    onClick = onTermsClick
                 )
             }
         }
