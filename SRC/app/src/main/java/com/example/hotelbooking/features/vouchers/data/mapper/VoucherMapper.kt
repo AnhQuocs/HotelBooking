@@ -19,6 +19,8 @@ object VoucherMapper {
             discountType = DiscountType.valueOf(dto.discountType),
             discountValue = dto.discountValue,
             minOrderValue = dto.minOrderValue,
+            totalQuantity = dto.totalQuantity,
+            usedCount = dto.usedCount,
             endDate = dto.endDate,
             isUsed = isUsed
         )

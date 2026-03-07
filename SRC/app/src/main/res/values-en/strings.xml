@@ -535,7 +535,7 @@
     <!-- ADMIN PROFILE -->
     <string name="voucher">Voucher</string>
 
-    <!-- ADMIN VOUCHER -->
+    <!-- VOUCHER -->
     <string name="create_voucher">Create Voucher</string>
     <string name="publish_now">Publish now</string>
     <string name="voucher_code_label">Voucher Code (e.g., SUMMER2026)</string>
@@ -559,6 +559,24 @@
     <string name="voucher_used">Used</string>
     <string name="voucher_discount_value">Discount Value</string>
     <string name="voucher_sold_out">Fully Redeemed</string>
+    <string name="voucher_invalid_or_sold_out">The promotion code is no longer available or an error occurred.</string>
+    <string name="promo_applied_code">Applied code: %1$s</string>
+    <string name="promo_discount_percent">Discount %1$d%%</string>
+    <string name="promo_discount_amount">Discount %1$d USD</string>
+    <string name="select_promotion">Select promotion</string>
+    <string name="no_promotion_available">No promotions available for this booking.</string>
+    <string name="no_promotion">Do not use promotion</string>
+    <string name="voucher_min_order">Minimum order: %1$d USD</string>
+    <string name="voucher_used_count">Used: %1$d/%2$d</string>
+    <string name="my_promotions">My Promotions</string>
+    <string name="search_hotel">Search hotel name...</string>
+    <string name="no_promotion_found">No promotions found.</string>
+    <string name="apply_promotion">Apply</string>
+    <string name="min_order">Min order: %1$d USD</string>
+    <string name="expiry_date">Expires: %1$s</string>
+    <string name="used_status">Used</string>
+    <string name="expired_status">Expired</string>
+    <string name="use_now">Use now</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

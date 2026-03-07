@@ -171,6 +171,7 @@ fun RebookContent(
                 CheckoutSummaryCard(
                     date = dateStr,
                     numberOfGuest = booking.numberOfGuests,
+                    discountAmount = booking.discountAmount.toString(),
                     guestName = it.fullName,
                     roomName = room.name,
                     phone = it.phone ?: "",
@@ -182,7 +183,7 @@ fun RebookContent(
 
             Spacer(modifier = Modifier.height(AppSpacing.M))
 
-            PromoUI()
+//            PromoUI()
 
             Spacer(modifier = Modifier.height(AppSpacing.M))
 

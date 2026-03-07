@@ -4,6 +4,7 @@ import com.example.hotelbooking.features.vouchers.data.mapper.VoucherMapper
 import com.example.hotelbooking.features.vouchers.domain.model.Voucher
 import com.example.hotelbooking.features.vouchers.domain.repository.VoucherRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -16,10 +17,12 @@ class GetVouchersWithStatusUseCase @Inject constructor(
     private val repository: VoucherRepository
 ) {
     operator fun invoke(userId: String): Flow<List<Voucher>> {
-        return repository.getActiveVouchers().map { allVouchers ->
-            val usedIds = repository.getUsedVoucherIds(userId)
+        return combine(
+            repository.getActiveVouchers(),
+            repository.getUsedVoucherIds(userId)
+        ) { activeDtos, usedIds ->
 
-            allVouchers.map { dto ->
+            activeDtos.map { dto ->
                 VoucherMapper.toDomain(
                     dto = dto,
                     isUsed = usedIds.contains(dto.id)

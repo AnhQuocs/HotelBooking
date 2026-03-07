@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.vouchers.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.vouchers.domain.model.Voucher
 import com.example.hotelbooking.features.vouchers.domain.usecase.UserVoucherUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,21 @@ class UserVoucherViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<UserVoucherState>(UserVoucherState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _groupedVouchers = MutableStateFlow<Map<Hotel, List<Voucher>>>(emptyMap())
+    val groupedVouchers = _groupedVouchers.asStateFlow()
+
+    fun groupVouchersByHotel(vouchers: List<Voucher>, allHotels: List<Hotel>) {
+        val hotelIdsWithVouchers = vouchers.map { it.hotelId }.toSet()
+
+        val activeHotels = allHotels.filter { it.id in hotelIdsWithVouchers }
+
+        val grouped = activeHotels.associateWith { hotel ->
+            vouchers.filter { it.hotelId == hotel.id }
+        }
+
+        _groupedVouchers.value = grouped
+    }
 
     fun loadUserVouchers(userId: String) {
         viewModelScope.launch {

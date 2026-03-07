@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface VoucherRepository {
     // USER
     fun getActiveVouchers(): Flow<List<VoucherDto>>
-    suspend fun getUsedVoucherIds(userId: String): List<String>
+    fun getUsedVoucherIds(userId: String): Flow<List<String>>
     suspend fun applyVoucher(userId: String, voucherId: String): Result<Unit>
 
     // ADMIN

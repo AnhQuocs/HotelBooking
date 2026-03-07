@@ -8,6 +8,8 @@ data class Voucher(
     val discountType: DiscountType,
     val discountValue: Double = 0.0,
     val minOrderValue: Double = 0.0,
+    val totalQuantity: Int = 0,
+    val usedCount: Int = 0,
     val endDate: Long = 0L,
     val isUsed: Boolean = false
 )

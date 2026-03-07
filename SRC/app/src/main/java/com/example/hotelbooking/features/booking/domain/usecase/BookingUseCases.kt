@@ -7,12 +7,14 @@ import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookings
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.CheckExpiredBookingsUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.ExpirePendingBookingsUseCase
+import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateBookingPriceUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateBookingUseCase
 
 data class BookingUseCases(
     val checkAvailabilityUseCase: CheckAvailabilityUseCase,
     val createBookingUseCase: CreateBookingUseCase,
     val updateBookingUseCase: UpdateBookingUseCase,
+    val updateBookingPriceUseCase: UpdateBookingPriceUseCase,
     val getBookingsByUserUseCase: GetBookingsByUserUseCase,
     val getBookingByIdUseCase: GetBookingByIdUseCase,
     val getBookingsUseCase: GetBookingsUseCase,

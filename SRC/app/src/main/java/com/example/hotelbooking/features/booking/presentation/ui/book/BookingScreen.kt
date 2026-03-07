@@ -70,6 +70,7 @@ fun BookingScreen(
     roomName: String,
     price: String,
     capacity: Int,
+    code: String,
     bookingViewModel: BookingViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel()
 ) {
@@ -124,16 +125,19 @@ fun BookingScreen(
             val dateStr = "${startDate.dayOfMonth}-${endDate.dayOfMonth} ${
                 startDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
             } ${startDate.year}"
+
             val encodedRoomName = Uri.encode(roomName)
             val encodedGuestName = Uri.encode(name)
+            val encodedCode = Uri.encode(code)
+
             val successData = (uiState as BookingUiState.BookingSuccess).booking
             val bookingId = successData.bookingId
             val expireAtLong = successData.expireAt?.seconds ?: 0L
 
             navController.navigate(
-                "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice&expireAt=$expireAtLong"
+                "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice&expireAt=$expireAtLong&code=$encodedCode"
             ) {
-                popUpTo("booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&stock={stock}&roomName={roomName}&price={price}") {
+                popUpTo("booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&roomName={roomName}&price={price}&capacity={capacity}&code={code}") {
                     inclusive = true
                 }
             }

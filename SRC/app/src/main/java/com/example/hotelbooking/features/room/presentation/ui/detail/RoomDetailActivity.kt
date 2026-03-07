@@ -32,6 +32,7 @@ class RoomDetailActivity : BaseComponentActivity() {
         enableEdgeToEdge()
 
         val roomId = intent.getStringExtra("roomId") ?: ""
+        val code = intent.getStringExtra("code") ?: ""
 
         setContent {
             val navController = rememberNavController()
@@ -52,13 +53,14 @@ class RoomDetailActivity : BaseComponentActivity() {
                 ) {
                     RoomDetailSection(
                         roomId = roomId,
+                        code = code,
                         onBackClick = { finish() },
                         navController = navController
                     )
                 }
 
                 composable(
-                    route = "booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&roomName={roomName}&price={price}&capacity={capacity}",
+                    route = "booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&roomName={roomName}&price={price}&capacity={capacity}&code={code}",
                     arguments = listOf(
                         navArgument("roomId") { type = NavType.StringType },
                         navArgument("start") { type = NavType.StringType },
@@ -66,7 +68,8 @@ class RoomDetailActivity : BaseComponentActivity() {
                         navArgument("hotelId") { type = NavType.StringType },
                         navArgument("roomName") { type = NavType.StringType },
                         navArgument("price") { type = NavType.StringType },
-                        navArgument("capacity") { type = NavType.IntType }
+                        navArgument("capacity") { type = NavType.IntType },
+                        navArgument("code") { type = NavType.StringType; defaultValue = "" }
                     ),
                     enterTransition = {
                         slideIntoContainer(
@@ -88,6 +91,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val roomName = Uri.decode(backStackEntry.arguments?.getString("roomName") ?: "")
                     val price = backStackEntry.arguments?.getString("price") ?: ""
                     val capacity = backStackEntry.arguments?.getInt("capacity") ?: 0
+                    val code = backStackEntry.arguments?.getString("code") ?: ""
 
                     BookingScreen(
                         navController = navController,
@@ -97,12 +101,13 @@ class RoomDetailActivity : BaseComponentActivity() {
                         hotelId = hotelId,
                         roomName = roomName,
                         price = price,
-                        capacity = capacity
+                        capacity = capacity,
+                        code = code
                     )
                 }
 
                 composable(
-                    route = "checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}&expireAt={expireAt}",
+                    route = "checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}&expireAt={expireAt}&code={code}",
                     arguments = listOf(
                         navArgument("date") { type = NavType.StringType },
                         navArgument("hotelId") { type = NavType.StringType },
@@ -113,6 +118,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                         navArgument("phone") { type = NavType.StringType },
                         navArgument("totalPrice") { type = NavType.StringType },
                         navArgument("expireAt") { type = NavType.LongType },
+                        navArgument("code") { type = NavType.StringType; defaultValue = "" }
                     )
                 ) { backStackEntry ->
                     val date = Uri.decode(backStackEntry.arguments?.getString("date") ?: "")
@@ -125,6 +131,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val phone = backStackEntry.arguments?.getString("phone") ?: ""
                     val totalPrice = backStackEntry.arguments?.getString("totalPrice") ?: ""
                     val expireAt = backStackEntry.arguments?.getLong("expireAt") ?: 600
+                    val code = backStackEntry.arguments?.getString("code") ?: ""
 
                     CheckoutScreen(
                         date = date,
@@ -136,7 +143,8 @@ class RoomDetailActivity : BaseComponentActivity() {
                         phone = phone,
                         totalPrice = totalPrice,
                         navController = navController,
-                        expireAt = expireAt
+                        expireAt = expireAt,
+                        code = code
                     )
                 }
 

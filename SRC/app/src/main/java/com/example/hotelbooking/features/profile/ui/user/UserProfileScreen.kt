@@ -50,8 +50,8 @@ import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthState
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.profile.feature.language.presentation.ui.ChangeLanguageActivity
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.ui.PaymentMethodActivity
-import com.example.hotelbooking.features.profile.feature.promotions.presentation.ui.PromotionActivity
 import com.example.hotelbooking.features.transaction.presentation.ui.history.TransactionHistoryActivity
+import com.example.hotelbooking.features.vouchers.presentation.ui.user.UserPromotionListActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -128,7 +128,7 @@ fun UserProfileScreen(
             ) {
                 item {
                     PaymentInformation(onPromotionsClick = {
-                        val intent = Intent(context, PromotionActivity::class.java)
+                        val intent = Intent(context, UserPromotionListActivity::class.java)
                         context.startActivity(intent)
                     }, onPaymentMethodClick = {
                         val intent = Intent(context, PaymentMethodActivity::class.java)
@@ -214,44 +214,44 @@ fun LogoutDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss, containerColor = Color.White, title = {
-        Text(
-            text = stringResource(R.string.logout_title),
-            style = AfacadTypography.titleLarge.copy(color = Color.Black)
-        )
-    }, text = {
-        Text(
-            text = stringResource(R.string.logout_message),
-            style = AfacadTypography.bodyMedium,
-            color = Color.Black
-        )
-    }, confirmButton = {
-        Button(
-            onClick = {
-                onConfirm()
-                Toast.makeText(
-                    context, context.getString(R.string.logout_success), Toast.LENGTH_SHORT
-                ).show()
-            },
-            modifier = Modifier
-                .padding(horizontal = Dimen.PaddingS)
-                .height(40.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = RoyalBlue
-            ),
-            shape = RoundedCornerShape(AppShape.ShapeM)
-        ) {
             Text(
-                text = stringResource(R.string.logout_confirm), color = Color.White
+                text = stringResource(R.string.logout_title),
+                style = AfacadTypography.titleLarge.copy(color = Color.Black)
             )
-        }
-    }, dismissButton = {
-        TextButton(
-            onClick = onDismiss, modifier = Modifier.padding(horizontal = Dimen.PaddingS)
-        ) {
+        }, text = {
             Text(
-                text = stringResource(R.string.cancel), color = RoyalBlue
+                text = stringResource(R.string.logout_message),
+                style = AfacadTypography.bodyMedium,
+                color = Color.Black
             )
-        }
-    }, shape = RoundedCornerShape(AppShape.ShapeXL)
+        }, confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm()
+                    Toast.makeText(
+                        context, context.getString(R.string.logout_success), Toast.LENGTH_SHORT
+                    ).show()
+                },
+                modifier = Modifier
+                    .padding(horizontal = Dimen.PaddingS)
+                    .height(40.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RoyalBlue
+                ),
+                shape = RoundedCornerShape(AppShape.ShapeM)
+            ) {
+                Text(
+                    text = stringResource(R.string.logout_confirm), color = Color.White
+                )
+            }
+        }, dismissButton = {
+            TextButton(
+                onClick = onDismiss, modifier = Modifier.padding(horizontal = Dimen.PaddingS)
+            ) {
+                Text(
+                    text = stringResource(R.string.cancel), color = RoyalBlue
+                )
+            }
+        }, shape = RoundedCornerShape(AppShape.ShapeXL)
     )
 }

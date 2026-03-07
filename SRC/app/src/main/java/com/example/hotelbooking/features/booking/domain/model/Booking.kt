@@ -31,6 +31,7 @@ data class Booking(
     val endDate: Timestamp,
     val guests: List<Guest> = emptyList(),
     val numberOfGuests: Int,
+    val discountAmount: Double,
     val totalPrice: Double,
     val status: BookingStatus,
     val cancelReason: CancelReason?,

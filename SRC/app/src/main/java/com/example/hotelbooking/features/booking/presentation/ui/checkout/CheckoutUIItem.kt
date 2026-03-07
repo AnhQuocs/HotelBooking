@@ -1,7 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.checkout
 
 import android.content.Context
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,21 +30,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.booking.presentation.ui.util.formatTime
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -82,12 +79,6 @@ fun CountdownTimer(
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth()
     )
-}
-
-fun formatTime(seconds: Int): String {
-    val minutes = seconds / 60
-    val secs = seconds % 60
-    return String.format("%02d:%02d", minutes, secs)
 }
 
 @Composable
@@ -182,6 +173,7 @@ fun CheckoutSummaryCard(
     roomName: String,
     phone: String,
     totalPrice: String,
+    discountAmount: String,
     isEdit: Boolean = false,
     onEditClick: () -> Unit = {}
 ) {
@@ -298,7 +290,7 @@ fun CheckoutSummaryCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 6.dp),
+                    .padding(top = Dimen.PaddingXSPlus),
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
@@ -311,7 +303,7 @@ fun CheckoutSummaryCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "-$0.0",
+                    text = "-$$discountAmount",
                     style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Normal,
@@ -323,7 +315,7 @@ fun CheckoutSummaryCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 6.dp),
+                    .padding(top = Dimen.PaddingXSPlus),
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
@@ -386,32 +378,6 @@ fun CheckoutSummaryItem(
                 color = TextPrimaryDark,
                 fontWeight = FontWeight.SemiBold
             )
-        )
-    }
-}
-
-@Composable
-fun DashedLine(
-    modifier: Modifier = Modifier,
-    color: Color = Color.Gray,
-    strokeWidth: Dp = 1.dp,
-    dashLength: Dp = 10.dp,
-    gapLength: Dp = 5.dp
-) {
-    Canvas(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(strokeWidth)
-    ) {
-        val pathEffect = PathEffect.dashPathEffect(
-            floatArrayOf(dashLength.toPx(), gapLength.toPx()), 0f
-        )
-        drawLine(
-            color = color,
-            start = Offset(0f, 0f),
-            end = Offset(size.width, 0f),
-            strokeWidth = strokeWidth.toPx(),
-            pathEffect = pathEffect
         )
     }
 }

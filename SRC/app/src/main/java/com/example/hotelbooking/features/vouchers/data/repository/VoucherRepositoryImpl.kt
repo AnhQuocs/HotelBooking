@@ -24,16 +24,18 @@ class VoucherRepositoryImpl @Inject constructor(
         awaitClose { subscription.remove() }
     }
 
-    override suspend fun getUsedVoucherIds(userId: String): List<String> {
-        return try {
-            firestore.collection("used_vouchers")
-                .whereEqualTo("userId", userId)
-                .get()
-                .await()
-                .map { it.getString("voucherId") ?: "" }
-        } catch (e: Exception) {
-            emptyList()
-        }
+    override fun getUsedVoucherIds(userId: String): Flow<List<String>> = callbackFlow {
+        val listener = firestore.collection("used_vouchers")
+            .whereEqualTo("userId", userId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                val ids = snapshot?.documents?.mapNotNull { it.getString("voucherId") } ?: emptyList()
+                trySend(ids)
+            }
+        awaitClose { listener.remove() }
     }
 
     override suspend fun applyVoucher(userId: String, voucherId: String): Result<Unit> {

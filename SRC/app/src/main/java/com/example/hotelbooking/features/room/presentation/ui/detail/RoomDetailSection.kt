@@ -25,6 +25,7 @@ import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomVi
 @Composable
 fun RoomDetailSection(
     roomId: String,
+    code: String,
     roomViewModel: RoomViewModel = hiltViewModel(),
     navController: NavController,
     onBackClick: () -> Unit
@@ -53,6 +54,7 @@ fun RoomDetailSection(
         is RoomState.Success -> {
             RoomDetailScreen(
                 room = (roomDetailState as RoomState.Success<RoomType>).data,
+                code = code,
                 context = context,
                 onBackClick = { onBackClick() },
                 navController = navController

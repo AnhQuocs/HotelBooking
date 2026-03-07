@@ -19,6 +19,7 @@ class HotelDetailActivity : BaseComponentActivity() {
         enableEdgeToEdge()
 
         val hotelId = intent.getStringExtra("hotelId") ?: ""
+        val code = intent.getStringExtra("code") ?: ""
 
         setContent {
             val context = LocalContext.current
@@ -37,6 +38,7 @@ class HotelDetailActivity : BaseComponentActivity() {
                 onRoomClick = { roomId ->
                     val intent = Intent(context, RoomDetailActivity::class.java)
                         .putExtra("roomId", roomId)
+                        .putExtra("code", code)
                     context.startActivity(intent)
                 },
                 onChatClick = { hotelId, adminId, hotelName, shortAddress ->

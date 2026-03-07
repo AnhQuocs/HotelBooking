@@ -175,6 +175,7 @@ class BookingViewModel @Inject constructor(
                 ),
                 guests = guests,
                 numberOfGuests = numberOfGuests,
+                discountAmount = 0.0,
                 totalPrice = totalPrice,
                 status = BookingStatus.PENDING,
                 stayStatus = StayStatus.NONE,
@@ -199,6 +200,30 @@ class BookingViewModel @Inject constructor(
                     _isSubmitting.value = false
                     _uiState.value =
                         BookingUiState.Error(error.message ?: "Booking failed")
+                }
+        }
+    }
+
+    fun updateBookingPrice(
+        bookingId: String,
+        discountAmount: Double,
+        newPrice: Double,
+        onComplete: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isSubmitting.value = true
+
+            val result = bookingUseCases.updateBookingPriceUseCase(bookingId, discountAmount, newPrice)
+
+            result
+                .onSuccess {
+                    _isSubmitting.value = false
+                    onComplete(true)
+                }
+                .onFailure { error ->
+                    _isSubmitting.value = false
+                    _uiState.value = BookingUiState.Error(error.message ?: "Lỗi cập nhật giá")
+                    onComplete(false)
                 }
         }
     }

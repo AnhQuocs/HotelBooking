@@ -49,6 +49,7 @@ import java.time.ZoneId
 fun RoomDetailScreen(
     room: RoomType,
     context: Context,
+    code: String,
     onBackClick: () -> Unit,
     navController: NavController,
     bookingViewModel: BookingViewModel = hiltViewModel()
@@ -70,9 +71,10 @@ fun RoomDetailScreen(
                     val price = room.pricePerNight.toString()
                     val encodedName = Uri.encode(room.name)
                     val capacity = room.capacity
+                    val encodedCode = Uri.encode(code)
 
                     navController.navigate(
-                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&roomName=$encodedName&price=$price&capacity=$capacity"
+                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&roomName=$encodedName&price=$price&capacity=$capacity&code=$encodedCode"
                     )
                 }
             )

@@ -12,7 +12,7 @@ data class VoucherDto(
     val totalQuantity: Int = 0,
     val usedCount: Int = 0,
     val endDate: Long = 0L,
-    val isActive: Boolean = true
+    @field:JvmField val isActive: Boolean = true
 )
 
 //data class UsedVoucherDto(

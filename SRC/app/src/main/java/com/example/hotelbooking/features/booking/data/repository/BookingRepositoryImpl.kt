@@ -175,6 +175,30 @@ class BookingRepositoryImpl(
         return updatedBooking.toDomain()
     }
 
+    override suspend fun updateBookingPrice(
+        bookingId: String,
+        discountAmount: Double,
+        newPrice: Double
+    ): Result<Unit> {
+        return try {
+            bookingsCollection
+                .document(bookingId)
+                .update(
+                    mapOf(
+                        "totalPrice" to newPrice,
+                        "discountAmount" to discountAmount
+                    )
+                )
+                .await()
+
+            invalidateCache()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun getBookingsByUser(userId: String): List<Booking> {
         cachedBookings[userId]?.let { return it }
 

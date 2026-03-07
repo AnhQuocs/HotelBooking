@@ -535,7 +535,7 @@
     <!-- ADMIN PROFILE -->
     <string name="voucher">Mã giảm giá</string>
 
-    <!-- ADMIN VOUCHER -->
+    <!-- VOUCHER -->
     <string name="create_voucher">Tạo Voucher</string>
     <string name="publish_now">Phát hành ngay</string>
     <string name="voucher_code_label">Mã Voucher (VÍ DỤ: SUMMER2026)</string>
@@ -559,6 +559,24 @@
     <string name="voucher_used">Đã sử dụng</string>
     <string name="voucher_discount_value">Giá trị giảm</string>
     <string name="voucher_sold_out">Đã hết lượt sử dụng</string>
+    <string name="voucher_invalid_or_sold_out">Mã khuyến mãi đã hết lượt hoặc có lỗi!</string>
+    <string name="promo_applied_code">Đã áp dụng mã: %1$s</string>
+    <string name="promo_discount_percent">Giảm %1$d%%</string>
+    <string name="promo_discount_amount">Giảm %1$d USD</string>
+    <string name="select_promotion">Chọn khuyến mãi</string>
+    <string name="no_promotion_available">Không có mã khuyến mãi nào khả dụng cho đơn hàng này.</string>
+    <string name="no_promotion">Không dùng khuyến mãi</string>
+    <string name="voucher_min_order">Đơn tối thiểu: %1$d USD</string>
+    <string name="voucher_used_count">Đã dùng: %1$d/%2$d</string>
+    <string name="my_promotions">Kho khuyến mãi của tôi</string>
+    <string name="search_hotel">Tìm tên khách sạn...</string>
+    <string name="no_promotion_found">Chưa có khuyến mãi nào phù hợp.</string>
+    <string name="use_promotion">Sử dụng</string>
+    <string name="min_order">Đơn tối thiểu: %1$d USD</string>
+    <string name="expiry_date">HSD: %1$s</string>
+    <string name="used_status">Đã dùng</string>
+    <string name="expired_status">Hết hạn</string>
+    <string name="use_now">Dùng ngay</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>

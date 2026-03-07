@@ -1,12 +1,9 @@
 package com.example.hotelbooking.features.booking.presentation.ui.checkout
 
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,18 +35,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
-import com.example.hotelbooking.features.booking.domain.model.CancelReason
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingHistoryViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
@@ -64,16 +54,17 @@ import com.example.hotelbooking.features.profile.feature.payment_card.presentati
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
-import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionAction
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionState
 import com.example.hotelbooking.features.transaction.presentation.viewmodel.TransactionViewModel
+import com.example.hotelbooking.features.vouchers.domain.model.DiscountType
+import com.example.hotelbooking.features.vouchers.domain.model.Voucher
+import com.example.hotelbooking.features.vouchers.presentation.viewmodel.UserVoucherState
+import com.example.hotelbooking.features.vouchers.presentation.viewmodel.UserVoucherViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.PrimaryBlue
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -89,102 +80,71 @@ fun CheckoutScreen(
     phone: String,
     totalPrice: String,
     expireAt: Long,
+    code: String,
     navController: NavController,
     hotelViewModel: HotelViewModel = hiltViewModel(),
     bookingViewModel: BookingViewModel = hiltViewModel(),
     bookingHistoryViewModel: BookingHistoryViewModel = hiltViewModel(),
     transactionViewModel: TransactionViewModel = hiltViewModel(),
-    paymentCardViewModel: PaymentCardViewModel = hiltViewModel()
+    paymentCardViewModel: PaymentCardViewModel = hiltViewModel(),
+    voucherViewModel: UserVoucherViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
     val uiState by hotelViewModel.hotelDetailState.collectAsState()
     val bookingState by bookingViewModel.uiState.collectAsState()
     val createdId by transactionViewModel.createdTransactionId.collectAsState()
     val transactionActionState by transactionViewModel.actionState.collectAsState()
     val isCancelling by bookingHistoryViewModel.isCancelling.collectAsState()
     val timeLeft by bookingViewModel.timeLeft.collectAsState()
+    val cardsState by paymentCardViewModel.cardsState.collectAsState()
+    val voucherState by voucherViewModel.uiState.collectAsState()
 
-    var isShowBottomSheet by remember { mutableStateOf(false) }
+    // UI States Voucher & BottomSheets
+    var isShowPaymentBottomSheet by remember { mutableStateOf(false) }
+    var isShowPromoBottomSheet by remember { mutableStateOf(false) }
+    var appliedVoucher by remember { mutableStateOf<Voucher?>(null) }
+
     val scope = rememberCoroutineScope()
 
-    val cardsState by paymentCardViewModel.cardsState.collectAsState()
+    val originalPrice = totalPrice.toDoubleOrNull() ?: 0.0
 
-    LaunchedEffect(Unit) {
-        bookingViewModel.stopPaymentTimer()
-        transactionViewModel.resetActionState()
-        transactionViewModel.clearCreatedId()
-
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-        val now = System.currentTimeMillis()
-        val transaction = Transaction(
-            bookingId = bookingId,
-            userId = userId,
-            status = TransactionStatus.PENDING,
-            totalPrice = totalPrice.toDouble(),
-            amountPaid = totalPrice.toDouble(),
-            paymentMethod = null,
-            createdAt = now,
-            updatedAt = now,
-            refundedAt = null
-        )
-
-        transactionViewModel.createTransaction(transaction)
-        paymentCardViewModel.loadPaymentCards(userId)
-    }
-
-    LaunchedEffect(hotelId) {
-        hotelViewModel.loadHotelById(hotelId)
-        val expireTimestamp = Timestamp(expireAt, 0)
-        bookingViewModel.startPaymentTimer(expireTimestamp, bookingId)
-    }
-
-    LaunchedEffect(transactionActionState) {
-        if (transactionActionState is TransactionState.Success) {
-            when ((transactionActionState as TransactionState.Success).data) {
-                TransactionAction.CONFIRM -> {
-                    navController.navigate("payment_complete") {
-                        popUpTo("checkout?date={date}&hotelId={hotelId}&bookingId={bookingId}&roomName={roomName}&guestName={guestName}&numberOfGuest={numberOfGuest}&phone={phone}&totalPrice={totalPrice}") {
-                            inclusive = true
-                        }
-                    }
-                    transactionViewModel.resetActionState()
-                    bookingViewModel.resetState()
-                }
-
-                TransactionAction.INITIALIZE -> {
-                    Log.d(
-                        "Checkout",
-                        "Transaction Initialized: ${transactionViewModel.createdTransactionId.value}"
-                    )
-                }
-
-                else -> {}
+    val discountAmount = remember(appliedVoucher, originalPrice) {
+        appliedVoucher?.let { v ->
+            if (v.discountType == DiscountType.PERCENTAGE) {
+                originalPrice * (v.discountValue / 100.0)
+            } else {
+                v.discountValue
             }
-        }
+        } ?: 0.0
     }
 
-    LaunchedEffect(timeLeft) {
-        if (timeLeft == 0L) {
-            bookingViewModel.onTimeout()
-
-            val isCancelled = bookingHistoryViewModel.cancelBooking(
-                bookingId = bookingId,
-                reason = CancelReason.TIMEOUT
-            )
-
-            if (isCancelled) {
-                BookingRefreshEvent.triggerRefresh()
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.payment_time_expired),
-                    Toast.LENGTH_LONG
-                ).show()
-                navController.navigate("roomDetail") {
-                    popUpTo("0") { inclusive = true }
-                }
-            }
-        }
+    val finalPrice = remember(discountAmount, originalPrice) {
+        (originalPrice - discountAmount).coerceAtLeast(0.0)
     }
+
+    CheckoutSideEffects(
+        context = context,
+        navController = navController,
+        userId = userId,
+        hotelId = hotelId,
+        bookingId = bookingId,
+        expireAt = expireAt,
+        code = code,
+        originalPrice = originalPrice,
+        appliedVoucher = appliedVoucher,
+        transactionActionState = transactionActionState,
+        timeLeft = timeLeft,
+        voucherState = voucherState,
+        hotelViewModel = hotelViewModel,
+        bookingViewModel = bookingViewModel,
+        bookingHistoryViewModel = bookingHistoryViewModel,
+        transactionViewModel = transactionViewModel,
+        paymentCardViewModel = paymentCardViewModel,
+        voucherViewModel = voucherViewModel,
+        onApplyVoucher = { appliedVoucher = it }
+    )
 
     Box(
         modifier = Modifier
@@ -224,7 +184,22 @@ fun CheckoutScreen(
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     Button(
-                        onClick = { isShowBottomSheet = true },
+                        onClick = {
+                            val now = System.currentTimeMillis()
+                            val transaction = Transaction(
+                                bookingId = bookingId,
+                                userId = userId,
+                                status = TransactionStatus.PENDING,
+                                totalPrice = originalPrice,
+                                amountPaid = finalPrice,
+                                paymentMethod = null,
+                                createdAt = now,
+                                updatedAt = now,
+                                refundedAt = null
+                            )
+                            transactionViewModel.createTransaction(transaction)
+                            isShowPaymentBottomSheet = true
+                        },
                         modifier = Modifier
                             .width(Dimen.WidthL)
                             .padding(Dimen.PaddingM)
@@ -301,14 +276,18 @@ fun CheckoutScreen(
                     guestName = guestName,
                     roomName = roomName,
                     phone = phone,
-                    totalPrice = totalPrice
+                    discountAmount = discountAmount.toString(),
+                    totalPrice = finalPrice.toInt().toString()
                 )
 
                 Spacer(modifier = Modifier.height(AppSpacing.M))
 
-                PromoUI()
+                PromoUI(
+                    appliedVoucher = appliedVoucher,
+                    onClick = { isShowPromoBottomSheet = true }
+                )
 
-                if (isShowBottomSheet) {
+                if (isShowPaymentBottomSheet) {
                     if (uiState is HotelState.Success && cardsState is PaymentCardState.Success) {
                         val hotel = (uiState as HotelState.Success<Hotel>).data
                         val cards = (cardsState as PaymentCardState.Success<List<PaymentCard>>).data
@@ -319,27 +298,51 @@ fun CheckoutScreen(
                             hotel.name,
                             bookingId
                         )
+                        val toastText = stringResource(id = R.string.voucher_invalid_or_sold_out)
 
                         PaymentMethodBottomSheet(
                             cards = cards,
-                            onDismissRequest = { isShowBottomSheet = false },
+                            onDismissRequest = { isShowPaymentBottomSheet = false },
                             onNextClick = { brand ->
-                                isShowBottomSheet = false
+                                isShowPaymentBottomSheet = false
 
-                                createdId?.let { txId ->
-                                    transactionViewModel.confirmPayment(
-                                        bookingId = bookingId,
-                                        transactionId = txId,
-                                        brand = brand,
-                                        title = title,
-                                        message = message
-                                    )
-                                } ?: run {
-                                    Toast.makeText(
-                                        context,
-                                        "Transaction not ready",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                bookingViewModel.updateBookingPrice(
+                                    bookingId = bookingId,
+                                    discountAmount = discountAmount,
+                                    newPrice = finalPrice
+                                ) { isPriceUpdated ->
+                                    if (isPriceUpdated) {
+                                        val proceedToPayment = {
+                                            createdId?.let { txId ->
+                                                transactionViewModel.confirmPayment(
+                                                    bookingId = bookingId,
+                                                    transactionId = txId,
+                                                    brand = brand,
+                                                    title = title,
+                                                    message = message
+                                                )
+                                            }
+                                        }
+
+                                        if (appliedVoucher != null) {
+                                            voucherViewModel.applyVoucher(
+                                                userId,
+                                                appliedVoucher!!.id
+                                            ) { result ->
+                                                if (result.isSuccess) {
+                                                    proceedToPayment()
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        toastText,
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        } else {
+                                            proceedToPayment()
+                                        }
+                                    }
                                 }
                             }
                         )
@@ -358,58 +361,20 @@ fun CheckoutScreen(
                 CircularProgressIndicator(color = PrimaryBlue)
             }
         }
-    }
-}
 
+        if (isShowPromoBottomSheet && voucherState is UserVoucherState.Success) {
+            val availableVouchers = (voucherState as UserVoucherState.Success).vouchers.filter {
+                it.hotelId == hotelId && !it.isUsed && originalPrice >= it.minOrderValue
+            }
 
-@Composable
-fun PromoUI() {
-    Text(
-        text = stringResource(R.string.promo),
-        style = AfacadTypography.bodyLarge.copy(
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(Dimen.HeightLarge)
-            .padding(top = Dimen.PaddingXSPlus)
-            .clip(RoundedCornerShape(AppShape.ShapeL))
-            .background(PrimaryBlue.copy(alpha = 0.2f), RoundedCornerShape(AppShape.ShapeL)),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Dimen.PaddingSM),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_promo),
-                contentDescription = null,
-                modifier = Modifier.size(Dimen.SizeM)
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Text(
-                text = stringResource(R.string.select_promo),
-                style = AfacadTypography.bodyMedium.copy(
-                    fontSize = 15.sp,
-                    color = PrimaryBlue
-                )
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                Icons.Default.ArrowForwardIos,
-                contentDescription = null,
-                tint = PrimaryBlue.copy(alpha = 0.8f),
-                modifier = Modifier.size(Dimen.SizeSM)
+            VoucherSelectionBottomSheet(
+                vouchers = availableVouchers,
+                selectedVoucher = appliedVoucher,
+                onDismiss = { isShowPromoBottomSheet = false },
+                onSelect = { voucher ->
+                    appliedVoucher = voucher
+                    isShowPromoBottomSheet = false
+                }
             )
         }
     }
