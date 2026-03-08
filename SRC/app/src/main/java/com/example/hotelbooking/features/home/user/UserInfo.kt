@@ -21,11 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.auth.domain.model.AuthUser
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -45,11 +47,20 @@ fun UserInfo(
             .padding(horizontal = Dimen.PaddingSM),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.user_avatar),
-            contentDescription = null,
-            modifier = Modifier.size(60.dp)
-        )
+        if(user.avatar != null) {
+            AsyncImage(
+                model = user.avatar,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.clip(CircleShape).size(60.dp)
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.user_avatar),
+                contentDescription = null,
+                modifier = Modifier.size(60.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.width(AppSpacing.XS))
 

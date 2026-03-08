@@ -56,9 +56,10 @@ fun SignUpScreen(
     navController: NavController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val uiState = authViewModel.uiState.collectAsState()
-
     val context = LocalContext.current
+
+    val uiState = authViewModel.uiState.collectAsState()
+    var isSignUpWithAdmin by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = uiState.value) {
         when (val state = uiState.value) {
@@ -110,7 +111,8 @@ fun SignUpScreen(
                 },
                 onSignUpWithAdmin = { username, email, password, code ->
                     authViewModel.signUpAdmin(username, email, password, code)
-                }
+                },
+                onCheckBoxClick = { value -> isSignUpWithAdmin = value }
             )
 
             Spacer(modifier = Modifier.height(Dimen.PaddingL))
@@ -137,7 +139,9 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(Dimen.PaddingL))
 
-            AuthOptions()
+            if(!isSignUpWithAdmin) {
+                AuthOptions()
+            }
         }
 
         if (uiState.value == AuthState.Loading) {
@@ -164,6 +168,7 @@ fun SignUpScreen(
 fun SignUpSection(
     onSignUp: (String, String, String) -> Unit,
     onSignUpWithAdmin: (String, String, String, String) -> Unit,
+    onCheckBoxClick: (Boolean) -> Unit,
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -236,6 +241,7 @@ fun SignUpSection(
             onCheckedChange = { isChecked ->
                 isAdmin = isChecked
                 if (!isChecked) adminCode = ""
+                onCheckBoxClick(isChecked)
             },
             colors = CheckboxDefaults.colors(
                 checkedColor = PrimaryBlue,

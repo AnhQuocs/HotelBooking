@@ -23,7 +23,7 @@ fun SearchChatsSection(
     query: String,
     searchState: SearchChatState<List<ChatWithHotel>>,
     userId: String,
-    onOpenChat: (Chat, String, String) -> Unit
+    onOpenChat: (Chat, String, String, String) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -61,6 +61,7 @@ fun SearchChatsSection(
                                         onOpenChat(
                                             chat,
                                             hotel.name,
+                                            hotel.adminIds.first(),
                                             hotel.shortAddress
                                         )
                                     }

@@ -23,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -47,28 +48,42 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.DiscountPink
+import com.example.hotelbooking.ui.theme.LightBlue
+import com.example.hotelbooking.ui.theme.RoyalBlue
 import com.example.hotelbooking.ui.theme.SurfaceLight
 
 @Composable
 fun HotelFilterSection(
     hotels: List<Hotel>, selectedHotelId: String?, onHotelSelected: (String?) -> Unit
 ) {
+    val chipColors = FilterChipDefaults.filterChipColors(
+        containerColor = Color.White,
+        labelColor = Color.Black,
+        selectedContainerColor = RoyalBlue,
+        selectedLabelColor = Color.White
+    )
+
     LazyRow(
         contentPadding = PaddingValues(horizontal = Dimen.PaddingM, vertical = Dimen.PaddingS),
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.S),
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier.background(LightBlue)
     ) {
         item {
             FilterChip(
                 selected = selectedHotelId == null,
                 onClick = { onHotelSelected(null) },
-                label = { Text(stringResource(id = R.string.status_all)) })
+                colors = chipColors,
+                label = { Text(stringResource(id = R.string.status_all)) }
+            )
         }
+
         items(hotels) { hotel ->
             FilterChip(
                 selected = selectedHotelId == hotel.id,
                 onClick = { onHotelSelected(hotel.id) },
-                label = { Text(hotel.name) })
+                colors = chipColors,
+                label = { Text(hotel.name) }
+            )
         }
     }
 }

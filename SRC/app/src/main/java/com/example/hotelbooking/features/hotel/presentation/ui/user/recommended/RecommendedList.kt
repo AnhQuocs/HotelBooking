@@ -154,7 +154,7 @@ fun RecommendedItem(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "⭐${hotel.averageRating}",
+                text = "⭐%.1f".format(hotel.averageRating),
                 color = Color.Black
             )
         }

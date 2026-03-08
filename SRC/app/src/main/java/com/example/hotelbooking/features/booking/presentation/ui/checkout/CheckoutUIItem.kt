@@ -158,7 +158,7 @@ fun HotelInfo(hotel: Hotel, context: Context) {
         Spacer(modifier = Modifier.weight(1f))
 
         Text(
-            text = "⭐${hotel.averageRating}",
+            text = "⭐%.1f".format(hotel.averageRating),
             style = AfacadTypography.labelLarge.copy(fontSize = 15.sp),
             color = Color.Black
         )
@@ -172,7 +172,8 @@ fun CheckoutSummaryCard(
     guestName: String,
     roomName: String,
     phone: String,
-    totalPrice: String,
+    originalPrice: Double,
+    finalPrice: Double,
     discountAmount: String,
     isEdit: Boolean = false,
     onEditClick: () -> Unit = {}
@@ -278,7 +279,7 @@ fun CheckoutSummaryCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "$$totalPrice",
+                    text = "$$originalPrice",
                     style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
@@ -328,7 +329,7 @@ fun CheckoutSummaryCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "$$totalPrice",
+                    text = "$$finalPrice",
                     style = AfacadTypography.bodyMedium.copy(
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,

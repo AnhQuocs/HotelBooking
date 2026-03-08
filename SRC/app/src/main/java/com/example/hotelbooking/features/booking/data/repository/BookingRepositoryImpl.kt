@@ -46,7 +46,6 @@ class BookingRepositoryImpl(
         val startTs = Timestamp(startDate.atStartOfDay(ZoneOffset.UTC).toInstant())
         val now = Timestamp.now()
 
-        // Log input đầu vào để kiểm tra
         Log.d("RoomCheck", "Checking Hotel: $hotelId - Type: $roomTypeId from $startDate to $endDate")
 
         val snapshot = bookingsCollection
@@ -63,7 +62,6 @@ class BookingRepositoryImpl(
         val occupiedRoomNumbers = mutableSetOf<String>()
 
         bookings.forEach { booking ->
-            // Logic hủy booking hết hạn (giữ nguyên)
             if (shouldCancel(booking, now)) {
                 cancelBooking(booking.bookingId)
                 Log.d("RoomCheck", "Cancelled expired booking: ${booking.bookingId}")
@@ -73,28 +71,13 @@ class BookingRepositoryImpl(
             val bookingStart = booking.startDate.toLocalDate()
             val bookingEnd = booking.endDate.toLocalDate()
 
-            // Logic check trùng lịch (giữ nguyên)
             if (bookingStart.isBefore(endDate) && bookingEnd.isAfter(startDate)) {
                 occupiedRoomNumbers.add(booking.roomNumber)
             }
         }
 
-        // --- PHẦN TÍNH TOÁN VÀ LOG KẾT QUẢ ---
 
-        // Tính danh sách phòng trống
         val availableRooms = allRoomNumbers.filterNot { it in occupiedRoomNumbers }
-
-        // Log chi tiết kết quả
-        Log.d(
-            "RoomCheck",
-            """
-        |--- Availability Result ---
-        |Total Rooms: ${allRoomNumbers.size} (${allRoomNumbers.joinToString(", ")})
-        |Occupied:    ${occupiedRoomNumbers.size} (${occupiedRoomNumbers.joinToString(", ")})
-        |Available:   ${availableRooms.size} (${availableRooms.joinToString(", ")})
-        |---------------------------
-        """.trimMargin()
-        )
 
         return availableRooms
     }
@@ -403,33 +386,10 @@ class BookingRepositoryImpl(
             firestore.runTransaction { firestoreTransaction ->
                 val bookingSnapshot = firestoreTransaction.get(bookingRef)
                 if (!bookingSnapshot.exists()) {
-                    throw Exception("Booking does not exist.")
+                    throw Exception("The booking does not exist.")
                 }
 
-                val roomTypeId = bookingSnapshot.getString("roomTypeId") ?: ""
-                val roomNumber = bookingSnapshot.getString("roomNumber") ?: ""
                 val currentBookingStatus = bookingSnapshot.getString("status") ?: "PENDING"
-
-                if (roomTypeId.isNotEmpty() && roomNumber.isNotEmpty()) {
-                    val roomTypeRef = firestore.collection("rooms").document(roomTypeId)
-                    val roomTypeSnapshot = firestoreTransaction.get(roomTypeRef)
-
-                    if (roomTypeSnapshot.exists()) {
-                        val currentRoomList = roomTypeSnapshot.get("roomList")
-                            ?.let { it as? List<*> }
-                            ?.mapNotNull { it as? Map<*, *> }
-                            ?: throw Exception("Room list data error!")
-
-                        val updatedRoomList = currentRoomList.map { room ->
-                            if (room["roomNumber"] == roomNumber) {
-                                room.toMutableMap().apply { this["isAvailable"] = true }
-                            } else {
-                                room
-                            }
-                        }
-                        firestoreTransaction.update(roomTypeRef, "roomList", updatedRoomList)
-                    }
-                }
 
                 firestoreTransaction.update(
                     bookingRef,
@@ -439,28 +399,21 @@ class BookingRepositoryImpl(
                     "updatedAt", Timestamp.now()
                 )
 
-                val newTransactionStatus =
-                    if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
+                val newTransactionStatus = if (currentBookingStatus == "CONFIRMED") "REFUND" else "CANCELLED"
 
                 firestoreTransaction.update(transactionRef, "status", newTransactionStatus)
 
+                val now = System.currentTimeMillis()
                 if (newTransactionStatus == "REFUND") {
-                    firestoreTransaction.update(
-                        transactionRef,
-                        "refundedAt", System.currentTimeMillis()
-                    )
+                    firestoreTransaction.update(transactionRef, "refundedAt", now)
                 } else {
-                    firestoreTransaction.update(
-                        transactionRef,
-                        "updatedAt", System.currentTimeMillis()
-                    )
+                    firestoreTransaction.update(transactionRef, "updatedAt", now)
                 }
 
                 null
             }.await()
 
             invalidateCache()
-
             Result.success(Unit)
 
         } catch (e: Exception) {

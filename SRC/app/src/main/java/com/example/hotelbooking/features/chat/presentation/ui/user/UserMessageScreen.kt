@@ -64,7 +64,7 @@ import com.example.hotelbooking.utils.getHighlightedText
 @Composable
 fun UserMessageScreen(
     userId: String,
-    onOpenChat: (Chat, String, String) -> Unit,
+    onOpenChat: (Chat, String, String, String) -> Unit,
     viewModel: ConversationListViewModel = hiltViewModel(),
     searchChatsViewModel: SearchChatsViewModel = hiltViewModel()
 ) {
@@ -146,25 +146,37 @@ fun UserMessageScreen(
             Spacer(modifier = Modifier.height(AppSpacing.M))
 
             if (query.isBlank()) {
-                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    itemsIndexed(list) { index, chat ->
-                        val hotel = chat.hotel
-                        val chat = chat.chat
+                if(list.isEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.user_chat_empty),
+                        style = AfacadTypography.bodyLarge.copy(
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                        itemsIndexed(list) { index, chat ->
+                            val hotel = chat.hotel
+                            val chat = chat.chat
 
-                        hotel?.let {
-                            Column {
-                                ChatItem(
-                                    hotelName = hotel.name,
-                                    lastTimestamp = chat.lastTimestamp,
-                                    lastSenderId = chat.lastSenderId,
-                                    lastMessage = chat.lastMessage,
-                                    userId = userId,
-                                    query = null,
-                                    onOpenChat = { onOpenChat(chat, hotel.name, hotel.shortAddress) }
-                                )
+                            hotel?.let {
+                                Column {
+                                    ChatItem(
+                                        hotelName = hotel.name,
+                                        lastTimestamp = chat.lastTimestamp,
+                                        lastSenderId = chat.lastSenderId,
+                                        lastMessage = chat.lastMessage,
+                                        userId = userId,
+                                        query = null,
+                                        onOpenChat = { onOpenChat(chat, hotel.name, hotel.adminIds.first(), hotel.shortAddress) }
+                                    )
 
-                                if (index != list.lastIndex) {
-                                    LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                                    if (index != list.lastIndex) {
+                                        LineGray(modifier = Modifier.padding(vertical = Dimen.PaddingXSPlus))
+                                    }
                                 }
                             }
                         }
@@ -176,8 +188,8 @@ fun UserMessageScreen(
                     query = query,
                     searchState = searchState,
                     userId = userId,
-                    onOpenChat = { chat, hotelName, shortAddress ->
-                        onOpenChat(chat, hotelName, shortAddress)
+                    onOpenChat = { chat, hotelName, adminId, shortAddress ->
+                        onOpenChat(chat, hotelName, adminId, shortAddress)
                     }
                 )
             }

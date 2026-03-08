@@ -173,7 +173,7 @@ fun HotelInfo(hotel: Hotel) {
             Spacer(modifier = Modifier.width(AppSpacing.S))
 
             Text(
-                text = "⭐${hotel.averageRating}",
+                text = "⭐%.1f".format(hotel.averageRating),
                 style = AfacadTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 color = Color.Black,
                 modifier = Modifier

@@ -8,6 +8,7 @@ import com.example.hotelbooking.features.auth.domain.model.UserRole
 import com.example.hotelbooking.features.auth.domain.repository.AuthRepository
 import com.example.hotelbooking.features.hotel.domain.model.AdminAmenityConfig
 import com.example.hotelbooking.features.hotel.domain.model.CustomAmenity
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -124,7 +125,7 @@ class AuthRepositoryImpl(
                     uid = uid,
                     email = email,
                     username = username,
-                    role = UserRole.ADMIN
+                    role = UserRole.ADMIN.name
                 )
 
                 transaction.set(userRef, newUserDto)
@@ -169,7 +170,8 @@ class AuthRepositoryImpl(
             .document(uid)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    android.util.Log.e("Firestore", "Permission denied for getCurrentUser: ${error.message}")
+                    trySend(null)
                     return@addSnapshotListener
                 }
                 val user = snapshot?.toObject(AuthUserDto::class.java)?.toDomain()
@@ -180,22 +182,46 @@ class AuthRepositoryImpl(
     }
 
     override fun getUserById(userId: String): Flow<AuthUser?> = callbackFlow {
+        if (userId.isBlank()) {
+            trySend(null)
+            close()
+            return@callbackFlow
+        }
+
         val subscription = firestore.collection("users")
             .document(userId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    android.util.Log.e("REPO_ERROR", "Lỗi lấy user $userId: ${error.message}")
+                    trySend(null)
                     return@addSnapshotListener
                 }
-                val user = snapshot?.toObject(AuthUserDto::class.java)?.toDomain()
-                trySend(user)
-            }
 
+                if (snapshot != null && snapshot.exists()) {
+                    val user = snapshot.toObject(AuthUserDto::class.java)?.toDomain()
+                    trySend(user)
+                } else {
+                    trySend(null)
+                }
+            }
         awaitClose { subscription.remove() }
     }
 
     override suspend fun signOut() {
         auth.signOut()
+    }
+
+    override suspend fun reauthenticate(password: String): Result<Unit> {
+        val user = auth.currentUser ?: return Result.failure(Exception("User not found"))
+        val email = user.email ?: return Result.failure(Exception("Email not found"))
+
+        return try {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            user.reauthenticate(credential).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     // =============== ADMIN ===============

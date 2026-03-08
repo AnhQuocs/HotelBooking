@@ -47,13 +47,15 @@ import com.example.hotelbooking.ui.theme.SurfaceLight
 fun ChatSection(
     state: ChatState<List<ChatMessage>>,
     hotelName: String,
+    adminName: String?,
     shortAddress: String,
     userId: String,
     inputText: String,
     onInputTextChange: (String) -> Unit,
-    onSendMessage: () -> Unit
+    onSendMessage: () -> Unit,
+    onCallClick: () -> Unit,
 ) {
-    when(state) {
+    when (state) {
         is ChatState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -79,7 +81,9 @@ fun ChatSection(
                         .padding(horizontal = Dimen.PaddingM)
                         .offset(y = 8.dp),
                     chatName = hotelName,
-                    subChatName = shortAddress
+                    adminName = adminName,
+                    subChatName = shortAddress,
+                    onCallClick = { onCallClick() }
                 )
 
                 LazyColumn(
@@ -91,7 +95,10 @@ fun ChatSection(
                     itemsIndexed(chatList) { index, msg ->
                         val isLastMessage = index == chatList.size - 1
                         val showDivider =
-                            isLastMessage || !isSameDay(msg.timestamp, chatList[index + 1].timestamp)
+                            isLastMessage || !isSameDay(
+                                msg.timestamp,
+                                chatList[index + 1].timestamp
+                            )
 
                         MessageBubble(
                             message = msg,
@@ -144,7 +151,11 @@ fun ChatSection(
                                     .size(48.dp)
                                     .clip(CircleShape)
                             ) {
-                                Icon(Icons.Default.Send, contentDescription = null, tint = Color.White)
+                                Icon(
+                                    Icons.Default.Send,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
                             }
                         },
                         modifier = Modifier

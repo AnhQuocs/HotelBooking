@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.home.admin.ui.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apartment
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -26,17 +26,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.hotelbooking.R
+import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.review.domain.model.Review
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.NearBlack
+import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.RatingYellow
 
 @Composable
 fun EmptyDashboardState(onCreateClick: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(color = Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -52,9 +54,12 @@ fun EmptyDashboardState(onCreateClick: () -> Unit) {
             style = AfacadTypography.titleMedium
         )
         Spacer(modifier = Modifier.height(AppSpacing.L))
-        Button(onClick = onCreateClick) {
-            Text(text = stringResource(R.string.empty_dashboard_action))
-        }
+        AppButton(
+            text = stringResource(R.string.empty_dashboard_action),
+            color = PrimaryBlue,
+            onClick = { onCreateClick() },
+            modifier = Modifier.padding(horizontal = Dimen.PaddingXL)
+        )
     }
 }
 

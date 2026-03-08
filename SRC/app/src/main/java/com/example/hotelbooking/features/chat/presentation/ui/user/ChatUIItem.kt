@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.chat.presentation.ui.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -41,8 +43,9 @@ import com.example.hotelbooking.features.chat.presentation.util.getInitials
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.BlueNavy
+import com.example.hotelbooking.ui.theme.RoyalBlue
 import com.example.hotelbooking.ui.theme.ScrimBlack20
 
 @Composable
@@ -107,6 +110,8 @@ fun MessageBubble(
 fun ChatHeader(
     modifier: Modifier = Modifier,
     chatName: String,
+    adminName: String?,
+    onCallClick: () -> Unit,
     subChatName: String
 ) {
     Row(
@@ -157,46 +162,61 @@ fun ChatHeader(
                 modifier = Modifier.padding(start = Dimen.PaddingXXS)
             )
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if(subChatName.isNotBlank()) {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = null,
-                        tint = Color.Gray.copy(alpha = 0.6f),
-                        modifier = Modifier.size(Dimen.SizeSM)
+            if (adminName == null) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (subChatName.isNotBlank()) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null,
+                            tint = Color.Gray.copy(alpha = 0.6f),
+                            modifier = Modifier.size(Dimen.SizeSM)
+                        )
+
+                        Spacer(Modifier.width(AppSpacing.XS))
+                    }
+
+                    Text(
+                        text = subChatName,
+                        style = AfacadTypography.labelLarge.copy(
+                            color = Color.Gray,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
-
-                    Spacer(Modifier.width(AppSpacing.XS))
                 }
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (subChatName.isNotBlank()) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            tint = RoyalBlue,
+                            modifier = Modifier.size(Dimen.SizeSM)
+                        )
 
-                Text(
-                    text = subChatName,
-                    style = AfacadTypography.labelLarge.copy(
-                        color = Color.Gray,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                        Spacer(Modifier.width(AppSpacing.XS))
+                    }
+
+                    Text(
+                        text = adminName,
+                        style = AfacadTypography.labelLarge.copy(
+                            color = RoyalBlue,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(R.drawable.ic_video_call),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(Color.Black),
-                modifier = Modifier.size(Dimen.SizeM)
-            )
-
-            Spacer(Modifier.width(AppSpacing.MediumLarge))
-
-            Image(
-                painter = painterResource(R.drawable.ic_call),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(Color.Black),
-                modifier = Modifier.size(22.dp)
-            )
-        }
+        Image(
+            painter = painterResource(R.drawable.ic_call),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.Black),
+            modifier = Modifier
+                .size(22.dp)
+                .clickable { onCallClick() }
+        )
     }
 }
 
@@ -214,7 +234,10 @@ fun DateDivider(date: String) {
         ) {
             Text(
                 text = date,
-                modifier = Modifier.padding(horizontal = Dimen.PaddingSM, vertical = Dimen.PaddingXS),
+                modifier = Modifier.padding(
+                    horizontal = Dimen.PaddingSM,
+                    vertical = Dimen.PaddingXS
+                ),
                 style = AfacadTypography.labelMedium.copy(
                     fontSize = 12.sp,
                     color = Color.Gray,

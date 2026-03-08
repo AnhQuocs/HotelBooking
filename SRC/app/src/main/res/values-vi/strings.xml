@@ -226,6 +226,11 @@
     <string name="you">Bạn</string>
     <string name="type_a_message">Nhập tin nhắn…</string>
     <string name="msg_no_chats_found">Không tìm thấy đoạn chat</string>
+    <string name="admin_chat_empty">Chưa có tin nhắn nào. Khi người dùng liên hệ, cuộc trò chuyện sẽ xuất hiện tại đây.</string>
+    <string name="user_chat_empty">Chưa có tin nhắn nào. Hãy gửi tin nhắn để bắt đầu trò chuyện với khách sạn.</string>
+    <string name="close">Đóng</string>
+    <string name="cannot_call_title">Không thể gọi</string>
+    <string name="cannot_call_message">Quản trị viên chưa thêm số điện thoại vào hồ sơ nên hiện tại bạn không thể thực hiện cuộc gọi.</string>
 
     <!-- NOTIFICATION -->
     <string name="notification">Thông báo</string>
@@ -511,9 +516,6 @@
     <string name="hide_room_type_confirm">Hạng phòng này sẽ không hiển thị cho khách hàng đặt chỗ nữa. Bạn có chắc chắn muốn ẩn?</string>
     <string name="show_room_type_confirm">Loại phòng này sẽ được hiển thị công khai và cập nhật lại giá sàn cho khách sạn.</string>
 
-    <!-- ADMIN PROFILE -->
-    <string name="voucher">Mã giảm giá</string>
-
     <!-- VOUCHER -->
     <string name="create_voucher">Tạo Voucher</string>
     <string name="publish_now">Phát hành ngay</string>
@@ -617,7 +619,9 @@
     <string name="not_provided">"Chưa cung cấp"</string>
     <string name="save_avatar_btn">"Lưu ảnh đại diện"</string>
     <string name="save_info_hint">Chúng tôi sẽ lưu thông tin này để giúp bạn đặt phòng nhanh hơn.</string>
+    <string name="admin_save_info_hint">Thông tin này sẽ hiển thị cho khách hàng khi họ cần liên hệ với bạn</string>
     <string name="hotel_contact_phone_hint">Khách sạn sẽ liên lạc với bạn qua số điện thoại này nếu cần.</string>
+    <string name="guest_contact_phone_hint">Khách hàng có thể liên lạc với bạn qua số điện thoại này khi cần</string>
     <string name="edit_full_name">"Cập nhật họ và tên"</string>
     <string name="last_name_label">"Họ"</string>
     <string name="first_name_label">"Tên"</string>
@@ -629,6 +633,29 @@
     <string name="name_invalid">%1$s không được chứa số hoặc ký tự đặc biệt</string>
     <string name="phone_empty_error">Số điện thoại không được để trống</string>
     <string name="phone_invalid">Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0</string>
+    <string name="delete_account">Xóa tài khoản</string>
+    <string name="delete_account_title">Xác nhận xóa tài khoản</string>
+    <string name="delete_account_message">Hành động này không thể hoàn tác. Mọi dữ liệu đặt phòng và thông tin cá nhân của bạn sẽ bị xóa vĩnh viễn khỏi hệ thống.</string>
+    <string name="delete_account_success">Tài khoản của bạn đã được xóa thành công</string>
+    <string name="error_wrong_password">Mật khẩu cũ không chính xác!</string>
+    <string name="error_system_unknown">Lỗi hệ thống, vui lòng thử lại sau.</string>
+    <string name="update_success">Cập nhật thành công!</string>
+    <string name="error_update_failed">Cập nhật thất bại, vui lòng thử lại.</string>
+    <string name="error_avatar_failed">Không thể cập nhật ảnh đại diện.</string>
+    <string name="error_delete_failed">Xóa tài khoản thất bại. Vui lòng thử lại sau.</string>
+    <string name="reauth_password_title">Xác nhận mật khẩu</string>
+    <string name="reauth_password_message">Để bảo mật, vui lòng nhập mật khẩu của bạn để xác nhận hành động này.</string>
+    <string name="security">Bảo mật</string>
+    <string name="error_empty_password">Mật khẩu không được để trống</string>
+    <string name="error_password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="old_password">Mật khẩu hiện tại</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="confirm_new_password">Xác nhận mật khẩu mới</string>
+    <string name="error_password_same_as_old">Mật khẩu mới không được trùng với mật khẩu hiện tại</string>
+
+    <!-- ADMIN PROFILE -->
+    <string name="voucher">Mã giảm giá</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>

@@ -85,6 +85,7 @@ fun BookingDetailScreen(
     DetailSideEffects(
         bookingId = bookingId,
         roomId = roomId,
+        paymentCardViewModel = paymentCardViewModel,
         transactionState = transactionActionState,
         bookingDetailState = bookingDetailState,
         roomViewModel = roomViewModel,
@@ -98,9 +99,12 @@ fun BookingDetailScreen(
             topBar = {
                 val bookingStatus = (bookingDetailState as? BookingHistoryState.Success<*>)
                     ?.let { (it.data as? BookingWithHotel)?.booking?.status }
+                val stayStatus = (bookingDetailState as? BookingHistoryState.Success<*>)
+                    ?.let { (it.data as? BookingWithHotel)?.booking?.stayStatus }
                 BookingDetailTopBar(
                     onBackClick = onBackClick,
                     bookingStatus = bookingStatus,
+                    stayStatus = stayStatus,
                     onCancelClick = {
                         val intent = Intent(context, CancelBookingActivity::class.java)
                             .putExtra("bookingId", bookingId)
@@ -191,28 +195,31 @@ fun BookingDetailScreen(
             }
         }
 
-        if (showBottomSheet && bookingDetailState is BookingHistoryState.Success && cardsState is PaymentCardState.Success) {
-            val hotelName =
-                (bookingDetailState as BookingHistoryState.Success<BookingWithHotel>).data.hotel?.name
-                    ?: ""
-            val cards = (cardsState as PaymentCardState.Success<List<PaymentCard>>).data
+        if (showBottomSheet && bookingDetailState is BookingHistoryState.Success) {
+            val hotelName = (bookingDetailState as BookingHistoryState.Success<BookingWithHotel>).data.hotel?.name ?: ""
+
+            val cards = if (cardsState is PaymentCardState.Success) {
+                (cardsState as PaymentCardState.Success<List<PaymentCard>>).data
+            } else {
+                emptyList()
+            }
+
             PaymentMethodBottomSheet(
                 cards = cards,
                 onDismissRequest = { showBottomSheet = false },
+                onAddCardClick = {
+                    showBottomSheet = false
+                    // Chuyển sang màn hình thêm thẻ
+                },
                 onNextClick = { brand ->
                     showBottomSheet = false
-
-                    createdId?.let {
+                    createdId?.let { txId ->
                         transactionViewModel.confirmPayment(
                             bookingId = bookingId,
-                            transactionId = it,
+                            transactionId = txId,
                             brand = brand,
                             title = context.getString(R.string.booking_success_title),
-                            message = context.getString(
-                                R.string.booking_success_message,
-                                hotelName,
-                                bookingId
-                            )
+                            message = context.getString(R.string.booking_success_message, hotelName, bookingId)
                         )
                     }
                 }
@@ -225,6 +232,7 @@ fun BookingDetailScreen(
 private fun DetailSideEffects(
     bookingId: String,
     roomId: String,
+    paymentCardViewModel: PaymentCardViewModel,
     transactionState: TransactionState<TransactionAction>,
     bookingDetailState: BookingHistoryState<BookingWithHotel>,
     roomViewModel: RoomViewModel,
@@ -232,6 +240,14 @@ private fun DetailSideEffects(
     transactionViewModel: TransactionViewModel,
     context: Context
 ) {
+    val userId = remember { FirebaseAuth.getInstance().currentUser?.uid ?: ""}
+
+    LaunchedEffect(userId) {
+        if (userId.isNotEmpty()) {
+            paymentCardViewModel.loadPaymentCards(userId)
+        }
+    }
+
     LaunchedEffect(Unit) {
         BookingRefreshEvent.refreshTrigger.collect {
             bookingHistoryViewModel.loadBookingById(bookingId)

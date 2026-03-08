@@ -60,7 +60,7 @@ class MainActivity : BaseComponentActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.uiEvent.collect { event ->
-                    when(event) {
+                    when (event) {
                         is MainViewModel.UiEvent.ShowToast -> {
                             val message = event.message.asString(this@MainActivity)
                             Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
@@ -69,6 +69,8 @@ class MainActivity : BaseComponentActivity() {
                 }
             }
         }
+
+        val goToAuth = intent.getBooleanExtra("GO_TO_AUTH", false)
 
         setContent {
             val context = LocalContext.current
@@ -82,7 +84,8 @@ class MainActivity : BaseComponentActivity() {
                         R.string.notification_off
                     }
 
-                    Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(messageRes), Toast.LENGTH_SHORT)
+                        .show()
                 }
             )
 
@@ -99,19 +102,21 @@ class MainActivity : BaseComponentActivity() {
             }
 
             HotelBookingTheme {
-                MainApp()
+                MainApp(goToAuth = goToAuth)
             }
         }
     }
 }
 
 @Composable
-fun MainApp() {
+fun MainApp(goToAuth: Boolean) {
     val navController = rememberNavController()
+
+    val startRoute = if (goToAuth) "auth" else "splash_root"
 
     NavHost(
         navController = navController,
-        startDestination = "splash_root"
+        startDestination = startRoute
     ) {
         splashGraph(navController)
         authGraph(navController)
@@ -166,10 +171,6 @@ fun NavGraphBuilder.adminGraph(navController: NavController) {
         composable("admin_main") {
             AdminMainScreen(navController = navController)
         }
-//
-//        composable("manage_hotel") {
-//            ManageHotelScreen()
-//        }
     }
 }
 

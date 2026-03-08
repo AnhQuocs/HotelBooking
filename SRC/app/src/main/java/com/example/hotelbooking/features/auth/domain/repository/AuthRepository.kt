@@ -10,6 +10,7 @@ interface AuthRepository {
     suspend fun deleteAccount(userId: String)
     fun getCurrentUser(): Flow<AuthUser?>
     fun getUserById(userId: String): Flow<AuthUser?>
+    suspend fun reauthenticate(password: String): Result<Unit>
 
     //USER
     suspend fun signUp(username: String, email: String, password: String): AuthUser

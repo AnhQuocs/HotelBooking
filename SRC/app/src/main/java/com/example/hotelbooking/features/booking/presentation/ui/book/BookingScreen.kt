@@ -42,7 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.booking.domain.model.Guest
+import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDate
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingUiState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
@@ -72,8 +74,11 @@ fun BookingScreen(
     capacity: Int,
     code: String,
     bookingViewModel: BookingViewModel = hiltViewModel(),
-    roomViewModel: RoomViewModel = hiltViewModel()
+    roomViewModel: RoomViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
+    val user by authViewModel.currentUser.collectAsState()
+
     val uiState by bookingViewModel.uiState.collectAsState()
     val isSubmitting by bookingViewModel.isSubmitting.collectAsState()
 
@@ -81,6 +86,20 @@ fun BookingScreen(
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var dob by remember { mutableStateOf<LocalDate?>(null) }
+
+    var hasInitialized by remember { mutableStateOf(false) }
+
+    LaunchedEffect(user) {
+        if (user != null && !hasInitialized) {
+            name = user?.fullName ?: ""
+            email = user?.email ?: ""
+            phone = user?.phoneNumber ?: ""
+            dob = user?.dob?.toLocalDate()
+
+            hasInitialized = true
+        }
+    }
+
     var numberOfGuest by remember { mutableStateOf(1) }
 
     var isNameDirty by remember { mutableStateOf(false) }
@@ -147,76 +166,76 @@ fun BookingScreen(
 
     Scaffold(
         topBar = {
-        TopAppBar(
-            title = { Text(stringResource(id = R.string.complete_your_booking)) },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = null)
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                titleContentColor = Color.Black,
-                navigationIconContentColor = Color.Black
-            )
-        )
-    }, bottomBar = {
-        Surface(shadowElevation = 16.dp, color = Color.White) {
-            Button(
-                onClick = {
-                    val dobTimestamp = dob?.atStartOfDay(ZoneId.systemDefault())
-                        ?.toInstant()
-                        ?.toEpochMilli()
-
-                    val mainGuest = Guest(
-                        fullName = name,
-                        email = email,
-                        phone = phone,
-                        dateOfBirth = dobTimestamp?.let { Timestamp(Date(it)) },
-                        isRepresentative = true
-                    )
-                    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
-                    bookingViewModel.submitBooking(
-                        hotelId = hotelId,
-                        roomTypeId = roomId,
-                        roomNumber = selectedRoom,
-                        userId = userId,
-                        startDate = startDate,
-                        endDate = endDate,
-                        guests = listOf(mainGuest),
-                        numberOfGuests = numberOfGuest,
-                        pricePerNight = pricePerNight,
-                        timeoutSeconds = timeoutSeconds
-                    )
+            TopAppBar(
+                title = { Text(stringResource(id = R.string.complete_your_booking)) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimen.PaddingM)
-                    .height(Dimen.HeightDefault + 2.dp),
-                shape = RoundedCornerShape(AppShape.ShapeL),
-                enabled = !isSubmitting && (uiState !is BookingUiState.Loading) && isFormValid,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = BlueNavy,
-                    contentColor = Color.White,
-                    disabledContainerColor = Color.LightGray,
-                    disabledContentColor = Color.White
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black,
+                    navigationIconContentColor = Color.Black
                 )
-            ) {
-                if (isSubmitting) {
-                    CircularProgressIndicator(
-                        color = Color.White, modifier = Modifier.size(Dimen.SizeM)
-                    )
-                } else {
-                    Text(
-                        text = stringResource(
-                            R.string.pay_now, totalPrice
+            )
+        }, bottomBar = {
+            Surface(shadowElevation = 16.dp, color = Color.White) {
+                Button(
+                    onClick = {
+                        val dobTimestamp = dob?.atStartOfDay(ZoneId.systemDefault())
+                            ?.toInstant()
+                            ?.toEpochMilli()
+
+                        val mainGuest = Guest(
+                            fullName = name,
+                            email = email,
+                            phone = phone,
+                            dateOfBirth = dobTimestamp?.let { Timestamp(Date(it)) },
+                            isRepresentative = true
                         )
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+                        bookingViewModel.submitBooking(
+                            hotelId = hotelId,
+                            roomTypeId = roomId,
+                            roomNumber = selectedRoom,
+                            userId = userId,
+                            startDate = startDate,
+                            endDate = endDate,
+                            guests = listOf(mainGuest),
+                            numberOfGuests = numberOfGuest,
+                            pricePerNight = pricePerNight,
+                            timeoutSeconds = timeoutSeconds
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimen.PaddingM)
+                        .height(Dimen.HeightDefault + 2.dp),
+                    shape = RoundedCornerShape(AppShape.ShapeL),
+                    enabled = !isSubmitting && (uiState !is BookingUiState.Loading) && isFormValid,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = BlueNavy,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.LightGray,
+                        disabledContentColor = Color.White
                     )
+                ) {
+                    if (isSubmitting) {
+                        CircularProgressIndicator(
+                            color = Color.White, modifier = Modifier.size(Dimen.SizeM)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(
+                                R.string.pay_now, totalPrice
+                            )
+                        )
+                    }
                 }
             }
-        }
-    }, containerColor = Color.White
+        }, containerColor = Color.White
     ) { paddingValues ->
         Column(
             modifier = Modifier

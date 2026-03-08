@@ -167,100 +167,114 @@ fun AdminMessageScreen(
                 Spacer(modifier = Modifier.height(Dimen.PaddingM))
             }
 
-            itemsIndexed(filteredChats) { index, detail ->
-                val chat = detail.chat
-                val customer = detail.user
-                val hotel = detail.hotel
+            if(filteredChats.isEmpty()) {
+                item {
+                    Text(
+                        text = stringResource(id = R.string.admin_chat_empty),
+                        style = AfacadTypography.bodyLarge.copy(
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
+                itemsIndexed(filteredChats) { index, detail ->
+                    val chat = detail.chat
+                    val customer = detail.user
+                    val hotel = detail.hotel
 
-                val displayName = customer?.username ?: stringResource(id = R.string.username_label)
-                val displayHotel = hotel?.name ?: "Hotel"
+                    val displayName = customer?.username ?: stringResource(id = R.string.username_label)
+                    val displayHotel = hotel?.name ?: "Hotel"
 
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onOpenChat(chat, currentUser.uid)
-                            }
-                            .padding(vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                    Column {
+                        Row(
                             modifier = Modifier
-                                .size(52.dp)
-                                .clip(CircleShape)
-                                .background(BlueNavy),
-                            contentAlignment = Alignment.Center
+                                .fillMaxWidth()
+                                .clickable {
+                                    onOpenChat(chat, currentUser.uid)
+                                }
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = displayName.take(1).uppercase(),
-                                style = AfacadTypography.bodyLarge.copy(
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
+                            Box(
+                                modifier = Modifier
+                                    .size(52.dp)
+                                    .clip(CircleShape)
+                                    .background(BlueNavy),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = displayName.take(1).uppercase(),
+                                    style = AfacadTypography.bodyLarge.copy(
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 )
+                            }
+
+                            Spacer(Modifier.width(AppSpacing.M))
+
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    text = buildAnnotatedString {
+                                        withStyle(
+                                            SpanStyle(
+                                                color = Color.Black,
+                                                fontWeight = FontWeight.SemiBold,
+                                                fontSize = 16.sp
+                                            )
+                                        ) {
+                                            append(displayName)
+                                        }
+                                        withStyle(
+                                            SpanStyle(
+                                                color = BlueNavy,
+                                                fontWeight = FontWeight.Normal,
+                                                fontSize = 13.sp
+                                            )
+                                        ) {
+                                            append(" ($displayHotel)")
+                                        }
+                                    },
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                Spacer(modifier = Modifier.height(AppSpacing.XXS))
+
+                                Text(
+                                    text = if (chat.lastSenderId == currentUser.uid)
+                                        stringResource(id = R.string.you) + ": ${chat.lastMessage}"
+                                    else
+                                        chat.lastMessage,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = AfacadTypography.labelLarge.copy(
+                                        color = Color.Gray,
+                                        fontSize = 14.sp
+                                    )
+                                )
+                            }
+
+                            Spacer(Modifier.width(AppSpacing.S))
+
+                            Text(
+                                text = formatTimestamp24h(chat.lastTimestamp),
+                                fontSize = 11.sp,
+                                color = Color.LightGray,
+                                modifier = Modifier.align(Alignment.Top)
                             )
                         }
 
-                        Spacer(Modifier.width(AppSpacing.M))
-
-                        Column(Modifier.weight(1f)) {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(
-                                        SpanStyle(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.SemiBold,
-                                            fontSize = 16.sp
-                                        )
-                                    ) {
-                                        append(displayName)
-                                    }
-                                    withStyle(
-                                        SpanStyle(
-                                            color = BlueNavy,
-                                            fontWeight = FontWeight.Normal,
-                                            fontSize = 13.sp
-                                        )
-                                    ) {
-                                        append(" ($displayHotel)")
-                                    }
-                                },
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-
-                            Spacer(modifier = Modifier.height(AppSpacing.XXS))
-
-                            Text(
-                                text = if (chat.lastSenderId == currentUser.uid)
-                                    stringResource(id = R.string.you) + ": ${chat.lastMessage}"
-                                else
-                                    chat.lastMessage,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = AfacadTypography.labelLarge.copy(
-                                    color = Color.Gray,
-                                    fontSize = 14.sp
-                                )
+                        if (index != filteredChats.lastIndex) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(start = 64.dp),
+                                thickness = 0.5.dp,
+                                color = Color(0xFFE9EBED)
                             )
                         }
-
-                        Spacer(Modifier.width(AppSpacing.S))
-
-                        Text(
-                            text = formatTimestamp24h(chat.lastTimestamp),
-                            fontSize = 11.sp,
-                            color = Color.LightGray,
-                            modifier = Modifier.align(Alignment.Top)
-                        )
-                    }
-
-                    if (index != filteredChats.lastIndex) {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(start = 64.dp),
-                            thickness = 0.5.dp,
-                            color = Color(0xFFE9EBED)
-                        )
                     }
                 }
             }

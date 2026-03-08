@@ -145,9 +145,10 @@ fun UserMainScreen(
 
                 2 -> UserMessageScreen(
                     userId = userId,
-                    onOpenChat = { chat, hotelName, shortAddress ->
+                    onOpenChat = { chat, hotelName, adminId, shortAddress ->
                         val intent = Intent(context, ChatActivity::class.java)
                             .putExtra("hotelId", chat.hotelId)
+                            .putExtra("adminId", adminId)
                             .putExtra("hotelName", hotelName)
                             .putExtra("shortAddress", shortAddress)
                             .putExtra("userId", chat.userId)

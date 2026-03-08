@@ -80,6 +80,7 @@ import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.LightBlue
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.wait
 
 @AndroidEntryPoint
 class CreateVoucherActivity : BaseComponentActivity() {
@@ -163,7 +164,8 @@ fun CreateVoucherScreen(
                     }
                 }
             }
-        }
+        },
+        containerColor = Color.White
     ) { padding ->
         LazyColumn(
             modifier = Modifier

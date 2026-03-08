@@ -41,6 +41,8 @@ import com.example.hotelbooking.features.room.presentation.ui.CheckAvailabilityS
 import com.example.hotelbooking.features.room.presentation.ui.DateSelectionSection
 import com.example.hotelbooking.features.room.presentation.ui.toMillis
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
+import com.example.hotelbooking.features.vouchers.domain.model.DiscountType
+import com.example.hotelbooking.features.vouchers.domain.model.Voucher
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -142,15 +144,31 @@ fun RebookContent(
     room: RoomType,
     start: LocalDate,
     end: LocalDate,
-    finalTotalPrice: Double,
+    originalPrice: Double,
     uiState: BookingUiState,
     roomState: RoomState<RoomType>,
     bookingViewModel: BookingViewModel,
     context: Context,
     onEditClick: (Int) -> Unit,
     selectedRoomNumber: String?,
-    onRoomSelected: (String) -> Unit
+    onRoomSelected: (String) -> Unit,
+    appliedVoucher: Voucher?,
+    onPromoClick: () -> Unit
 ) {
+    val discountAmount = remember(appliedVoucher, originalPrice) {
+        appliedVoucher?.let { v ->
+            if (v.discountType == DiscountType.PERCENTAGE) {
+                originalPrice * (v.discountValue / 100.0)
+            } else {
+                v.discountValue
+            }
+        } ?: 0.0
+    }
+
+    val finalPrice = remember(discountAmount, originalPrice) {
+        (originalPrice - discountAmount).coerceAtLeast(0.0)
+    }
+
     val dateStr = "${start.dayOfMonth}-${end.dayOfMonth} ${
         start.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }
     } ${start.year}"
@@ -171,11 +189,12 @@ fun RebookContent(
                 CheckoutSummaryCard(
                     date = dateStr,
                     numberOfGuest = booking.numberOfGuests,
-                    discountAmount = booking.discountAmount.toString(),
                     guestName = it.fullName,
                     roomName = room.name,
                     phone = it.phone ?: "",
-                    totalPrice = "$${finalTotalPrice.toInt()}",
+                    discountAmount = discountAmount.toString(),
+                    originalPrice = originalPrice,
+                    finalPrice = finalPrice,
                     isEdit = true,
                     onEditClick = { onEditClick(room.capacity) }
                 )
@@ -183,7 +202,10 @@ fun RebookContent(
 
             Spacer(modifier = Modifier.height(AppSpacing.M))
 
-//            PromoUI()
+            PromoUI(
+                appliedVoucher = appliedVoucher,
+                onClick = onPromoClick
+            )
 
             Spacer(modifier = Modifier.height(AppSpacing.M))
 

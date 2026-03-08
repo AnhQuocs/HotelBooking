@@ -226,6 +226,11 @@
     <string name="you">You</string>
     <string name="type_a_message">Type a message…</string>
     <string name="msg_no_chats_found">No chats found</string>
+    <string name="admin_chat_empty">No messages yet. Conversations will appear here once users contact you.</string>
+    <string name="user_chat_empty">No messages yet. Send a message to start chatting with the hotel.</string>
+    <string name="cannot_call_title">Cannot make a call</string>
+    <string name="cannot_call_message">The admin has not added a phone number to their profile yet, so you cannot make a call.</string>
+    <string name="close">Close</string>
 
     <!-- NOTIFICATION -->
     <string name="notification">Notification</string>
@@ -511,9 +516,6 @@
     <string name="hide_room_type_confirm">This room type will no longer be visible for customers to book. Are you sure you want to hide it?</string>
     <string name="show_room_type_confirm">This room type will be publicly visible again and the hotel\'s minimum price will be recalculated.</string>
 
-    <!-- ADMIN PROFILE -->
-    <string name="voucher">Voucher</string>
-
     <!-- VOUCHER -->
     <string name="create_voucher">Create Voucher</string>
     <string name="publish_now">Publish now</string>
@@ -617,7 +619,9 @@
     <string name="not_provided">Not provided</string>
     <string name="save_avatar_btn">Save profile picture</string>
     <string name="save_info_hint">We will save this information to help you book faster.</string>
+    <string name="admin_save_info_hint">This information will be shown to customers when they need to contact you</string>
     <string name="hotel_contact_phone_hint">The hotel may contact you using this phone number if necessary.</string>
+    <string name="guest_contact_phone_hint">Customers may contact you using this phone number if needed</string>
     <string name="edit_full_name">Update full name</string>
     <string name="last_name_label">Last name</string>
     <string name="first_name_label">First name</string>
@@ -629,6 +633,29 @@
     <string name="name_invalid">%1$s cannot contain numbers or special characters</string>
     <string name="phone_empty_error">Phone number cannot be empty</string>
     <string name="phone_invalid">Phone number must contain 10 digits and start with 0</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_title">Confirm account deletion</string>
+    <string name="delete_account_message">This action cannot be undone. All your booking data and personal information will be permanently deleted from the system</string>
+    <string name="delete_account_success">Your account has been successfully deleted</string>
+    <string name="error_wrong_password">The old password is incorrect!</string>
+    <string name="error_system_unknown">System error, please try again later.</string>
+    <string name="update_success">Update successful!</string>
+    <string name="error_update_failed">Update failed, please try again.</string>
+    <string name="error_avatar_failed">Cannot update profile picture.</string>
+    <string name="error_delete_failed">Failed to delete account. Please try again later.</string>
+    <string name="reauth_password_title">Confirm your password</string>
+    <string name="reauth_password_message">For security reasons, please enter your password to confirm this action.</string>
+    <string name="security">Security</string>
+    <string name="error_empty_password">Password cannot be empty</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="change_password">Change Password</string>
+    <string name="old_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="error_password_same_as_old">The new password must be different from the current password</string>
+
+    <!-- ADMIN PROFILE -->
+    <string name="voucher">Voucher</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

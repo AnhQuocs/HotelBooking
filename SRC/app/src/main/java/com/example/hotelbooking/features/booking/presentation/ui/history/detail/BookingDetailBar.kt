@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,6 +48,7 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 fun BookingDetailTopBar(
     onBackClick: () -> Unit,
     bookingStatus: BookingStatus?,
+    stayStatus: StayStatus?,
     onCancelClick: () -> Unit,
     onRebookClick: () -> Unit
 ) {
@@ -82,65 +84,69 @@ fun BookingDetailTopBar(
                 ),
             )
 
-            Box {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(Dimen.SizeSM)
-                        .clickable { showMenu = true },
-                    tint = NearBlack
-                )
+            if(stayStatus == StayStatus.NONE) {
+                Box {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(Dimen.SizeSM)
+                            .clickable { showMenu = true },
+                        tint = NearBlack
+                    )
 
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false },
-                    modifier = Modifier.background(Color.White)
-                ) {
-                    if (bookingStatus != null && bookingStatus != BookingStatus.CANCELLED) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(id = R.string.cancel_booking_confirm),
-                                    style = AfacadTypography.bodyLarge.copy(color = Color.Red)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Cancel,
-                                    contentDescription = null,
-                                    tint = Color.Red,
-                                    modifier = Modifier.size(Dimen.PaddingSM)
-                                )
-                            },
-                            onClick = {
-                                showMenu = false
-                                onCancelClick()
-                            }
-                        )
-                    } else if (bookingStatus == BookingStatus.CANCELLED) {
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    "Re-order",
-                                    style = AfacadTypography.bodyLarge.copy(color = PrimaryBlue)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Reorder,
-                                    contentDescription = null,
-                                    tint = PrimaryBlue,
-                                    modifier = Modifier.size(Dimen.PaddingSM)
-                                )
-                            },
-                            onClick = {
-                                showMenu = false
-                                onRebookClick()
-                            }
-                        )
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        modifier = Modifier.background(Color.White)
+                    ) {
+                        if (bookingStatus != null && bookingStatus != BookingStatus.CANCELLED) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(id = R.string.cancel_booking_confirm),
+                                        style = AfacadTypography.bodyLarge.copy(color = Color.Red)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Cancel,
+                                        contentDescription = null,
+                                        tint = Color.Red,
+                                        modifier = Modifier.size(Dimen.PaddingSM)
+                                    )
+                                },
+                                onClick = {
+                                    showMenu = false
+                                    onCancelClick()
+                                }
+                            )
+                        } else if (bookingStatus == BookingStatus.CANCELLED) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "Re-order",
+                                        style = AfacadTypography.bodyLarge.copy(color = PrimaryBlue)
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Reorder,
+                                        contentDescription = null,
+                                        tint = PrimaryBlue,
+                                        modifier = Modifier.size(Dimen.PaddingSM)
+                                    )
+                                },
+                                onClick = {
+                                    showMenu = false
+                                    onRebookClick()
+                                }
+                            )
+                        }
                     }
                 }
+            } else {
+                Spacer(modifier = Modifier.size(Dimen.SizeSM))
             }
         }
     }

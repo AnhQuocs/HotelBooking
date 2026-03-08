@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -37,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthState
@@ -101,12 +104,21 @@ fun UserProfileScreen(
                             .padding(bottom = Dimen.PaddingS),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.user_avatar),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(Dimen.SizeXXLPlus)
-                        )
+                        if(currentUser?.avatar != null) {
+                            AsyncImage(
+                                model = currentUser?.avatar,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.clip(CircleShape).size(Dimen.SizeXXLPlus)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(R.drawable.user_avatar),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(Dimen.SizeXXLPlus)
+                            )
+                        }
 
                         Spacer(Modifier.width(AppSpacing.XS))
 
@@ -203,7 +215,7 @@ fun UserProfileScreen(
                 item {
                     LegalSupportSection(
                         onHelpCenterClick = {
-
+                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
                         },
                         onPrivacyPolicyClick = {
                             val intent = Intent(context, PrivacyPolicyActivity::class.java)

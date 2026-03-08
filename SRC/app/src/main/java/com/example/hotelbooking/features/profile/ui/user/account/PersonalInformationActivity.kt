@@ -1,11 +1,15 @@
 package com.example.hotelbooking.features.profile.ui.user.account
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.PhotoCamera
@@ -30,6 +35,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,19 +52,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
+import com.example.hotelbooking.components.LineGray
+import com.example.hotelbooking.features.auth.domain.model.UserRole
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.auth.presentation.viewmodel.UpdateActionState
+import com.example.hotelbooking.features.main.MainActivity
+import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.CancelledRed
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextTertiary
 import com.google.firebase.Timestamp
@@ -90,10 +104,12 @@ fun PersonalInfoScreen(
     authViewModel: AuthViewModel,
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val user by authViewModel.currentUser.collectAsState()
     val updateState by authViewModel.updateState.collectAsState()
 
-    var showDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
     var editingField by remember { mutableStateOf("") }
 
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -106,6 +122,9 @@ fun PersonalInfoScreen(
     val datePickerState = rememberDatePickerState()
     var showDatePicker by remember { mutableStateOf(false) }
 
+    var showConfirmDialog by remember { mutableStateOf(false) }
+    var showReAuthPasswordDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             AppTopBar(
@@ -115,6 +134,8 @@ fun PersonalInfoScreen(
         },
         containerColor = Color.White
     ) { padding ->
+        val isAdmin = user?.role == UserRole.ADMIN
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -198,7 +219,9 @@ fun PersonalInfoScreen(
 
             item {
                 Text(
-                    text = stringResource(id = R.string.save_info_hint),
+                    text = stringResource(
+                        id = if (isAdmin) R.string.admin_save_info_hint else R.string.save_info_hint
+                    ),
                     style = AfacadTypography.titleMedium.copy(color = TextTertiary),
                     modifier = Modifier.padding(horizontal = Dimen.PaddingSM)
                 )
@@ -212,7 +235,7 @@ fun PersonalInfoScreen(
                     value = user?.username,
                     onClick = {
                         editingField = "username"
-                        showDialog = true
+                        showEditDialog = true
                     }
                 )
                 ProfileInfoRow(
@@ -220,7 +243,7 @@ fun PersonalInfoScreen(
                     value = user?.fullName,
                     onClick = {
                         editingField = "fullName"
-                        showDialog = true
+                        showEditDialog = true
                     }
                 )
                 ProfileInfoRow(
@@ -237,7 +260,7 @@ fun PersonalInfoScreen(
                         value = user?.phoneNumber,
                         onClick = {
                             editingField = "phoneNumber"
-                            showDialog = true
+                            showEditDialog = true
                         },
                         isLast = true
                     )
@@ -245,11 +268,67 @@ fun PersonalInfoScreen(
                     Spacer(modifier = Modifier.height(AppSpacing.XS))
 
                     Text(
-                        stringResource(id = R.string.hotel_contact_phone_hint),
+                        text = stringResource(
+                            id = if (isAdmin)
+                                R.string.guest_contact_phone_hint
+                            else
+                                R.string.hotel_contact_phone_hint
+                        ),
                         style = AfacadTypography.bodyMedium,
                         color = Color.Gray,
                         modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                     )
+                }
+            }
+
+            item {
+                Column {
+                    LineGray(modifier = Modifier.padding(Dimen.PaddingM))
+
+                    Text(
+                        text = stringResource(R.string.security),
+                        style = AfacadTypography.bodyLarge.copy(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = Color.Black,
+                        modifier = Modifier.padding(horizontal = Dimen.PaddingM)
+                    )
+
+                    ProfileInfoRow(
+                        label = stringResource(R.string.password_label),
+                        value = stringResource(R.string.change_password),
+                        onClick = {
+                            context.startActivity(
+                                Intent(
+                                    context,
+                                    ChangePasswordActivity::class.java
+                                )
+                            )
+                        },
+                        isLast = true
+                    )
+                }
+            }
+
+            if (!isAdmin) {
+                item {
+                    OutlinedButton(
+                        onClick = { showConfirmDialog = true },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = CancelledRed),
+                        border = BorderStroke(1.dp, CancelledRed),
+                        shape = RoundedCornerShape(AppShape.ShapeS),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = Dimen.PaddingM)
+                            .padding(bottom = Dimen.PaddingL)
+                            .height(Dimen.HeightLarge)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.delete_account),
+                            style = AfacadTypography.bodyLarge
+                        )
+                    }
                 }
             }
         }
@@ -258,12 +337,36 @@ fun PersonalInfoScreen(
     LaunchedEffect(updateState) {
         if (updateState is UpdateActionState.Success) {
             selectedImageUri = null
-            showDialog = false
+            showEditDialog = false
             authViewModel.resetUpdateState()
+        }
+
+        if (updateState is UpdateActionState.Error) {
+            val errorMessage = (updateState as UpdateActionState.Error).message.asString(context)
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            authViewModel.resetUpdateState()
+        }
+
+        if (updateState is UpdateActionState.DeleteAccountSuccess) {
+            authViewModel.resetState()
+
+            Toast.makeText(
+                context,
+                context.getString(R.string.delete_account_success),
+                Toast.LENGTH_SHORT
+            ).show()
+
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("GO_TO_AUTH", true)
+            }
+
+            context.startActivity(intent)
+            (context as? Activity)?.finish()
         }
     }
 
-    if (showDialog) {
+    if (showEditDialog) {
         EditInfoDialog(
             field = editingField,
             initialValue = when (editingField) {
@@ -272,9 +375,29 @@ fun PersonalInfoScreen(
                 else -> user?.phoneNumber
             },
             isLoading = updateState is UpdateActionState.Loading,
-            onDismiss = { showDialog = false },
+            onDismiss = { showEditDialog = false },
             onSave = { newValue ->
                 authViewModel.updateProfileField(editingField, newValue)
+            }
+        )
+    }
+
+    if (showConfirmDialog) {
+        DeleteAccountDialog(
+            onConfirm = {
+                showConfirmDialog = false
+                showReAuthPasswordDialog = true
+            },
+            onDismiss = { showConfirmDialog = false }
+        )
+    }
+
+    if (showReAuthPasswordDialog) {
+        ReAuthPasswordDialog(
+            isLoading = updateState is UpdateActionState.Loading,
+            onDismiss = { authViewModel.resetUpdateState(); showReAuthPasswordDialog = false },
+            onConfirm = { password ->
+                authViewModel.deleteAccountWithReAuth(password)
             }
         )
     }

@@ -60,14 +60,13 @@ import com.example.hotelbooking.ui.theme.SurfaceSoftBlue
 fun PaymentMethodBottomSheet(
     cards: List<PaymentCard>,
     onDismissRequest: () -> Unit,
-    onNextClick: (PaymentBrand) -> Unit
+    onNextClick: (PaymentBrand) -> Unit,
+    onAddCardClick: () -> Unit = {}
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = false
-    )
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val sortedCards = cards.sortedByDescending { it.isDefault }
 
-    var brand by remember { mutableStateOf<PaymentBrand?>(null) }
+    var brand by remember { mutableStateOf(sortedCards.firstOrNull()?.brand) }
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -104,16 +103,24 @@ fun PaymentMethodBottomSheet(
 
             Spacer(modifier = Modifier.height(AppSpacing.L))
 
-            PaymentMethodRadioButton(cards = sortedCards, onSelectedBrand = { newBrand -> brand = newBrand })
-
-            Spacer(modifier = Modifier.height(AppSpacing.L))
+            if (sortedCards.isNotEmpty()) {
+                PaymentMethodRadioButton(
+                    cards = sortedCards,
+                    onSelectedBrand = { newBrand -> brand = newBrand }
+                )
+                Spacer(modifier = Modifier.height(AppSpacing.L))
+            }
 
             Box(
                 modifier = Modifier
                     .height(Dimen.HeightLarge)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(AppShape.ShapeM))
-                    .background(Color.White, RoundedCornerShape(AppShape.ShapeM)),
+                    .background(Color.White, RoundedCornerShape(AppShape.ShapeM))
+                    .clickable {
+                        onDismissRequest()
+                        onAddCardClick()
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Row(

@@ -32,6 +32,7 @@ import com.example.hotelbooking.features.chat.presentation.ui.admin.AdminChatAct
 import com.example.hotelbooking.features.chat.presentation.ui.admin.AdminMessageScreen
 import com.example.hotelbooking.features.home.admin.ui.dashboard.AdminHomeScreen
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.MyHotelsScreen
+import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelViewModel
 import com.example.hotelbooking.features.profile.ui.admin.AdminProfileScreen
 import com.google.firebase.auth.FirebaseAuth
@@ -113,7 +114,8 @@ fun AdminMainScreen(
             when (tab) {
                 0 -> AdminHomeScreen(
                     onNavigateToCreateHotel = {
-
+                        val intent = Intent(context, AddHotelActivity::class.java)
+                        context.startActivity(intent)
                     }
                 )
 

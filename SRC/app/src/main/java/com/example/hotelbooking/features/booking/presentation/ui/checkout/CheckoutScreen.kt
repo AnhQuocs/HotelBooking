@@ -1,5 +1,6 @@
 package com.example.hotelbooking.features.booking.presentation.ui.checkout
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +52,7 @@ import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.Hotel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.ui.AddPaymentCardActivity
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardState
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.transaction.domain.model.Transaction
@@ -124,6 +127,22 @@ fun CheckoutScreen(
         (originalPrice - discountAmount).coerceAtLeast(0.0)
     }
 
+    LaunchedEffect(Unit) {
+        val now = System.currentTimeMillis()
+        val transaction = Transaction(
+            bookingId = bookingId,
+            userId = userId,
+            status = TransactionStatus.PENDING,
+            totalPrice = originalPrice,
+            amountPaid = originalPrice,
+            paymentMethod = null,
+            createdAt = now,
+            updatedAt = now,
+            refundedAt = null
+        )
+        transactionViewModel.createTransaction(transaction)
+    }
+
     CheckoutSideEffects(
         context = context,
         navController = navController,
@@ -185,19 +204,6 @@ fun CheckoutScreen(
                 ) {
                     Button(
                         onClick = {
-                            val now = System.currentTimeMillis()
-                            val transaction = Transaction(
-                                bookingId = bookingId,
-                                userId = userId,
-                                status = TransactionStatus.PENDING,
-                                totalPrice = originalPrice,
-                                amountPaid = finalPrice,
-                                paymentMethod = null,
-                                createdAt = now,
-                                updatedAt = now,
-                                refundedAt = null
-                            )
-                            transactionViewModel.createTransaction(transaction)
                             isShowPaymentBottomSheet = true
                         },
                         modifier = Modifier
@@ -277,7 +283,8 @@ fun CheckoutScreen(
                     roomName = roomName,
                     phone = phone,
                     discountAmount = discountAmount.toString(),
-                    totalPrice = finalPrice.toInt().toString()
+                    originalPrice = originalPrice,
+                    finalPrice = finalPrice
                 )
 
                 Spacer(modifier = Modifier.height(AppSpacing.M))
@@ -344,6 +351,11 @@ fun CheckoutScreen(
                                         }
                                     }
                                 }
+                            },
+                            onAddCardClick = {
+                                isShowPaymentBottomSheet = false
+                                val intent = Intent(context, AddPaymentCardActivity::class.java)
+                                context.startActivity(intent)
                             }
                         )
                     }

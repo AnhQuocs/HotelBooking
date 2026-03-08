@@ -148,8 +148,7 @@ fun RoomImage(
                 .padding(horizontal = Dimen.PaddingM)
                 .padding(top = 36.dp)
                 .align(Alignment.TopCenter),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
@@ -161,20 +160,6 @@ fun RoomImage(
             ) {
                 Icon(
                     Icons.Default.ArrowBackIosNew,
-                    contentDescription = null,
-                    modifier = Modifier.size(Dimen.SizeSM)
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .size(Dimen.PaddingXL + 4.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray.copy(alpha = 0.6f), CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Default.Share,
                     contentDescription = null,
                     modifier = Modifier.size(Dimen.SizeSM)
                 )
