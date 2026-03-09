@@ -313,6 +313,8 @@ fun PersonalInfoScreen(
 
             if (!isAdmin) {
                 item {
+                    Spacer(modifier = Modifier.height(AppSpacing.XLPlus))
+
                     OutlinedButton(
                         onClick = { showConfirmDialog = true },
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = CancelledRed),

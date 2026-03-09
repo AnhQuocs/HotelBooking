@@ -69,6 +69,7 @@ fun BookingScreen(
     startDate: LocalDate,
     endDate: LocalDate,
     hotelId: String,
+    ownerId: String,
     roomName: String,
     price: String,
     capacity: Int,
@@ -156,7 +157,7 @@ fun BookingScreen(
             navController.navigate(
                 "checkout?date=${Uri.encode(dateStr)}&hotelId=$hotelId&bookingId=$bookingId&roomName=$encodedRoomName&guestName=$encodedGuestName&numberOfGuest=$numberOfGuest&phone=$phone&totalPrice=$totalPrice&expireAt=$expireAtLong&code=$encodedCode"
             ) {
-                popUpTo("booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&roomName={roomName}&price={price}&capacity={capacity}&code={code}") {
+                popUpTo("booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&ownerId={ownerId}&roomName={roomName}&price={price}&capacity={capacity}&code={code}") {
                     inclusive = true
                 }
             }
@@ -198,6 +199,7 @@ fun BookingScreen(
 
                         bookingViewModel.submitBooking(
                             hotelId = hotelId,
+                            ownerId = ownerId,
                             roomTypeId = roomId,
                             roomNumber = selectedRoom,
                             userId = userId,

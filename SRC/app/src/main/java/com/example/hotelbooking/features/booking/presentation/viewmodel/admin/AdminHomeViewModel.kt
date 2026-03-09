@@ -8,7 +8,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
-import com.example.hotelbooking.features.home.admin.SyncBookingAutoUseCase
+import com.example.hotelbooking.features.home.ui.admin.SyncBookingAutoUseCase
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.usecase.AdminHotelUseCases
 import com.example.hotelbooking.features.review.domain.model.Review

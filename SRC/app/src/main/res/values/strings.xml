@@ -600,9 +600,20 @@
     <string name="privacy_title_6">"6. Contact and Complaints"</string>
     <string name="privacy_content_6">"If you have any questions about how we handle your data, you can contact the development team directly through the \"Support\" section in the application or send an email to the system\'s official support address."</string>
 
+    <!-- ADMIN PRIVACY POLICY -->
+    <string name="privacy_title_admin_1">1. Hotel Information Management</string>
+    <string name="privacy_content_admin_1">We collect information provided by you including Hotel Name, Address, and Room details. This data is stored to display correctly to users seeking accommodations.</string>
+    <string name="privacy_title_admin_2">2. Visual Content &amp; Media</string>
+    <string name="privacy_content_admin_2">The images you upload to the Media Library are stored on Firebase and used to represent your hotel. You are responsible for the copyright and appropriateness of these images.</string>
+    <string name="privacy_title_admin_3">3. Data Integrity</string>
+    <string name="privacy_content_admin_3">Management actions such as updating prices, managing vouchers, or hiding reviews are recorded to maintain system consistency and provide accurate reports in the Operations Center.</string>
+    <string name="privacy_title_admin_4">4. Administrative Account Policy</string>
+    <string name="privacy_content_admin_4">To ensure the stability of the hotel data system, Admin accounts do not have the \"Self-Delete\" feature. Please contact the System Administrator if you need to deactivate your management account.</string>
+
     <!-- USER TERMS OF SERVICE -->
     <string name="terms_of_service_title">"Terms of Service"</string>
     <string name="terms_of_service_intro">"By using our application, you agree to the following terms and conditions. Please read them carefully."</string>
+
     <string name="terms_title_1">"1. Acceptance of Terms"</string>
     <string name="terms_content_1">"By accessing and using this hotel booking application, you acknowledge that you have read, understood, and agreed to be bound by these Terms of Service and our Privacy Policy."</string>
     <string name="terms_title_2">"2. Booking and Payments"</string>
@@ -615,6 +626,20 @@
     <string name="terms_content_5">"Users must provide accurate personal and guest information. You are responsible for maintaining the confidentiality of your account and for all activities that occur under your account authenticated via Firebase."</string>
     <string name="terms_title_6">"6. Limitation of Liability"</string>
     <string name="terms_content_6">"We act as an intermediary between users and hotels. We are not liable for any direct or indirect damages arising from the hotel\'s service quality, or any technical issues caused by third-party services like internet providers or payment gateways."</string>
+
+    <!-- ADMIN TERMS OF SERVICE -->
+    <string name="terms_title_admin_1">1. Partner Responsibilities</string>
+    <string name="terms_content_admin_1">By registering as a Hotel Administrator, you agree to provide accurate information regarding room availability, pricing, and hotel facilities. You are responsible for all content uploaded via your account.</string>
+    <string name="terms_title_admin_2">2. Booking &amp; No-show Management</string>
+    <string name="terms_content_admin_2">Admins have the right to manage the booking lifecycle. According to system policy:\n• After 6 hours of scheduled check-in: Admin may manually mark a guest as No-show if they have not arrived.\n• After 12 hours: The system will automatically execute No-show status to release the room.</string>
+    <string name="terms_title_admin_3">3. Voucher &amp; Promotion Policy</string>
+    <string name="terms_content_admin_3">When creating Vouchers in the Operations Center, you acknowledge that these discounts will directly affect your hotel\'s displayed revenue. Once a voucher is applied to a confirmed booking, it cannot be revoked.</string>
+    <string name="terms_title_admin_4">4. Content Moderation (Reviews)</string>
+    <string name="terms_content_admin_4">Admins are granted the right to hide reviews containing inappropriate language or fraudulent content. However, the numeric rating (stars) will remain in the system to ensure overall statistical transparency.</string>
+    <string name="terms_title_admin_5">5. Revenue &amp; Reports</string>
+    <string name="terms_content_admin_5">Revenue data displayed in the Operations Center is for reporting and management purposes. You are responsible for verifying these figures with your actual bank statements and internal accounting.</string>
+    <string name="terms_title_admin_6">6. Account Stability &amp; Data Integrity</string>
+    <string name="terms_content_admin_6">To protect the history of bookings and financial records, Admin accounts cannot be self-deleted. Any request for account deactivation must be submitted to the System Developer for manual processing.</string>
 
     <!-- ACCOUNT -->
     <string name="not_provided">Not provided</string>
@@ -657,6 +682,20 @@
 
     <!-- ADMIN PROFILE -->
     <string name="voucher">Voucher</string>
+    <string name="operations_center">Operations Center</string>
+    <string name="media_library">Media Library</string>
+    <string name="revenue_report">Revenue Report</string>
+    <string name="view_mode">View Mode</string>
+    <string name="total_revenue">Total Revenue</string>
+    <string name="all_hotels">All Hotels</string>
+    <string name="revenue_day">Day %1$s</string>
+    <string name="revenue_week">Week of %1$s</string>
+    <string name="revenue_month">Month %1$s</string>
+    <string name="revenue_all_time">All time</string>
+    <string name="period_day">Day</string>
+    <string name="period_week">Week</string>
+    <string name="period_month">Month</string>
+    <string name="period_all">All</string>
 
     <!-- OTHER -->
     <string name="loading">Loading…</string>

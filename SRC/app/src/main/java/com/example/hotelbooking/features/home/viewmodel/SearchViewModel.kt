@@ -1,10 +1,12 @@
-package com.example.hotelbooking.features.home.user.search.viewmodel
+package com.example.hotelbooking.features.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.domain.usecase.read.SearchHotelsUseCase
+import com.example.hotelbooking.features.hotel.domain.usecase.read.SearchManagedHotelsUseCase
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +19,17 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchHotelsUseCase: SearchHotelsUseCase
+    private val searchHotelsUseCase: SearchHotelsUseCase,
+    private val searchManagedHotelsUseCase: SearchManagedHotelsUseCase
 ) : ViewModel() {
+
+    private var isAdminMode: Boolean = false
+
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
-    private val _searchResultState = MutableStateFlow<HotelState<List<Hotel>>>(HotelState.Success(emptyList()))
+    private val _searchResultState =
+        MutableStateFlow<HotelState<List<Hotel>>>(HotelState.Success(emptyList()))
     val searchResultState = _searchResultState.asStateFlow()
 
     init {
@@ -40,16 +47,29 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun initSearchMode(isAdmin: Boolean) {
+        this.isAdminMode = isAdmin
+    }
+
     fun onSearchQueryChange(newQuery: String) {
         _searchQuery.value = newQuery
     }
 
     private fun performSearch(query: String) {
+        val adminId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        if (adminId.isEmpty()) {
+            _searchResultState.value = HotelState.Error("User not logged in")
+            return
+        }
+
         viewModelScope.launch {
             _searchResultState.value = HotelState.Loading
-            runCatching {
-                searchHotelsUseCase(query)
-            }.onSuccess { list ->
+
+            val result = runCatching {
+                searchManagedHotelsUseCase(adminId, query)
+            }
+
+            result.onSuccess { list ->
                 _searchResultState.value = HotelState.Success(list)
             }.onFailure { e ->
                 _searchResultState.value = HotelState.Error(e.message ?: "Search failed")

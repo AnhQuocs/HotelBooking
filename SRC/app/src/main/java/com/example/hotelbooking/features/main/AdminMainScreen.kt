@@ -30,7 +30,7 @@ import androidx.navigation.NavController
 import com.example.hotelbooking.components.AdminBottomBar
 import com.example.hotelbooking.features.chat.presentation.ui.admin.AdminChatActivity
 import com.example.hotelbooking.features.chat.presentation.ui.admin.AdminMessageScreen
-import com.example.hotelbooking.features.home.admin.ui.dashboard.AdminHomeScreen
+import com.example.hotelbooking.features.home.ui.admin.dashboard.AdminHomeScreen
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.MyHotelsScreen
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHotelActivity
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelViewModel

@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -109,6 +110,7 @@ fun RecommendedItem(
 
             Column(
                 modifier = Modifier
+                    .weight(1f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -116,7 +118,9 @@ fun RecommendedItem(
                     text = hotelName,
                     color = Color.Black,
                     style = AfacadTypography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                    modifier = Modifier.padding(start = AppSpacing.XS)
+                    modifier = Modifier.padding(start = AppSpacing.XS),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -132,7 +136,9 @@ fun RecommendedItem(
                     Text(
                         text = hotelShortAddress,
                         style = AfacadTypography.labelLarge.copy(fontWeight = FontWeight.Normal),
-                        color = Color.Gray
+                        color = Color.Gray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
 
@@ -151,11 +157,13 @@ fun RecommendedItem(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(AppSpacing.S))
 
             Text(
                 text = "⭐%.1f".format(hotel.averageRating),
-                color = Color.Black
+                color = Color.Black,
+                style = AfacadTypography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                modifier = Modifier.padding(top = 2.dp)
             )
         }
 

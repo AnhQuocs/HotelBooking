@@ -6,7 +6,7 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
-import com.example.hotelbooking.features.home.admin.ui.dashboard.BookingFilterType
+import com.example.hotelbooking.features.home.ui.admin.dashboard.BookingFilterType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,7 +64,11 @@ class AdminBookingListViewModel @Inject constructor(
                             }
 
                             BookingFilterType.OCCUPANCY -> {
-                                !targetDate.isBefore(startDate) && targetDate.isBefore(endDate) && booking.status == BookingStatus.CONFIRMED
+                                val isDateMatch = !targetDate.isBefore(startDate) && targetDate.isBefore(endDate)
+                                val isActiveStatus = booking.status == BookingStatus.CONFIRMED
+                                val isActualStay = booking.stayStatus != StayStatus.NO_SHOW
+
+                                isDateMatch && isActiveStatus && isActualStay
                             }
 
                             BookingFilterType.NEW_BOOKINGS -> {

@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.user
+package com.example.hotelbooking.features.home.ui.user
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
-import com.example.hotelbooking.features.home.user.search.ui.SearchActivity
+import com.example.hotelbooking.features.home.ui.user.search.SearchActivity
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.popular.HotelSection
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity

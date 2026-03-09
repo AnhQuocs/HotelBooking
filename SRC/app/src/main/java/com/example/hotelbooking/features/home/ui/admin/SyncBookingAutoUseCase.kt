@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin
+package com.example.hotelbooking.features.home.ui.admin
 
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus

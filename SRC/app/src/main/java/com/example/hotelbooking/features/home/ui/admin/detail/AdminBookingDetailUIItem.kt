@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui.detail
+package com.example.hotelbooking.features.home.ui.admin.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -25,8 +25,8 @@ import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
-import com.example.hotelbooking.features.home.admin.ui.ActionDialog
-import com.example.hotelbooking.features.home.admin.ui.dashboard.ConfirmDialogState
+import com.example.hotelbooking.features.home.ui.admin.ActionDialog
+import com.example.hotelbooking.features.home.ui.admin.dashboard.ConfirmDialogState
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography

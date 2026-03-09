@@ -47,6 +47,7 @@ import java.time.ZoneId
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomDetailScreen(
+    ownerId: String,
     room: RoomType,
     context: Context,
     code: String,
@@ -74,7 +75,7 @@ fun RoomDetailScreen(
                     val encodedCode = Uri.encode(code)
 
                     navController.navigate(
-                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&roomName=$encodedName&price=$price&capacity=$capacity&code=$encodedCode"
+                        "booking_screen/${room.id}?start=$startStr&end=$endStr&hotelId=${room.hotelId}&ownerId=$ownerId&roomName=$encodedName&price=$price&capacity=$capacity&code=$encodedCode"
                     )
                 }
             )

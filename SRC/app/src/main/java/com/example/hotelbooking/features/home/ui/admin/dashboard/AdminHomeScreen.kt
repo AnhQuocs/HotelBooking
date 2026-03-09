@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui.dashboard
+package com.example.hotelbooking.features.home.ui.admin.dashboard
 
 import android.content.Context
 import android.content.Intent
@@ -340,7 +340,7 @@ fun AdminHomeScreen(
                         items(state.recentReviews) { review -> AdminReviewItem(review) }
                     }
 
-                    item { Spacer(modifier = Modifier.height(AppSpacing.L)) }
+                    item { Spacer(modifier = Modifier.height(AppSpacing.M)) }
                 }
             }
         }

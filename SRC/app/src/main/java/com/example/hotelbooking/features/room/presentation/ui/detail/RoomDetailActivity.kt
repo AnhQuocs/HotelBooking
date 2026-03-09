@@ -32,6 +32,7 @@ class RoomDetailActivity : BaseComponentActivity() {
         enableEdgeToEdge()
 
         val roomId = intent.getStringExtra("roomId") ?: ""
+        val ownerId = intent.getStringExtra("ownerId") ?: ""
         val code = intent.getStringExtra("code") ?: ""
 
         setContent {
@@ -53,6 +54,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                 ) {
                     RoomDetailSection(
                         roomId = roomId,
+                        ownerId = ownerId,
                         code = code,
                         onBackClick = { finish() },
                         navController = navController
@@ -60,12 +62,13 @@ class RoomDetailActivity : BaseComponentActivity() {
                 }
 
                 composable(
-                    route = "booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&roomName={roomName}&price={price}&capacity={capacity}&code={code}",
+                    route = "booking_screen/{roomId}?start={start}&end={end}&hotelId={hotelId}&ownerId={ownerId}&roomName={roomName}&price={price}&capacity={capacity}&code={code}",
                     arguments = listOf(
                         navArgument("roomId") { type = NavType.StringType },
                         navArgument("start") { type = NavType.StringType },
                         navArgument("end") { type = NavType.StringType },
                         navArgument("hotelId") { type = NavType.StringType },
+                        navArgument("ownerId") { type = NavType.StringType },
                         navArgument("roomName") { type = NavType.StringType },
                         navArgument("price") { type = NavType.StringType },
                         navArgument("capacity") { type = NavType.IntType },
@@ -88,6 +91,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                     val startStr = backStackEntry.arguments?.getString("start") ?: ""
                     val endStr = backStackEntry.arguments?.getString("end") ?: ""
                     val hotelId = backStackEntry.arguments?.getString("hotelId") ?: ""
+                    val ownerId = backStackEntry.arguments?.getString("ownerId") ?: ""
                     val roomName = Uri.decode(backStackEntry.arguments?.getString("roomName") ?: "")
                     val price = backStackEntry.arguments?.getString("price") ?: ""
                     val capacity = backStackEntry.arguments?.getInt("capacity") ?: 0
@@ -99,6 +103,7 @@ class RoomDetailActivity : BaseComponentActivity() {
                         startDate = LocalDate.parse(startStr),
                         endDate = LocalDate.parse(endStr),
                         hotelId = hotelId,
+                        ownerId = ownerId,
                         roomName = roomName,
                         price = price,
                         capacity = capacity,

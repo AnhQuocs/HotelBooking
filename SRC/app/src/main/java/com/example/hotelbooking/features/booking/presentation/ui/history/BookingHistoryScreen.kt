@@ -90,7 +90,9 @@ fun BookingHistoryScreen(
     Scaffold(
         topBar = {
             Box(
-                modifier = Modifier.fillMaxWidth().height(70.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Text(
@@ -119,8 +121,13 @@ fun BookingHistoryScreen(
                 onValueChange = {
                     searchBookingsViewModel.onSearchQueryChange(it)
                 },
-                label = { Text(
-                    stringResource(id = R.string.search), fontSize = 15.sp, color = Color.Black) },
+                label = {
+                    Text(
+                        stringResource(id = R.string.search),
+                        fontSize = 15.sp,
+                        color = Color.Black
+                    )
+                },
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.ic_search),
