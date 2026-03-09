@@ -1,6 +1,8 @@
 package com.example.hotelbooking.features.chat.presentation.ui.admin
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,9 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.hotelbooking.R
 import com.example.hotelbooking.features.chat.presentation.util.getInitials
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
@@ -35,7 +40,8 @@ import com.example.hotelbooking.ui.theme.ScrimBlack20
 fun AdminChatHeader(
     modifier: Modifier = Modifier,
     customerName: String,
-    hotelName: String
+    hotelName: String,
+    onCallClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -103,10 +109,19 @@ fun AdminChatHeader(
                         color = Color.Gray
                     ),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
             }
         }
 
+        Image(
+            painter = painterResource(R.drawable.ic_call),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.Black),
+            modifier = Modifier
+                .size(22.dp)
+                .clickable { onCallClick() }
+        )
     }
 }

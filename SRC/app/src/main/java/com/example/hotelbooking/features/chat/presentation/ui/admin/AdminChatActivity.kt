@@ -1,5 +1,7 @@
 package com.example.hotelbooking.features.chat.presentation.ui.admin
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
+import com.example.hotelbooking.features.chat.presentation.ui.user.CannotCallDialog
 import com.example.hotelbooking.features.chat.presentation.viewmodel.AdminChatState
 import com.example.hotelbooking.features.chat.presentation.viewmodel.AdminChatViewModel
 import com.example.hotelbooking.features.chat.presentation.viewmodel.ChatViewModel
@@ -84,6 +88,8 @@ fun AdminChatScreen(
     adminChatViewModel: AdminChatViewModel = hiltViewModel(),
     chatViewModel: ChatViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     val chatState by adminChatViewModel.chatState.collectAsState()
     var inputText by remember { mutableStateOf("") }
 
@@ -91,6 +97,8 @@ fun AdminChatScreen(
         adminChatViewModel.load(adminId)
         adminChatViewModel.startListening(chatId)
     }
+
+    var showCannotCallDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -147,7 +155,17 @@ fun AdminChatScreen(
                     .padding(horizontal = Dimen.PaddingM)
                     .padding(top = Dimen.PaddingS),
                 customerName = userMetadata?.username ?: loadingText,
-                hotelName = hotelMetadata?.name ?: loadingText
+                hotelName = hotelMetadata?.name ?: loadingText,
+                onCallClick = {
+                    if (userMetadata?.phoneNumber == null) {
+                        showCannotCallDialog = true
+                    } else {
+                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                            data = Uri.parse("tel:${userMetadata.phoneNumber}")
+                        }
+                        context.startActivity(intent)
+                    }
+                }
             )
 
             AdminChatSection(
@@ -226,6 +244,14 @@ fun AdminChatScreen(
                     )
                 }
             }
+        }
+
+        if(showCannotCallDialog) {
+            CannotCallDialog(
+                onDismiss = { showCannotCallDialog = false },
+                onConfirm = { showCannotCallDialog = false },
+                isAdmin = true
+            )
         }
     }
 }

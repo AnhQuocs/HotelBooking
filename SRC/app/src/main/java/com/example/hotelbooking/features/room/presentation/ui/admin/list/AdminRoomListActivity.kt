@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -62,6 +63,8 @@ import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.AvailableGreen
+import com.example.hotelbooking.ui.theme.ErrorRed
+import com.example.hotelbooking.ui.theme.NearBlack
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -126,7 +129,7 @@ fun AdminRoomListScreen(
             }
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
+        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             when (val state = uiState) {
                 is RoomListState.Loading -> CircularProgressIndicator(
                     modifier = Modifier.align(
@@ -135,7 +138,14 @@ fun AdminRoomListScreen(
                 )
 
                 is RoomListState.Empty -> {
-
+                    Text(
+                        text = stringResource(id = R.string.list_no_room_types),
+                        style = AfacadTypography.bodyMedium,
+                        color = NearBlack,
+                        modifier = Modifier.align(
+                            Alignment.Center
+                        )
+                    )
                 }
                 is RoomListState.Success -> {
                     LazyColumn(
@@ -152,7 +162,14 @@ fun AdminRoomListScreen(
                 }
 
                 is RoomListState.Error -> {
-
+                    Text(
+                        text = state.message,
+                        style = AfacadTypography.bodyMedium,
+                        color = ErrorRed,
+                        modifier = Modifier.align(
+                            Alignment.Center
+                        )
+                    )
                 }
             }
         }

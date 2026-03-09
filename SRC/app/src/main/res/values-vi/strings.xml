@@ -231,6 +231,7 @@
     <string name="close">Đóng</string>
     <string name="cannot_call_title">Không thể gọi</string>
     <string name="cannot_call_message">Quản trị viên chưa thêm số điện thoại vào hồ sơ nên hiện tại bạn không thể thực hiện cuộc gọi.</string>
+    <string name="cannot_call_user_message">Người dùng chưa thêm số điện thoại vào hồ sơ nên bạn không thể thực hiện cuộc gọi.</string>
 
     <!-- NOTIFICATION -->
     <string name="notification">Thông báo</string>
@@ -519,6 +520,7 @@
     <string name="open_selling_room_type">Mở bán loại phòng?</string>
     <string name="hide_room_type_confirm">Hạng phòng này sẽ không hiển thị cho khách hàng đặt chỗ nữa. Bạn có chắc chắn muốn ẩn?</string>
     <string name="show_room_type_confirm">Loại phòng này sẽ được hiển thị công khai và cập nhật lại giá sàn cho khách sạn.</string>
+    <string name="list_no_room_types">Khách sạn này hiện chưa có loại phòng nào.</string>
 
     <!-- VOUCHER -->
     <string name="create_voucher">Tạo Voucher</string>

@@ -230,6 +230,7 @@
     <string name="user_chat_empty">No messages yet. Send a message to start chatting with the hotel.</string>
     <string name="cannot_call_title">Cannot make a call</string>
     <string name="cannot_call_message">The admin has not added a phone number to their profile yet, so you cannot make a call.</string>
+    <string name="cannot_call_user_message">This user has not added a phone number yet, so you cannot make a call.</string>
     <string name="close">Close</string>
 
     <!-- NOTIFICATION -->
@@ -519,6 +520,7 @@
     <string name="open_selling_room_type">Open this room type for booking?</string>
     <string name="hide_room_type_confirm">This room type will no longer be visible for customers to book. Are you sure you want to hide it?</string>
     <string name="show_room_type_confirm">This room type will be publicly visible again and the hotel\'s minimum price will be recalculated.</string>
+    <string name="list_no_room_types">This hotel currently has no room types available.</string>
 
     <!-- VOUCHER -->
     <string name="create_voucher">Create Voucher</string>

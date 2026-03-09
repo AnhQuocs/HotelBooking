@@ -2,7 +2,6 @@ package com.example.hotelbooking.features.chat.presentation.ui.user
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -165,7 +164,8 @@ fun ChatScreen(
 @Composable
 fun CannotCallDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit,
+    isAdmin: Boolean = false
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -178,7 +178,7 @@ fun CannotCallDialog(
         },
         text = {
             Text(
-                text = stringResource(R.string.cannot_call_message),
+                text = stringResource(if(isAdmin) R.string.cannot_call_user_message else R.string.cannot_call_message),
                 style = AfacadTypography.bodyMedium,
                 color = Color.Black
             )
