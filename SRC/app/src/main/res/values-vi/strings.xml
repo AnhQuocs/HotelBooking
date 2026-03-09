@@ -264,6 +264,10 @@
     <string name="review_comment_placeholder">Phòng sạch sẽ, nhân viên thân thiện...</string>
     <string name="submit_review">Gửi đánh giá</string>
     <string name="skip_review">Bỏ qua</string>
+    <string name="time_just_now">Vừa xong</string>
+    <string name="time_minutes_ago">%d phút trước</string>
+    <string name="time_hours_ago">%d giờ trước</string>
+    <string name="time_days_ago">%d ngày trước</string>
 
     <!-- MAP -->
     <string name="hotel_near_you">Khách sạn gần bạn</string>

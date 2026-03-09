@@ -30,8 +30,8 @@ import com.example.hotelbooking.components.ReadMoreText
 import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.features.hotel.presentation.ui.admin.detail.TimePolicyItem
 import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
-import com.example.hotelbooking.features.review.presentation.ui.AllReviewActivity
-import com.example.hotelbooking.features.review.presentation.ui.ReviewSection
+import com.example.hotelbooking.features.review.presentation.ui.user.AllReviewActivity
+import com.example.hotelbooking.features.review.presentation.ui.user.ReviewSection
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.RoomSection

@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.review.presentation.ui
+package com.example.hotelbooking.features.review.presentation.ui.user
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -52,6 +52,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.features.review.domain.model.RatingStats
+import com.example.hotelbooking.features.review.presentation.ui.ReviewItem
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing

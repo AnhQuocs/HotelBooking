@@ -2,9 +2,11 @@ package com.example.hotelbooking.features.review.data.mapper
 
 import com.example.hotelbooking.features.review.data.dto.ReviewDto
 import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.domain.model.ReviewStatus
 
 fun ReviewDto.toReview(): Review {
     return Review(
+        id = id ?: "",
         serviceId = serviceId.orEmpty(),
         userId = userId.orEmpty(),
         userName = userName.orEmpty(),
@@ -12,7 +14,8 @@ fun ReviewDto.toReview(): Review {
         serviceType = serviceType.orEmpty(),
         rating = rating ?: 0,
         comment = comment.orEmpty(),
-        timestamp = timestamp.orEmpty()
+        timestamp = timestamp.orEmpty(),
+        status = status?.let { ReviewStatus.valueOf(it) } ?: ReviewStatus.ACTIVE
     )
 }
 
@@ -25,6 +28,7 @@ fun Review.toDto(): ReviewDto {
         serviceType = serviceType,
         rating = rating,
         comment = comment,
-        timestamp = timestamp
+        timestamp = timestamp,
+        status = status.name
     )
 }

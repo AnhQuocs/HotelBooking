@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.review.presentation.ui
+package com.example.hotelbooking.features.review.presentation.ui.user
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,10 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
-import com.example.hotelbooking.R
 import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
+import com.example.hotelbooking.features.review.presentation.ui.ReviewList
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewState
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.PrimaryBlue

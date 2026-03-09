@@ -218,19 +218,19 @@ class AdminHomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val reviewsDeferred = async {
-                    reviewRepository.getReviewsByServiceId(hotelId)
+
+                launch {
+                    reviewRepository
+                        .getActiveReviewsByServiceId(hotelId)
+                        .collect { latestReviews ->
+                            _reviews.value = latestReviews
+                        }
                 }
 
-                val roomsDeferred = async {
-                    roomUseCases
-                        .getRoomsByHotelIdUseCase(hotelId)
-                        .first()
-                }
+                val rooms = roomUseCases
+                    .getRoomsByHotelIdUseCase(hotelId)
+                    .first()
 
-                _reviews.value = reviewsDeferred.await()
-
-                val rooms = roomsDeferred.await()
                 _totalRooms.value = rooms.sumOf { it.totalRoom }
 
             } catch (e: Exception) {

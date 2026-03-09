@@ -63,8 +63,9 @@ import com.example.hotelbooking.features.hotel.presentation.ui.admin.add.AddHote
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelState
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.admin.AdminHotelViewModel
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelViewModel
-import com.example.hotelbooking.features.review.presentation.ui.AllReviewActivity
-import com.example.hotelbooking.features.review.presentation.ui.ReviewSection
+import com.example.hotelbooking.features.review.presentation.ui.admin.AdminReviewActivity
+import com.example.hotelbooking.features.review.presentation.ui.user.AllReviewActivity
+import com.example.hotelbooking.features.review.presentation.ui.user.ReviewSection
 import com.example.hotelbooking.features.review.presentation.viewmodel.ReviewViewModel
 import com.example.hotelbooking.features.room.domain.model.RoomType
 import com.example.hotelbooking.features.room.presentation.ui.admin.list.AdminRoomListActivity
@@ -120,7 +121,7 @@ class AdminHotelDetailActivity : BaseComponentActivity() {
                     adminHotelViewModel.updateHotelStatus(hotelId, status)
                 },
                 onSeeAllClick = { hotelId ->
-                    val intent = Intent(context, AllReviewActivity::class.java)
+                    val intent = Intent(context, AdminReviewActivity::class.java)
                         .putExtra("hotelId", hotelId)
                     context.startActivity(intent)
                 },

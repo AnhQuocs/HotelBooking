@@ -240,8 +240,8 @@ fun StayCheckOutScreen(
                         1 -> stringResource(R.string.rating_very_bad)
                         2 -> stringResource(R.string.rating_bad)
                         3 -> stringResource(R.string.rating_normal)
-                        4 -> stringResource(R.string.rating_good)
-                        5 -> stringResource(R.string.rating_excellent)
+                        4 -> stringResource(R.string.rating_good2)
+                        5 -> stringResource(R.string.rating_excellent2)
                         else -> stringResource(R.string.rating_hint)
                     },
                     style = AfacadTypography.titleMedium,

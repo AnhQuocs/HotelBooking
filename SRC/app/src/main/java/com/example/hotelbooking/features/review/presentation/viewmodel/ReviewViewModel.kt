@@ -3,10 +3,12 @@ package com.example.hotelbooking.features.review.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.review.domain.model.HotelReviewSummary
-import com.example.hotelbooking.features.review.domain.usecase.ReviewUseCase
+import com.example.hotelbooking.features.review.domain.usecase.ReviewUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,22 +19,27 @@ sealed class ReviewState<out T> {
 }
 
 @HiltViewModel
-class ReviewViewModel @Inject constructor (
-    private val reviewUseCase: ReviewUseCase
-): ViewModel() {
+class ReviewViewModel @Inject constructor(
+    private val reviewUseCase: ReviewUseCases
+) : ViewModel() {
 
-    private val _reviewState = MutableStateFlow<ReviewState<HotelReviewSummary>>(ReviewState.Loading)
+    private val _reviewState =
+        MutableStateFlow<ReviewState<HotelReviewSummary>>(ReviewState.Loading)
+
     val reviewState = _reviewState.asStateFlow()
 
     fun loadReviews(serviceId: String) {
         viewModelScope.launch {
-            _reviewState.value = ReviewState.Loading
-            try {
-                val summary = reviewUseCase.getHotelReviewSummaryUseCase(serviceId)
-                _reviewState.value = ReviewState.Success(summary)
-            } catch (e: Exception) {
-                _reviewState.value = ReviewState.Error(e.message ?: "Unknown Error")
-            }
+            reviewUseCase.getHotelReviewSummaryUseCase(serviceId)
+                .onStart {
+                    _reviewState.value = ReviewState.Loading
+                }
+                .catch { e ->
+                    _reviewState.value = ReviewState.Error(e.message ?: "Unknown error")
+                }
+                .collect { summary ->
+                    _reviewState.value = ReviewState.Success(summary)
+                }
         }
     }
 }

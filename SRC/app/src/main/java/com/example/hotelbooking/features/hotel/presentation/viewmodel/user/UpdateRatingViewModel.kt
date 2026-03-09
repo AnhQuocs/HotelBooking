@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.hotel.domain.usecase.update.SubmitReviewUseCase
 import com.example.hotelbooking.features.review.domain.model.Review
+import com.example.hotelbooking.features.review.domain.model.ReviewStatus
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +39,7 @@ class UpdateRatingViewModel @Inject constructor(
 
             if (currentUser != null) {
                 val newReview = Review(
+                    id = "",
                     userId = currentUser.uid,
                     userName = currentUser.username ?: "Username",
                     userProfilePicture = currentUser.avatar ?: "",
@@ -45,7 +47,8 @@ class UpdateRatingViewModel @Inject constructor(
                     serviceType = "HOTEL",
                     rating = rating.toInt(),
                     comment = comment,
-                    timestamp = Timestamp.now().toString()
+                    timestamp = Timestamp.now().toString(),
+                    status = ReviewStatus.ACTIVE
                 )
 
                 submitReviewUseCase(newReview)

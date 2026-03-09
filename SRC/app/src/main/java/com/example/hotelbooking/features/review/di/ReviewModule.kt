@@ -4,7 +4,7 @@ import com.example.hotelbooking.features.review.data.repository.ReviewRepository
 import com.example.hotelbooking.features.review.data.source.FirebaseReviewDataSource
 import com.example.hotelbooking.features.review.domain.repository.ReviewRepository
 import com.example.hotelbooking.features.review.domain.usecase.GetHotelReviewSummaryUseCase
-import com.example.hotelbooking.features.review.domain.usecase.ReviewUseCase
+import com.example.hotelbooking.features.review.domain.usecase.ReviewUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,7 +31,7 @@ object ReviewModule {
 
     @Provides
     @Singleton
-    fun provideReviewUseCase(repository: ReviewRepository) = ReviewUseCase(
+    fun provideReviewUseCase(repository: ReviewRepository) = ReviewUseCases(
         getHotelReviewSummaryUseCase = GetHotelReviewSummaryUseCase(repository)
     )
 }

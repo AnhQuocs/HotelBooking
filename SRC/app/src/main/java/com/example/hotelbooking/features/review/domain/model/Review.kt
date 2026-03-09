@@ -1,6 +1,11 @@
 package com.example.hotelbooking.features.review.domain.model
 
+enum class ReviewStatus {
+    ACTIVE, HIDE
+}
+
 data class Review(
+    val id: String,
     val userId: String,
     val userName: String,
     val userProfilePicture: String,
@@ -8,7 +13,8 @@ data class Review(
     val serviceType: String,
     val rating: Int,
     val comment: String,
-    val timestamp: String
+    val timestamp: String,
+    val status: ReviewStatus
 )
 
 data class RatingStats(
