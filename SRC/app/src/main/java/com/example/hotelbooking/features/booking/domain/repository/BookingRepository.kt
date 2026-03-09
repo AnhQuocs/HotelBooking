@@ -67,5 +67,12 @@ interface BookingRepository {
         newTransaction: Transaction
     ): Result<Unit>
 
+    suspend fun getTotalRevenue(
+        adminId: String,
+        startDate: Long,
+        endDate: Long,
+        hotelId: String? = null
+    ): Double
+
     fun clearCache(userId: String)
 }

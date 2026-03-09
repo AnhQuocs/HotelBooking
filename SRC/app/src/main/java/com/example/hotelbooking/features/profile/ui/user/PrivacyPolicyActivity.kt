@@ -46,15 +46,20 @@ class PrivacyPolicyActivity : BaseComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val isAdmin = intent.getBooleanExtra("isAdmin", false)
+
         setContent {
-            PrivacyPolicyScreen(onBackClick = { finish() })
+            PrivacyPolicyScreen(onBackClick = { finish() }, isAdmin = isAdmin)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrivacyPolicyScreen(onBackClick: () -> Unit) {
+fun PrivacyPolicyScreen(
+    onBackClick: () -> Unit,
+    isAdmin: Boolean?
+) {
     val context = LocalContext.current
 
     Scaffold(
@@ -84,7 +89,7 @@ fun PrivacyPolicyScreen(onBackClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
             }
 
-            items(getPrivacyPolicySections(context)) { section ->
+            items(getPrivacyPolicySections(context, isAdmin ?: false)) { section ->
                 PrivacySectionItem(section)
                 Spacer(modifier = Modifier.height(AppSpacing.L))
             }

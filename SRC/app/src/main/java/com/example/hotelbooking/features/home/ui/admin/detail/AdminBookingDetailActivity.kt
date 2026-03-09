@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui.detail
+package com.example.hotelbooking.features.home.ui.admin.detail
 
 import android.os.Bundle
 import android.widget.Toast
@@ -46,7 +46,7 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
-import com.example.hotelbooking.features.home.admin.ui.dashboard.adminFormatTimestamp
+import com.example.hotelbooking.features.home.ui.admin.dashboard.adminFormatTimestamp
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing

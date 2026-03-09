@@ -47,7 +47,7 @@ fun HotelDetailScreen(
     reviewState: ReviewState<HotelReviewSummary>,
     onOpenMap: (Double, Double) -> Unit,
     onBackClick: () -> Unit,
-    onRoomClick: (String) -> Unit,
+    onRoomClick: (String, String) -> Unit,
     onChatClick: (String, String, String, String) -> Unit
 ) {
     val context = LocalContext.current
@@ -136,6 +136,7 @@ fun HotelDetailScreen(
 
             item {
                 RoomSection(
+                    ownerId = hotel.adminIds.first(),
                     state = roomState,
                     onRoomClick = onRoomClick
                 )

@@ -15,23 +15,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ConfirmationNumber
-import androidx.compose.material.icons.filled.Discount
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -43,13 +45,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppButton
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthState
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.profile.feature.language.presentation.ui.ChangeLanguageActivity
+import com.example.hotelbooking.features.profile.ui.admin.revenue.RevenueDashboardActivity
+import com.example.hotelbooking.features.profile.ui.component.LegalSupportSection
+import com.example.hotelbooking.features.profile.ui.component.Setting
 import com.example.hotelbooking.features.profile.ui.user.LogoutDialog
-import com.example.hotelbooking.features.profile.ui.user.ProfileItem
+import com.example.hotelbooking.features.profile.ui.user.PrivacyPolicyActivity
+import com.example.hotelbooking.features.profile.ui.user.TermsOfServiceActivity
+import com.example.hotelbooking.features.profile.ui.user.account.PersonalInformationActivity
+import com.example.hotelbooking.features.profile.ui.user.growingFeaturesSnackBar
 import com.example.hotelbooking.features.upload_image.presentation.ui.upload.UploadImageActivity
 import com.example.hotelbooking.features.vouchers.presentation.ui.admin.list.AdminVoucherListActivity
 import com.example.hotelbooking.ui.dimens.AppShape
@@ -58,6 +67,7 @@ import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.RoyalBlue
+import com.example.hotelbooking.ui.theme.TealPrimary
 
 @Composable
 fun AdminProfileScreen(
@@ -71,6 +81,10 @@ fun AdminProfileScreen(
     var isShowDialog by remember { mutableStateOf(false) }
 
     val username = currentUser?.username ?: stringResource(id = R.string.admin)
+
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val message = stringResource(id = R.string.growing_snack_bar_message)
 
     Box(
         modifier = Modifier
@@ -93,12 +107,23 @@ fun AdminProfileScreen(
                             .padding(bottom = Dimen.PaddingS),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.user_avatar),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(Dimen.SizeXXLPlus)
-                        )
+                        if (currentUser?.avatar != null) {
+                            AsyncImage(
+                                model = currentUser?.avatar,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(60.dp)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(R.drawable.user_avatar),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.size(Dimen.SizeXXLPlus)
+                            )
+                        }
 
                         Spacer(Modifier.width(AppSpacing.XS))
 
@@ -114,7 +139,36 @@ fun AdminProfileScreen(
                         }
                     }
                 }
-            }, containerColor = Color.White
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackBarHostState,
+                    modifier = Modifier.padding(Dimen.PaddingS)
+                ) { data ->
+                    Snackbar(
+                        modifier = Modifier.padding(horizontal = Dimen.PaddingM),
+                        shape = RoundedCornerShape(AppShape.ShapeS),
+                        containerColor = TealPrimary,
+                        contentColor = Color.White,
+                        action = {
+                            TextButton(
+                                onClick = { data.dismiss() }
+                            ) {
+                                Text(
+                                    text = data.visuals.actionLabel ?: "OK",
+                                    color = Color.Yellow
+                                )
+                            }
+                        }
+                    ) {
+                        Text(
+                            text = data.visuals.message,
+                            modifier = Modifier.padding(vertical = Dimen.PaddingS)
+                        )
+                    }
+                }
+            },
+            containerColor = Color.White
         ) { paddingValues ->
             LazyColumn(
                 modifier = Modifier
@@ -123,41 +177,61 @@ fun AdminProfileScreen(
                     .padding(horizontal = Dimen.PaddingSM)
             ) {
                 item {
-                    ProfileItem(
-                        Icons.Default.Language,
-                        stringResource(id = R.string.language),
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    context, ChangeLanguageActivity::class.java
-                                )
-                            )
-                        }
-                    )
-                }
-
-                item {
-                    ProfileItem(
-                        Icons.Default.Image,
-                        stringResource(id = R.string.add_image),
-                        onClick = {
+                    OperationsCenterSection(
+                        onRevenueClick = {
+                            val intent = Intent(context, RevenueDashboardActivity::class.java)
+                                .putExtra("adminId", currentUser?.uid)
+                            context.startActivity(intent)
+                        },
+                        onOpenGalleryClick = {
                             context.startActivity(
                                 Intent(
                                     context, UploadImageActivity::class.java
                                 )
                             )
+                        },
+                        onManageVoucherClick = {
+                            context.startActivity(
+                                Intent(context, AdminVoucherListActivity::class.java)
+                            )
                         }
                     )
                 }
 
                 item {
-                    ProfileItem(
-                        Icons.Default.ConfirmationNumber,
-                        stringResource(id = R.string.voucher),
-                        onClick = {
+                    Setting(
+                        onPersonalInfoClick = {
+                            val intent = Intent(context, PersonalInformationActivity::class.java)
+                            context.startActivity(intent)
+                        }, onLanguageClick = {
                             context.startActivity(
-                                Intent(context, AdminVoucherListActivity::class.java)
+                                Intent(
+                                    context, ChangeLanguageActivity::class.java
+                                )
                             )
+                        }, onAppearanceClick = {
+                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                        }, onCurrencyClick = {
+                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                        },
+                        isAdmin = true
+                    )
+                }
+
+                item {
+                    LegalSupportSection(
+                        onHelpCenterClick = {
+                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                        },
+                        onPrivacyPolicyClick = {
+                            val intent = Intent(context, PrivacyPolicyActivity::class.java)
+                                .putExtra("isAdmin", true)
+                            context.startActivity(intent)
+                        },
+                        onTermsClick = {
+                            val intent = Intent(context, TermsOfServiceActivity::class.java)
+                                .putExtra("isAdmin", true)
+                            context.startActivity(intent)
                         }
                     )
                 }

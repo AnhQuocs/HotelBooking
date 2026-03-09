@@ -599,6 +599,16 @@
     <string name="privacy_title_6">"6. Liên hệ và Khiếu nại"</string>
     <string name="privacy_content_6">"Nếu có bất kỳ thắc mắc nào về cách chúng tôi xử lý dữ liệu, bạn có thể liên hệ trực tiếp với đội ngũ phát triển thông qua phần \"Hỗ trợ\" trong ứng dụng hoặc gửi email về địa chỉ hỗ trợ chính thức của hệ thống."</string>
 
+    <!-- ADMIN PRIVACY POLICY -->
+    <string name="privacy_title_admin_1">1. Quản lý thông tin khách sạn</string>
+    <string name="privacy_content_admin_1">Chúng tôi thu thập thông tin do bạn cung cấp bao gồm Tên khách sạn, Địa chỉ và thông tin phòng. Dữ liệu này được lưu trữ để hiển thị chính xác cho người dùng đang tìm kiếm nơi lưu trú.</string>
+    <string name="privacy_title_admin_2">2. Nội dung hình ảnh &amp; media</string>
+    <string name="privacy_content_admin_2">Các hình ảnh bạn tải lên trong Thư viện media sẽ được lưu trữ trên Firebase và dùng để hiển thị cho khách sạn của bạn. Bạn chịu trách nhiệm về bản quyền và tính phù hợp của các hình ảnh này.</string>
+    <string name="privacy_title_admin_3">3. Tính toàn vẹn dữ liệu</string>
+    <string name="privacy_content_admin_3">Các hoạt động quản lý như cập nhật giá, quản lý voucher hoặc ẩn đánh giá sẽ được ghi lại để đảm bảo tính nhất quán của hệ thống và cung cấp báo cáo chính xác trong Trung tâm vận hành.</string>
+    <string name="privacy_title_admin_4">4. Chính sách tài khoản quản trị</string>
+    <string name="privacy_content_admin_4">Để đảm bảo tính ổn định của hệ thống dữ liệu khách sạn, tài khoản Admin không có chức năng \"Tự xóa\". Vui lòng liên hệ Quản trị viên hệ thống nếu bạn cần vô hiệu hóa tài khoản quản lý của mình.</string>
+
     <!-- USER TERMS OF SERVICE -->
     <string name="terms_of_service_title">"Điều khoản sử dụng"</string>
     <string name="terms_of_service_intro">"Bằng việc sử dụng ứng dụng của chúng tôi, bạn đồng ý với các điều khoản và điều kiện sau đây. Vui lòng đọc kỹ nội dung bên dưới."</string>
@@ -614,6 +624,20 @@
     <string name="terms_content_5">"Người dùng phải cung cấp thông tin cá nhân và thông tin khách hàng chính xác. Bạn chịu trách nhiệm bảo mật tài khoản của mình và cho mọi hoạt động xảy ra dưới tài khoản đã được xác thực qua Firebase."</string>
     <string name="terms_title_6">"6. Giới hạn trách nhiệm"</string>
     <string name="terms_content_6">"Chúng tôi đóng vai trò trung gian giữa người dùng và khách sạn. Chúng tôi không chịu trách nhiệm cho bất kỳ thiệt hại trực tiếp hoặc gián tiếp nào phát sinh từ chất lượng dịch vụ của khách sạn hoặc các sự cố kỹ thuật từ bên thứ ba."</string>
+
+    <!-- ADMIN TERMS OF SERVICE -->
+    <string name="terms_title_admin_1">1. Trách nhiệm của đối tác</string>
+    <string name="terms_content_admin_1">Khi đăng ký làm Quản trị viên khách sạn, bạn đồng ý cung cấp thông tin chính xác về tình trạng phòng, giá phòng và các tiện ích của khách sạn. Bạn chịu trách nhiệm đối với mọi nội dung được tải lên thông qua tài khoản của mình.</string>
+    <string name="terms_title_admin_2">2. Quản lý đặt phòng &amp; No-show</string>
+    <string name="terms_content_admin_2">Quản trị viên có quyền quản lý vòng đời của đơn đặt phòng. Theo chính sách hệ thống:\n• Sau 6 giờ kể từ thời điểm check-in dự kiến: Admin có thể đánh dấu khách là No-show nếu khách chưa đến.\n• Sau 12 giờ: Hệ thống sẽ tự động cập nhật trạng thái No-show để giải phóng phòng.</string>
+    <string name="terms_title_admin_3">3. Chính sách Voucher &amp; khuyến mãi</string>
+    <string name="terms_content_admin_3">Khi tạo Voucher trong Trung tâm vận hành, bạn hiểu rằng các mức giảm giá này sẽ ảnh hưởng trực tiếp đến doanh thu hiển thị của khách sạn. Khi một voucher đã được áp dụng cho đơn đặt phòng đã xác nhận, voucher đó sẽ không thể bị hủy.</string>
+    <string name="terms_title_admin_4">4. Kiểm duyệt nội dung (Đánh giá)</string>
+    <string name="terms_content_admin_4">Quản trị viên có quyền ẩn các đánh giá chứa ngôn từ không phù hợp hoặc nội dung gian lận. Tuy nhiên, điểm đánh giá bằng sao vẫn sẽ được giữ lại trong hệ thống để đảm bảo tính minh bạch thống kê.</string>
+    <string name="terms_title_admin_5">5. Doanh thu &amp; báo cáo</string>
+    <string name="terms_content_admin_5">Dữ liệu doanh thu hiển thị trong Trung tâm vận hành chỉ nhằm mục đích báo cáo và quản lý. Bạn có trách nhiệm đối chiếu các số liệu này với sao kê ngân hàng và hệ thống kế toán nội bộ của mình.</string>
+    <string name="terms_title_admin_6">6. Tính ổn định tài khoản &amp; dữ liệu</string>
+    <string name="terms_content_admin_6">Để bảo vệ lịch sử đặt phòng và các hồ sơ tài chính, tài khoản Admin không thể tự xóa. Mọi yêu cầu vô hiệu hóa tài khoản phải được gửi đến Nhà phát triển hệ thống để xử lý thủ công.</string>
 
     <!-- ACCOUNT -->
     <string name="not_provided">"Chưa cung cấp"</string>
@@ -656,6 +680,20 @@
 
     <!-- ADMIN PROFILE -->
     <string name="voucher">Mã giảm giá</string>
+    <string name="operations_center">Trung tâm điều hành</string>
+    <string name="media_library">Thư viện phương tiện</string>
+    <string name="revenue_report">Báo cáo doanh thu</string>
+    <string name="view_mode">Chế độ xem</string>
+    <string name="total_revenue">Tổng doanh thu</string>
+    <string name="all_hotels">Tất cả khách sạn</string>
+    <string name="revenue_day">Ngày %1$s</string>
+    <string name="revenue_week">Tuần của %1$s</string>
+    <string name="revenue_month">Tháng %1$s</string>
+    <string name="revenue_all_time">Tất cả thời gian</string>
+    <string name="period_day">Ngày</string>
+    <string name="period_week">Tuần</string>
+    <string name="period_month">Tháng</string>
+    <string name="period_all">Tất cả</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>

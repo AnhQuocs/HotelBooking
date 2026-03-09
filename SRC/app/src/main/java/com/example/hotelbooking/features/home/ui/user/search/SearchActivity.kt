@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.user.search.ui
+package com.example.hotelbooking.features.home.ui.user.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,7 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
-import com.example.hotelbooking.features.home.user.search.viewmodel.SearchViewModel
+import com.example.hotelbooking.features.home.viewmodel.SearchViewModel
 import com.example.hotelbooking.features.hotel.presentation.ui.user.details.HotelDetailActivity
 import com.example.hotelbooking.features.hotel.presentation.ui.user.recommended.RecommendedItem
 import com.example.hotelbooking.features.hotel.presentation.viewmodel.user.HotelState
@@ -80,6 +81,10 @@ fun SearchHotelScreen(
         val intent = Intent(context, HotelDetailActivity::class.java)
             .putExtra("hotelId", hotelId)
         context.startActivity(intent)
+    }
+
+    LaunchedEffect(Unit) {
+        searchViewModel.initSearchMode(isAdmin = false)
     }
 
     Scaffold(

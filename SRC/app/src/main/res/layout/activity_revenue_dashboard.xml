@@ -5,6 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.home.ui.admin.detail.AdminBookingDetailActivity">
+    tools:context=".features.profile.ui.admin.revenue.RevenueDashboardActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

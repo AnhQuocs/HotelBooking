@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.user
+package com.example.hotelbooking.features.home.ui.user
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -15,6 +15,8 @@ import com.example.hotelbooking.features.transaction.domain.model.Transaction
 import com.example.hotelbooking.features.transaction.domain.model.TransactionStatus
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.AggregateField
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
@@ -515,6 +517,37 @@ class BookingRepositoryImpl(
         } catch (e: Exception) {
             Log.e("REBOOK_TX", "Transaction failed: ${e.message}")
             Result.failure(e)
+        }
+    }
+
+    override suspend fun getTotalRevenue(
+        adminId: String,
+        startDate: Long,
+        endDate: Long,
+        hotelId: String?
+    ): Double {
+        return try {
+            val startTs = Timestamp(Date(startDate))
+            val endTs = Timestamp(Date(endDate))
+
+            var query = bookingsCollection
+                .whereEqualTo("ownerId", adminId)
+                .whereEqualTo("status", BookingStatus.CONFIRMED.name)
+                .whereGreaterThanOrEqualTo("createdAt", startTs)
+                .whereLessThan("createdAt", endTs)
+
+            if (hotelId != null) {
+                query = query.whereEqualTo("hotelId", hotelId)
+            }
+
+            val aggregateQuery = query.aggregate(AggregateField.sum("totalPrice"))
+            val snapshot = aggregateQuery.get(AggregateSource.SERVER).await()
+
+            (snapshot.get(AggregateField.sum("totalPrice")) as? Number)?.toDouble() ?: 0.0
+
+        } catch (e: Exception) {
+            Log.e("REVENUE_DEBUG", "Error summing revenue: ${e.message}")
+            0.0
         }
     }
 

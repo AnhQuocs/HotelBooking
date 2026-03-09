@@ -37,15 +37,17 @@ class TermsOfServiceActivity : BaseComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val isAdmin = intent.getBooleanExtra("isAdmin", false)
+
         setContent {
-            TermsOfServiceScreen(onBackClick = { finish() })
+            TermsOfServiceScreen(onBackClick = { finish() }, isAdmin = isAdmin)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TermsOfServiceScreen(onBackClick: () -> Unit) {
+fun TermsOfServiceScreen(onBackClick: () -> Unit, isAdmin: Boolean?) {
     Scaffold(
         topBar = {
             AppTopBar(
@@ -70,14 +72,27 @@ fun TermsOfServiceScreen(onBackClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(AppSpacing.MediumLarge))
             }
 
-            val sections = listOf(
-                R.string.terms_title_1 to R.string.terms_content_1,
-                R.string.terms_title_2 to R.string.terms_content_2,
-                R.string.terms_title_3 to R.string.terms_content_3,
-                R.string.terms_title_4 to R.string.terms_content_4,
-                R.string.terms_title_5 to R.string.terms_content_5,
-                R.string.terms_title_6 to R.string.terms_content_6
-            )
+            val isUserAdmin = isAdmin ?: false
+
+            val sections = if (isUserAdmin) {
+                listOf(
+                    R.string.terms_title_admin_1 to R.string.terms_content_admin_1,
+                    R.string.terms_title_admin_2 to R.string.terms_content_admin_2,
+                    R.string.terms_title_admin_3 to R.string.terms_content_admin_3,
+                    R.string.terms_title_admin_4 to R.string.terms_content_admin_4,
+                    R.string.terms_title_admin_5 to R.string.terms_content_admin_5,
+                    R.string.terms_title_admin_6 to R.string.terms_content_admin_6
+                )
+            } else {
+                listOf(
+                    R.string.terms_title_1 to R.string.terms_content_1,
+                    R.string.terms_title_2 to R.string.terms_content_2,
+                    R.string.terms_title_3 to R.string.terms_content_3,
+                    R.string.terms_title_4 to R.string.terms_content_4,
+                    R.string.terms_title_5 to R.string.terms_content_5,
+                    R.string.terms_title_6 to R.string.terms_content_6
+                )
+            }
 
             items(sections) { (titleRes, contentRes) ->
                 TermsSectionItem(stringResource(titleRes), stringResource(contentRes))

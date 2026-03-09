@@ -135,6 +135,7 @@ class BookingViewModel @Inject constructor(
 
     fun submitBooking(
         hotelId: String,
+        ownerId: String,
         roomTypeId: String,
         roomNumber: String,
         userId: String,
@@ -165,6 +166,7 @@ class BookingViewModel @Inject constructor(
                 bookingId = "",
                 userId = userId,
                 hotelId = hotelId,
+                ownerId = ownerId,
                 roomTypeId = roomTypeId,
                 roomNumber = roomNumber,
                 startDate = Timestamp(

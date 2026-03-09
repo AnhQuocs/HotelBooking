@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui.dashboard
+package com.example.hotelbooking.features.home.ui.admin.dashboard
 
 import android.content.Intent
 import android.os.Bundle
@@ -46,7 +46,7 @@ import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingListViewModel
-import com.example.hotelbooking.features.home.admin.ui.detail.AdminBookingDetailActivity
+import com.example.hotelbooking.features.home.ui.admin.detail.AdminBookingDetailActivity
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen

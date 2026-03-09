@@ -1,6 +1,5 @@
 package com.example.hotelbooking.features.hotel.data.repository
 
-import com.example.hotelbooking.features.hotel.data.dto.HotelDto
 import com.example.hotelbooking.features.hotel.data.mapper.HotelMapper
 import com.example.hotelbooking.features.hotel.data.source.FirebaseHotelDataSource
 import com.example.hotelbooking.features.hotel.domain.model.AdminHotel
@@ -12,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import kotlin.compareTo
 
 class HotelRepositoryImpl(
     private val dataSource: FirebaseHotelDataSource
@@ -55,6 +53,25 @@ class HotelRepositoryImpl(
             hotels.filter { hotel ->
                 hotel.name.lowercase().removeAccents().contains(normalizedQuery) ||
                         hotel.address.lowercase().removeAccents().contains(normalizedQuery)
+            }
+        }
+
+    override suspend fun searchManagedHotels(adminId: String, query: String): List<Hotel> =
+        withContext(Dispatchers.Default) {
+            try {
+                val allHotels = getOrFetchHotels()
+
+                val managedHotels = allHotels.filter { it.adminIds.contains(adminId) }
+
+                if (query.isBlank()) return@withContext managedHotels
+
+                val normalizedQuery = query.lowercase().removeAccents()
+                managedHotels.filter { hotel ->
+                    hotel.name.lowercase().removeAccents().contains(normalizedQuery) ||
+                            hotel.address.lowercase().removeAccents().contains(normalizedQuery)
+                }
+            } catch (e: Exception) {
+                emptyList()
             }
         }
 

@@ -44,8 +44,9 @@ import com.example.hotelbooking.ui.theme.PrimaryBlue
 
 @Composable
 fun RoomSection(
+    ownerId: String,
     state: RoomState<List<RoomType>>,
-    onRoomClick: (String) -> Unit
+    onRoomClick: (String, String) -> Unit
 ) {
     when (state) {
         is RoomState.Loading -> {
@@ -65,7 +66,7 @@ fun RoomSection(
             ) {
                 InfoTitle(text = stringResource(id = R.string.rooms))
                 Spacer(modifier = Modifier.height(AppSpacing.S))
-                RoomList(state.data, onRoomClick)
+                RoomList(ownerId, list = state.data, onRoomClick)
             }
         }
 
@@ -75,8 +76,9 @@ fun RoomSection(
 
 @Composable
 fun RoomList(
+    ownerId: String,
     list: List<RoomType>,
-    onRoomClick: (String) -> Unit
+    onRoomClick: (String, String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -92,7 +94,7 @@ fun RoomList(
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(AppShape.ShapeS))
                 .background(Color.LightGray)
-                .clickable { onRoomClick(list[0].id) }
+                .clickable { onRoomClick(list[0].id, ownerId) }
         ) {
             val room = list[0]
 
@@ -129,37 +131,9 @@ fun RoomList(
                 .fillMaxHeight(),
             list = list.drop(1).take(3),
             context = context,
-            onRoomClick = { roomId -> onRoomClick(roomId) }
+            onRoomClick = { roomId -> onRoomClick(roomId, ownerId) }
         )
     }
-
-//    LazyRow(
-//        verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.spacedBy(AppSpacing.S)
-//    ) {
-//        items(list, key = { it.id }) { room ->
-//            Box(
-//                modifier = Modifier
-//                    .height(75.dp)
-//                    .width(120.dp)
-//                    .clip(RoundedCornerShape(AppShape.ShapeS + 2.dp))
-//                    .background(Color.LightGray)
-//                    .clickable { onRoomClick(room.id) }
-//            ) {
-//                AsyncImage(
-//                    model = ImageRequest.Builder(context)
-//                        .data(room.imageUrl)
-//                        .crossfade(true)
-//                        .placeholderMemoryCacheKey(room.imageUrl)
-//                        .memoryCacheKey(room.imageUrl)
-//                        .build(),
-//                    contentDescription = null,
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier.fillMaxSize()
-//                )
-//            }
-//        }
-//    }
 }
 
 @Composable

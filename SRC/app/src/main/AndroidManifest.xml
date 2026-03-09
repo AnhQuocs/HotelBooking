@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HOTEL_BOOKING">
         <activity
+            android:name=".features.profile.ui.admin.revenue.RevenueDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".features.profile.ui.user.account.ChangePasswordActivity"
             android:exported="false" />
         <activity
@@ -63,10 +66,10 @@
             android:name=".features.hotel.presentation.ui.admin.add.AddHotelActivity"
             android:exported="false" />
         <activity
-            android:name=".features.home.admin.ui.detail.AdminBookingDetailActivity"
+            android:name=".features.home.ui.admin.detail.AdminBookingDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".features.home.admin.ui.dashboard.AdminBookingListActivity"
+            android:name=".features.home.ui.admin.dashboard.AdminBookingListActivity"
             android:exported="false" />
         <activity
             android:name=".features.booking.presentation.ui.history.stay.StayCheckOutActivity"
@@ -114,7 +117,7 @@
             android:name=".features.map.ui.FullMapActivity"
             android:exported="false" />
         <activity
-            android:name=".features.home.user.search.ui.SearchActivity"
+            android:name=".features.home.ui.user.search.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".features.review.presentation.ui.AllReviewActivity"

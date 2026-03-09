@@ -58,6 +58,8 @@ import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthState
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.profile.feature.language.presentation.ui.ChangeLanguageActivity
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.ui.PaymentMethodActivity
+import com.example.hotelbooking.features.profile.ui.component.LegalSupportSection
+import com.example.hotelbooking.features.profile.ui.component.Setting
 import com.example.hotelbooking.features.profile.ui.user.account.PersonalInformationActivity
 import com.example.hotelbooking.features.transaction.presentation.ui.history.TransactionHistoryActivity
 import com.example.hotelbooking.features.vouchers.presentation.ui.user.UserPromotionListActivity
@@ -104,12 +106,14 @@ fun UserProfileScreen(
                             .padding(bottom = Dimen.PaddingS),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if(currentUser?.avatar != null) {
+                        if (currentUser?.avatar != null) {
                             AsyncImage(
                                 model = currentUser?.avatar,
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier.clip(CircleShape).size(Dimen.SizeXXLPlus)
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(60.dp)
                             )
                         } else {
                             Image(

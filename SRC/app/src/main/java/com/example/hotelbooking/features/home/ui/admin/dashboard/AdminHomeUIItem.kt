@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui.dashboard
+package com.example.hotelbooking.features.home.ui.admin.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

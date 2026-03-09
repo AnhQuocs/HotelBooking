@@ -25,7 +25,7 @@ fun HotelDetailContainer(
     hotelId: String,
     onOpenMap: (Double, Double) -> Unit,
     onBackClick: () -> Unit,
-    onRoomClick: (String) -> Unit,
+    onRoomClick: (String, String) -> Unit,
     onChatClick: (String, String, String, String) -> Unit,
     hotelViewModel: HotelViewModel = hiltViewModel(),
     roomViewModel: RoomViewModel = hiltViewModel(),

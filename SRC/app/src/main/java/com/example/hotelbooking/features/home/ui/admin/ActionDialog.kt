@@ -1,4 +1,4 @@
-package com.example.hotelbooking.features.home.admin.ui
+package com.example.hotelbooking.features.home.ui.admin
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.height
