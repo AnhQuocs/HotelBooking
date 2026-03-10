@@ -26,6 +26,8 @@
     <string name="sign_up">Sign Up</string>
     <string name="google_sign_in_canceled">Google Sign-In canceled</string>
     <string name="sign_in_failed">Sign in failed. Please try again!</string>
+    <string name="reset_password_hint">Enter your email to receive a password reset link.</string>
+    <string name="reset_password_email_sent">A password reset link has been sent to your email</string>
 
     <!-- SIGN UP -->
     <string name="or">Or</string>

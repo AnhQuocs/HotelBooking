@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.auth.domain.model.AuthUser
 import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
+import com.example.hotelbooking.features.auth.domain.usecase.ResetPasswordUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.UpdateProfileUseCases
 import com.example.hotelbooking.features.main.viewmodel.UiText
 import com.google.firebase.auth.FirebaseAuth
@@ -37,7 +38,8 @@ sealed class UpdateActionState {
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    private val updateProfileUseCases: UpdateProfileUseCases
+    private val updateProfileUseCases: UpdateProfileUseCases,
+    private val resetPasswordUseCase: ResetPasswordUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<AuthState>(AuthState.Nothing)
     val uiState = _uiState.asStateFlow()
@@ -248,6 +250,31 @@ class AuthViewModel @Inject constructor(
             } else {
                 _updateState.value = UpdateActionState.Error(
                     UiText.StringResource(R.string.error_system_unknown)
+                )
+            }
+        }
+    }
+
+    // =============== RESET PASSWORD ===============
+    fun resetPassword(email: String) {
+        if (email.isBlank()) {
+            _updateState.value = UpdateActionState.Error(
+                UiText.DynamicString("Please enter your email")
+            )
+            return
+        }
+
+        viewModelScope.launch {
+            _updateState.value = UpdateActionState.Loading
+
+            val result = resetPasswordUseCase(email)
+
+            if (result.isSuccess) {
+                _updateState.value = UpdateActionState.Success
+            } else {
+                val errorMessage = result.exceptionOrNull()?.message ?: "Failed to send email"
+                _updateState.value = UpdateActionState.Error(
+                    UiText.DynamicString(errorMessage)
                 )
             }
         }

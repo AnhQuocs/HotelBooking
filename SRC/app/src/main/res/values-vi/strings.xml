@@ -26,6 +26,8 @@
     <string name="sign_up">Đăng ký</string>
     <string name="google_sign_in_canceled">Đăng nhập Google đã bị hủy</string>
     <string name="sign_in_failed">Đăng nhập thất bại. Vui lòng thử lại!</string>
+    <string name="reset_password_hint">Nhập email của bạn để nhận liên kết đặt lại mật khẩu.</string>
+    <string name="reset_password_email_sent">Liên kết đặt lại mật khẩu đã được gửi đến email của bạn</string>
 
     <!-- SIGN UP -->
     <string name="or">Hoặc</string>
