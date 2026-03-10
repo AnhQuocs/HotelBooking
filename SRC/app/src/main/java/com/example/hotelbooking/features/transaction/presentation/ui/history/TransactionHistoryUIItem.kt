@@ -105,11 +105,11 @@ fun QuickStatsRow(transactions: List<Transaction>) {
         modifier = Modifier
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(vertical = Dimen.PaddingS),
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.M)
     ) {
         ModernStatCard(
-            title = stringResource(R.string.revenue),
+            title = stringResource(R.string.transaction_paid),
             value = NumberFormat
                 .getCurrencyInstance(Locale.US)
                 .format(totalPaid),

@@ -336,6 +336,7 @@
 
     <!-- TRANSACTIONS -->
     <string name="transaction_statistics">Thống kê giao dịch</string>
+    <string name="transaction_paid">Đã thanh toán</string>
     <string name="revenue">Doanh thu</string>
     <string name="pending">Đang xử lý</string>
     <string name="pending2">Đang chờ xử lý</string>

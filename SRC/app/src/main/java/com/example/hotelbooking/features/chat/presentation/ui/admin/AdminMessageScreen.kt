@@ -31,9 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,10 +50,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
+import com.example.hotelbooking.features.chat.domain.model.AdminChatWithDetails
 import com.example.hotelbooking.features.chat.domain.model.Chat
 import com.example.hotelbooking.features.chat.presentation.util.formatTimestamp24h
 import com.example.hotelbooking.features.chat.presentation.viewmodel.AdminChatViewModel
-import com.example.hotelbooking.features.chat.presentation.viewmodel.SearchChatsViewModel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
@@ -69,14 +66,11 @@ import com.example.hotelbooking.ui.theme.TextTertiary
 fun AdminMessageScreen(
     onOpenChat: (Chat, String) -> Unit,
     viewModel: AdminChatViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel(),
-    searchChatsViewModel: SearchChatsViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    var query by remember { mutableStateOf("") }
-    val searchState by searchChatsViewModel.searchResultState.collectAsState()
-
-    val chatDetails by viewModel.chatDetailsList.collectAsState()
-    val currentUser = authViewModel.currentUser.collectAsState().value
+    val query by viewModel.searchQuery.collectAsState()
+    val filteredChats by viewModel.filteredChats.collectAsState()
+    val currentUser by authViewModel.currentUser.collectAsState()
 
     LaunchedEffect(currentUser) {
         currentUser?.uid?.let { viewModel.load(it) }
@@ -84,19 +78,9 @@ fun AdminMessageScreen(
 
     if (currentUser == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator(color = Color(0xFF0A3A7A))
+            CircularProgressIndicator(color = BlueNavy)
         }
         return
-    }
-
-    val filteredChats = remember(query, chatDetails) {
-        if (query.isEmpty()) chatDetails
-        else {
-            chatDetails.filter {
-                it.user?.username?.contains(query, ignoreCase = true) == true ||
-                        it.hotel?.name?.contains(query, ignoreCase = true) == true
-            }
-        }
     }
 
     Scaffold(
@@ -131,9 +115,7 @@ fun AdminMessageScreen(
                 Spacer(modifier = Modifier.height(Dimen.PaddingS))
                 OutlinedTextField(
                     value = query,
-                    onValueChange = {
-                        searchChatsViewModel.onSearchQueryChange(it)
-                    },
+                    onValueChange = { viewModel.onSearchQueryChange(it) },
                     label = {
                         Text(
                             stringResource(id = R.string.search),
@@ -150,8 +132,8 @@ fun AdminMessageScreen(
                     },
                     trailingIcon = {
                         if (query.isNotEmpty()) {
-                            IconButton(onClick = { searchChatsViewModel.onSearchQueryChange("") }) {
-                                Icon(Icons.Default.Clear, contentDescription = null)
+                            IconButton(onClick = { viewModel.onSearchQueryChange("") }) {
+                                Icon(Icons.Default.Clear, contentDescription = null, tint = Color.Gray)
                             }
                         }
                     },
@@ -161,123 +143,129 @@ fun AdminMessageScreen(
                         unfocusedBorderColor = SurfaceGray,
                         cursorColor = Color.Black
                     ),
+                    singleLine = true,
                     shape = RoundedCornerShape(AppShape.ShapeXL2),
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(Dimen.PaddingM))
             }
 
-            if(filteredChats.isEmpty()) {
+            if (filteredChats.isEmpty()) {
                 item {
                     Text(
-                        text = stringResource(id = R.string.admin_chat_empty),
+                        text = if (query.isEmpty())
+                            stringResource(id = R.string.admin_chat_empty)
+                        else
+                            stringResource(id = R.string.msg_no_chats_found),
                         style = AfacadTypography.bodyLarge.copy(
-                            color = Color.Black,
+                            color = Color.Gray,
                             textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.SemiBold
                         ),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 40.dp)
                     )
                 }
             } else {
-                itemsIndexed(filteredChats) { index, detail ->
-                    val chat = detail.chat
-                    val customer = detail.user
-                    val hotel = detail.hotel
-
-                    val displayName = customer?.username ?: stringResource(id = R.string.username_label)
-                    val displayHotel = hotel?.name ?: "Hotel"
-
-                    Column {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onOpenChat(chat, currentUser.uid)
-                                }
-                                .padding(vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(52.dp)
-                                    .clip(CircleShape)
-                                    .background(BlueNavy),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = displayName.take(1).uppercase(),
-                                    style = AfacadTypography.bodyLarge.copy(
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                            }
-
-                            Spacer(Modifier.width(AppSpacing.M))
-
-                            Column(Modifier.weight(1f)) {
-                                Text(
-                                    text = buildAnnotatedString {
-                                        withStyle(
-                                            SpanStyle(
-                                                color = Color.Black,
-                                                fontWeight = FontWeight.SemiBold,
-                                                fontSize = 16.sp
-                                            )
-                                        ) {
-                                            append(displayName)
-                                        }
-                                        withStyle(
-                                            SpanStyle(
-                                                color = BlueNavy,
-                                                fontWeight = FontWeight.Normal,
-                                                fontSize = 13.sp
-                                            )
-                                        ) {
-                                            append(" ($displayHotel)")
-                                        }
-                                    },
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-
-                                Spacer(modifier = Modifier.height(AppSpacing.XXS))
-
-                                Text(
-                                    text = if (chat.lastSenderId == currentUser.uid)
-                                        stringResource(id = R.string.you) + ": ${chat.lastMessage}"
-                                    else
-                                        chat.lastMessage,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = AfacadTypography.labelLarge.copy(
-                                        color = Color.Gray,
-                                        fontSize = 14.sp
-                                    )
-                                )
-                            }
-
-                            Spacer(Modifier.width(AppSpacing.S))
-
-                            Text(
-                                text = formatTimestamp24h(chat.lastTimestamp),
-                                fontSize = 11.sp,
-                                color = Color.LightGray,
-                                modifier = Modifier.align(Alignment.Top)
-                            )
-                        }
-
-                        if (index != filteredChats.lastIndex) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(start = 64.dp),
-                                thickness = 0.5.dp,
-                                color = Color(0xFFE9EBED)
-                            )
-                        }
-                    }
+                itemsIndexed(
+                    items = filteredChats,
+                    key = { _, detail -> detail.chat.chatId }
+                ) { index, detail ->
+                    ChatItem(
+                        detail = detail,
+                        currentUserId = currentUser!!.uid,
+                        onOpenChat = onOpenChat,
+                        isLastItem = index == filteredChats.lastIndex
+                    )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ChatItem(
+    detail: AdminChatWithDetails,
+    currentUserId: String,
+    onOpenChat: (Chat, String) -> Unit,
+    isLastItem: Boolean
+) {
+    val chat = detail.chat
+    val customer = detail.user
+    val hotel = detail.hotel
+
+    val displayName = customer?.username ?: stringResource(id = R.string.username_label)
+    val displayHotel = hotel?.name ?: "Hotel"
+
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onOpenChat(chat, currentUserId) }
+                .padding(vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .clip(CircleShape)
+                    .background(BlueNavy),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = displayName.take(1).uppercase(),
+                    style = AfacadTypography.bodyLarge.copy(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+
+            Spacer(Modifier.width(AppSpacing.M))
+
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(SpanStyle(color = Color.Black, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)) {
+                            append(displayName)
+                        }
+                        withStyle(SpanStyle(color = BlueNavy, fontSize = 13.sp)) {
+                            append(" ($displayHotel)")
+                        }
+                    },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(AppSpacing.XXS))
+
+                Text(
+                    text = if (chat.lastSenderId == currentUserId)
+                        stringResource(id = R.string.you) + ": ${chat.lastMessage}"
+                    else
+                        chat.lastMessage,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = AfacadTypography.labelLarge.copy(color = Color.Gray, fontSize = 14.sp)
+                )
+            }
+
+            Spacer(Modifier.width(AppSpacing.S))
+
+            Text(
+                text = formatTimestamp24h(chat.lastTimestamp),
+                fontSize = 11.sp,
+                color = Color.LightGray,
+                modifier = Modifier.align(Alignment.Top)
+            )
+        }
+
+        if (!isLastItem) {
+            HorizontalDivider(
+                modifier = Modifier.padding(start = 64.dp),
+                thickness = 0.5.dp,
+                color = Color(0xFFE9EBED)
+            )
         }
     }
 }

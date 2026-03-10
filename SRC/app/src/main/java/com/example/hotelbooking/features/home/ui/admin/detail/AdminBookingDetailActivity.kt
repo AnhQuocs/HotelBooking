@@ -4,26 +4,20 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,27 +32,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.hotelbooking.BaseComponentActivity
 import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailState
 import com.example.hotelbooking.features.booking.presentation.viewmodel.admin.AdminBookingDetailViewModel
-import com.example.hotelbooking.features.home.ui.admin.dashboard.adminFormatTimestamp
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomState
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
 import com.example.hotelbooking.ui.theme.AfacadTypography
-import com.example.hotelbooking.ui.theme.AvailableGreen
-import com.example.hotelbooking.ui.theme.BrightBlue
-import com.example.hotelbooking.ui.theme.NearBlack
-import com.google.firebase.Timestamp
+import com.example.hotelbooking.ui.theme.BlueNavy
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @AndroidEntryPoint
 class AdminBookingDetailActivity : BaseComponentActivity() {
@@ -108,15 +99,16 @@ fun AdminBookingDetailScreen(
                 title = {
                     Text(
                         stringResource(id = R.string.booking_detail_title),
-                        fontWeight = FontWeight.Bold
+                        style = AfacadTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = Color.Black)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
+                modifier = Modifier.shadow(4.dp)
             )
         },
         bottomBar = {
@@ -125,220 +117,74 @@ fun AdminBookingDetailScreen(
                 AdminActionBottomBar(booking, adminBookingDetailViewModel, isProcessing)
             }
         },
-        containerColor = Color(0xFFF5F7FA)
+        containerColor = Color(0xFFF8F9FA)
     ) { padding ->
-        if (isProcessing) {
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(padding)
-            )
-        }
-
-        when (val state = uiState) {
-            is AdminBookingDetailState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.White),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+        Column(modifier = Modifier.padding(padding)) {
+            if (isProcessing) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = BlueNavy)
             }
 
-            is AdminBookingDetailState.Error -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = state.message, color = Color.Red)
-                }
-            }
-
-            is AdminBookingDetailState.Success -> {
-                val booking = state.bookingWithHotel.booking
-                val hotel = state.bookingWithHotel.hotel
-
-                val roomDetailState by roomViewModel.roomDetailState.collectAsState()
-
-                LaunchedEffect(booking) {
-                    roomViewModel.loadRoomDetail(roomId = booking.roomTypeId)
+            when (val state = uiState) {
+                is AdminBookingDetailState.Loading -> {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = BlueNavy)
+                    }
                 }
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .padding(Dimen.PaddingM),
-                    verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
-                ) {
-                    item {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = Color.White)
-                        ) {
-                            Column(modifier = Modifier.padding(Dimen.PaddingM)) {
-                                Text(
-                                    "ID: ${booking.bookingId}",
-                                    style = AfacadTypography.labelMedium,
-                                    color = Color.Gray
-                                )
-                                Spacer(modifier = Modifier.height(AppSpacing.S))
-                                Text(
-                                    hotel?.name ?: "",
-                                    style = AfacadTypography.titleLarge,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Spacer(modifier = Modifier.height(AppSpacing.S))
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalArrangement = Arrangement.spacedBy(AppSpacing.S)
-                                ) {
-                                    Text(
-                                        stringResource(id = R.string.check_in) + ": ${
-                                            adminFormatTimestamp(
-                                                booking.startDate
-                                            )
-                                        }"
-                                    )
-                                    Text(
-                                        stringResource(id = R.string.check_out) + ": ${
-                                            adminFormatTimestamp(
-                                                booking.endDate
-                                            )
-                                        }"
-                                    )
-                                }
-                            }
-                        }
+                is AdminBookingDetailState.Error -> {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
+                    }
+                }
+
+                is AdminBookingDetailState.Success -> {
+                    val booking = state.bookingWithHotel.booking
+                    val hotel = state.bookingWithHotel.hotel
+                    val roomDetailState by roomViewModel.roomDetailState.collectAsState()
+
+                    LaunchedEffect(booking.roomTypeId) {
+                        roomViewModel.loadRoomDetail(roomId = booking.roomTypeId)
                     }
 
-                    when (val state = roomDetailState) {
-                        is RoomState.Loading -> {
-                            item {
-                                Box(
-                                    modifier = Modifier
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(Dimen.PaddingM),
+                        verticalArrangement = Arrangement.spacedBy(AppSpacing.MediumLarge)
+                    ) {
+                        item {
+                            AdminBookingSummaryCard(booking = booking, hotel = hotel)
+                        }
+
+                        item {
+                            when (val rState = roomDetailState) {
+                                is RoomState.Success -> AdminRoomPaymentCard(
+                                    booking = booking,
+                                    room = rState.data
+                                )
+
+                                is RoomState.Loading -> Box(
+                                    Modifier
                                         .fillMaxWidth()
                                         .height(Dimen.HeightXL),
-                                    contentAlignment = Alignment.Center
+                                    Alignment.Center
                                 ) {
-                                    CircularProgressIndicator()
+                                    CircularProgressIndicator(modifier = Modifier.size(Dimen.SizeM))
+                                }
+
+                                is RoomState.Error -> {
+                                    Text(rState.message)
                                 }
                             }
                         }
 
-                        is RoomState.Success -> {
-                            item {
-                                val room = state.data
-
-                                Card(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                                ) {
-                                    Column(modifier = Modifier.padding(Dimen.PaddingM)) {
-                                        Text(
-                                            stringResource(id = R.string.room_and_payment),
-                                            style = AfacadTypography.titleMedium,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Divider(modifier = Modifier.padding(vertical = AppSpacing.S))
-                                        Text(stringResource(id = R.string.room_type) + ": ${room.name}")
-                                        Spacer(modifier = Modifier.height(AppSpacing.S))
-                                        Text(stringResource(id = R.string.room_number) + ": ${booking.roomNumber}")
-                                        Spacer(modifier = Modifier.height(AppSpacing.S))
-                                        Text(
-                                            stringResource(id = R.string.total_price) + ": $${booking.totalPrice}",
-                                            color = AvailableGreen,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                            }
+                        item {
+                            AdminGuestInfoCard(booking = booking)
                         }
 
-                        is RoomState.Error -> {
-                            item { Text(stringResource(id = R.string.error, state.message)) }
-                        }
-                    }
-
-                    item {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = Color.White)
-                        ) {
-                            Column(modifier = Modifier.padding(Dimen.PaddingM)) {
-                                Text(
-                                    stringResource(id = R.string.guest_information) + " (${booking.numberOfGuests})",
-                                    style = AfacadTypography.titleMedium,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Divider(modifier = Modifier.padding(vertical = Dimen.PaddingS))
-
-                                booking.guests.forEachIndexed { index, guest ->
-                                    Row(
-                                        modifier = Modifier.padding(vertical = Dimen.PaddingXS),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            Icons.Default.Person,
-                                            contentDescription = null,
-                                            tint = Color.Gray,
-                                            modifier = Modifier
-                                                .size(Dimen.SizeL)
-                                                .align(Alignment.Top)
-                                        )
-                                        Spacer(modifier = Modifier.width(AppSpacing.S))
-                                        Column(
-                                            verticalArrangement = Arrangement.spacedBy(AppSpacing.XS)
-                                        ) {
-                                            val displayName =
-                                                StringBuilder(stringResource(id = R.string.guest) + " ${index + 1}: ${guest.fullName}")
-                                            if (guest.isRepresentative) {
-                                                displayName.append(" (" + stringResource(id = R.string.guest_representative) + ")")
-                                            }
-
-                                            Text(
-                                                text = displayName.toString(),
-                                                fontWeight = if (guest.isRepresentative) FontWeight.Bold else FontWeight.Medium,
-                                                color = if (guest.isRepresentative) BrightBlue else NearBlack
-                                            )
-
-                                            guest.dateOfBirth?.let {
-                                                Text(
-                                                    text = stringResource(id = R.string.date_of_birth) + ": ${
-                                                        formatDate(
-                                                            it
-                                                        )
-                                                    }",
-                                                    style = AfacadTypography.bodySmall,
-                                                    color = Color.Gray
-                                                )
-                                            }
-                                            guest.email?.let {
-                                                Text(
-                                                    text = stringResource(id = R.string.email_label) + ": $it",
-                                                    style = AfacadTypography.bodySmall,
-                                                    color = Color.Gray
-                                                )
-                                            }
-                                            guest.phone?.let {
-                                                Text(
-                                                    text = stringResource(id = R.string.phone) + ": $it",
-                                                    style = AfacadTypography.bodySmall,
-                                                    color = Color.Gray
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        item { Spacer(modifier = Modifier.height(Dimen.PaddingXL)) }
                     }
                 }
             }
         }
     }
-}
-
-fun formatDate(timestamp: Timestamp): String {
-    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    return formatter.format(timestamp.toDate())
 }

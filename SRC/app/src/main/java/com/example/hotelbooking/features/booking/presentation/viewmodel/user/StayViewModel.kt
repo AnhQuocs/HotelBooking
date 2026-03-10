@@ -74,14 +74,14 @@ class StayViewModel @Inject constructor(
         val originalBooking = _bookingState.value
 
         if (originalBooking == null) {
-            onError("Dữ liệu chưa tải xong. Vui lòng đợi...")
+            onError("Data is still loading. Please wait...")
             return
         }
 
         val finalGuestList = _guestListState.value
 
         if (finalGuestList.any { it.fullName.isBlank() }) {
-            onError("Vui lòng nhập đầy đủ tên khách hàng")
+            onError("Please enter all guest names")
             return
         }
 
@@ -99,8 +99,9 @@ class StayViewModel @Inject constructor(
             if (result) {
                 onSuccess()
             } else {
-                onError("Lỗi hệ thống. Không thể Check-in.")
+                onError("System error. Unable to check in.")
             }
+
             _isSubmitting.value = false
         }
     }

@@ -336,6 +336,7 @@
 
     <!-- TRANSACTIONS -->
     <string name="transaction_statistics">Transaction statistics</string>
+    <string name="transaction_paid">Paid</string>
     <string name="revenue">Revenue</string>
     <string name="pending">Pending</string>
     <string name="pending2">Pending</string>

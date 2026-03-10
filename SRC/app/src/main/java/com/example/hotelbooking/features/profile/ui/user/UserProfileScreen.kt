@@ -137,15 +137,6 @@ fun UserProfileScreen(
                                 )
                             )
                         }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Image(
-                            painter = painterResource(R.drawable.ic_notification2),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(Color.White),
-                            modifier = Modifier.size(Dimen.SizeML)
-                        )
                     }
                 }
             },
