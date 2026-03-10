@@ -589,6 +589,17 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="growing_snack_bar_message">Growing features</string>
+    <string name="choose_email_app">Choose an app to send email:</string>
+    <string name="no_email_app_found">No email app found on this device!</string>
+    <string name="support_title">Support</string>
+    <string name="support_hint">How can we help you?</string>
+    <string name="subject_label">Subject</string>
+    <string name="content_label">Detailed content</string>
+    <string name="include_device_info">Include device information</string>
+    <string name="send_request">Send request</string>
+    <string name="error_empty_fields">Please fill in all required information</string>
+    <string name="redirecting_to_email">Redirecting to support app...</string>
+    <string name="support_response_hint">Please check your email inbox for our response.</string>
 
     <!-- USER PRIVACY POLICY -->
     <string name="privacy_policy_title">"Privacy Policy"</string>

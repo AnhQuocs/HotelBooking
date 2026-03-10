@@ -60,6 +60,7 @@ import com.example.hotelbooking.features.profile.feature.language.presentation.u
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.ui.PaymentMethodActivity
 import com.example.hotelbooking.features.profile.ui.component.LegalSupportSection
 import com.example.hotelbooking.features.profile.ui.component.Setting
+import com.example.hotelbooking.features.profile.ui.support.SupportActivity
 import com.example.hotelbooking.features.profile.ui.user.account.PersonalInformationActivity
 import com.example.hotelbooking.features.transaction.presentation.ui.history.TransactionHistoryActivity
 import com.example.hotelbooking.features.vouchers.presentation.ui.user.UserPromotionListActivity
@@ -219,7 +220,7 @@ fun UserProfileScreen(
                 item {
                     LegalSupportSection(
                         onHelpCenterClick = {
-                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                            context.startActivity(Intent(context, SupportActivity::class.java))
                         },
                         onPrivacyPolicyClick = {
                             val intent = Intent(context, PrivacyPolicyActivity::class.java)

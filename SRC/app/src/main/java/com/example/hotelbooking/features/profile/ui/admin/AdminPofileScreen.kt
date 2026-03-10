@@ -54,6 +54,7 @@ import com.example.hotelbooking.features.profile.feature.language.presentation.u
 import com.example.hotelbooking.features.profile.ui.admin.revenue.RevenueDashboardActivity
 import com.example.hotelbooking.features.profile.ui.component.LegalSupportSection
 import com.example.hotelbooking.features.profile.ui.component.Setting
+import com.example.hotelbooking.features.profile.ui.support.SupportActivity
 import com.example.hotelbooking.features.profile.ui.user.LogoutDialog
 import com.example.hotelbooking.features.profile.ui.user.PrivacyPolicyActivity
 import com.example.hotelbooking.features.profile.ui.user.TermsOfServiceActivity
@@ -221,7 +222,7 @@ fun AdminProfileScreen(
                 item {
                     LegalSupportSection(
                         onHelpCenterClick = {
-                            growingFeaturesSnackBar(scope, snackBarHostState, message = message)
+                            context.startActivity(Intent(context, SupportActivity::class.java))
                         },
                         onPrivacyPolicyClick = {
                             val intent = Intent(context, PrivacyPolicyActivity::class.java)
