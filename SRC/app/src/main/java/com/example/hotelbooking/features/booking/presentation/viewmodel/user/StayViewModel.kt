@@ -9,6 +9,7 @@ import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingB
 import com.example.hotelbooking.features.booking.domain.usecase.update.UpdateBookingUseCase
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -29,11 +30,20 @@ class StayViewModel @Inject constructor(
     private val _bookingState = MutableStateFlow<Booking?>(null)
     val bookingState = _bookingState.asStateFlow()
 
+    private var bookingDetailJob: Job? = null
+
     fun loadBookingData(bookingId: String) {
-        viewModelScope.launch {
-            val booking = getBookingByIdUseCase(bookingId)
-            _bookingState.value = booking
-            initGuestList(booking)
+        bookingDetailJob?.cancel()
+
+        bookingDetailJob = viewModelScope.launch {
+            getBookingByIdUseCase(bookingId)
+                .collect { booking ->
+                    if (booking != null) {
+                        _bookingState.value = booking
+
+                        initGuestList(booking)
+                    }
+                }
         }
     }
 

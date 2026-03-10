@@ -118,8 +118,8 @@ fun BookingScreen(
     val totalDays = ChronoUnit.DAYS.between(startDate, endDate)
     val totalPrice = totalDays * pricePerNight
 
-//    val timeoutSeconds: Long = 10 * 60L
-    val timeoutSeconds: Long = 2 * 60L
+    val timeoutSeconds: Long = 10 * 60L
+//    val timeoutSeconds: Long = 2 * 60L
 
     val roomDetailState by roomViewModel.roomDetailState.collectAsState()
 

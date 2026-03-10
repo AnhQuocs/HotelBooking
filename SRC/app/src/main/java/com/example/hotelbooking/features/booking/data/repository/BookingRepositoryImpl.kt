@@ -20,9 +20,11 @@ import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -184,27 +186,29 @@ class BookingRepositoryImpl(
         }
     }
 
-    override suspend fun getBookingsByUser(userId: String): List<Booking> {
-        cachedBookings[userId]?.let { return it }
-
-        val snapshot = bookingsCollection
+    override fun getBookingsByUser(userId: String): Flow<List<Booking>> {
+        return bookingsCollection
             .whereEqualTo("userId", userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .get()
-            .await()
-
-        val bookings = snapshot.documents
-            .mapNotNull { it.toObject(BookingDto::class.java)?.toDomain() }
-
-        cachedBookings[userId] = bookings
-        return bookings
+            .snapshots()
+            .map { snapshot ->
+                snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(BookingDto::class.java)?.toDomain()
+                }
+            }
     }
 
-    override suspend fun getBookingById(bookingId: String): Booking {
-        val snapshot = bookingsCollection.document(bookingId).get().await()
-        val bookingDto = snapshot.toObject(BookingDto::class.java)
-            ?: throw Exception("Booking with ID $bookingId not found")
-        return bookingDto.toDomain()
+    override fun getBookingById(bookingId: String): Flow<Booking?> {
+        return bookingsCollection
+            .document(bookingId)
+            .snapshots()
+            .map { snapshot ->
+                if (snapshot.exists()) {
+                    snapshot.toObject(BookingDto::class.java)?.toDomain()
+                } else {
+                    null
+                }
+            }
     }
 
     override fun getAllBookingsByHotelId(hotelId: String): Flow<List<Booking>> = callbackFlow {

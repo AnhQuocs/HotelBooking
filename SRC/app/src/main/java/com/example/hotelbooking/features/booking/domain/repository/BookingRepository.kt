@@ -31,9 +31,8 @@ interface BookingRepository {
 
     suspend fun updateBookingPrice(bookingId: String, discountAmount: Double, newPrice: Double): Result<Unit>
 
-    suspend fun getBookingsByUser(userId: String): List<Booking>
-
-    suspend fun getBookingById(bookingId: String): Booking
+    fun getBookingsByUser(userId: String): Flow<List<Booking>>
+    fun getBookingById(bookingId: String): Flow<Booking?>
 
     fun getAllBookingsByHotelId(hotelId: String): Flow<List<Booking>>
 

@@ -1,52 +1,31 @@
 package com.example.hotelbooking.features.booking.domain.usecase.read
 
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
-import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
-import com.example.hotelbooking.features.hotel.domain.repository.HotelRepository
 import com.example.hotelbooking.utils.removeAccents
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SearchBookingsWithHotelUseCase @Inject constructor(
-    private val bookingRepository: BookingRepository,
-    private val hotelRepository: HotelRepository
+    private val getBookingsWithHotelUseCase: GetBookingsWithHotelUseCase
 ) {
-    suspend operator fun invoke(userId: String, query: String): List<BookingWithHotel> {
-        // 1. Lấy toàn bộ booking của user
-        val allBookings = bookingRepository.getBookingsByUser(userId)
-        if (allBookings.isEmpty()) return emptyList()
-
-        // 2. Lấy danh sách hotelId duy nhất
-        val hotelIds = allBookings.map { it.hotelId }.distinct()
-
-        // 3. Lấy thông tin hotel
-        val hotelsMap = hotelIds.associateWith { id ->
-            // Dùng .firstOrNull() để lấy giá trị hiện tại từ Flow
-            hotelRepository.getHotelById(id).firstOrNull()
-        }
-
-        // 4. Map dữ liệu
-        val bookingsWithHotel = allBookings.map { booking ->
-            BookingWithHotel(
-                booking = booking,
-                hotel = hotelsMap[booking.hotelId]
-            )
-        }
-
-        // 5. Chuẩn hóa query
+    operator fun invoke(userId: String, query: String): Flow<List<BookingWithHotel>> {
         val normalizedQuery = query.lowercase().removeAccents()
 
-        // 6. Filter theo bookingId, hotelName, shortAddress
-        return if (normalizedQuery.isBlank()) {
-            bookingsWithHotel
-        } else {
-            bookingsWithHotel.filter { bwh ->
-                val hotel = bwh.hotel
-                val matchesBookingId = bwh.booking.bookingId.lowercase().removeAccents().contains(normalizedQuery)
-                val matchesHotelName = hotel?.name?.lowercase()?.removeAccents()?.contains(normalizedQuery) == true
-                val matchesShortAddress = hotel?.shortAddress?.lowercase()?.removeAccents()?.contains(normalizedQuery) == true
+        return getBookingsWithHotelUseCase(userId).map { list ->
+            if (normalizedQuery.isBlank()) {
+                list
+            } else {
+                list.filter { bwh ->
+                    val hotel = bwh.hotel
+                    val matchesId = bwh.booking.bookingId.lowercase().contains(normalizedQuery)
+                    val matchesName =
+                        hotel?.name?.lowercase()?.removeAccents()?.contains(normalizedQuery) == true
+                    val matchesAddress = hotel?.shortAddress?.lowercase()?.removeAccents()
+                        ?.contains(normalizedQuery) == true
 
-                matchesBookingId || matchesHotelName || matchesShortAddress
+                    matchesId || matchesName || matchesAddress
+                }
             }
         }
     }

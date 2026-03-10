@@ -3,6 +3,7 @@ package com.example.hotelbooking.features.booking.domain.usecase.update
 import com.example.hotelbooking.features.booking.domain.model.BookingStatus
 import com.example.hotelbooking.features.booking.domain.repository.BookingRepository
 import com.example.hotelbooking.features.booking.presentation.ui.history.toLocalDateTime
+import kotlinx.coroutines.flow.firstOrNull
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -15,9 +16,14 @@ sealed class CancellationResult {
 class CancelBookingAndTransactionUseCase @Inject constructor(
     private val repository: BookingRepository
 ) {
-    suspend operator fun invoke(bookingId: String, cancelReason: String, cancelNote: String?): CancellationResult {
+    suspend operator fun invoke(
+        bookingId: String,
+        cancelReason: String,
+        cancelNote: String?
+    ): CancellationResult {
         return try {
-            val booking = repository.getBookingById(bookingId)
+            val booking = repository.getBookingById(bookingId).firstOrNull()
+                ?: return CancellationResult.Failure(Exception("Booking not found"))
 
             when (booking.status) {
                 BookingStatus.PENDING -> {
@@ -37,7 +43,7 @@ class CancelBookingAndTransactionUseCase @Inject constructor(
                 }
 
                 else -> {
-                    CancellationResult.Failure(Exception("Invalid status for cancellation"))
+                    CancellationResult.Failure(Exception("Invalid status for cancellation: ${booking.status}"))
                 }
             }
         } catch (e: Exception) {

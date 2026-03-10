@@ -20,9 +20,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,8 +53,8 @@ import com.example.hotelbooking.features.hotel.domain.model.Hotel
 import com.example.hotelbooking.ui.dimens.AppShape
 import com.example.hotelbooking.ui.dimens.AppSpacing
 import com.example.hotelbooking.ui.dimens.Dimen
-import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.AfacadTypography
+import com.example.hotelbooking.ui.theme.BlueNavy
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.utils.getHighlightedText
@@ -294,8 +296,44 @@ fun BookingHistoryCard(
             }
         }
 
-        if (booking.status == BookingStatus.CANCELLED) {
-            CancelledRibbon()
+        when (booking.status) {
+            BookingStatus.CANCELLED -> {
+                CancelledRibbon()
+            }
+            BookingStatus.PENDING -> {
+                PendingTag()
+            }
+            else -> {}
+        }
+    }
+}
+
+@Composable
+fun PendingTag() {
+    Surface(
+        color = Color(0xFFFFB800).copy(alpha = 0.9f),
+        shape = RoundedCornerShape(bottomStart = AppShape.ShapeL),
+        modifier = Modifier.padding(start = Dimen.PaddingS)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = Dimen.PaddingSM, vertical = Dimen.PaddingXSPlus),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.HourglassEmpty,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(modifier = Modifier.width(AppSpacing.XS))
+            Text(
+                text = stringResource(id = R.string.pending).uppercase(),
+                style = AfacadTypography.bodySmall.copy(
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 10.sp
+                )
+            )
         }
     }
 }

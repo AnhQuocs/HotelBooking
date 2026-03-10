@@ -6,6 +6,9 @@ import com.example.hotelbooking.features.profile.feature.payment_card.data.mappe
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.repository.PaymentCardRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.snapshots
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.jvm.java
@@ -30,23 +33,24 @@ class PaymentCardRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun getPaymentCards(userId: String): List<PaymentCard> {
+    override fun getPaymentCards(userId: String): Flow<List<PaymentCard>> {
         return collection
             .whereEqualTo("userId", userId)
-            .get()
-            .await()
-            .documents
-            .mapNotNull { it.toObject(PaymentCardDto::class.java) }
-            .map { it.toDomain() }
+            .snapshots()
+            .map { querySnapshot ->
+                querySnapshot.documents.mapNotNull { doc ->
+                    doc.toObject(PaymentCardDto::class.java)?.toDomain()
+                }
+            }
     }
 
-    override suspend fun getPaymentCardById(id: String): PaymentCard? {
+    override fun getPaymentCardById(id: String): Flow<PaymentCard?> {
         return collection
             .document(id)
-            .get()
-            .await()
-            .toObject(PaymentCardDto::class.java)
-            ?.toDomain()
+            .snapshots()
+            .map { documentSnapshot ->
+                documentSnapshot.toObject(PaymentCardDto::class.java)?.toDomain()
+            }
     }
 
     override suspend fun deletePaymentCard(id: String) {

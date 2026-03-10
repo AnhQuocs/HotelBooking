@@ -2,6 +2,8 @@ package com.example.hotelbooking.features.profile.feature.payment_card.domain.us
 
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.repository.PaymentCardRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 data class PaymentCardUseCases @Inject constructor(
@@ -33,7 +35,7 @@ class CreatePaymentCardUseCase @Inject constructor(
         }
 
         return try {
-            val existingCards = repository.getPaymentCards(paymentCard.userId)
+            val existingCards = repository.getPaymentCards(paymentCard.userId).first()
 
             val shouldBeDefault = existingCards.isEmpty() || paymentCard.isDefault
 
@@ -44,7 +46,6 @@ class CreatePaymentCardUseCase @Inject constructor(
             }
 
             repository.createPaymentCard(paymentCard.copy(isDefault = shouldBeDefault))
-
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -78,18 +79,15 @@ class UpdatePaymentCardUseCase @Inject constructor(
     private val repository: PaymentCardRepository
 ) {
     suspend operator fun invoke(paymentCard: PaymentCard) {
-
         if (paymentCard.isDefault) {
-            val cards = repository.getPaymentCards(paymentCard.userId)
-            cards
+            val currentCards = repository.getPaymentCards(paymentCard.userId).first()
+
+            currentCards
                 .filter { it.id != paymentCard.id && it.isDefault }
                 .forEach {
-                    repository.updatePaymentCard(
-                        it.copy(isDefault = false)
-                    )
+                    repository.updatePaymentCard(it.copy(isDefault = false))
                 }
         }
-
         repository.updatePaymentCard(paymentCard)
     }
 }
@@ -97,7 +95,7 @@ class UpdatePaymentCardUseCase @Inject constructor(
 class GetPaymentCardsUseCase @Inject constructor(
     private val repository: PaymentCardRepository
 ) {
-    suspend operator fun invoke(userId: String): List<PaymentCard> {
+    operator fun invoke(userId: String): Flow<List<PaymentCard>> {
         return repository.getPaymentCards(userId)
     }
 }
@@ -105,7 +103,7 @@ class GetPaymentCardsUseCase @Inject constructor(
 class GetPaymentCardByIdUseCase @Inject constructor(
     private val repository: PaymentCardRepository
 ) {
-    suspend operator fun invoke(id: String): PaymentCard? {
+    operator fun invoke(id: String): Flow<PaymentCard?> {
         return repository.getPaymentCardById(id)
     }
 }

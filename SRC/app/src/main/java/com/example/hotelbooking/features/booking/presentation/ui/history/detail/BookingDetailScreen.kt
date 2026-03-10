@@ -36,6 +36,7 @@ import com.example.hotelbooking.features.booking.presentation.viewmodel.user.Boo
 import com.example.hotelbooking.features.booking.presentation.viewmodel.user.BookingViewModel
 import com.example.hotelbooking.features.main.BookingRefreshEvent
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
+import com.example.hotelbooking.features.profile.feature.payment_card.presentation.ui.AddPaymentCardActivity
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardState
 import com.example.hotelbooking.features.profile.feature.payment_card.presentation.viewmodel.PaymentCardViewModel
 import com.example.hotelbooking.features.room.presentation.viewmodel.user.RoomViewModel
@@ -209,7 +210,8 @@ fun BookingDetailScreen(
                 onDismissRequest = { showBottomSheet = false },
                 onAddCardClick = {
                     showBottomSheet = false
-                    // Chuyển sang màn hình thêm thẻ
+                    val intent = Intent(context, AddPaymentCardActivity::class.java)
+                    context.startActivity(intent)
                 },
                 onNextClick = { brand ->
                     showBottomSheet = false

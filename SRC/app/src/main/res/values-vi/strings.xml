@@ -598,7 +598,7 @@
     <string name="include_device_info">Gửi kèm thông tin thiết bị</string>
     <string name="send_request">Gửi yêu cầu</string>
     <string name="error_empty_fields">Vui lòng nhập đầy đủ thông tin</string>
-    <string name="redirecting_to_email">Đang chuyển sang ứng dụng hỗ trợ...</string>
+    <string name="redirecting_to_email">Đang chuyển sang ứng dụng hỗ trợ…</string>
     <string name="support_response_hint">Hãy theo dõi hộp thư email để nhận phản hồi từ chúng tôi.</string>
 
     <!-- USER PRIVACY POLICY -->

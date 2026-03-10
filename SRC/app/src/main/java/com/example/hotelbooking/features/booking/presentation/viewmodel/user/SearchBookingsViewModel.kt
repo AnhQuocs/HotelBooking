@@ -8,10 +8,13 @@ import com.example.hotelbooking.features.booking.domain.usecase.read.SearchBooki
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,22 +50,27 @@ class SearchBookingsViewModel @Inject constructor(
         _searchQuery.value = newQuery
     }
 
+    private var searchJob: Job? = null
+
     private fun performSearch(query: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        viewModelScope.launch {
-            _searchResultState.value = BookingHistoryState.Loading
+        searchJob?.cancel()
 
-            runCatching {
-                searchBookingsWithHotelUseCase(userId, query)
-            }.onSuccess { list ->
-                _searchResultState.value = BookingHistoryState.Success(list)
-            }.onFailure { e ->
-                _searchResultState.value = BookingHistoryState.Error(
-                    messageRes = R.string.error_search_failed,
-                    fallbackMessage = e.message
-                )
-            }
+        searchJob = viewModelScope.launch {
+            searchBookingsWithHotelUseCase(userId, query)
+                .onStart {
+                    _searchResultState.value = BookingHistoryState.Loading
+                }
+                .catch { e ->
+                    _searchResultState.value = BookingHistoryState.Error(
+                        messageRes = R.string.error_search_failed,
+                        fallbackMessage = e.message
+                    )
+                }
+                .collect { list ->
+                    _searchResultState.value = BookingHistoryState.Success(list)
+                }
         }
     }
 }

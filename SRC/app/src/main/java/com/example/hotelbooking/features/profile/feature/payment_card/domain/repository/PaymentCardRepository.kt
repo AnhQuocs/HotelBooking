@@ -1,6 +1,7 @@
 package com.example.hotelbooking.features.profile.feature.payment_card.domain.repository
 
 import com.example.hotelbooking.features.profile.feature.payment_card.domain.model.PaymentCard
+import kotlinx.coroutines.flow.Flow
 
 
 interface PaymentCardRepository {
@@ -8,9 +9,9 @@ interface PaymentCardRepository {
 
     suspend fun updatePaymentCard(paymentCard: PaymentCard)
 
-    suspend fun getPaymentCards(userId: String): List<PaymentCard>
+    fun getPaymentCards(userId: String): Flow<List<PaymentCard>>
 
-    suspend fun getPaymentCardById(id: String): PaymentCard?
+    fun getPaymentCardById(id: String): Flow<PaymentCard?>
 
     suspend fun deletePaymentCard(id: String)
 }

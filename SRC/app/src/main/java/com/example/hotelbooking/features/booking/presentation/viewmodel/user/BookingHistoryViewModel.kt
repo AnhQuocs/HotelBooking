@@ -7,7 +7,6 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.features.booking.domain.model.Booking
 import com.example.hotelbooking.features.booking.domain.model.BookingWithHotel
 import com.example.hotelbooking.features.booking.domain.model.CancelReason
-import com.example.hotelbooking.features.booking.domain.model.StayStatus
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingDetailWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.read.GetBookingsWithHotelUseCase
 import com.example.hotelbooking.features.booking.domain.usecase.update.CancelBookingAndTransactionUseCase
@@ -21,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,45 +64,10 @@ class BookingHistoryViewModel @Inject constructor(
 
     val timeLeft = timerManager.timeLeft
 
-    fun startPaymentTimer(bookingId: String, duration: Int) {
-        if (!timerManager.isRunning()) {
-            timerManager.startTimer(bookingId, duration)
-        }
-    }
-
-    suspend fun updateStayStatus(
-        bookingId: String,
-        newStatus: StayStatus
-    ): Boolean {
-        _isProcessing.value = true
-        return try {
-            updateStayStatusUseCase(bookingId, newStatus)
-
-            val updatedCombined =
-                getBookingDetailWithHotelUseCase(bookingId)
-
-            _bookingDetailState.value =
-                BookingHistoryState.Success(updatedCombined)
-
-            true
-        } catch (e: Exception) {
-            false
-        } finally {
-            _isProcessing.value = false
-        }
-    }
-
     suspend fun processCheckOut(booking: Booking): Boolean {
         _isProcessing.value = true
         return try {
-            val isSuccess = checkOutUseCase(booking)
-
-            if (isSuccess) {
-                val updatedCombined = getBookingDetailWithHotelUseCase(booking.bookingId)
-                _bookingDetailState.value = BookingHistoryState.Success(updatedCombined)
-            }
-
-            isSuccess
+            checkOutUseCase(booking)
         } catch (e: Exception) {
             false
         } finally {
@@ -111,31 +77,35 @@ class BookingHistoryViewModel @Inject constructor(
 
     fun loadMyBookings(userId: String) {
         viewModelScope.launch {
-            _state.value = BookingHistoryState.Loading
-            try {
-                val combinedList = getBookingsWithHotelUseCase(userId)
-                _state.value = BookingHistoryState.Success(combinedList)
-            } catch (e: Exception) {
-                _state.value = BookingHistoryState.Error(
-                    messageRes = R.string.error_unknown,
-                    fallbackMessage = e.message
-                )
-            }
+            getBookingsWithHotelUseCase(userId)
+                .onStart { _state.value = BookingHistoryState.Loading }
+                .catch { e ->
+                    _state.value = BookingHistoryState.Error(
+                        messageRes = R.string.error_unknown,
+                        fallbackMessage = e.message
+                    )
+                }
+                .collect { combinedList ->
+                    _state.value = BookingHistoryState.Success(combinedList)
+                }
         }
     }
 
     fun loadBookingById(bookingId: String) {
         viewModelScope.launch {
-            _bookingDetailState.value = BookingHistoryState.Loading
-            try {
-                val combined = getBookingDetailWithHotelUseCase(bookingId)
-                _bookingDetailState.value = BookingHistoryState.Success(combined)
-            } catch (e: Exception) {
-                _bookingDetailState.value = BookingHistoryState.Error(
-                    messageRes = R.string.error_unknown,
-                    fallbackMessage = e.message
-                )
-            }
+            getBookingDetailWithHotelUseCase(bookingId)
+                .onStart { _bookingDetailState.value = BookingHistoryState.Loading }
+                .catch { e ->
+                    _bookingDetailState.value = BookingHistoryState.Error(
+                        messageRes = R.string.error_unknown,
+                        fallbackMessage = e.message
+                    )
+                }
+                .collect { combined ->
+                    if (combined != null) {
+                        _bookingDetailState.value = BookingHistoryState.Success(combined)
+                    }
+                }
         }
     }
 

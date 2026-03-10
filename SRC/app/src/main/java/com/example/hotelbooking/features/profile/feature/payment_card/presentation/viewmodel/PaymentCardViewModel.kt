@@ -8,6 +8,7 @@ import com.example.hotelbooking.features.profile.feature.payment_card.domain.use
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -77,31 +78,32 @@ class PaymentCardViewModel @Inject constructor(
     fun loadPaymentCards(userId: String) {
         viewModelScope.launch {
             _cardsState.value = PaymentCardState.Loading
-            try {
-                val cards =
-                    paymentCardUseCases.getPaymentCards(userId)
-                _cardsState.value =
-                    PaymentCardState.Success(cards)
-            } catch (e: Exception) {
-                _cardsState.value =
-                    PaymentCardState.Error("common.error")
-            }
+
+            paymentCardUseCases.getPaymentCards(userId)
+                .catch { e ->
+                    _cardsState.value = PaymentCardState.Error("common.error")
+                }
+                .collect { cards ->
+                    _cardsState.value = PaymentCardState.Success(cards)
+                }
         }
     }
 
     fun loadPaymentCardById(id: String) {
         viewModelScope.launch {
             _cardState.value = PaymentCardState.Loading
-            try {
-                val card =
-                    paymentCardUseCases.getPaymentCardById(id)
-                        ?: throw IllegalStateException()
-                _cardState.value =
-                    PaymentCardState.Success(card)
-            } catch (e: Exception) {
-                _cardState.value =
-                    PaymentCardState.Error("common.error")
-            }
+
+            paymentCardUseCases.getPaymentCardById(id)
+                .catch { e ->
+                    _cardState.value = PaymentCardState.Error("common.error")
+                }
+                .collect { card ->
+                    if (card != null) {
+                        _cardState.value = PaymentCardState.Success(card)
+                    } else {
+                        _cardState.value = PaymentCardState.Error("common.error")
+                    }
+                }
         }
     }
 
