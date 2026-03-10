@@ -12,6 +12,9 @@ interface AuthRepository {
     fun getUserById(userId: String): Flow<AuthUser?>
     suspend fun reauthenticate(password: String): Result<Unit>
 
+    suspend fun signInWithGoogle(idToken: String): AuthUser
+    suspend fun reauthenticateWithGoogle(idToken: String): Result<Unit>
+
     //USER
     suspend fun signUp(username: String, email: String, password: String): AuthUser
     suspend fun signIn(email: String, password: String): AuthUser

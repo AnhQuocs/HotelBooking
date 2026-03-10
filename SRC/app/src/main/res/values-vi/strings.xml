@@ -24,6 +24,8 @@
     <string name="sign_in">Đăng nhập</string>
     <string name="dont_have_account">Chưa có tài khoản?</string>
     <string name="sign_up">Đăng ký</string>
+    <string name="google_sign_in_canceled">Đăng nhập Google đã bị hủy</string>
+    <string name="sign_in_failed">Đăng nhập thất bại. Vui lòng thử lại!</string>
 
     <!-- SIGN UP -->
     <string name="or">Hoặc</string>
@@ -40,6 +42,7 @@
     <string name="admin_code_label">Mã quản trị</string>
     <string name="admin_code_hint">Nhập mã quản trị viên</string>
     <string name="code_is_required">Mã không được để trống</string>
+    <string name="sign_up_failed">Đăng ký thất bại. Vui lòng thử lại!</string>
 
     <!-- USER HOME -->
     <string name="home">Trang Chủ</string>
@@ -683,6 +686,7 @@
     <string name="new_password">Mật khẩu mới</string>
     <string name="confirm_new_password">Xác nhận mật khẩu mới</string>
     <string name="error_password_same_as_old">Mật khẩu mới không được trùng với mật khẩu hiện tại</string>
+    <string name="sign_in_with_google">Đăng nhập với Google</string>
 
     <!-- ADMIN PROFILE -->
     <string name="voucher">Mã giảm giá</string>

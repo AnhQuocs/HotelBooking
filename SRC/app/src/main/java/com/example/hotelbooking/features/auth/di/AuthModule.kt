@@ -6,7 +6,9 @@ import com.example.hotelbooking.features.auth.domain.usecase.AuthUseCases
 import com.example.hotelbooking.features.auth.domain.usecase.GetCurrentUserUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.GetUserByIdUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.ReauthenticateUseCase
+import com.example.hotelbooking.features.auth.domain.usecase.ReauthenticateWithGoogleUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignInUseCase
+import com.example.hotelbooking.features.auth.domain.usecase.SignInWithGoogleUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignOutUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignUpAdminUseCase
 import com.example.hotelbooking.features.auth.domain.usecase.SignUpUseCase
@@ -45,6 +47,8 @@ object AuthModule {
         getCurrentUserUseCase = GetCurrentUserUseCase(repository),
         getUserByIdUseCase = GetUserByIdUseCase(repository),
         signOutUseCase = SignOutUseCase(repository),
-        reauthenticateUseCase = ReauthenticateUseCase(repository)
+        reauthenticateUseCase = ReauthenticateUseCase(repository),
+        signInWithGoogleUseCase = SignInWithGoogleUseCase(repository),
+        reauthenticateWithGoogleUseCase = ReauthenticateWithGoogleUseCase(repository)
     )
 }

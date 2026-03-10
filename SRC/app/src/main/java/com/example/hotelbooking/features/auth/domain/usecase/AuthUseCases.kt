@@ -11,8 +11,26 @@ data class AuthUseCases(
     val getCurrentUserUseCase: GetCurrentUserUseCase,
     val getUserByIdUseCase: GetUserByIdUseCase,
     val signOutUseCase: SignOutUseCase,
-    val reauthenticateUseCase: ReauthenticateUseCase
+    val reauthenticateUseCase: ReauthenticateUseCase,
+    val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    val reauthenticateWithGoogleUseCase: ReauthenticateWithGoogleUseCase
 )
+
+class SignInWithGoogleUseCase(
+    private val repository: AuthRepository
+) {
+    suspend operator fun invoke(idToken: String): AuthUser {
+        return repository.signInWithGoogle(idToken)
+    }
+}
+
+class ReauthenticateWithGoogleUseCase(
+    private val repository: AuthRepository
+) {
+    suspend operator fun invoke(idToken: String): Result<Unit> {
+        return repository.reauthenticateWithGoogle(idToken)
+    }
+}
 
 class SignUpUseCase(
     private val repository: AuthRepository

@@ -10,6 +10,7 @@ import com.example.hotelbooking.features.hotel.domain.model.AdminAmenityConfig
 import com.example.hotelbooking.features.hotel.domain.model.CustomAmenity
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -51,6 +52,55 @@ class AuthRepositoryImpl(
             }
         } catch (e: Exception) {
             throw e
+        }
+    }
+
+    // =============== GOOGLE AUTH ===============
+
+    override suspend fun signInWithGoogle(idToken: String): AuthUser {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val result = auth.signInWithCredential(credential).await()
+            val firebaseUser = result.user ?: throw Exception("Google login failed")
+
+            val userRef = firestore.collection("users").document(firebaseUser.uid)
+            val snapshot = userRef.get().await()
+
+            if (snapshot.exists()) {
+                val userDto = snapshot.toObject(AuthUserDto::class.java)
+                    ?: throw Exception("User data is corrupted")
+                userDto.toDomain()
+            } else {
+                val newUser = AuthUser(
+                    uid = firebaseUser.uid,
+                    email = firebaseUser.email ?: "",
+                    username = firebaseUser.displayName ?: "User_${firebaseUser.uid.take(5)}",
+                    fullName = firebaseUser.displayName,
+                    phoneNumber = firebaseUser.phoneNumber,
+                    avatar = firebaseUser.photoUrl?.toString(),
+                    avatarPublicId = null,
+                    dob = null,
+                    role = UserRole.USER
+                )
+
+                userRef.set(newUser.toDto()).await()
+                newUser
+            }
+        } catch (e: Exception) {
+            auth.signOut()
+            throw e
+        }
+    }
+
+    override suspend fun reauthenticateWithGoogle(idToken: String): Result<Unit> {
+        val user = auth.currentUser ?: return Result.failure(Exception("User not found"))
+
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            user.reauthenticate(credential).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

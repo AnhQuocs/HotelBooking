@@ -46,6 +46,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +66,7 @@ import com.example.hotelbooking.R
 import com.example.hotelbooking.components.AppTopBar
 import com.example.hotelbooking.components.LineGray
 import com.example.hotelbooking.features.auth.domain.model.UserRole
+import com.example.hotelbooking.features.auth.presentation.ui.GoogleAuthUiClient
 import com.example.hotelbooking.features.auth.presentation.viewmodel.AuthViewModel
 import com.example.hotelbooking.features.auth.presentation.viewmodel.UpdateActionState
 import com.example.hotelbooking.features.main.MainActivity
@@ -76,7 +78,9 @@ import com.example.hotelbooking.ui.theme.CancelledRed
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextTertiary
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -104,7 +108,6 @@ fun PersonalInfoScreen(
     authViewModel: AuthViewModel,
     onBackClick: () -> Unit
 ) {
-    val context = LocalContext.current
 
     val user by authViewModel.currentUser.collectAsState()
     val updateState by authViewModel.updateState.collectAsState()
@@ -124,6 +127,19 @@ fun PersonalInfoScreen(
 
     var showConfirmDialog by remember { mutableStateOf(false) }
     var showReAuthPasswordDialog by remember { mutableStateOf(false) }
+
+    val isGoogleUser = remember(user) {
+        FirebaseAuth.getInstance().currentUser?.providerData?.any { it.providerId == "google.com" } == true
+    }
+
+    val context = LocalContext.current
+    val webClientId = stringResource(R.string.default_web_client_id)
+
+    val googleAuthUiClient = remember {
+        GoogleAuthUiClient(context, webClientId)
+    }
+
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -295,19 +311,23 @@ fun PersonalInfoScreen(
                         modifier = Modifier.padding(horizontal = Dimen.PaddingM)
                     )
 
-                    ProfileInfoRow(
-                        label = stringResource(R.string.password_label),
-                        value = stringResource(R.string.change_password),
-                        onClick = {
-                            context.startActivity(
-                                Intent(
-                                    context,
-                                    ChangePasswordActivity::class.java
-                                )
-                            )
-                        },
-                        isLast = true
-                    )
+                    if (!isGoogleUser) {
+                        ProfileInfoRow(
+                            label = stringResource(R.string.password_label),
+                            value = stringResource(R.string.change_password),
+                            onClick = {
+                                context.startActivity(Intent(context, ChangePasswordActivity::class.java))
+                            },
+                            isLast = true
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.sign_in_with_google),
+                            style = AfacadTypography.bodyMedium,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(horizontal = Dimen.PaddingM, vertical = Dimen.PaddingS)
+                        )
+                    }
                 }
             }
 
@@ -388,7 +408,16 @@ fun PersonalInfoScreen(
         DeleteAccountDialog(
             onConfirm = {
                 showConfirmDialog = false
-                showReAuthPasswordDialog = true
+                if (isGoogleUser) {
+                    scope.launch {
+                        val idToken = googleAuthUiClient.signIn()
+                        if (idToken != null) {
+                            authViewModel.deleteAccountWithGoogleReAuth(idToken)
+                        }
+                    }
+                } else {
+                    showReAuthPasswordDialog = true
+                }
             },
             onDismiss = { showConfirmDialog = false }
         )

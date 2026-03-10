@@ -138,6 +138,11 @@ dependencies {
     // Compressor
     implementation("id.zelory:compressor:3.0.1")
 
+    // Google Auth
+    implementation("androidx.credentials:credentials:1.3.0-rc01")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-rc01")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     // Other
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")

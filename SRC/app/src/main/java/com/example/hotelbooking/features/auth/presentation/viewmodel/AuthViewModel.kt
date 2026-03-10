@@ -213,6 +213,50 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    // =============== GOOGLE AUTH ===============
+    fun signInWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _uiState.value = AuthState.Loading
+            try {
+                val user = authUseCases.signInWithGoogleUseCase(idToken)
+
+                _currentUser.value = user
+                _uiState.value = AuthState.Success(user)
+            } catch (e: Exception) {
+                _uiState.value = AuthState.Error
+            }
+        }
+    }
+
+    fun deleteAccountWithGoogleReAuth(idToken: String) {
+        viewModelScope.launch {
+            _updateState.value = UpdateActionState.Loading
+
+            val reAuthResult = authUseCases.reauthenticateWithGoogleUseCase(idToken)
+
+            if (reAuthResult.isSuccess) {
+                try {
+                    val uid = _currentUser.value?.uid ?: return@launch
+                    updateProfileUseCases.deleteAccountUseCase(uid)
+
+                    _updateState.value = UpdateActionState.DeleteAccountSuccess
+                } catch (e: Exception) {
+                    _updateState.value = UpdateActionState.Error(
+                        UiText.StringResource(R.string.error_delete_failed)
+                    )
+                }
+            } else {
+                _updateState.value = UpdateActionState.Error(
+                    UiText.StringResource(R.string.error_system_unknown)
+                )
+            }
+        }
+    }
+
+    fun showLoading() {
+        _uiState.value = AuthState.Loading
+    }
+
     fun resetState() {
         _uiState.value = AuthState.Nothing
     }

@@ -2,6 +2,7 @@ package com.example.hotelbooking.features.auth.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,9 @@ import com.example.hotelbooking.ui.theme.SlateGray
 import com.example.hotelbooking.ui.theme.TextTertiary
 
 @Composable
-fun AuthOptions() {
+fun AuthOptions(
+    onClick: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +69,7 @@ fun AuthOptions() {
     Spacer(modifier = Modifier.height(Dimen.PaddingM))
 
     Button(
-        onClick = {},
+        onClick = { onClick() },
         modifier = Modifier
             .fillMaxWidth()
             .height(Dimen.HeightDefault)

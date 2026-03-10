@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import com.example.hotelbooking.ui.theme.ActionDanger
 import com.example.hotelbooking.ui.theme.AfacadTypography
 import com.example.hotelbooking.ui.theme.PrimaryBlue
 import com.example.hotelbooking.ui.theme.TextTertiary
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
@@ -55,6 +57,13 @@ fun SignInScreen(
 
     val context = LocalContext.current
 
+    val webClientId = stringResource(R.string.default_web_client_id)
+    val googleAuthUiClient = remember {
+        GoogleAuthUiClient(context, webClientId)
+    }
+    val scope = rememberCoroutineScope()
+
+    val failedMessage = stringResource(id = R.string.sign_in_failed)
     LaunchedEffect(key1 = uiState.value) {
         when (val state = uiState.value) {
             is AuthState.Success -> {
@@ -71,7 +80,7 @@ fun SignInScreen(
             }
 
             is AuthState.Error -> {
-                Toast.makeText(context, "Sign in failed. Please try again!", Toast.LENGTH_SHORT)
+                Toast.makeText(context, failedMessage, Toast.LENGTH_SHORT)
                     .show()
                 authViewModel.resetState()
             }
@@ -128,7 +137,24 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(Dimen.PaddingL))
 
-            AuthOptions()
+            val googleCanceled = stringResource(id = R.string.google_sign_in_canceled)
+
+            AuthOptions(
+                onClick = {
+                    scope.launch {
+                        authViewModel.showLoading()
+
+                        val idToken = googleAuthUiClient.signIn()
+
+                        if (idToken != null) {
+                            authViewModel.signInWithGoogle(idToken)
+                        } else {
+                            authViewModel.resetState()
+                            Toast.makeText(context, googleCanceled, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            )
         }
 
         if (uiState.value == AuthState.Loading) {
