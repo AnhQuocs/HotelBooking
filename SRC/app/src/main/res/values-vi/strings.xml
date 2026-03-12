@@ -192,7 +192,7 @@
     <string name="qr_address">Địa chỉ: %1$s</string>
     <string name="qr_price">Giá: $%1$s</string>
     <string name="qr_rating">Đánh giá: %1$s/5</string>
-    <string name="qr_check_in">Nhận phòng: %1$s</string>
+    <string name="qr_check_in">Nhận phòng:  %1$s</string>
     <string name="qr_check_out">Trả phòng: %1$s</string>
     <string name="qr_guests">Số lượng khách: %1$d</string>
     <string name="qr_invalid">Dữ liệu không hợp lệ</string>
@@ -267,7 +267,7 @@
     <string name="rating_excellent2">Tuyệt vời! 😍</string>
     <string name="rating_hint">Chạm vào sao để đánh giá</string>
     <string name="review_comment_label">Chia sẻ thêm (Tùy chọn)</string>
-    <string name="review_comment_placeholder">Phòng sạch sẽ, nhân viên thân thiện...</string>
+    <string name="review_comment_placeholder">Phòng sạch sẽ, nhân viên thân thiện…</string>
     <string name="submit_review">Gửi đánh giá</string>
     <string name="skip_review">Bỏ qua</string>
     <string name="time_just_now">Vừa xong</string>
@@ -718,6 +718,16 @@
     <string name="period_week">Tuần</string>
     <string name="period_month">Tháng</string>
     <string name="period_all">Tất cả</string>
+    <string name="delete_image_title">Xác nhận xóa ảnh</string>
+    <string name="delete_image_message">Ảnh này sẽ bị xóa vĩnh viễn khỏi kho và không thể hoàn tác. Bạn có chắc chắn không?</string>
+    <string name="uploading_progress">Đang tải lên… (%1$d/%2$d)</string>
+    <string name="upload_images_button">Tải lên %1$d ảnh</string>
+    <string name="select_new_images">Chọn ảnh mới</string>
+    <string name="max_images_upload">Tối đa 5 ảnh một lần</string>
+    <string name="images_ready_to_upload">Ảnh chuẩn bị tải lên:</string>
+    <string name="your_gallery">Kho ảnh của bạn</string>
+    <string name="gallery_image_count">%1$d ảnh</string>
+    <string name="profile_gallery_empty">Kho ảnh còn trống</string>
 
     <!-- OTHER -->
     <string name="loading">Đang tải…</string>
