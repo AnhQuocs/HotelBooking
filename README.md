@@ -28,10 +28,11 @@ Dự án được thực hiện nhằm áp dụng kiến thức về phân tích
 - Quên mật khẩu và đặt lại mật khẩu
 - Xác thực sinh trắc học (Biometric)
 - Quản lý thông tin cá nhân
+- Phân quyền user/admin
 - Thay đổi mật khẩu
 
 #### 🏨 Tìm kiếm & Duyệt khách sạn
-- Tìm kiếm khách sạn theo địa điểm, ngày, số phòng
+- Tìm kiếm khách sạn theo tên, địa điểm
 - Hiển thị danh sách khách sạn phổ biến
 - Hiển thị danh sách khách sạn được đề xuất
 - Xem chi tiết khách sạn (hình ảnh, mô tả, tiện ích)
@@ -82,17 +83,13 @@ Dự án được thực hiện nhằm áp dụng kiến thức về phân tích
 #### 💬 Chat & Hỗ trợ
 - Trò chuyện trực tiếp với bộ phận hỗ trợ
 - Nhắn tin thời gian thực
-- Chia sẻ hình ảnh trong chat
 
 #### 🗺️ Bản đồ
 - Xem toàn bộ khách sạn trên bản đồ
 - Xem vị trí khách sạn chi tiết
-- Tìm khách sạn gần vị trí hiện tại
 
 #### 🔔 Thông báo
-- Nhận thông báo về đơn đặt phòng
-- Nhận thông báo khuyến mãi
-- Nhận thông báo từ bộ phận hỗ trợ
+- Nhận thông báo về đơn đặt phòng, hủy đặt phòng
 
 #### 🌍 Đa ngôn ngữ
 - Hỗ trợ tiếng Anh
@@ -101,7 +98,7 @@ Dự án được thực hiện nhằm áp dụng kiến thức về phân tích
 
 #### ⚙️ Cài đặt Người dùng
 - Thay đổi ngôn ngữ
-- Cài đặt thông báo
+- Cài đặt thông tin cá nhân
 - Chính sách bảo mật
 - Điều khoản dịch vụ
 
@@ -117,14 +114,14 @@ Dự án được thực hiện nhằm áp dụng kiến thức về phân tích
 - Thêm khách sạn mới
 - Xem danh sách tất cả khách sạn
 - Chỉnh sửa thông tin khách sạn
-- Xóa khách sạn
+- Ẩn khách sạn (ngừng kinh doanh)
 - Tải lên hình ảnh khách sạn
 
 #### 🛏️ Quản lý Phòng
 - Thêm loại phòng mới
 - Xem danh sách phòng
 - Chỉnh sửa thông tin phòng
-- Xóa phòng
+- Ản phòng (ngừng kinh doanh)
 - Quản lý giá phòng
 - Tải lên hình ảnh phòng
 
@@ -139,8 +136,7 @@ Dự án được thực hiện nhằm áp dụng kiến thức về phân tích
 
 #### ⭐ Quản lý Đánh giá
 - Xem tất cả đánh giá từ khách hàng
-- Duyệt duyệt đánh giá
-- Xóa đánh giá không phù hợp
+- Ẩn đánh giá không phù hợp
 
 #### 🎁 Quản lý Voucher
 - Tạo voucher mới
@@ -546,7 +542,7 @@ GOOGLE_MAPS_API_KEY=AIzaSyD...your_key
 
 | Chỉ số | Giá trị |
 |--------|--------|
-| Lines of Code | 20,000+ |
+| Lines of Code | 40,000+ |
 | Features | 30+ |
 | Activities | 45+ |
 | Composables | 100+ |
